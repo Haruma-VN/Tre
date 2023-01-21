@@ -16,4 +16,4 @@ export async function ConcatRes() {
     const now = Date.now();
     const time = (now - before) / 1000;
     DefaultExit(time);
-}
+};
