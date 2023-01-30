@@ -4,6 +4,7 @@ import path from 'node:path';
 import { SmartBuffer } from 'smart-buffer';
 import { readline_size } from '../../../Tre.Progress/Readline/util.js';
 import fs from 'fs-extra';
+import zlib_beautify from '../../../Tre.Libraries/Tre.Buffer/zlib_beautify.js';
 export default function (path_file) {
     let folder = path_file + '/Res';
     let TreRsgpInfo = "";
@@ -108,7 +109,7 @@ export default function (path_file) {
                 rsgp_info.writeInt32LE(file_data.length, pos_2 - 4 - atlas_space * 4);
                 if (TreRsgpAtlas === true) {
                     if (TreRsgpCheck === true) {
-                        TreRsgpInfo.Res.forEach((res, index) => {
+                        TreRsgpInfo.Res.forEach((res) => {
                             if (res.Path.join('\\') === folder_2) {
                                 id = res.PTXInfo.Id;
                                 Width = res.PTXInfo.Width;
@@ -164,6 +165,9 @@ export default function (path_file) {
     rsgp_header.writeInt32LE(92, 76);
     rsgp_header.writeBuffer(rsgp_info.toBuffer().slice(0, pos_2), 92);
     rsgp_header.writeBuffer(rsgp_data, info_size + ptx_length);
-    RsgpCompression == true && TreRsgpAtlas == true ? {} : rsgp_header.writeInt32LE(rsgp_header.length, 40)
-    return rsgp_header.toBuffer();
+    RsgpCompression == true && TreRsgpAtlas == true ? {} : rsgp_header.writeInt32LE(rsgp_header.length, 40);
+    const zlib_beautify_buffer_memory = Buffer.alloc((zlib_beautify(rsgp_header.length)).byteLength - rsgp_header.length);
+    const rsgp_bundle_output_with_zlib_beautify = new Array();
+    rsgp_bundle_output_with_zlib_beautify.push(rsgp_header.toBuffer(), zlib_beautify_buffer_memory);
+    return Buffer.concat(rsgp_bundle_output_with_zlib_beautify);
 };
