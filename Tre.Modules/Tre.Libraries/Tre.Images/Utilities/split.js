@@ -74,6 +74,9 @@ export default async function (opt) {
                         y: info.y,
                     });
                 }
+                else {
+                    continue;
+                };
             }
         };
         atlas_info.method = (option == 'extension') ? "path" : "id";
@@ -86,4 +89,3 @@ export default async function (opt) {
     }
     return 0;
 };
-// node main.js WorldMap_Kongfu_1536.json WORLDMAP_KONGFU_1536_00.png WORLDMAP_KONGFU_1536_01.png WORLDMAP_KONGFU_1536_02.png
