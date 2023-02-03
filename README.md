@@ -21,17 +21,17 @@ Tre currently using these tools as Third Party
 
 | Name | Link |
 | ------ | ------ |
-| JSONC | [https://github.com/onury/jsonc][PlDb] |
-| Sharp | [https://github.com/lovell/sharp][PlGh] |
-| Crypto-JS | [https://github.com/brix/crypto-js][PlGd] |
-| fs-extra | [https://github.com/jprichardson/node-fs-extra][PlOd] |
-| maxrects-packer | [https://github.com/soimy/maxrects-packer][PlMe] |
-| readline-sync | [https://github.com/anseki/readline-sync][PlGa] |
-| rijndael-js | [https://github.com/Snack-X/rijndael-js][PlGa] |
-| smart-buffer | [https://github.com/JoshGlazebrook/smart-buffer][PlGa] |
-| etcpak | [https://github.com/wolfpld/etcpak][PlGa] |
-| PVRTexTool-Cli | [https://developer.imaginationtech.com/pvrtextool/][PlGa] |
-| Real_Esrgan | [https://github.com/xinntao/Real-ESRGAN/][PlGa] |
+| JSONC | https://github.com/onury/jsonc |
+| Sharp | https://github.com/lovell/sharp |
+| Crypto-JS | https://github.com/brix/crypto-js |
+| fs-extra | https://github.com/jprichardson/node-fs-extra|
+| maxrects-packer | https://github.com/soimy/maxrects-packer|
+| readline-sync | https://github.com/anseki/readline-sync |
+| rijndael-js | https://github.com/Snack-X/rijndael-js |
+| smart-buffer | https://github.com/JoshGlazebrook/smart-buffer |
+| etcpak | https://github.com/wolfpld/etcpak |
+| PVRTexTool-Cli | https://developer.imaginationtech.com/pvrtextool/ |
+| Real_Esrgan | https://github.com/xinntao/Real-ESRGAN/ |
 ## Installation
 
 Tre requires [Node.js](https://nodejs.org/) to run.
@@ -39,7 +39,12 @@ Tre requires [Node.js](https://nodejs.org/) to run.
 If you want to compile Tre from TypeScript source code you can install TypeScript as well.
 Run Tre with launch.cmd after you setup environment in "C/Tre.Vietnam/"
 If you want the fast in charge use I recommend you check [Releases](https://github.com/Tre-VN/Tre/releases/) to download the full build from the Assets.
+## Bugs Report and Implement Idea
 
+All Bugs related to Tre please report in [GitHub Issues Page](https://github.com/Tre-VN/Tre/issues/).
+If you wish to communicate with the creator you can communicate through gmail or discord.
+Discord: Haruma-VN#3635
+Gmail: harumascaremath@gmail.com
 #### Fixing Scripts
 
 Install TypeScript first:
