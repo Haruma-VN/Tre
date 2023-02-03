@@ -61,7 +61,7 @@ tsc
 
 ## License
 
-This tool using GNU License, which mean if you want to use Tre you are free to use if your program is the same LICENSE with Tre and open source code on GitHub.
+This tool is using GNU License, which mean if you want to use Tre you are free to use if your program is the same LICENSE with Tre and open source code on GitHub.
 
 **Happy Modding!**
 
