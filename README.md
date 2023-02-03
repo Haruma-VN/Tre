@@ -45,7 +45,8 @@ All Bugs related to Tre please report in [GitHub Issues Page](https://github.com
 If you wish to communicate with the creator you can communicate through gmail or discord.
 Discord: Haruma-VN#3635,
 Gmail: harumascaremath@gmail.com
-#### Fixing Scripts
+
+## Fixing Scripts
 
 Install TypeScript first:
 
