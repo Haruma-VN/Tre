@@ -43,7 +43,7 @@ If you want the fast in charge use I recommend you check [Releases](https://gith
 
 All Bugs related to Tre please report in [GitHub Issues Page](https://github.com/Tre-VN/Tre/issues/).
 If you wish to communicate with the creator you can communicate through gmail or discord.
-Discord: Haruma-VN#3635
+Discord: Haruma-VN#3635,
 Gmail: harumascaremath@gmail.com
 #### Fixing Scripts
 
@@ -66,7 +66,7 @@ tsc
 
 ## License
 
-This tool is using GNU License, which mean if you want to use Tre you are free to use if your program is the same LICENSE with Tre and open source code on GitHub.
+This tool using GNU License, which mean if you want to use Tre you are free to use if your program is the same LICENSE with Tre and open source code on GitHub.
 
 **Happy Modding!**
 
