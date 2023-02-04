@@ -3,6 +3,7 @@ import { MaxRectsPacker } from "maxrects-packer";
 import { readjson, writejson } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import { TreErrorMessage } from "../../../Tre.Debug/Tre.ErrorSystem.js";
 import { dimension, cat } from "../../../Tre.Libraries/Tre.Images/util.js";
+import best_sorting from '../../../Tre.Libraries/Tre.Sort/ArraySortSystem.js';
 type AtlasImage = {
     slot: number;
     id: string;
@@ -64,7 +65,7 @@ export default async function (dir = process.argv[2], width = 4096, height = 409
     };
     const options = {
         smart: true,
-        pot: true,
+        pot: false,
         square: true,
         allowRotation: false,
     };
@@ -93,6 +94,7 @@ export default async function (dir = process.argv[2], width = 4096, height = 409
     };
     const append_array = new Array();
     for (let i = 0; i < img_data.length; ++i) {
+        img_data[i] = best_sorting(img_data[i]);
         const count = (i < 9 && i >= 0) ? ("0" + i) : i;
         result_json.resources.push({
             slot: 0,
