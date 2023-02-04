@@ -13,9 +13,11 @@ export default async function (dir: string, orig: number | string, mod: number |
         TreErrorMessage({ error: "Cannot get dimension of image", system: error.toString() }, error)
     }).finally(() => { });
     const transform_x = calculate(orig, mod);
-    await resize(dir, input.width * transform_x, input.height * transform_x, new_dir).catch((error) => {
-        TreErrorMessage({ error: "Cannot resize spritesheet", reason: "Unknown", system: error.toString() }, "Unknown bug occur please check debug folder for more details.");
-        return;
-    });;
+    if (input.width / transform_x <= 1 || input.height / transform_x <= 1) {
+        await resize(dir, input.width, input.height, new_dir);
+    }
+    else {
+        await resize(dir, Math.ceil(input.width / transform_x), Math.ceil(input.height / transform_x), new_dir);
+    }
     return;
 };

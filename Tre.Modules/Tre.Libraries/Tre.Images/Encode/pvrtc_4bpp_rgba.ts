@@ -21,23 +21,23 @@ export default async function (dir: string = process.argv[2], mode: number = 0):
     };
     fs.appendFileSync(tre_thirdparty + 'pvrtc.bat', 'finish', { flag: 'a' });
     const dimension_x: { width: number, height: number } = await dimension(dir).then((result: { width: number, height: number }) => result);
-    await exec('pvrtc.bat', { cwd: tre_thirdparty }, (err, stdout, stderr) => {
+    await exec('pvrtc.bat', { cwd: tre_thirdparty }, async (err, stdout, stderr) => {
         if (stderr == stderr) {
-            let width: number = dimension_x.width;
-            let height: number = dimension_x.height;
+            let width: number = await dimension_x.width;
+            let height: number = await dimension_x.height;
             let offset: number = width * height / 2;
             let image_dir: string = dirname(dir) + '/';
             let image_name: string = basename(dir);
             let image_pvrtc: string = image_dir + image_name;
             let pvrtc_raw: string = tre_thirdparty + image_name + '.pvr';
-            let originalImage: any = fs.readFileSync(pvrtc_raw).slice(fs.readFileSync(pvrtc_raw).length - offset);
+            let originalImage: any = await fs.readFileSync(pvrtc_raw).slice(fs.readFileSync(pvrtc_raw).length - offset);
             fs.writeFileSync(image_pvrtc + '.PTX', originalImage, { flag: 'w' });
             fs.unlinkSync(pvrtc_raw);
             let clear_temp = fs.readdirSync(tre_thirdparty);
             for (let temp of clear_temp) {
                 let temp_ext = extname(temp).toUpperCase();
                 if (temp_ext != '.EXE') {
-                    fs.unlinkSync(tre_thirdparty + temp);
+                    await fs.unlinkSync(tre_thirdparty + temp);
                 };
             }
 

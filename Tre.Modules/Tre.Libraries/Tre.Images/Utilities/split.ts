@@ -3,6 +3,7 @@ import { writejson, readjson, makefolder } from '../../Tre.FileSystem/util.js';
 import { split } from '../util.js';
 import { extname, basename } from '../../Tre.Basename/util.js';
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
+import fix_duplicate_res from '../../../Tre.Scripts/Tre/Repair/duplicate_res.js';
 export interface PopCapResJsonDataBundle {
     resources?: PopCapResJsonDetailInfo[],
     id?: string,
@@ -19,7 +20,15 @@ export interface PopCapResJsonDetailInfo {
     path: string[],
     parent: string,
 }
+export interface configAtlas {
+    atlas: {
+        split: {
+            repairDuplicateFolder: boolean,
+        }
+    }
+}
 export default async function (opt: number) {
+    const json_config: configAtlas = readjson("C:/Tre.Vietnam/Tre.Extension/Tre.Settings/toolkit.json");
     let json: PopCapResJsonDataBundle = {};
     const img_list = new Array();
     let directory_name = new String();
@@ -46,6 +55,9 @@ export default async function (opt: number) {
         }
     };
     if (json.resources != undefined) {
+        if (json_config.atlas.split.repairDuplicateFolder === true) {
+            json.resources = fix_duplicate_res(json.resources);
+        };
         let atlas_info = { method: "", subgroup: json.id, groups: new Array() };
         let extend_info = new Array();
         for (const info of json.resources) {

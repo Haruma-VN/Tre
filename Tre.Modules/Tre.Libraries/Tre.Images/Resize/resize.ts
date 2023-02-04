@@ -4,7 +4,7 @@ export default async function (dir: string, width: number | string, height: numb
     width = (typeof width === 'string') ? parseInt(width) : width;
     height = (typeof height === 'string') ? parseInt(height) : height;
     const images = await sharp(dir);
-    await images.resize((width), (height))
+    await images.resize((width), (height)).png({effort: 1})
         .toFile(new_dir);
     return
 }
