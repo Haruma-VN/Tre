@@ -1,15 +1,51 @@
 "use strict";
-import { readline_integer } from '../../Tre.Modules/Tre.Progress/Readline/util.js';
+import { readline_integer, readline_normal } from '../../Tre.Modules/Tre.Progress/Readline/util.js';
 import functions from "./functions.js";
+import * as color from '../Tre.Libraries/Tre.Color/color.js';
+import fs from 'node:fs';
 export default async function (): Promise<void> {
-    console.log("All modules have been loaded!");
     const proc_arr: string[] = new Array();
     for (let i: number = 2; i < process.argv.length; ++i) {
         proc_arr.push(process.argv[i]);
     };
     let mode: number;
+    let __check_while_loop__end: boolean;
+    if (proc_arr.length == 0) {
+        __check_while_loop__end = true;
+        console.log(color.fggreen_string("◉ Execution Reminder: If you don't want to parse more path press enter while given the empty string."));
+        console.log(color.yellow_string("◉ Execution Warning: No Args have been found, please drag a directory here or pass a string to continue the process..."));
+        let dir: string = readline_normal();
+        while (dir !== '') {
+            if (dir === "./") {
+                console.log("◉ Execution Warning: \"./\" is not a valid path. Please try again.");
+                dir = await readline_normal();
+                continue;
+            }
+
+            if (dir[0] === "\"" && dir[dir.length - 1] === "\"") {
+                dir = dir.slice(1, -1);
+            }
+            try {
+                const stats = fs.statSync(dir);
+                if (stats.isDirectory() || stats.isFile()) {
+                    proc_arr.push(dir);
+                    console.log(color.fggreen_string(`◉ Execution Size: ${proc_arr.length}`));
+                    dir = await readline_normal();
+                } else {
+                    console.log(color.fgred_string(`◉ Execution Error: ${dir} is not a directory. Please try again.`));
+                    dir = await readline_normal();
+                }
+            } catch (err) {
+                console.log(color.fgred_string(`◉ Execution Error: ${dir} is not a valid path. Please try again.`));
+                dir = await readline_normal();
+            }
+        };
+    };
+    if (__check_while_loop__end) {
+        console.log(color.fggreen_string(`◉ Execution Collect Status: Finish`));
+    }
     if (proc_arr.length > 1) {
-        console.log("Execution Argument: Execute all progress files at once");
+        console.log(color.fgcyan_string("◉ Execution Argument: Execute all files in queue"));
         mode = await readline_integer(0, 1);
     }
     else {
@@ -17,14 +53,12 @@ export default async function (): Promise<void> {
     };
     if (mode === 0) {
         switch (proc_arr.length) {
-            case 0:
-                return;
             case 1:
                 await functions(1, proc_arr[0], 1, mode).finally(() => { });
                 break;
             default:
-                for (let i:number = 0; i < proc_arr.length; ++i) {
-                    await functions(i, proc_arr[i], proc_arr.length, mode).finally(() => { });
+                for (let i: number = 0; i < proc_arr.length; ++i) {
+                    await functions((i + 1), proc_arr[i], proc_arr.length, mode).finally(() => { });
                 };
                 break
         }
