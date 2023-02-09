@@ -1,8 +1,8 @@
 "use strict";
 export namespace Argument.Tre.Packages {
-    export const tre_all_module_have_been_loaded = "◉ Available modules have been loaded!";
-    export const command_execute_in_progress = "◉ Command execution in progress:";
-    export const module_available = "◉ Modules available, select one function to do the apply:";
+    export const tre_all_module_have_been_loaded = "◉ Loaded fully operational initialized!";
+    export const command_execute_in_progress = "◉ Executing command in progress:";
+    export const module_available = "◉ Loaded and waiting, select a function to start execute:";
     export const js_shell_error = "Unexpected Error when execute the script";
     export const concat_mode_argument_res = "◉ Execution Argument: Concat Mode";
     export const concat_mode_argument_rton = "◉ Execution Argument: Encode RTON";
@@ -14,4 +14,7 @@ export namespace Argument.Tre.Packages {
     export const tre_execution_time_after_process = "◉ Execution time:";
     export const unknown_reason = "Unknown";
     export const error_syntax = "Error";
+    export const cannot_load_any_modules = "◉ Execution failed: No modules were founded to be applied.";
+    export const no_string_has_been_passed = "◉ Execution failed: No arguments provided";
+    export const display_cipher_key_readline_argument = "◉ Execution Argument: Cipher Key";
 }
