@@ -216,60 +216,89 @@ export default async function (execute_file_count: number, execute_file_dir: str
                 case Display.Tre.Function.popcap_resources_cat.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
                     let mode: number = await Console.IntegerReadLine(1, 2);
-                    console.log(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
                     let encode: number = await Console.IntegerReadLine(1, 2);
                     await res_pack(execute_file_dir, mode, encode);
                     break;
                 case Display.Tre.Function.popcap_texture_decode_rgba8888.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
                     width = await Console.IntegerReadLine(1, 16384);
-                    console.log(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
                     height = await Console.IntegerReadLine(1, 16384);
                     await decode_rgba8888(execute_file_dir, width, height);
                     break;
                 case Display.Tre.Function.popcap_texture_decode_argb8888.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
                     width = await Console.IntegerReadLine(1, 16384);
-                    console.log(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
                     height = await Console.IntegerReadLine(1, 16384);
                     await decode_argb8888(execute_file_dir, width, height);
                     break;
                 case Display.Tre.Function.popcap_texture_decode_etc1a.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
                     width = await Console.IntegerReadLine(1, 16384);
-                    console.log(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
                     height = await Console.IntegerReadLine(1, 16384);
                     await decode_etc1a(execute_file_dir, width, height);
                     break;
                 case Display.Tre.Function.popcap_texture_decode_pvrtc.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
                     width = await Console.IntegerReadLine(1, 16384);
-                    console.log(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
                     height = await Console.IntegerReadLine(1, 16384);
                     await decode_pvrtc(execute_file_dir, width, height);
                     break;
                 case Display.Tre.Function.popcap_zlib_rsgp_unpack.void_number_readline_argument():
-                    console.log(color.fggreen_string('◉ Execution Argument: Decode PTX'))
+                    Console.WriteLine(color.fggreen_string('◉ Execution Argument: Decode PTX'))
                     let auto_decode: number = await Console.IntegerReadLine(0, 1);
                     await unpack_rsgp(execute_file_dir, auto_decode);
                     break;
                 case Display.Tre.Function.popcap_zlib_rsgp_pack.void_number_readline_argument():
                     await pack_rsgp(execute_file_dir);
                     break;
-                // case Display.Tre.Function.atlas_cat.void_number_readline_argument():
-                //     console.log(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
-                //     let width: number = await readline_size();
-                //     console.log(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
-                //     let height: number = await readline_size();
-                //     await atlas_cat(execute_file_dir, (width), (height)).finally(() => { });
-                //     break;
-                // case Display.Tre.Function.resize_atlas.void_number_readline_argument():
-                //     console.log(color.fgcyan_string(`${Argument.Tre.Packages.popcap_atlas_member_resize_original_quality}`));
-                //     let orig: number = await readline_texture();
-                //     console.log(color.fgcyan_string(`${Argument.Tre.Packages.popcap_atlas_member_resize_modifier_after_quality}`));
-                //     let mod: number = await readline_texture();
-                //     await resize_atlas(execute_file_dir, orig, mod);
-                //     break;
+                case Display.Tre.Function.popcap_texture_atlas_cat_simple.void_number_readline_argument():
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
+                    width = await Console.SizeReadLine();
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
+                    height = await Console.SizeReadLine();
+                    await atlas_cat(execute_file_dir, (width), (height), Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                        Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                        Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                        Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void).finally(() => { });
+                    break;
+                case Display.Tre.Function.popcap_texture_atlas_cat.void_number_readline_argument():
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
+                    width = await Console.SizeReadLine();
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
+                    height = await Console.SizeReadLine();
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_smart_pack}`));
+                    let atlas_cat_smart_option_area: number | boolean = Console.IntegerReadLine(0, 1);
+                    atlas_cat_smart_option_area = (atlas_cat_smart_option_area === 1) ? true : false;
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_pot}`));
+                    let atlas_cat_pot_option_area: number | boolean = Console.IntegerReadLine(0, 1);
+                    atlas_cat_pot_option_area = (atlas_cat_pot_option_area === 1) ? true : false;
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_iz_square}`));
+                    let atlas_cat_square_option_area_force: number | boolean = Console.IntegerReadLine(0, 1);
+                    atlas_cat_square_option_area_force = (atlas_cat_square_option_area_force === 1) ? true : false;
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_can_be_allow_for_rotation}`));
+                    let atlas_cat_allow_rotation_option_area_force: number | boolean = Console.IntegerReadLine(0, 1);
+                    atlas_cat_allow_rotation_option_area_force = (atlas_cat_allow_rotation_option_area_force === 1) ? true : false;
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`));
+                    let atlas_cat_padding_size: number | boolean = Console.IntegerReadLine(0, width);
+                    await atlas_cat(execute_file_dir, (width), (height), Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                        Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                        Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                        Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                        atlas_cat_smart_option_area, atlas_cat_pot_option_area, atlas_cat_square_option_area_force, atlas_cat_allow_rotation_option_area_force, atlas_cat_padding_size
+                    ).finally(() => { });
+                    break;
+                case Display.Tre.Function.popcap_texture_resize_atlas_simple.void_number_readline_argument():
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_atlas_member_resize_original_quality}`));
+                    let orig: number = await Console.TextureQualityReadLine();
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_atlas_member_resize_modifier_after_quality}`));
+                    let mod: number = await Console.TextureQualityReadLine();
+                    await resize_atlas(execute_file_dir, orig, mod);
+                    break;
 
             }
         }
