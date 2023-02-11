@@ -15,16 +15,15 @@ export default async function (): Promise<void> {
     const start_timer: number = Date.now();
     if (proc_arr.length == 0) {
         __check_while_loop__end = true;
-        Console.WriteLine(color.fggreen_string("◉ Execution Reminder: If you don't want to parse more path press enter while given the empty string."));
-        Console.WriteLine(color.yellow_string("◉ Execution Warning: No Args have been found, please drag a directory here or pass a string to continue the process..."));
+        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_reminder_quick_tip}`));
+        Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.execute_when_there_is_no_directory_passes_in_tre}`));
         let dir: string = readline_normal();
         while (dir !== '') {
             if (dir === "./") {
-                Console.WriteLine("◉ Execution Warning: \"./\" is not a valid path. Please try again.");
+                Console.WriteLine(`${Argument.Tre.Packages.execution_warning_log} \"./\" ${Argument.Tre.Packages.execute_error_not_valid_file_path}`);
                 dir = await readline_normal();
                 continue;
             }
-
             if (dir[0] === "\"" && dir[dir.length - 1] === "\"") {
                 dir = dir.slice(1, -1);
             }
@@ -32,14 +31,14 @@ export default async function (): Promise<void> {
                 const stats = fs.statSync(dir);
                 if (stats.isDirectory() || stats.isFile()) {
                     proc_arr.push(dir);
-                    Console.WriteLine(color.fggreen_string(`◉ Execution Size: ${proc_arr.length}`));
+                    Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_file_size} ${proc_arr.length}`));
                     dir = await readline_normal();
                 } else {
-                    Console.WriteLine(color.fgred_string(`◉ Execution Error: ${dir} is not a directory. Please try again.`));
+                    Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.execute_error_log} ${dir} `));
                     dir = await readline_normal();
                 }
             } catch (err) {
-                Console.WriteLine(color.fgred_string(`◉ Execution Error: ${dir} is not a valid path. Please try again.`));
+                Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.execute_error_log} ${dir} ${Argument.Tre.Packages.execute_error_not_valid_directory_path}`));
                 dir = await readline_normal();
             }
         };
@@ -47,10 +46,10 @@ export default async function (): Promise<void> {
     if (__check_while_loop__end) {
         const end_timer: number = Date.now();
         Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_execution_time_after_process} ${(end_timer - start_timer) / 1000}s`));
-        Console.WriteLine(color.fggreen_string(`◉ Execution Collect Status: Finish`));
+        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_status_finish}`));
     }
     if (proc_arr.length > 1) {
-        Console.WriteLine(color.fgcyan_string("◉ Execution Argument: Execute all files in queue"));
+        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.execute_all_files_in_queue}`));
         mode = await readline_integer(0, 1);
     }
     else {
@@ -59,10 +58,7 @@ export default async function (): Promise<void> {
     if (mode === 0) {
         switch (proc_arr.length) {
             case 0:
-                Console.WriteLine(`${Argument.Tre.Packages.no_string_has_been_passed}`);
-            case 1:
-                await functions(1, proc_arr[0], 1, mode).finally(() => { });
-                break;
+                Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.no_string_has_been_passed}`));
             default:
                 for (let i: number = 0; i < proc_arr.length; ++i) {
                     await functions((i + 1), proc_arr[i], proc_arr.length, mode).finally(() => { });

@@ -1,8 +1,7 @@
 "use strict";
 export default class Void {
     constructor(private name: string, private void_number: number) { }
-    #pragma
-    //#region 
+    //#region Class Display
     public display(): string {
         switch (this.void_number.toString().length) {
             case 1:
