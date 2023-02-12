@@ -1,0 +1,48 @@
+﻿<Window x:Class="Tre.Settings.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Pages ="clr-namespace:Tre.Settings.Pages"
+        Height="720" Width="1280" MinHeight="700" MinWidth="650" AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" Background="Transparent" >
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
+    </WindowChrome.WindowChrome>
+    <Border CornerRadius="5" MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseDown="Border_MouseDown">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5,1">
+                <GradientStop Color="#2e3967" />
+                <GradientStop Color="#192559" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto">
+                </RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 15 0">
+                <TextBlock Text="05:34" Foreground="#fdf9f6" FontSize="28" VerticalAlignment="Center"/>
+                <StackPanel Margin="13 0" VerticalAlignment="Center" >
+                    <TextBlock Text="Feb, 13" Foreground="#f8fefa" FontSize="10" />
+                    <TextBlock Text="Monday" Foreground="#f8fefa" FontSize="10" />
+                </StackPanel>
+                <!--<Icons:PackIconMaterial Kind="Wifi" Foreground="#fdf9f6" Width="25" Height="25" VerticalAlignment="Center"/>-->
+            </StackPanel>
+
+            <Button x:Name="backButton" Click="backButton_Click" Style="{StaticResource backButton}">
+                <!--<Icons:PackIconMaterial Kind="ArrowLeft" Foreground="#fdf9f6" Width="25" Height="25" />-->
+            </Button>
+
+            <TextBlock Text="Settings" Name="titleText" Style="{StaticResource pageTitle}" />
+
+            <ContentPresenter x:Name="container" Grid.Row="2">
+                <ContentPresenter.Content>
+                    <Pages:About_Page/>
+                </ContentPresenter.Content>
+            </ContentPresenter>
+        </Grid>
+    </Border>
+</Window>
