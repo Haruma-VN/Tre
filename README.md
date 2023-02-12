@@ -27,7 +27,6 @@ Tre currently using these tools as Third Party
 | fs-extra | https://github.com/jprichardson/node-fs-extra|
 | maxrects-packer | https://github.com/soimy/maxrects-packer|
 | readline-sync | https://github.com/anseki/readline-sync |
-| rijndael-js | https://github.com/Snack-X/rijndael-js |
 | smart-buffer | https://github.com/JoshGlazebrook/smart-buffer |
 | etcpak | https://github.com/wolfpld/etcpak |
 | PVRTexTool-Cli | https://developer.imaginationtech.com/pvrtextool/ |
