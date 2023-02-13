@@ -9,11 +9,11 @@
             <Style TargetType="Button">
                 <Setter Property="Height" Value="300" />
                 <Setter Property="Foreground" Value="#e2e2e4" />
-                <Setter Property="Background" >
+                <Setter Property="Background">
                     <Setter.Value>
-                        <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
-                            <GradientStop Color="#464f78"/>
-                            <GradientStop Color="#323f6c" Offset="0.9"/>
+                        <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1" Opacity="0.92">
+                            <GradientStop Color="#2d2d2d"/>
+                            <GradientStop Color="#2d2d2d" Offset="0.9"/>
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
@@ -21,29 +21,42 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}" CornerRadius="5">
-                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True" >
-                        <Setter Property="Background" Value="#5f76f6" />
-                        <Setter Property="Foreground" Value="#ffffff" />
-                        <Setter Property="Height" Value="330" />
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush StartPoint="0.5, 0" Opacity="0.95" EndPoint="0.5, 1">
+                                    <GradientStop Color="#262626"/>
+                                    <GradientStop Color="#404040"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Foreground" Value="#cccccc"/>
+                        <Setter Property="Height" Value="330"/>
                     </Trigger>
-
-                    <DataTrigger Binding="{Binding ElementName=element, Path=IsActive}" Value="True" >
-                        <Setter Property="Background" Value="#5f76f6" />
-                        <Setter Property="Foreground" Value="#ffffff" />
-                        <Setter Property="Height" Value="330" />
+                    <DataTrigger Binding="{Binding ElementName=element, Path=IsActive}" Value="True">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
+                                    <GradientStop Color="#262626"/>
+                                    <GradientStop Color="#404040" />
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Foreground" Value="#cccccc"/>
+                        <Setter Property="Height" Value="330"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </Button.Style>
         <StackPanel VerticalAlignment="Center">
             <Icons:PackIconMaterial Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center" Kind="{Binding ElementName=element, Path=Icon}"/>
-            <TextBlock FontSize="18" FontWeight="SemiBold" TextAlignment="Center" Margin="0 30 0 0" Text="{Binding ElementName=element, Path=Title}" />
+            <TextBlock FontSize="18" FontWeight="SemiBold" TextAlignment="Center" Margin="0 30 0 0" Text="{Binding ElementName=element, Path=Title}" FontFamily="Segoe UI"/>
         </StackPanel>
     </Button>
 </UserControl>

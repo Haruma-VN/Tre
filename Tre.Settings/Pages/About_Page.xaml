@@ -3,19 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uc="clr-namespace:Tre.Settings.Pages" >
     <Border CornerRadius="5" Padding="20 40" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxWidth="800"
-                Margin="50 0" Background="#374270">
+                Margin="50 0" Background="#282828" Opacity="0.9">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 15 0">
-                <TextBlock Text="Version: 3.0.0 Public" Style="{StaticResource aboutText}"/>
-                <TextBlock Text="Copyright © Tre-VN 2023" Style="{StaticResource aboutText}"/>
-                <TextBlock Text="GitHub: https://github.com/Tre-VN" Style="{StaticResource aboutText}"/>
-                <Separator />
-                <TextBlock Text="TypeScript, WPF, C# and NodeJS" Style="{StaticResource aboutText}"/>
+                <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="Version: 3.0.0 Public" Style="{StaticResource aboutText}" />
+                <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="Copyright © Tre-VN 2023" Style="{StaticResource aboutText}" />
+                <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="GitHub: https://github.com/Tre-VN" Style="{StaticResource aboutText}" />
+                <Separator  Margin="0 10 0 0" Width="800" Background="#ffffff"/>
+                <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="TypeScript, WPF, C# and NodeJS" Style="{StaticResource aboutText}" />
             </StackPanel>
         </Grid>
     </Border>

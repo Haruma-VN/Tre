@@ -13,11 +13,10 @@
     <!---->
 
 
-    <Border CornerRadius="5" MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseDown="Border_MouseDown" >
+    <Border CornerRadius="5" MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseDown="Border_MouseDown">
         <Border.Background>
-            <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5,1">
-                <GradientStop Color="#2e3967" />
-                <GradientStop Color="#192559" Offset="1.0"/>
+            <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
+                <GradientStop Color="#212121" />
             </LinearGradientBrush>
         </Border.Background>
 
@@ -29,10 +28,10 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 15 0">
-                <TextBlock x:Name="CurrentHourTextBlock" Text="Null" Foreground="#fdf9f6" FontSize="28" VerticalAlignment="Center"/>
-                <StackPanel Margin="13 0" VerticalAlignment="Center" >
-                    <TextBlock x:Name="CurrentDateTextBlock"  Text="Null" Foreground="#f8fefa" FontSize="10" />
-                    <TextBlock x:Name="CurrentDayInWeekTextBlock" Text="Null" Foreground="#f8fefa" FontSize="10" />
+                <TextBlock FontFamily="Segoe UI" FontWeight="Light" x:Name="CurrentHourTextBlock" Text="Null" Foreground="#fdf9f6" FontSize="28" VerticalAlignment="Center"/>
+                <StackPanel Margin="10 0" VerticalAlignment="Center" >
+                    <TextBlock FontFamily="Segoe UI" FontWeight="Light" x:Name="CurrentDateTextBlock"  Text="Null" Foreground="#f8fefa" FontSize="10" />
+                    <TextBlock FontFamily="Segoe UI" FontWeight="Light" x:Name="CurrentDayInWeekTextBlock" Text="Null" Foreground="#f8fefa" FontSize="10" />
                 </StackPanel>
                 <Icons:PackIconMaterial x:Name="CurrentWifiDisplayBlock" Kind="Wifi" Foreground="#fdf9f6" Width="25" Height="25" VerticalAlignment="Center"/>
             </StackPanel>
@@ -43,7 +42,7 @@
                 <Icons:PackIconMaterial Kind="ArrowLeft" Foreground="#fdf9f6" Width="25" Height="25" />
             </Button>
 
-            <TextBlock Text="Tre.Settings" Name="titleText" Style="{StaticResource pageTitle}" />
+            <TextBlock FontFamily="Segoe UI" FontWeight="SemiBold" Text="Tre.Settings" Name="titleText" Style="{StaticResource pageTitle}" />
 
             <ContentPresenter x:Name="container" Grid.Row="2">
                 <ContentPresenter.Content>

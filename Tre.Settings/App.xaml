@@ -42,20 +42,22 @@
             <Setter Property="TextAlignment" Value="Left" />
             <Setter Property="Margin" Value="0 10" />
         </Style>
-
-
         <Style x:Key="ToggleButton" TargetType="ToggleButton">
-            <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0 10 10 0" />
+            <Setter Property="Background" Value="#212121"/>
+            <Setter Property="Foreground" Value="#fcf9f4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="10 0 10 0"/>
+            <Setter Property="Padding" Value="10 0 10 0"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
                         <Grid>
-                            <Border x:Name="Border" Background="#2b3361" CornerRadius="13" Width="50" Height="26"
-                                    VerticalAlignment="Center" HorizontalAlignment="Center"
-                                    BorderThickness="1" BorderBrush="#ffffff" />
-                            <Ellipse x:Name="Ellipse" Fill="#fbfbfb" Height="24" Width="24" Margin="1 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Border x:Name="Border" Background="#212121" CornerRadius="9" Width="40" Height="20"
+            VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="1" BorderBrush="#c6c6c6"/>
+                            <Ellipse x:Name="Ellipse" Fill="#fbfbfb" Height="18" Width="18" Margin="1 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
@@ -64,7 +66,7 @@
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Border" 
                                                             Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#2b3361" Duration="0:0:0.2"/>
+                                                            To="#666666" Duration="0:0:0.2"/>
                                             <ThicknessAnimation Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Margin" To="25 0 0 0" Duration="0:0:0.2" />
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -74,8 +76,52 @@
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Border" 
                                                             Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#bbd862" Duration="0:0:0.2"/>
+                                                            To="#212121" Duration="0:0:0.2"/>
                                             <ThicknessAnimation Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Margin" To="1 0 0 0" Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SmoothButton" TargetType="Button">
+            <Setter Property="Background" Value="#212121"/>
+            <Setter Property="Foreground" Value="#fcf9f4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="10 0 10 0"/>
+            <Setter Property="Padding" Value="10 0 10 0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="Border" CornerRadius="5" Background="#212121"/>
+                            <ContentPresenter x:Name="ContentPresenter"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="Border"
+                                  Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                  To="#6077f7" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="Border"
+                                  Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                  To="#212121" Duration="0:0:0.2"/>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.ExitActions>

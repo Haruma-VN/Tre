@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using Tre.Settings.Pages;
 using MahApps.Metro.IconPacks;
 using System.Net.NetworkInformation;
+using System.Windows.Media.Animation;
 
 namespace Tre.Settings
 {
@@ -125,6 +126,7 @@ namespace Tre.Settings
 
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
+            AnimateTransitionFoward(mainInterface);
             container.Content = mainInterface;
             backButton.Visibility = Visibility.Collapsed;
             titleText.Text = "Tre.Settings";
@@ -136,28 +138,64 @@ namespace Tre.Settings
             switch (page)
             {
                 case AppPages.About:
-                    container.Content = aboutPage;
+                    AnimateTransitionBackWard(aboutPage);
                     titleText.Text = "About";
                     break;
                 case AppPages.Settings:
-                    container.Content = settingPage;
+                    AnimateTransitionBackWard(settingPage);
                     titleText.Text = "Settings";
                     break;
                 case AppPages.Introduce:
-                    container.Content = introducePage;
+                    AnimateTransitionBackWard(introducePage);
                     titleText.Text = "Introduce";
                     break;
                 case AppPages.MainInterface:
-                    container.Content = mainInterface;
+                    AnimateTransitionBackWard(mainInterface);
                     titleText.Text = "Tre.Settings";
                     break;
                 case AppPages.Language:
-                    container.Content = languagePage;
+                    AnimateTransitionBackWard(languagePage);
                     titleText.Text = "Language";
                     break;
                 default:
                     break;
             }
+        }
+
+        private void AnimateTransitionBackWard(UIElement newContent)
+        {
+            var sb = new Storyboard();
+            var slideAnimation = new ThicknessAnimation
+            {
+                Duration = TimeSpan.FromMilliseconds(500),
+                From = new Thickness(container.ActualWidth, 0, -container.ActualWidth, 0),
+                To = new Thickness(0),
+                DecelerationRatio = 0.9
+            };
+            Storyboard.SetTarget(slideAnimation, container);
+            Storyboard.SetTargetProperty(slideAnimation, new PropertyPath(MarginProperty));
+            sb.Children.Add(slideAnimation);
+            sb.Begin();
+
+            container.Content = newContent;
+        }
+
+        private void AnimateTransitionFoward(UIElement newContent)
+        {
+            var sb = new Storyboard();
+            var slideAnimation = new ThicknessAnimation
+            {
+                Duration = TimeSpan.FromMilliseconds(500),
+                From = new Thickness(-container.ActualWidth, 0, container.ActualWidth, 0),
+                To = new Thickness(0),
+                DecelerationRatio = 0.9
+            };
+            Storyboard.SetTarget(slideAnimation, container);
+            Storyboard.SetTargetProperty(slideAnimation, new PropertyPath(MarginProperty));
+            sb.Children.Add(slideAnimation);
+            sb.Begin();
+
+            container.Content = newContent;
         }
     }
 }

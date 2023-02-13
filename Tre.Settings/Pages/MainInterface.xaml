@@ -11,5 +11,5 @@
                 <UserControls:Element Icon="Information" Title="About" ElementClick="Element_Click_About"/>
             </StackPanel>
         </ScrollViewer>
-            </Grid>
+    </Grid>
 </UserControl>
