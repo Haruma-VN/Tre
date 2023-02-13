@@ -4,6 +4,7 @@ import { readjson, writejson } from '../../../Tre.Libraries/Tre.FileSystem/util.
 import { TreErrorMessage } from "../../../Tre.Debug/Tre.ErrorSystem.js";
 import { dimension, cat } from "../../../Tre.Libraries/Tre.Images/util.js";
 import best_sorting from '../../../Tre.Libraries/Tre.Sort/ArraySortSystem.js';
+import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
 type AtlasImage = {
     slot: number;
     id: string;
@@ -28,19 +29,24 @@ interface result_json {
     res: string,
     resources: Array<AtlasImage>,
 }
-export default async function (dir = process.argv[2], width = 4096, height = 4096) {
+export default async function (dir: string, width: number, height: number, display_not_atlas_info: string = "Not AtlasInfo.json",
+    cannot_find_groups_array_in_atlasinfo: string = "Cannot find groups array in AtlasInfo.json", cannot_find_subgroup_in_atlas_info: string = "Cannot find subgroup in AtlasInfo.json",
+    cannot_find_method_in_atlas_info: string = "Cannot find method in AtlasInfo.json", cannot_get_res_data: string = "Cannot get res data",
+    not_found_res_indicated_in_subgroups = "Not found res data indicated in subgroup",
+    total_sprites_process_in_thiz_function: string = "Total sprites process:", thiz_selection_max_rects_bin_iz_smart: boolean = true, thiz_selection_max_rects_bin_iz_pot: boolean = false,
+    thiz_selection_max_rects_bin_iz_square: boolean = true, thiz_selection_max_rects_bin_can_be_rotation: boolean = false, thiz_selection_max_rects_bin_padding_size: number = 1) {
     const img_list = new Array();
-    const atlas_info = readjson(dir + "/AtlasInfo.json");
+    const atlas_info: any = readjson(dir + "/AtlasInfo.json");
     if (atlas_info.groups == undefined) {
-        TreErrorMessage({ error: "Not AtlasInfo.json", reason: "Cannot find groups array in AtlasInfo.json" }, "Cannot find groups array in AtlasInfo.json");
+        TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_groups_array_in_atlasinfo }, cannot_find_groups_array_in_atlasinfo);
         return 0;
     };
     if (atlas_info.subgroup == undefined) {
-        TreErrorMessage({ error: "Not AtlasInfo.json", reason: "Cannot find subgroup in AtlasInfo.json" }, "Cannot find subgroup in AtlasInfo.json");
+        TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_subgroup_in_atlas_info }, cannot_find_subgroup_in_atlas_info);
         return 0;
     };
     if (atlas_info.method == undefined) {
-        TreErrorMessage({ error: "Not AtlasInfo.json", reason: "Cannot find method in AtlasInfo.json" }, "Cannot find method in AtlasInfo.json");
+        TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_method_in_atlas_info }, cannot_find_method_in_atlas_info);
         return 0;
     };
     const selection = (atlas_info.method == 'path') ? 'extension' : 'id';
@@ -48,7 +54,7 @@ export default async function (dir = process.argv[2], width = 4096, height = 409
         atlas_info.groups[i].extension = atlas_info.groups[i].path[(atlas_info.groups[i].path.length - 1)];
     };
     for (let i in atlas_info.groups) {
-        const sprite_dimension = await dimension(dir + "/" + atlas_info.groups[i][selection] + ".png").finally((result: Promise<{}>) => {
+        const sprite_dimension = await dimension(dir + "/" + atlas_info.groups[i][selection] + ".png").finally((result: any) => {
             return result;
         });
         atlas_info.groups[i].x = (atlas_info.groups[i].x != undefined) ? atlas_info.groups[i].x : 0;
@@ -64,15 +70,15 @@ export default async function (dir = process.argv[2], width = 4096, height = 409
         })
     };
     const options = {
-        smart: true,
-        pot: false,
-        square: true,
-        allowRotation: false,
+        smart: thiz_selection_max_rects_bin_iz_smart,
+        pot: thiz_selection_max_rects_bin_iz_pot,
+        square: thiz_selection_max_rects_bin_iz_square,
+        allowRotation: thiz_selection_max_rects_bin_can_be_rotation,
     };
     const img_data = new Array();
-    let packer = new MaxRectsPacker(width, height, 1, options);
+    let packer = new MaxRectsPacker(width, height, thiz_selection_max_rects_bin_padding_size, options);
     packer.addArray(img_list);
-    packer.bins.forEach(bin => {
+    packer.bins.forEach((bin: any) => {
         img_data.push(bin.rects);
     });
     let res = "1536";
@@ -82,10 +88,10 @@ export default async function (dir = process.argv[2], width = 4096, height = 409
     else if (atlas_info.subgroup.indexOf('_640') != -1) { res = "640" }
     else if (atlas_info.subgroup.indexOf('_1200') != -1) { res = "1200" }
     else {
-        TreErrorMessage({ error: "Cannot get res data", reason: "Not found res data indicated in subgroup" }, "Not found res data indicated in subgroup");
+        TreErrorMessage({ error: cannot_get_res_data, reason: not_found_res_indicated_in_subgroups }, not_found_res_indicated_in_subgroups);
         return 0;
     };
-    let result_json: result_json = {
+    let result_json: any = {
         id: atlas_info.subgroup,
         type: "simple",
         parent: atlas_info.subgroup.replace('_1536', '').replace('_768', '').replace('_384', '').replace('_640', '').replace('_1200', ''),
@@ -105,8 +111,8 @@ export default async function (dir = process.argv[2], width = 4096, height = 409
             ],
             type: "Image",
             atlas: true,
-            width: parseInt(width),
-            height: parseInt(height),
+            width: parseInt(width.toString()),
+            height: parseInt(height.toString()),
         },)
         const child_array = new Array();
         for (let j in img_data[i]) {
@@ -138,6 +144,6 @@ export default async function (dir = process.argv[2], width = 4096, height = 409
         await cat(append_array[i], `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`, width, height);
     };
     writejson(dir + "/../" + atlas_info.subgroup + '.json', result_json);
-    console.log("Total sprites process: " + img_list.length);
+    console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function} ${img_list.length}`));
     return 0;
 }

@@ -2,7 +2,7 @@
 import { read_single_folder, readjson, writejson } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import path from 'node:path';
 
-interface SimpleData {
+export interface SimpleData {
     id: string;
     type: string;
     parent?: string;
@@ -11,7 +11,7 @@ interface SimpleData {
     subgroups?: any[];
 }
 
-interface MainData {
+export interface MainData {
     slot: number;
     id: string;
     path: string[];
@@ -29,11 +29,8 @@ interface MainData {
     subgroups?: any[],
 }
 
-export default function (dir = process.argv[2], mode: number, encode: any): number {
-    const result_from_read_dir = read_single_folder(dir);
-    const rsg_data: SimpleData[] = result_from_read_dir.map((val) => {
-        return readjson(dir + '/' + val);
-    });
+export default function (dir:string, mode: number, encode: any, res_array_for_data: any[], is_rewrite_mode: boolean = false): number {
+    const rsg_data: any[] = res_array_for_data;
     let slot_count = 0;
     const resources_output_result = { "version": 1, "slot_count": 0, "groups": [] };
     switch (mode) {
@@ -68,7 +65,7 @@ export default function (dir = process.argv[2], mode: number, encode: any): numb
                 }
                 debug_json.type = express_json.type;
                 express_json = debug_json;
-                let res_fix: MainData;
+                let res_fix: any;
                 if ((express_json.type == 'simple') && (express_json.parent != undefined) && (express_json.id != undefined) && (express_json.res != undefined)) {
                     for (let j = 0; j < express_json.resources.length; j++) {
                         const mainData = () => {
@@ -174,6 +171,11 @@ export default function (dir = process.argv[2], mode: number, encode: any): numb
     };
     resources_output_result.groups = rsg_data;
     resources_output_result.slot_count = slot_count;
-    writejson(`${dir}/../${path.parse(dir).name}.json`, resources_output_result);
+    if(!is_rewrite_mode){
+        writejson(`${dir}/../${path.parse(dir).name}.json`, resources_output_result);
+    }
+    else{
+        writejson(`${dir}/../${path.parse(dir).name}.rewrite.json`, resources_output_result);
+    }
     return 0;
 }
