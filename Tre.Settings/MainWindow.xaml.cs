@@ -7,6 +7,10 @@ using MahApps.Metro.IconPacks;
 using System.Net.NetworkInformation;
 using System.Windows.Media.Animation;
 using Tre.Settings.UserControls;
+using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace Tre.Settings
 {
@@ -21,6 +25,7 @@ namespace Tre.Settings
         private Pages.Settings_Page settingPage = new Pages.Settings_Page();
         private Pages.Introduce introducePage = new Pages.Introduce();
         private Pages.Language_Page languagePage = new Pages.Language_Page();
+
 
         private void UpdateTimeDisplay()
         {
@@ -130,18 +135,29 @@ namespace Tre.Settings
             }
         }
 
+        private Stack<UIElement> _pageStack = new Stack<UIElement>();
+
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
-            AnimateTransitionFoward(mainInterface);
-            container.Content = mainInterface;
-            backButton.Visibility = Visibility.Visible;
-            backButton.IsEnabled = false;
+            if (_pageStack.Count > 0)
+            {
+                UIElement previousPage = _pageStack.Pop();
+                AnimateTransitionFoward(previousPage);
+                container.Content = previousPage;
+
+                if (_pageStack.Count == 0)
+                {
+                    backButton.Visibility = Visibility.Visible;
+                    backButton.IsEnabled = false;
+                }
+            }
         }
 
         public void ExecutePage(AppPages page)
         {
             backButton.Visibility = Visibility.Visible;
             backButton.IsEnabled = true;
+            _pageStack.Push((UIElement)container.Content);
             switch (page)
             {
                 case AppPages.About:
@@ -172,11 +188,24 @@ namespace Tre.Settings
                 Duration = TimeSpan.FromMilliseconds(500),
                 From = new Thickness(container.ActualWidth, 0, -container.ActualWidth, 0),
                 To = new Thickness(0),
-                DecelerationRatio = 0.9
+                DecelerationRatio = 0.9,
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
             Storyboard.SetTarget(slideAnimation, container);
             Storyboard.SetTargetProperty(slideAnimation, new PropertyPath(MarginProperty));
             sb.Children.Add(slideAnimation);
+            var opacityAnimation = new DoubleAnimation
+            {
+                Duration = TimeSpan.FromMilliseconds(500),
+                From = 0,
+                To = 1,
+                DecelerationRatio = 0.9,
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            Storyboard.SetTarget(opacityAnimation, container);
+            Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+            sb.Children.Add(opacityAnimation);
+
             sb.Begin();
 
             container.Content = newContent;
@@ -184,20 +213,32 @@ namespace Tre.Settings
 
         private void AnimateTransitionFoward(UIElement newContent)
         {
+            container.Content = newContent;
             var sb = new Storyboard();
             var slideAnimation = new ThicknessAnimation
             {
                 Duration = TimeSpan.FromMilliseconds(500),
                 From = new Thickness(-container.ActualWidth, 0, container.ActualWidth, 0),
                 To = new Thickness(0),
-                DecelerationRatio = 0.9
+                DecelerationRatio = 0.9,
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
             Storyboard.SetTarget(slideAnimation, container);
             Storyboard.SetTargetProperty(slideAnimation, new PropertyPath(MarginProperty));
             sb.Children.Add(slideAnimation);
-            sb.Begin();
+            var opacityAnimation = new DoubleAnimation
+            {
+                Duration = TimeSpan.FromMilliseconds(500),
+                From = 0,
+                To = 1,
+                DecelerationRatio = 0.9,
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            Storyboard.SetTarget(opacityAnimation, container);
+            Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(OpacityProperty));
+            sb.Children.Add(opacityAnimation);
 
-            container.Content = newContent;
+            sb.Begin();
         }
     }
 }

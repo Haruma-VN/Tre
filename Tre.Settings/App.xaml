@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+
         <Style x:Key="backButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#ffffff"/>
@@ -15,10 +16,58 @@
                     <ControlTemplate TargetType="Button">
                         <Grid Width="48" Height="48" Background="{TemplateBinding Background}">
                             <Path x:Name="backArrow" 
-                Data="M20,12 L4,24 20,36" 
-                Fill="#ffffff" 
-                StrokeThickness="2"/>
+                          Data="M20,12 L4,24 20,36" 
+                          Fill="#ffffff" 
+                          StrokeThickness="2"/>
                         </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="backArrow" Property="Fill" Value="#CCCCCC"/>
+                                <Setter TargetName="backArrow" Property="Stroke" Value="#CCCCCC"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="backArrow" 
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0.5" 
+                                                     Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="backArrow" 
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="1.0" 
+                                                     Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="backArrow" 
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0.8" 
+                                                     Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="backArrow" 
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="1.0" 
+                                                     Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -31,7 +80,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
         <Style x:Key="pageTitle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#ffffff" />
             <Setter Property="Grid.Row" Value="1" />
@@ -43,14 +91,13 @@
             <Setter Property="Foreground" Value="#fbf9f6" />
             <Setter Property="FontSize" Value="20" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="FontFamily" Value="Sergio UI" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="TextAlignment" Value="Left" />
             <Setter Property="Margin" Value="0 10" />
         </Style>
-        
-        
+
         <Style x:Key="ToggleButton" TargetType="ToggleButton">
-            <Setter Property="Background" Value="#212121"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#fcf9f4"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Height" Value="30"/>
@@ -62,9 +109,9 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
                         <Grid>
-                            <Border x:Name="Border" Background="#2e2e2e" CornerRadius="10" Width="40" Height="20"
-            VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="1" BorderBrush="#f7f7f7"/>
-                            <Ellipse x:Name="Ellipse" Fill="#ffffff" Height="18" Width="18" Margin="1 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center"  StrokeThickness="2"/>
+                            <Border x:Name="Border" Opacity="0.8" Background="#2e2e2e" CornerRadius="10" Width="40" Height="20"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="1"   BorderBrush="#f7f7f7"/>
+                            <Ellipse x:Name="Ellipse" Fill="#ffffff" Height="18" Width="18" Margin="1 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" StrokeThickness="2"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
@@ -72,8 +119,8 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Border" 
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#666666" Duration="0:0:0.2"/>
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#666666" Duration="0:0:0.2"/>
                                             <ThicknessAnimation Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Margin" To="25 0 0 0" Duration="0:0:0.2" />
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -82,8 +129,8 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Border" 
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#212121" Duration="0:0:0.2"/>
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#2e2e2e" Duration="0:0:0.2"/>
                                             <ThicknessAnimation Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Margin" To="1 0 0 0" Duration="0:0:0.2" />
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -94,42 +141,80 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        <Style x:Key="SmoothButton" TargetType="Button">
-            <Setter Property="Background" Value="#212121"/>
-            <Setter Property="Foreground" Value="#fcf9f4"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="10 0 10 0"/>
-            <Setter Property="Padding" Value="10 0 10 0"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
+
+        <!--https://learn.microsoft.com/en-us/dotnet/desktop/wpf/controls/scrollbar-styles-and-templates?view=netframeworkdesktop-4.8-->
+        <Style x:Key="ScrollBarLineButton" TargetType="{x:Type RepeatButton}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Focusable" Value="False"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Border x:Name="Border" CornerRadius="5" Background="#212121"/>
-                            <ContentPresenter x:Name="ContentPresenter"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"/>
-                        </Grid>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border x:Name="Border"
+                Margin="1"
+                CornerRadius="4"
+                BorderThickness="1"
+                Background="#2e2e2e"
+                BorderBrush="#2e2e2e">
+                            <Path x:Name="Arrow"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="{Binding Content, 
+                        RelativeSource={RelativeSource TemplatedParent}}">
+                                <Path.Fill>
+                                    <SolidColorBrush Color="#ffffff"/>
+                                </Path.Fill>
+                            </Path>
+                        </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#808080"/>
                                 <Trigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Border"
-                                  Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                  To="#6077f7" Duration="0:0:0.2"/>
+                                  Storyboard.TargetProperty="BorderBrush.Color"
+                                  To="#808080"
+                                  Duration="0:0:0.2"/>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#808080"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="Border"
+                                  Storyboard.TargetProperty="Background.Color"
+                                  To="#808080"
+                                  Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#2e2e2e"/>
                                 <Trigger.ExitActions>
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ColorAnimation Storyboard.TargetName="Border"
-                                  Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                  To="#212121" Duration="0:0:0.2"/>
+                                  Storyboard.TargetProperty="BorderBrush.Color"
+                                  To="#2e2e2e"
+                                  Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#2e2e2e"/>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="Border"
+                                  Storyboard.TargetProperty="Background.Color"
+                                                To="#2e2e2e"
+                                                Duration="0:0:0.2"/>        
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </Trigger.ExitActions>
@@ -139,44 +224,61 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--https://learn.microsoft.com/en-us/dotnet/desktop/wpf/controls/scrollbar-styles-and-templates?view=netframeworkdesktop-4.8-->
-        <Style x:Key="ScrollBarLineButton" TargetType="{x:Type RepeatButton}">
-  <Setter Property="SnapsToDevicePixels" Value="True"/>
-  <Setter Property="OverridesDefaultStyle" Value="True"/>
-  <Setter Property="Focusable" Value="False"/>
-  <Setter Property="Template">
-    <Setter.Value>
-      <ControlTemplate TargetType="{x:Type RepeatButton}">
-        <Border x:Name="Border"
-                Margin="1"
-                CornerRadius="4"
-                BorderThickness="1"
-                Background="#2e2e2e"
-                BorderBrush="#2e2e2e">
-          <Path x:Name="Arrow"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Data="{Binding Content, 
-                        RelativeSource={RelativeSource TemplatedParent}}">
-            <Path.Fill>
-                                    <SolidColorBrush Color="#ffffff"/>
-            </Path.Fill>
-          </Path>
-        </Border>
-      </ControlTemplate>
-    </Setter.Value>
-  </Setter>
-</Style>
 
         <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="IsTabStop" Value="False" />
-            <Setter Property="Focusable" Value="False" />
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
-                        <Border Background="#2e2e2e" Opacity="0.3" CornerRadius="2" />
+                        <Border x:Name="Border"
+                Background="#2e2e2e"
+                Opacity="0.3"
+                CornerRadius="2">
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Opacity" Value="0.5"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Border"
+                                   Storyboard.TargetProperty="Opacity"
+                                   To="0.5"
+                                   Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Opacity" Value="1.0"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Border"
+                                   Storyboard.TargetProperty="Opacity"
+                                   To="1.0"
+                                   Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="False">
+                                <Setter TargetName="Border" Property="Opacity" Value="0.3"/>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Border"
+                                   Storyboard.TargetProperty="Opacity"
+                                   To="0.3"
+                                   Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -277,10 +379,55 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type RepeatButton}">
-                                <Border Background="Transparent"/>
+                                <Border x:Name="Border"
+                Background="#2e2e2e"
+                BorderThickness="1"
+                BorderBrush="#2e2e2e">
+                                </Border>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#808080"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation 
+                            Storyboard.TargetProperty="Background.Color"
+                            To="#808080"
+                            Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter  Property="BorderBrush" Value="#2e2e2e"/>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                           
+                            To="#2e2e2e"
+                            Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="False">
+                            <Setter Property="Background" Value="#2e2e2e"/>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                            
+                            To="#2e2e2e"
+                            Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
                 <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
                     <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -506,5 +653,14 @@
                 </GradientStopCollection>
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="LightColor" Color="#ffffff"/>
+        <SolidColorBrush x:Key="LightGrayColor" Color="#cecece"/>
+        <SolidColorBrush x:Key="DarkColor" Color="#2d2d2d"/>
+        <SolidColorBrush x:Key="DarkGrayColor" Color="#404040"/>
+        <SolidColorBrush x:Key="VeryDarkGray_NotCommonlyUse" Color="#272727"/>
+        <SolidColorBrush x:Key="VeryDarkGray_CommonlyUse" Color="#2e2e2e"/>
+        <SolidColorBrush x:Key="LightGrayishOrange" Color="#fcf9f4"/>
+        <SolidColorBrush x:Key="VeryDarkGray" Color="#272727"/>
     </Application.Resources>
 </Application>

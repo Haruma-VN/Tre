@@ -26,7 +26,7 @@
                                     <VisualState x:Name="MouseOver">
                                         <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#333"/>
+                                                <EasingColorKeyFrame KeyTime="0" Value="#2e2e2e"/>
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -39,7 +39,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
     </Window.Resources>
 
 
