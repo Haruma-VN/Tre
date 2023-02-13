@@ -1,5 +1,5 @@
 # Tre
-## _A PvZ2 Tool can do modding tasks. The goal is to make modding easier._
+## A PvZ2 Tool can do modding tasks. The goal is to make modding easier for people.
 
 
 Tre is a tool written in TypeScript and being converted to JavaScript to process in NodeJS. If you want to compile
