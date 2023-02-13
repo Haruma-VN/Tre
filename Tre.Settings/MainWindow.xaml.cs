@@ -6,6 +6,7 @@ using Tre.Settings.Pages;
 using MahApps.Metro.IconPacks;
 using System.Net.NetworkInformation;
 using System.Windows.Media.Animation;
+using Tre.Settings.UserControls;
 
 namespace Tre.Settings
 {
@@ -28,9 +29,9 @@ namespace Tre.Settings
             string dayOfWeek = currentTime.ToString("dddd");
             string date = currentTime.ToString("MMM, dd");
 
-            CurrentHourTextBlock.Text = hour;
-            CurrentDayInWeekTextBlock.Text = dayOfWeek;
-            CurrentDateTextBlock.Text = date;
+            //CurrentHourTextBlock.Text = hour;
+            //CurrentDayInWeekTextBlock.Text = dayOfWeek;
+            //CurrentDateTextBlock.Text = date;
         }
 
 
@@ -38,43 +39,48 @@ namespace Tre.Settings
         {
             UpdateTimeDisplay();
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMinutes(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            //timer = new DispatcherTimer();
+            //timer.Interval = TimeSpan.FromMinutes(1);
+            //timer.Tick += Timer_Tick;
+            //timer.Start();
         }
 
         private DispatcherTimer timer;
 
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            UpdateTimeDisplay();
-            UpdateWifiDisplay();
-        }
+        //private void Timer_Tick(object sender, EventArgs e)
+        //{
+        //    UpdateTimeDisplay();
+        //    UpdateWifiDisplay();
+        //}
 
         public MainWindow()
         {
             InitializeComponent();
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            //DispatcherTimer timer = new DispatcherTimer();
+            //timer.Interval = TimeSpan.FromSeconds(1);
+            //timer.Tick += Timer_Tick;
+            //timer.Start();
         }
 
-        private void UpdateWifiDisplay()
+        //private void UpdateWifiDisplay()
+        //{
+        //    bool isWifiEnabled = CheckWifiStatus();
+        //    if (isWifiEnabled)
+        //    {
+        //        CurrentWifiDisplayBlock.Kind = PackIconMaterialKind.Wifi;
+        //    }
+        //    else
+        //    {
+        //        CurrentWifiDisplayBlock.Kind = PackIconMaterialKind.WifiOff;
+        //    }
+        //}
+
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            bool isWifiEnabled = CheckWifiStatus();
-            if (isWifiEnabled)
-            {
-                CurrentWifiDisplayBlock.Kind = PackIconMaterialKind.Wifi;
-            }
-            else
-            {
-                CurrentWifiDisplayBlock.Kind = PackIconMaterialKind.WifiOff;
-            }
+            Application.Current.Shutdown();
         }
-
         private bool CheckWifiStatus()
         {
             try
@@ -128,34 +134,30 @@ namespace Tre.Settings
         {
             AnimateTransitionFoward(mainInterface);
             container.Content = mainInterface;
-            backButton.Visibility = Visibility.Collapsed;
-            titleText.Text = "Tre.Settings";
+            backButton.Visibility = Visibility.Visible;
+            backButton.IsEnabled = false;
         }
 
         public void ExecutePage(AppPages page)
         {
             backButton.Visibility = Visibility.Visible;
+            backButton.IsEnabled = true;
             switch (page)
             {
                 case AppPages.About:
                     AnimateTransitionBackWard(aboutPage);
-                    titleText.Text = "About";
                     break;
                 case AppPages.Settings:
                     AnimateTransitionBackWard(settingPage);
-                    titleText.Text = "Settings";
                     break;
                 case AppPages.Introduce:
                     AnimateTransitionBackWard(introducePage);
-                    titleText.Text = "Introduce";
                     break;
                 case AppPages.MainInterface:
                     AnimateTransitionBackWard(mainInterface);
-                    titleText.Text = "Tre.Settings";
                     break;
                 case AppPages.Language:
                     AnimateTransitionBackWard(languagePage);
-                    titleText.Text = "Language";
                     break;
                 default:
                     break;

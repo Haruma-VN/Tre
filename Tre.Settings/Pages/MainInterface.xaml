@@ -6,8 +6,8 @@
         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto" Padding="0 20" VerticalAlignment="Center"  Width="{Binding ElementName=grid, Path=ActualWidth}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <UserControls:Element Icon="Settings" Title="Settings" ElementClick="Element_Click_Setting"/>
-                <UserControls:Element Icon="BookOpen" Title="Language" ElementClick="Element_Click_Language"/>
-                <UserControls:Element Icon="HelpCircle" Title="Introduce" ElementClick="Element_Click_Help"/>
+                <UserControls:Element Icon="Earth" Title="Language" ElementClick="Element_Click_Language"/>
+                <UserControls:Element Icon="HelpCircle" Title="Help" ElementClick="Element_Click_Help"/>
                 <UserControls:Element Icon="Information" Title="About" ElementClick="Element_Click_About"/>
             </StackPanel>
         </ScrollViewer>

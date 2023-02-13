@@ -28,23 +28,37 @@
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background">
+                        <Setter Property="RenderTransform">
                             <Setter.Value>
-                                <LinearGradientBrush StartPoint="0.5, 0" Opacity="0.95" EndPoint="0.5, 1">
-                                    <GradientStop Color="#262626"/>
-                                    <GradientStop Color="#404040"/>
-                                </LinearGradientBrush>
+                                <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
                             </Setter.Value>
                         </Setter>
-                        <Setter Property="Foreground" Value="#cccccc"/>
-                        <Setter Property="Height" Value="330"/>
+                        <Setter Property="Opacity" Value="1.0"/>
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Height" From="300" To="330" Duration="0:0:0.2"/>
+                                    <ColorAnimation Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" From="#2e2e2e" To="#404040" Duration="0:0:0.2"/>
+                                    <ColorAnimation Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)" From="#e2e2e4" To="#cccccc" Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Height" From="330" To="300" Duration="0:0:0.2"/>
+                                    <ColorAnimation Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" From="#404040" To="#2e2e2e" Duration="0:0:0.2"/>
+                                    <ColorAnimation Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)" From="#cccccc" To="#e2e2e4" Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
                     </Trigger>
                     <DataTrigger Binding="{Binding ElementName=element, Path=IsActive}" Value="True">
                         <Setter Property="Background">
                             <Setter.Value>
                                 <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
                                     <GradientStop Color="#262626"/>
-                                    <GradientStop Color="#404040" />
+                                    <GradientStop Color="#2e2e2e" />
                                 </LinearGradientBrush>
                             </Setter.Value>
                         </Setter>
