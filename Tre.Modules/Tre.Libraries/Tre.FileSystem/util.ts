@@ -10,6 +10,7 @@ import read_dir from './ReadFolder/all/withdir.js';
 import read_no_dir from './ReadFolder/all/withdir.js';
 import outfile from './OutFile/outfile.js';
 import check_is_file from './CheckItems/check.js';
+import delete_file from "./DeleteFile/delete.js";
 export {
     readfile,
     readfilebuffer,
@@ -21,5 +22,6 @@ export {
     read_dir,
     read_no_dir,
     outfile,
+    delete_file,
     check_is_file,
 };

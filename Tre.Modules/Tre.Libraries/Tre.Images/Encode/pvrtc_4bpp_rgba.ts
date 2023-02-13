@@ -1,47 +1,29 @@
 "use strict";
 import fs from 'node:fs';
-import { exec } from 'node:child_process';
+import { execSync } from 'node:child_process';
 import { basename, extname, dirname } from '../../Tre.Basename/util.js';
 import { dimension } from '../util.js';
-export default async function (dir: string = process.argv[2], mode: number = 0): Promise<void> {
+import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
+export default async function (dir:string): Promise<void> {
     const tre_thirdparty: string = 'C:/Tre.Vietnam/Tre.Extension/Tre.ThirdParty/Raw/';
-    let image_dir: string = dirname(dir) + '/';
-    let image_name_ptx: string = basename(dir) + '.ptx';
-    let image_name: string = basename(dir) + ".pvr";
-    if (fs.existsSync(image_dir + image_name_ptx)) {
-        fs.unlinkSync(image_dir + image_name_ptx)
-    };
-    let pvrtc_bat: string = 'PVRTexToolCLI.exe -f PVRTCI_4BPP_RGBA,UBN,sRGB -q PVRTCFAST -i "' + dir + '" -o "' + image_name + '"\n';
-    switch (mode) {
-        case 0:
-            fs.writeFileSync(tre_thirdparty + 'pvrtc.bat', pvrtc_bat, { flag: 'w' });
-            break;
-        default:
-            fs.appendFileSync(tre_thirdparty + 'pvrtc.bat', pvrtc_bat, { flag: 'a' });
-    };
-    fs.appendFileSync(tre_thirdparty + 'pvrtc.bat', 'finish', { flag: 'a' });
-    const dimension_x: { width: number, height: number } = await dimension(dir).then((result: { width: number, height: number }) => result);
-    await exec('pvrtc.bat', { cwd: tre_thirdparty }, async (err, stdout, stderr) => {
-        if (stderr == stderr) {
-            let width: number = await dimension_x.width;
-            let height: number = await dimension_x.height;
-            let offset: number = width * height / 2;
-            let image_dir: string = dirname(dir) + '/';
-            let image_name: string = basename(dir);
-            let image_pvrtc: string = image_dir + image_name;
-            let pvrtc_raw: string = tre_thirdparty + image_name + '.pvr';
-            let originalImage: any = await fs.readFileSync(pvrtc_raw).slice(fs.readFileSync(pvrtc_raw).length - offset);
-            fs.writeFileSync(image_pvrtc + '.PTX', originalImage, { flag: 'w' });
-            fs.unlinkSync(pvrtc_raw);
-            let clear_temp = fs.readdirSync(tre_thirdparty);
-            for (let temp of clear_temp) {
-                let temp_ext = extname(temp).toUpperCase();
-                if (temp_ext != '.EXE') {
-                    await fs.unlinkSync(tre_thirdparty + temp);
-                };
-            }
-
-        }
-    });
+    const pvrtc_process: string = `PVRTexToolCLI.exe -f PVRTCI_4BPP_RGBA,UBN,sRGB -q PVRTCFAST -i "${dir}" -o "${basename(dir).toUpperCase()}.PVR"`;
+    const dimension_x: { width: number; height: number } = await dimension(dir).then((result) => result);
+    const width: number = dimension_x.width;
+    const height: number = dimension_x.height;
+    const offset: number = width * height / 2;
+    console.log("Encoding: " + basename(dir) + extname(dir));
+    console.log("Width: " + width);
+    console.log("Height: " + height);
+    try {
+        await execSync(pvrtc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
+    } catch (error:any) {
+        TreErrorMessage({ error: `Cannot encode ${dir}`, reason: "Unknown", system: error.toString() }, `Cannot encode ${dir}`);
+        return;
+    }
+    const originalImage = await fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.PVR`).slice(fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.PVR`).length - offset);
+    await fs.writeFileSync(`${dirname(dir)}/${basename(dir).toUpperCase()}.PTX`, originalImage);
+    for (let item of fs.readdirSync(tre_thirdparty)) {
+        extname(item).toUpperCase() != '.EXE' ? await fs.unlinkSync(`${tre_thirdparty}${item}`) : {};
+    }
     return;
 }

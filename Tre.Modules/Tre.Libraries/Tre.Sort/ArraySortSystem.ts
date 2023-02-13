@@ -4,41 +4,50 @@ interface ResObjectSortingItem {
     id: string;
 }
 
-export default function (array: ResObjectSortingItem[]): ResObjectSortingItem[] {
+export default function sortResObjects(array: ResObjectSortingItem[]): ResObjectSortingItem[] {
     try {
-        array.sort((a: ResObjectSortingItem, b: ResObjectSortingItem) => {
-            // check if null or undefined
+        array.sort((a, b) => {
             if (!a || !b || !a.id || !b.id) {
-                TreErrorMessage({ error: "Bug", Reason: "Both a and b must have defined and non-null values for the id property", system: "Both a and b must have defined and non-null values for the id property" }, "Both a and b must have defined and non-null values for the id property");
+                TreErrorMessage({
+                    error: "Bug",
+                    Reason: "Both a and b must have defined and non-null values for the id property",
+                    system: "Both a and b must have defined and non-null values for the id property"
+                }, "Both a and b must have defined and non-null values for the id property");
             }
 
-            const [aNum, aUnit] = (a.id.match(/\d+x\d+/i) || [null, null]);
-            const [bNum, bUnit] = (b.id.match(/\d+x\d+/i) || [null, null]);
+            const aMatch = a.id.match(/^TEST(\d+)_(\d+)x(\d+)$/i);
+            const bMatch = b.id.match(/^TEST(\d+)_(\d+)x(\d+)$/i);
 
-            if (!aNum && !bNum) {
+            if (!aMatch && !bMatch) {
                 return a.id.localeCompare(b.id);
-            } else if (!aNum) {
+            } else if (!aMatch) {
                 return -1;
-            } else if (!bNum) {
+            } else if (!bMatch) {
                 return 1;
             } else {
-                // Resources Sprites check!
-                const aNumVal = parseInt(aNum.split("x")[0], 10);
-                const bNumVal = parseInt(bNum.split("x")[0], 10);
-                if (isNaN(aNumVal) || isNaN(bNumVal)) {
-                    TreErrorMessage({ error: "Bug", Reason: "Both aNumVal and bNumVal must be parseable as numbers", system: "Both aNumVal and bNumVal must be parseable as numbers" }, "Both aNumVal and bNumVal must be parseable as numbers");
+                const aNum = parseInt(aMatch[1], 10);
+                const bNum = parseInt(bMatch[1], 10);
+                if (isNaN(aNum) || isNaN(bNum)) {
+                    TreErrorMessage({
+                        error: "Bug",
+                        Reason: "Both aNum and bNum must be parseable as numbers",
+                        system: "Both aNum and bNum must be parseable as numbers"
+                    }, "Both aNum and bNum must be parseable as numbers");
                 }
-                if (aNumVal !== bNumVal) {
-                    return aNumVal - bNumVal;
+                if (aNum !== bNum) {
+                    return aNum - bNum;
                 } else {
-                    return aNum.localeCompare(bNum);
+                    return a.id.localeCompare(b.id);
                 }
             }
         });
         return array;
     } catch (error: any) {
-        // Bug? 
-        TreErrorMessage({ error: "Bug", Reason: "Both aNumVal and bNumVal must be parseable as numbers", system: error.toString() }, error.toString());
+        TreErrorMessage({
+            error: "Bug",
+            Reason: "Unexpected error while sorting resources objects",
+            system: error.toString()
+        }, error.toString());
         return [];
     }
 }
