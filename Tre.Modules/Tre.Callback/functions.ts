@@ -3,7 +3,7 @@ import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, enc
 import { res_pack, res_split, res_rewrite, res_beautify } from '../../Tre.Modules/Tre.Scripts/PopCap/resources/util.js';
 import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo } from '../../Tre.Modules/Tre.Scripts/PopCap/atlas/util.js';
 import { TreErrorMessage } from '../../Tre.Modules/Tre.Debug/Tre.ErrorSystem.js';
-import { readjson, readfile, writefile, writejson, check_is_file, readfilebuffer, makefolder } from "../Tre.Libraries/Tre.FileSystem/util.js";
+import { readjson, readfile, writefile, writejson, check_is_file, readfilebuffer, makefolder, delete_file, read_dir, read_single_folder } from "../Tre.Libraries/Tre.FileSystem/util.js";
 import { Display } from './toolkit_functions.js';
 import { Argument } from "./toolkit_question.js";
 import { extname, basename } from '../Tre.Libraries/Tre.Basename/util.js';
@@ -11,11 +11,12 @@ import { Console } from "./console.js";
 import { atlasinfo_cat, atlasinfo_split } from "../../Tre.Modules/Tre.Scripts/Tre/AtlasInfo/util.js";
 import * as color from '../Tre.Libraries/Tre.Color/color.js';
 import extra_system from '../Tre.Libraries/Tre.Extra/outfile.js';
-import path from 'node:path';
+import path from "node:path";
 import { unpack_rsgp, pack_rsgp } from '../Tre.Scripts/PopCap/rsgp/util.js';
 import readline_for_json from "./Public/ReadLine/readline_for_json.js";
 import ban from "./Public/JSExecutor/ban.js";
 import applyPatch from "../../Tre.Modules/Tre.Libraries/Tre.JSONSystem/patch.js";
+import generatePatch from "../Tre.Libraries/Tre.JSONSystem/generate_patch.js";
 import * as ImagesUtilities from "../Tre.Libraries/Tre.Images/util.js";
 export interface configAtlas {
     display: {
@@ -98,6 +99,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_resources_to_atlasinfo);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_resources_beautify);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.tre_void_json_patch_work);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.tre_void_json_patch_generator);
                     break;
                 case ".png":
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_rgba8888);
@@ -197,7 +199,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     try {
                         if (!Array.isArray(execute_file_dir)) {
                             const js_shell_string_await_for_executor: string = (readfile(execute_file_dir));
-                            let javascript_shell_allow_this_funcction: boolean = ban(["eval", "exec", "spawn", "setTimeout", "console", "setInterval", "require", "import", "export", "fs", "class", "interface", "abstract", "delete", "with", "var", "readline", "JSON", "fetch"], js_shell_string_await_for_executor);
+                            let javascript_shell_allow_this_funcction: boolean = ban(["eval", "exec", "spawn", "setTimeout", "console", "setInterval", "require", "import", "export", "fs", "window", "interface", "abstract", "with", "var", "readline", "JSON", "fetch", "document"], js_shell_string_await_for_executor);
                             if (javascript_shell_allow_this_funcction) {
                                 await eval(js_shell_string_await_for_executor);
                             }
@@ -408,13 +410,23 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     if (!Array.isArray(execute_file_dir)) {
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.tre_void_json_patch_ask_drag_file}`));
                         let json_apply_path: string = readline_for_json(execute_file_dir);
-                        let apply_patch: { loop?: boolean, patch?: any[] } = readjson(execute_file_dir);
+                        let apply_patch: any = readjson(execute_file_dir);
                         apply_patch = (JSON.stringify(apply_patch) === "{}") ? { loop: false, patch: [] } : apply_patch;
                         if (apply_patch.loop != undefined && apply_patch.patch != undefined) {
                             const finish_apply_patch_json = await applyPatch(readjson(json_apply_path), apply_patch);
                             writejson(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`, finish_apply_patch_json);
                             Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_void_json_patch_finish_apply_patch}`));
                         }
+                    }
+                    break;
+                case Display.Tre.Function.tre_void_json_patch_generator.void_number_readline_argument():
+                    if (!Array.isArray(execute_file_dir)) {
+                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.tre_void_json_patch_generator_execution_received}`));
+                        Console.WriteLine(execute_file_dir);
+                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.tre_void_json_patch_generator_new_execution_generator}`));
+                        let json_new_file_compare_diff: string = readline_for_json(execute_file_dir);
+                        writejson(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`, generatePatch(readjson(execute_file_dir), readjson(json_new_file_compare_diff)));
+                        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_void_json_patch_finish_write_patch}`));
                     }
                     break;
                 case Display.Tre.Function.tre_void_real_esrgan_upscaler_bitmap_content.void_number_readline_argument():
@@ -437,7 +449,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         }
                         await ImagesUtilities.real_esrgan(execute_file_dir, upscale_model, upscale_data, `${execute_file_dir}/../${path.parse(execute_file_dir).name}_x${upscale_data}.png`);
                     }
-                    else if(!Array.isArray(execute_file_dir) && check_if_the_directories_iz_folder){
+                    else if (!Array.isArray(execute_file_dir) && check_if_the_directories_iz_folder) {
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.tre_void_upscaler_real_esrgan_upscale_model}`));
                         Console.WriteLine("     1.realesr-animevideov3");
                         Console.WriteLine("     2.realesrgan-x4plus-anime");
@@ -481,4 +493,7 @@ export {
     writefile,
     writejson,
     basename,
+    delete_file,
+    read_single_folder,
+    read_dir,
 }

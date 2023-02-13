@@ -82,6 +82,7 @@ export namespace Display.Tre.Function {
     export const popcap_game_json_pack = new Void("PopCap JSON Concat", 54);
     // finish
     export const tre_void_json_patch_work = new Void("JSON Patch", 55);
+    export const tre_void_json_patch_generator = new Void("JSON Patch Generate", 56)
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {
             Console.WriteLine(display_item_list.display());

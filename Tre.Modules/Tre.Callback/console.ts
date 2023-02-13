@@ -1,4 +1,5 @@
 "use strict";
+import * as color from '../Tre.Libraries/Tre.Color/color.js';
 import { readline_argument, readline_char, readline_integer, readline_size, readline_texture, readline_expand, readline_normal } from '../../Tre.Modules/Tre.Progress/Readline/util.js';
 export namespace Console {
     export function WriteLine(...params: any[]): void {
@@ -34,5 +35,13 @@ export namespace Console {
 
     export function CharReadLine(): string {
         return readline_char();
+    }
+
+    export function Notify(...params: any[]): void{
+        let text: string = "";
+        params.forEach((param) => {
+            text += param;
+        });
+        return Console.WriteLine(color.fgred_string(`${text}`));
     }
 }

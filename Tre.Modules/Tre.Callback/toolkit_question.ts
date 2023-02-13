@@ -42,7 +42,10 @@ export namespace Argument.Tre.Packages {
     export const popcap_game_rewrite_mode = "◉ Execution Argument: Rewrite Mode";
     export const popcap_res_to_atlasinfo_notify_atlas_info_method = "◉ Execution Argument: AtlasInfo method";
     export const tre_void_json_patch_ask_drag_file = "◉ Execution Argument: Drag JSON apply patch";
-    export const tre_void_json_patch_finish_apply_patch = "◉ Execution Finish: Finish applied patch";
+    export const tre_void_json_patch_finish_apply_patch = "◉ Execution Finish: Applied patch";
+    export const tre_void_json_patch_generator_execution_received = "◉ Execution Received: Old JSON";
+    export const tre_void_json_patch_generator_new_execution_generator = "◉ Execution Argument: New JSON";
+    export const tre_void_json_patch_finish_write_patch = "◉ Execution Finish: Generated patch";
     export const tre_void_upscaler_real_esrgan_upscale_model = "◉ Execution Argument: Real-ESRGAN Upscale Model";
     export const tre_void_upscaler_real_esrgan_upscale_ratio = "◉ Execution Argument: Real-ESRGAN Upscale Ratio";
 }
