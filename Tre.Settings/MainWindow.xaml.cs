@@ -1,6 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Tre.Settings.Pages;
+using MahApps.Metro.IconPacks;
+using System.Net.NetworkInformation;
 
 namespace Tre.Settings
 {
@@ -16,9 +20,80 @@ namespace Tre.Settings
         private Pages.Introduce introducePage = new Pages.Introduce();
         private Pages.Language_Page languagePage = new Pages.Language_Page();
 
+        private void UpdateTimeDisplay()
+        {
+            DateTime currentTime = DateTime.Now;
+            string hour = currentTime.ToString("hh:mm");
+            string dayOfWeek = currentTime.ToString("dddd");
+            string date = currentTime.ToString("MMM, dd");
+
+            CurrentHourTextBlock.Text = hour;
+            CurrentDayInWeekTextBlock.Text = dayOfWeek;
+            CurrentDateTextBlock.Text = date;
+        }
+
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateTimeDisplay();
+
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMinutes(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private DispatcherTimer timer;
+
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            UpdateTimeDisplay();
+            UpdateWifiDisplay();
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void UpdateWifiDisplay()
+        {
+            bool isWifiEnabled = CheckWifiStatus();
+            if (isWifiEnabled)
+            {
+                CurrentWifiDisplayBlock.Kind = PackIconMaterialKind.Wifi;
+            }
+            else
+            {
+                CurrentWifiDisplayBlock.Kind = PackIconMaterialKind.WifiOff;
+            }
+        }
+
+        private bool CheckWifiStatus()
+        {
+            try
+            {
+                NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface ni in interfaces)
+                {
+                    if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 &&
+                        ni.OperationalStatus == OperationalStatus.Up)
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error checking Wi-Fi status: " + ex.Message);
+            }
+
+            return false;
         }
 
         private bool IsMaximized = false;
