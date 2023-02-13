@@ -14,6 +14,7 @@ with launch.cmd
 - Split and Concat PopCap Atlas (require you to split PopCap Resources to get the json data)
 - Encode and Decode PopCap PTX (Currently support texture format 0, 30 and 147)
 - Unpack and Pack RSGP (PGSR, RSG,...)
+- Unpack and Pack RSB (PGSR, RSG,...)
 - Split and Concat PopCap JSON, can also Patch JSON and generate the patch for JSONs.
 
 ## Third Party
