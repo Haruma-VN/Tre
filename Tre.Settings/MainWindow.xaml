@@ -8,7 +8,11 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
-    <Border CornerRadius="5" MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseDown="Border_MouseDown">
+
+    <!---->
+
+
+    <Border CornerRadius="5" MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseDown="Border_MouseDown" >
         <Border.Background>
             <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5,1">
                 <GradientStop Color="#2e3967" />
@@ -24,13 +28,15 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 15 15 0">
-                <TextBlock Text="05:34" Foreground="#fdf9f6" FontSize="28" VerticalAlignment="Center"/>
+                <TextBlock Text="07:25" Foreground="#fdf9f6" FontSize="28" VerticalAlignment="Center"/>
                 <StackPanel Margin="13 0" VerticalAlignment="Center" >
                     <TextBlock Text="Feb, 13" Foreground="#f8fefa" FontSize="10" />
                     <TextBlock Text="Monday" Foreground="#f8fefa" FontSize="10" />
                 </StackPanel>
                 <!--<Icons:PackIconMaterial Kind="Wifi" Foreground="#fdf9f6" Width="25" Height="25" VerticalAlignment="Center"/>-->
             </StackPanel>
+
+            <!---->
 
             <Button x:Name="backButton" Click="backButton_Click" Style="{StaticResource backButton}">
                 <!--<Icons:PackIconMaterial Kind="ArrowLeft" Foreground="#fdf9f6" Width="25" Height="25" />-->
@@ -40,7 +46,7 @@
 
             <ContentPresenter x:Name="container" Grid.Row="2">
                 <ContentPresenter.Content>
-                    <Pages:About_Page/>
+                    <Pages:MainInterface/>
                 </ContentPresenter.Content>
             </ContentPresenter>
         </Grid>
