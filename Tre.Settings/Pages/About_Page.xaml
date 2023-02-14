@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uc="clr-namespace:Tre.Settings.Pages" >
     <Border CornerRadius="5" Padding="20 40" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxWidth="800"
-                Margin="50 0" Background="#282828" Opacity="0.9">
+        Margin="50 0" Background="#282828" Opacity="0.9">
         <Border.Style>
             <Style TargetType="Border">
                 <Setter Property="Background" Value="#282828"/>
@@ -15,6 +15,7 @@
                 </Style.Triggers>
             </Style>
         </Border.Style>
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -29,4 +30,5 @@
             </StackPanel>
         </Grid>
     </Border>
+
 </UserControl>
