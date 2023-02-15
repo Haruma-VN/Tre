@@ -70,5 +70,9 @@ tsc
 
 This tool using GNU License, which mean if you want to use Tre you are free to use if your program is the same LICENSE with Tre and open source code on GitHub.
 
+## Special thanks
+
+- [Nintendo](https://github.com/Nineteendo): Helping on the implement, grammars
+
 **Happy Modding!**
 
