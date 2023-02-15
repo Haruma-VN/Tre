@@ -66,7 +66,7 @@ tsc
 This tool is licensed under the GNU License. If you want to use Tre, you are free to do so as long as your program has the same license as Tre and its source code is open on GitHub.
 
 ## Acknowledgements
-Special thanks to [Nineteendo](https://github.com/Nineteendo) for their help with implementation and grammar.
+Special thanks to [Nineteendo](https://github.com/Nineteendo) for his help with implementation and grammar.
 
 **Happy Modding!**
 
