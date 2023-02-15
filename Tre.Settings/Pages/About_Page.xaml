@@ -21,10 +21,38 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 15 0">
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 0 15 0">
                 <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="Version: 3.0.0 Public" Style="{StaticResource aboutText}" />
-                <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="Copyright © Tre-VN 2023" Style="{StaticResource aboutText}" />
-                <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="GitHub: https://github.com/Tre-VN" Style="{StaticResource aboutText}" />
+                <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="Copyright © Tre-VN 2023 | GNU LICENSE" Style="{StaticResource aboutText}" />
+                <TextBlock FontFamily="Segoe UI" FontSize="18" FontWeight="Regular" TextAlignment="Center" >
+    <Hyperlink NavigateUri="https://github.com/Tre-VN" RequestNavigate="Hyperlink_RequestNavigate">
+    <Hyperlink.Style>
+        <Style TargetType="Hyperlink">
+            <Setter Property="Foreground" Value="Cyan"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="White" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="Cyan" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Hyperlink.Style>
+    <Run Text="https://github.com/Tre-VN" />
+</Hyperlink>
+                </TextBlock>
+
                 <Separator  Margin="0 10 0 0" Width="800" Background="#ffffff"/>
                 <TextBlock TextAlignment="Center" FontFamily="Segoe UI" Foreground="#fcf9f4" FontSize="18" FontWeight="Regular" Text="TypeScript, WPF, C# and NodeJS" Style="{StaticResource aboutText}" />
             </StackPanel>

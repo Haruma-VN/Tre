@@ -39,6 +39,25 @@ namespace Tre.Settings
             //CurrentDateTextBlock.Text = date;
         }
 
+        private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var button = (Button)sender;
+            var newColor = (Color)ColorConverter.ConvertFromString("#005A9E");
+            AnimateColorChange(button, newColor, TimeSpan.FromMilliseconds(100));
+        }
+
+        private void Button_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var button = (Button)sender;
+            var newColor = (Color)ColorConverter.ConvertFromString("#106EBE");
+            AnimateColorChange(button, newColor, TimeSpan.FromMilliseconds(100));
+        }
+
+        private void AnimateColorChange(Button button, Color newColor, TimeSpan duration)
+        {
+            var colorAnimation = new ColorAnimation(newColor, duration);
+            button.Background.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

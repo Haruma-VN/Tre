@@ -2,28 +2,26 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uc="clr-namespace:Tre.Settings.UserControls">
+    
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxWidth="800" Margin="50 0">
-        <uc:Settings Title="JSON Strict" HasText="True" IsChecked="False" />
-        <uc:Settings Title="Display File Path" HasText="True" IsChecked="True" />
-        <uc:Settings Title="Repair Duplicate" HasText="True" IsChecked="False" />
-        <uc:Settings Title="Notify Duplicate" HasText="True" IsChecked="True" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
-            <uc:Settings Title="Use Other Voids" HasText="True" IsChecked="False" />
+        
+        
+    <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" MaxWidth="800" Margin="50 0">
+            <StackPanel.RenderTransform>
+                <TransformGroup>
+                </TransformGroup>
+            </StackPanel.RenderTransform>
+            <StackPanel.Resources>
+                <Style TargetType="uc:Settings">
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                </Style>
+            </StackPanel.Resources>
+            <uc:Settings Title="Strict JSON" x:Name="StrictJSON" HasText="True" IsChecked="False" />
+            <uc:Settings Title="Display File Directory" x:Name="DisableDisplayFullPath" HasText="True" IsChecked="False" />
+            <uc:Settings Title="Repair Duplicate" x:Name="RepairDuplicator" HasText="True" IsChecked="False" />
+            <uc:Settings Title="Notify Duplicate" x:Name="NotifyDuplicator" HasText="True" IsChecked="False" />
+            <uc:Settings Title="Use Other Voids" x:Name="UseOtherJavaScriptVoids" HasText="True" IsChecked="False" />
+            <uc:UIButton Width="100" Height="40" Content="Apply!" Click="Apply_Change_For_JS_Shell" />
         </StackPanel>
         </ScrollViewer>
 </UserControl>
