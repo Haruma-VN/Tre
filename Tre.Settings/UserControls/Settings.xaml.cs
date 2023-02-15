@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Configuration;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Tre.Settings.UserControls
@@ -46,5 +47,12 @@ namespace Tre.Settings.UserControls
             set { SetValue(IsCheckedProperty, value); }
         }
         public static readonly DependencyProperty IsCheckedProperty = DependencyProperty.Register("IsChecked", typeof(bool), typeof(Settings));
+
+        public string NotifyInformation
+        {
+            get { return (string)GetValue(ContentInformationProperty); }
+            set { SetValue(ContentInformationProperty, value); }
+        }
+        public static readonly DependencyProperty ContentInformationProperty = DependencyProperty.Register("NotifyInformation", typeof(string), typeof(Settings));
     }
 }

@@ -6,7 +6,7 @@
         xmlns:settings="clr-namespace:Tre.Settings"
         Height="720" Width="1280" MinHeight="700" MinWidth="650" AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None" Background="Transparent"  >
+        WindowStyle="None" Background="Transparent" Title="Tre:Settings"  >
 
     <Window.Resources>
         <Style x:Key="ExitButtonStyle" TargetType="Button">
