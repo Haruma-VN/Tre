@@ -39,8 +39,9 @@ If you want a quick setup, we recommend that you check [Releases](https://github
 
 Please report all bugs related to Tre in the [GitHub Issues Page](https://github.com/Tre-VN/Tre/issues/).
 If you wish to communicate with the creator, you can contact me through Gmail or Discord.
-Discord: Haruma-VN#3635,
-Gmail: harumascaremath@gmail.com
+- Discord: Haruma-VN#3635
+- Gmail: harumascaremath@gmail.com
+- Discord server: https://discord.gg/fuJB2vxS
 
 ## Building Scripts
 
