@@ -238,9 +238,13 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     break;
                 case Display.Tre.Function.popcap_resources_cat.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe_fix}`);
                     let mode: number = Console.IntegerReadLine(1, 2);
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
-                    let encode: number = Console.IntegerReadLine(1, 2);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
+                    let encode: number = Console.IntegerReadLine(0, 1);
                     if (!Array.isArray(execute_file_dir)) {
                         res_pack(execute_file_dir, mode, encode);
                     }
@@ -310,15 +314,25 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     width = Console.SizeReadLine();
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
                     height = Console.SizeReadLine();
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_true}`);
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_smart_pack}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_true}`);
                     let atlas_cat_smart_option_area: number | boolean = Console.IntegerReadLine(0, 1);
                     atlas_cat_smart_option_area = (atlas_cat_smart_option_area === 1) ? true : false;
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_true}`);
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_pot}`));
                     let atlas_cat_pot_option_area: number | boolean = Console.IntegerReadLine(0, 1);
                     atlas_cat_pot_option_area = (atlas_cat_pot_option_area === 1) ? true : false;
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_true}`);
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_iz_square}`));
                     let atlas_cat_square_option_area_force: number | boolean = Console.IntegerReadLine(0, 1);
                     atlas_cat_square_option_area_force = (atlas_cat_square_option_area_force === 1) ? true : false;
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_true}`);
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_can_be_allow_for_rotation}`));
                     let atlas_cat_allow_rotation_option_area_force: number | boolean = Console.IntegerReadLine(0, 1);
                     atlas_cat_allow_rotation_option_area_force = (atlas_cat_allow_rotation_option_area_force === 1) ? true : false;
@@ -390,6 +404,8 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     break;
                 case Display.Tre.Function.popcap_texture_atlas_split.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.method_split_popcap_atlas_texture}`));
+                    Console.WriteLine((`${Argument.Tre.Packages.method_split_popcap_atlas_texture_with_path_extension}`));
+                    Console.WriteLine((`${Argument.Tre.Packages.method_split_popcap_atlas_texture_with_id_extension}`));
                     let atlas_split_method: any = Console.IntegerReadLine(1, 2);
                     if (Array.isArray(execute_file_dir)) {
                         await atlas_split(parseInt(atlas_split_method));
