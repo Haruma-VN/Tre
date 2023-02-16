@@ -15,13 +15,13 @@
     "jsonc-simple-parser": "^3.0.0",
     "maxrects-packer": "^2.7.3",
     "readline-sync": "^1.4.10",
-    "rijndael-js": "^2.0.0",
     "sharp": "^0.31.3",
     "smart-buffer": "^4.2.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
-    "@types/node": "^18.11.18",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.13.0",
     "@types/sharp": "^0.31.1"
   }
 }
