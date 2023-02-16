@@ -9,8 +9,8 @@ Tre is a modding tool for Plants vs. Zombies 2, written in TypeScript and being 
 
 - JS Execute: This function executes all JavaScript source code, and allows you to call Tre functions in the script.
 - Split and Concat PopCap Resources: Allows you to split and concatenate PopCap resources (RTON encoding is not currently supported).
-- Split and Concat PopCap Atlas: Requires you to split PopCap Resources to get the JSON data.
-- EEncode and Decode PopCap PTX: Currently supports texture formats 0, 30, and 147.
+- Split and Concat PopCap Atlas: Requires you to split PopCap Resources to get the JSON data. Can also pack very fast from 1536 directly to 768.
+- Encode and Decode PopCap PTX: Currently supports texture formats 0, 30, and 147.
 - Unpack and Pack RSGP (PGSR, RSG, etc.).
 - Unpack and Pack RSB (OBB, SMF, etc.).
 - Split and Concat PopCap JSON: Can also patch JSON and generate the patch for JSONs.
@@ -66,7 +66,9 @@ tsc
 This tool is licensed under the GNU License. If you want to use Tre, you are free to do so as long as your program has the same license as Tre and its source code is open on GitHub.
 
 ## Acknowledgements
-Special thanks to [Nineteendo](https://github.com/Nineteendo) for his help with implementation and grammar.
+- Special thanks to [TwinStar](https://github.com/twinkles-twinstar) for his tool, this tool was based on his tool.
+- Special thanks to [YingFengTingYu (迎风听雨)](https://github.com/YingFengTingYu) for his source code, many functions are based on his tool.
+- Special thanks to [Nineteendo](https://github.com/Nineteendo) for his help with implementation and grammar.
 
 **Happy Modding!**
 
