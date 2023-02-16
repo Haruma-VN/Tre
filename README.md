@@ -42,22 +42,22 @@ If you wish to communicate with the creator, you can contact me through Gmail or
 Discord: Haruma-VN#3635,
 Gmail: harumascaremath@gmail.com
 
-## Fixing Scripts
+## Building Scripts
 
 If you need to fix any scripts in Tre, you can install TypeScript using the following command:
 
 ```sh
-npm i -g typescript
+$npm i -g typescript
 ```
 Initialize the environment with the following command:
 
 ```sh
-tsc --init
+$tsc --init
 ```
 fter making changes, generate the JavaScript scripts with the following command:
 
 ```sh
-tsc
+$tsc
 ```
 
 
