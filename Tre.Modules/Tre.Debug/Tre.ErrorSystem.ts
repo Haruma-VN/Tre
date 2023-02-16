@@ -1,6 +1,7 @@
 'use strict';
 import fs from 'fs';
 import stringify from '../Tre.Libraries/Tre.JSONSystem/stringify.js';
+import localization from "../Tre.Callback/localization.js";
 function TreErrorSystem(error: {} | string): void {
     const dir = "C:/Tre.Vietnam/Tre.Debug/";
     const DateBug = new Date();
@@ -35,7 +36,7 @@ function TreErrorMessage(error: {}, message: string): void {
     else {
         fs.writeFileSync(dir + filename + '.json', stringify(error));
     }
-    return console.log('\x1b[31m' + message + '\x1b[0m');
+    return console.log('\x1b[31m' + localization("execution_failed") + + message + '\x1b[0m');
 }
 function MessageOnly(message) {
     return console.log('\x1b[31m' + message + '\x1b[0m');
