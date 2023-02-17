@@ -52,17 +52,17 @@ If you want to make changes to Tre scripts, you must first install TypeScript to
 ```sh
 $npm i -g typescript
 ```
-Initialize the environment with the following command:
+Then initialise the environment:
 
 ```sh
 $tsc --init
 ```
-fter making changes, generate the JavaScript scripts with the following command:
+And finally, generate the javascript code:
 
 ```sh
 $tsc
 ```
-
+The module for the compiler should be "ESNext" if you wish to launch Tre with launch.cmd. If you want to compile ".exe" you should change the compiler module to "commonjs"
 
 ## License
 
