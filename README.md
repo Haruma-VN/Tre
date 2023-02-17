@@ -73,7 +73,7 @@ This tool is licensed under the GNU License. If you want to use Tre, you are fre
 I would like to extend my special thanks to the following individuals for their contributions to this project:
 
 - [TwinStar](https://github.com/twinkles-twinstar) for his [TwinStar.ToolKit](https://github.com/twinkles-twinstar/TwinStar.ToolKit), which served as the basis for this tool.
-- [YingFengTingYu (迎风听雨)](https://github.com/YingFengTingYu) for his [PopStudio](https://github.com/YingFengTingYu/PopStudio), from which we adapted many functions.
+- [迎风听雨](https://github.com/YingFengTingYu) for his [PopStudio](https://github.com/YingFengTingYu/PopStudio), from which we adapted many functions.
 - [Nineteendo](https://github.com/Nineteendo) for his invaluable help with implementation and grammar.
 
 **Happy Modding!**
