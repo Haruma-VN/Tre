@@ -62,7 +62,8 @@ And finally, generate the javascript code:
 ```sh
 $tsc
 ```
-The module for the compiler should be "ESNext" if you wish to launch Tre with "launch.cmd". If you want to compile ".exe" you should change the compiler module to "commonjs"
+- If you want to run Tre with launch.cmd: use compiler mode "ESNext".
+- If you want to make an executable: use compiler mode "commonjs"
 
 ## License
 
