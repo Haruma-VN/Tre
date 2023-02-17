@@ -39,15 +39,15 @@ To use Tre, you need to have [Node.js](https://nodejs.org/) installed on your ma
 If you want a quick setup, we recommend that you check [Releases](https://github.com/Tre-VN/Tre/releases/) to download the full build from the assets.
 ## Reporting Bugs and Suggesting Features
 
-Please report all bugs related to Tre in the [GitHub Issues Page](https://github.com/Tre-VN/Tre/issues/).
-If you wish to communicate with the creator, you can contact me through Gmail or Discord.
-- Discord: Haruma-VN#3635
-- Gmail: harumascaremath@gmail.com
-- Discord server: https://discord.gg/fuJB2vxS
+Please report all bugs related to Tre on [GitHub Issues Page](https://github.com/Tre-VN/Tre/issues/).
+If you want to reach the creator, you can do so via
+- Gmail harumascaremath@gmail.com
+- Discord Haruma-VN#3635.
+- Discord server: https://discord.gg/fuJB2vxS 
 
 ## Building Scripts
 
-If you need to fix any scripts in Tre, you can install TypeScript using the following command:
+If you want to make changes to Tre scripts, you must first install TypeScript to your local machine with the following command:
 
 ```sh
 $npm i -g typescript
