@@ -45,7 +45,7 @@ If you want to reach the creator, you can do so via
 - Discord Haruma-VN#3635.
 - Discord server: https://discord.gg/fuJB2vxS 
 
-## Building Scripts
+## Building Tre
 
 If you want to make changes to Tre scripts, you must first install TypeScript to your local machine with the following command:
 
@@ -63,11 +63,15 @@ And finally, generate the javascript code:
 $tsc
 ```
 - If you want to run Tre with launch.cmd: use compiler mode "ESNext".
-- If you want to make an executable: use compiler mode "commonjs"
+- If you want to make an executable: use compiler mode "commonjs".
 
 ## License
 
-This tool is licensed under the GNU License. If you want to use Tre, you are free to do so as long as your program has the same license as Tre and its source code is open on GitHub.
+- Please note that this tool is licensed under the GNU License. If you want to use Tre, you are free to do so as long as your program has the same license as Tre and its source code is open on GitHub.
+
+- Any violation of the terms and conditions of the GNU License is against the rules. We do not condone or support any unauthorized use, modification, or distribution of this tool.
+
+- Therefore, all users of Tre comply with the terms of the GNU License and use the tool only in accordance with the license and usage guidelines. Thank you for your understanding and cooperation.
 
 ## Acknowledgements
 
