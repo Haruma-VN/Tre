@@ -1,7 +1,0 @@
-{
-	"native": "--windows-x86-x64",
-	"include": "node_modules",
-	"entry_point": "main.js",
-	"Transpiler": "JSX",
-	"fetch": true
-}
