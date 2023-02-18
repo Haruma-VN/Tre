@@ -1,0 +1,27 @@
+{
+    "json": {
+        "strict_mode": false
+    },
+    "display": {
+        "disable_display_full_path_execution": false
+    },
+    "user": {
+        "cpu_usage_for_images": 7
+    },
+    "atlas": {
+        "split": {
+            "repairDuplicateFolder": false,
+            "notify_duplicate": true
+        },
+        "max_rects_bin_pack_simple": {
+            "padding": 1
+        },
+        "cross_resolution": {
+            "allow_384": false
+        }
+    },
+    "extension": {
+        "use_other_voids": false
+    },
+    "language": "English"
+}

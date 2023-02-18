@@ -1,0 +1,10 @@
+{
+    "loop": true,
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/name",
+        "value": "Jack"
+      }
+    ]
+  }
