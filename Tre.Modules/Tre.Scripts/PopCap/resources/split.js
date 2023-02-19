@@ -3,8 +3,8 @@ import { readjson, writejson, makefolder } from '../../../Tre.Libraries/Tre.File
 import localization from '../../../Tre.Callback/localization.js';
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import path from 'node:path';
-export default async function (dir: string = process.argv[2]) {
-    const json: { groups?: { id: string }[] } = readjson(dir);
+export default async function (dir = process.argv[2]) {
+    const json = readjson(dir);
     const directories = path.parse(dir).name + '.res';
     if (json.groups != undefined) {
         await makefolder(dir + '/../' + directories);

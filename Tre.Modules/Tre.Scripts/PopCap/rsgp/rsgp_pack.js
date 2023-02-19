@@ -9,52 +9,57 @@ import zlib_beautify from '../../../Tre.Libraries/Tre.Buffer/zlib_beautify.js';
 import { encode_rgba8888, encode_argb8888, encode_etc1a, encode_pvrtc, dimension } from '../../../Tre.Libraries/Tre.Images/util.js';
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import localization from '../../../Tre.Callback/localization.js';
-export default async function (path_file: string, encode_image?: boolean, image_fmt?: number): Promise<any> {
-    let TreInfo: any = "";
-    if(fs.existsSync(`${path_file}/TreRSGPInfo.json`)){
+export default async function (path_file, encode_image, image_fmt) {
+    let TreInfo = "";
+    if (fs.existsSync(`${path_file}/TreRSGPInfo.json`)) {
         TreInfo = fs.readJsonSync(`${path_file}/TreRSGPInfo.json`);
     }
-    else{
-        TreErrorMessage({reason: localization("no_tre_info"), error: localization("error")}, localization("no_tre_info"));
+    else {
+        TreErrorMessage({ reason: localization("no_tre_info"), error: localization("error") }, localization("no_tre_info"));
     }
     let RsgpCompression = true;
     TreInfo.CompressionMethod !== true ? RsgpCompression = undefined : {};
     async function GetPath() {
         let rsgp_paths = new Array();
         async function getAllFiles() {
-            function getAllFilesDir(dir: string): Array<any> {
+            function getAllFilesDir(dir) {
                 const all_files = new Array();
                 fs.readdirSync(dir).forEach((file) => {
                     let fullPath = path.join(dir, file);
                     if (fs.lstatSync(fullPath).isDirectory()) {
                         all_files.push(getAllFilesDir(fullPath));
-                    } else if (file === 'TreRSGPInfo.json') { }
+                    }
+                    else if (file === 'TreRSGPInfo.json') { }
                     else {
                         all_files.push(fullPath);
                     }
                 });
                 return all_files.reduce((a, b) => a.concat(b), new Array()).sort();
-            };
+            }
+            ;
             const item_paths = await [...[""], ...getAllFilesDir(`${path_file}/Res`)];
             item_paths.forEach((item, index) => {
                 item_paths[index] = item.slice(item.indexOf('Res') + 4).toUpperCase();
             });
             return item_paths;
-        };
-        function getAllFilesinJson(res: Array<any>): any {
+        }
+        ;
+        function getAllFilesinJson(res) {
             let all_files = new Array();
             res.forEach(path => {
                 all_files.push(path.Path.join('\\').toUpperCase());
             });
             return [...[""], ...all_files].sort();
-        };
+        }
+        ;
         await fs.existsSync(`${path_file}/TreRSGPInfo.json`) && TreInfo.UseTreRSGPInfo === true ? rsgp_paths = await getAllFilesinJson(TreInfo.Res) : rsgp_paths = await getAllFiles();
         return rsgp_paths;
-    };
-    async function Pack_RSGP(key_count: number, pos: number, folder_length: number, atlas_space: number, pos_2: number, offset_file: number, id: number, Width: number, Height: number, info_size: number, compression_flag: number, image_offset_size: number, ptx_length: number): Promise<void> {
-        let info_paths: Array<any> = await GetPath();
-        let ptx_image: string = "";
-        async function Encode(format: number): Promise<void> {
+    }
+    ;
+    async function Pack_RSGP(key_count, pos, folder_length, atlas_space, pos_2, offset_file, id, Width, Height, info_size, compression_flag, image_offset_size, ptx_length) {
+        let info_paths = await GetPath();
+        let ptx_image = "";
+        async function Encode(format) {
             for (let i = 0; i < info_paths.length; i++) {
                 if (path.parse(info_paths[i]).ext.toUpperCase() === '.PNG') {
                     switch (format) {
@@ -76,17 +81,19 @@ export default async function (path_file: string, encode_image?: boolean, image_
                             break;
                         default:
                             break;
-                    };
+                    }
+                    ;
                     ptx_image = info_paths[i].toUpperCase().replaceAll('.PNG', '.PTX');
                     for (let k = 0; k < info_paths.length; k++) {
-                        info_paths[k] === ptx_image ? info_paths.splice(i, 1) : {}
+                        info_paths[k] === ptx_image ? info_paths.splice(i, 1) : {};
                     }
                 }
             }
             return;
-        };
+        }
+        ;
         encode_image == true && TreInfo.UseTreRSGPInfo !== true ? await Encode((image_fmt) ? image_fmt : 150) : {};
-        let info_array: Array<any> = new Array();
+        let info_array = new Array();
         let rsgp_info = SmartBuffer.fromBuffer(Buffer.alloc(64000));
         let data = SmartBuffer.fromBuffer(Buffer.alloc(32000));
         let ptx_compression = "";
@@ -94,18 +101,20 @@ export default async function (path_file: string, encode_image?: boolean, image_
             atlas_space = 5;
             image_offset_size = 16;
             ptx_length = 4096;
-        };
+        }
+        ;
         for (let i = 0; i < info_paths.length - 1; i++) {
-            let info_temp: any = new Object();
+            let info_temp = new Object();
             const folder_1 = info_paths[i];
             const folder_2 = info_paths[i + 1];
-            let packet = SmartBuffer.fromOptions({ size: folder_2.length })
-            packet.writeString(folder_2 + ' ')
+            let packet = SmartBuffer.fromOptions({ size: folder_2.length });
+            packet.writeString(folder_2 + ' ');
             for (let k = 1; k < folder_2.length * 4; k = k + 4) {
                 packet.insertBuffer(Buffer.alloc(3), k);
-            };
+            }
+            ;
             info_temp.temp = packet;
-            folder_1.length > folder_2.length ? folder_length = folder_1.length : folder_length = folder_2.length
+            folder_1.length > folder_2.length ? folder_length = folder_1.length : folder_length = folder_2.length;
             for (let j = 0; j < folder_length; j++) {
                 if (folder_1[j] !== folder_2[j]) {
                     info_temp.key = j;
@@ -123,7 +132,8 @@ export default async function (path_file: string, encode_image?: boolean, image_
                     break;
                 }
             }
-        };
+        }
+        ;
         for (let h = 0; h < info_paths.length - 1; h++) {
             const folder_1 = info_paths[h];
             const folder_2 = info_paths[h + 1];
@@ -143,7 +153,8 @@ export default async function (path_file: string, encode_image?: boolean, image_
                                     id = res.PTXInfo.Id;
                                     Width = res.PTXInfo.Width;
                                     Height = res.PTXInfo.Height;
-                                };
+                                }
+                                ;
                             });
                         }
                         else if (encode_image == true) {
@@ -162,16 +173,18 @@ export default async function (path_file: string, encode_image?: boolean, image_
                         rsgp_info.writeInt32LE(id, pos_2 - 20);
                         rsgp_info.writeInt32LE(Width, pos_2 - 8);
                         rsgp_info.writeInt32LE(Height, pos_2 - 4);
-                        id++
+                        id++;
                     }
                     offset_file += file_data.length;
                     break;
                 }
             }
-        };
+        }
+        ;
         while (info_size < pos_2) {
             info_size += 4096;
-        };
+        }
+        ;
         let rsgp_header_info = SmartBuffer.fromBuffer(Buffer.alloc(info_size));
         let rsgp_filedata = data.toBuffer();
         if (RsgpCompression == true) {
@@ -179,12 +192,13 @@ export default async function (path_file: string, encode_image?: boolean, image_
             compression_flag = 3;
             if (ptx_length === 4096) {
                 ptx_compression = SmartBuffer.fromBuffer(Buffer.alloc(ptx_length));
-                ptx_compression.writeBuffer(Buffer.from('78DA030000000001000000', 'hex'), 0)
+                ptx_compression.writeBuffer(Buffer.from('78DA030000000001000000', 'hex'), 0);
                 rsgp_header_info.writeInt32LE(ptx_compression.length, 28);
                 rsgp_header_info.writeInt32LE(info_size + ptx_length, 40);
                 rsgp_header_info.writeBuffer(ptx_compression.toBuffer(), info_size);
             }
-        };
+        }
+        ;
         const zlib_beautify_buffer_memory = Buffer.alloc((zlib_beautify(rsgp_filedata.length)).byteLength - rsgp_filedata.length);
         rsgp_filedata = Buffer.concat([rsgp_filedata, zlib_beautify_buffer_memory]);
         rsgp_header_info.writeString('pgsr', 0);
@@ -200,6 +214,7 @@ export default async function (path_file: string, encode_image?: boolean, image_
         rsgp_header_info.writeBuffer(rsgp_filedata, info_size + ptx_length);
         RsgpCompression == true && ptx_length === 4096 ? {} : rsgp_header_info.writeInt32LE(rsgp_header_info.length, 40);
         return rsgp_header_info.toBuffer();
-    };
+    }
+    ;
     return await Pack_RSGP(0, 0, 0, 0, 0, 0, 0, 0, 0, 4096, 1, 0, 0);
 }

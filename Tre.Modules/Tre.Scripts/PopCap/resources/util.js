@@ -5,39 +5,29 @@ import { read_single_folder, readjson, writejson } from '../../../Tre.Libraries/
 import sortResObjects from "../../../Tre.Libraries/Tre.Sort/ArraySortSystem.js";
 import LocalResourcesCompare from './compare/local.js';
 import path from 'path';
-export {
-    res_split,
-    LocalResourcesCompare,
-}
-export interface ResDataConstructor {
-    type?: string;
-    id?: string;
-    res?: string;
-    parent?: string;
-    resources?: any[]
-}
-export function res_pack(dir: string, mode: number, encode: number): void {
+export { res_split, LocalResourcesCompare, };
+export function res_pack(dir, mode, encode) {
     const res_data_in_subgroups_folder = read_single_folder(dir);
-    const res_groups: any[] = res_data_in_subgroups_folder.map((file: string) => {
+    const res_groups = res_data_in_subgroups_folder.map((file) => {
         return readjson(`${dir}/${file}`);
     });
     pack(dir, mode, encode, res_groups);
     return;
 }
-export function res_rewrite(dir: string, mode: number, encode: number): void {
-    const res_data: any = readjson(dir);
-    const res_groups: any[] = res_data.groups.map((res: {}) => {
+export function res_rewrite(dir, mode, encode) {
+    const res_data = readjson(dir);
+    const res_groups = res_data.groups.map((res) => {
         return res;
     });
     pack(dir, mode, encode, res_groups, true);
     return;
 }
-export function res_beautify(dir: string): void {
-    const json: ResDataConstructor = readjson(dir);
+export function res_beautify(dir) {
+    const json = readjson(dir);
     // split parent
-    const parentArray: any = new Array();
+    const parentArray = new Array();
     if (json.resources != undefined && json.resources != null && json.resources != void 0) {
-        for (let i: number = 0; i < json.resources.length; ++i) {
+        for (let i = 0; i < json.resources.length; ++i) {
             if (json.resources[i].atlas) {
                 parentArray.push([json.resources[i]]);
             }
@@ -45,8 +35,8 @@ export function res_beautify(dir: string): void {
                 continue;
             }
         }
-        for (let i: number = 0; i < json.resources.length; i++) {
-            for (let j: number = 0; j < parentArray.length; j++) {
+        for (let i = 0; i < json.resources.length; i++) {
+            for (let j = 0; j < parentArray.length; j++) {
                 if (json.resources[i].parent) {
                     if (json.resources[i].parent === parentArray[j][0].id) {
                         parentArray[j].push(json.resources[i]);
@@ -55,15 +45,23 @@ export function res_beautify(dir: string): void {
             }
         }
     }
-    for(let i: number = 0; i < parentArray.length; i++){
+    for (let i = 0; i < parentArray.length; i++) {
         parentArray[i] = sortResObjects(parentArray[i]);
     }
-    const resources_output_result: any[] = [].concat(...parentArray);
+    const resources_output_result = [].concat(...parentArray);
     json.resources = resources_output_result;
     return writejson(`${dir}/../${path.parse(dir).name}.fixed.json`, json);
 }
 export default class {
-    constructor(public dir: string, public encode: number, public mode: number, public data: any[]) {
+    dir;
+    encode;
+    mode;
+    data;
+    constructor(dir, encode, mode, data) {
+        this.dir = dir;
+        this.encode = encode;
+        this.mode = mode;
+        this.data = data;
     }
     ResPack() {
         pack(this.dir, this.mode, this.encode, this.data);
