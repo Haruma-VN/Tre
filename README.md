@@ -32,6 +32,7 @@ Tre currently uses the following third-party libraries:
 | PVRTexTool-Cli | https://developer.imaginationtech.com/pvrtextool/ |
 | Real_Esrgan | https://github.com/xinntao/Real-ESRGAN/ |
 | cross-path-sort | https://www.npmjs.com/package/cross-path-sort |
+| stream-slice | https://github.com/yorkie/stream-slice |
 ## Installation
 
 To use Tre, you need to have [Node.js](https://nodejs.org/) installed on your machine. If you want to compile Tre from TypeScript source code, you can install TypeScript as well. To run Tre, use the launch.cmd script after setting up the environment in "C/Tre.Vietnam/".
