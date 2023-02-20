@@ -31,7 +31,6 @@ Tre currently uses the following third-party libraries:
 | etcpak | https://github.com/wolfpld/etcpak |
 | PVRTexTool-Cli | https://developer.imaginationtech.com/pvrtextool/ |
 | Real_Esrgan | https://github.com/xinntao/Real-ESRGAN/ |
-| Real_Esrgan | https://github.com/xinntao/Real-ESRGAN/ |
 | cross-path-sort | https://www.npmjs.com/package/cross-path-sort |
 ## Installation
 
