@@ -3,24 +3,34 @@ import fs from 'node:fs';
 import { execSync } from 'node:child_process';
 import { parse } from "node:path";
 import sharp from 'sharp';
-export default async function (dir:string, width:number, height:number) {
-    console.log("Decoding: " + parse(dir).base);
-    console.log("Width: " + width);
-    console.log("Height: " + height);
-    const tre_thirdparty:string = 'C:/Tre.Vietnam/Tre.Extension/Tre.ThirdParty/Raw/';
-    let cmd:string = `etcpak.exe --etc1 -v "${parse(dir).base}" "${parse(dir).name.toUpperCase()}.PNG"`;
-    var pvr_header:Buffer = Buffer.from('505652030000000006000000000000000000000000000000BBBBBBBBAAAAAAAA0100000001000000010000000100000000000000', 'hex');
+import * as color from "../../Tre.Color/color.js";
+import { basename, extname } from '../../Tre.Basename/util.js';
+import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
+import localization from '../../../Tre.Callback/localization.js';
+import path from "node:path";
+export default async function (dir: string, width: number, height: number): Promise<void> {
+    console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
+    console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
+    console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+    const tre_thirdparty = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
+    let cmd = `etcpak.exe --etc1 -v "${parse(dir).base}" "${parse(dir).name.toUpperCase()}.png"`;
+    let pvr_header: any = Buffer.from('505652030000000006000000000000000000000000000000BBBBBBBBAAAAAAAA0100000001000000010000000100000000000000', 'hex');
     pvr_header.writeInt32LE('0x' + width.toString(16), 28);
     pvr_header.writeInt32LE('0x' + height.toString(16), 24);
     const originalImage = Buffer.concat([pvr_header, fs.readFileSync(dir)]);
-    await fs.writeFileSync(`${tre_thirdparty}${parse(dir).base}`, originalImage);
-    await execSync(cmd, { cwd: tre_thirdparty, stdio: 'ignore' });
-    await sharp(`${tre_thirdparty}${parse(dir).name.toUpperCase()}.PNG`).removeAlpha().toBuffer().then(async slice_alpha => {
-        await sharp(fs.readFileSync(dir).slice(width * height / 2), { raw: { width: width, height: height, channels: 1 } }).png().toBuffer().then(async alpha => {
-            await sharp(slice_alpha).joinChannel(alpha).toFile(`${parse(dir).dir}/${parse(dir).name.toUpperCase()}.PNG`);
+    fs.writeFileSync(`${tre_thirdparty}${parse(dir).base}`, originalImage);
+    execSync(cmd, { cwd: tre_thirdparty, stdio: 'ignore' });
+    await sharp(`${tre_thirdparty}${parse(dir).name.toUpperCase()}.png`).removeAlpha().toBuffer().then(async (slice_alpha) => {
+        await sharp(fs.readFileSync(dir).slice(width * height / 2), { raw: { width: width, height: height, channels: 1 } }).png().toBuffer().then(async (alpha) => {
+            await sharp(slice_alpha).joinChannel(alpha).toBuffer().then(buffer => {
+                console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(`${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`)}`);
+                fs.writeFileSync(`${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`, buffer)
+            });
             for (let item of fs.readdirSync(tre_thirdparty)) {
-                await parse(item).ext.toUpperCase() != '.EXE' ? fs.unlinkSync(`${tre_thirdparty}${item}`) : {};
+                parse(item).ext.toUpperCase() != '.EXE' ? fs.unlinkSync(`${tre_thirdparty}${item}`) : {};
             }
+        }).catch((error: any) => {
+            TreErrorMessage({ error: localization("unknown"), reason: localization("popcap_ptx_decode_native_error"), system: error.toString() }, localization("popcap_ptx_decode_native_error"));
         });
     });
 };

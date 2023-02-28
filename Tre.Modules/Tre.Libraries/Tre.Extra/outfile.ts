@@ -4,6 +4,8 @@ import { Extra } from "./extra_script.js";
 import path from "node:path";
 import zlib from "node:zlib";
 import fs from "node:fs";
+import localization from "../../Tre.Callback/localization.js";
+import * as color from "../Tre.Color/color.js";
 export default function (dir: string | string[], is_folder_check: boolean = false, method: string, key?: string, iv?: any, mode?: any, padding?: any): void {
     if (key) {
         key = key;
@@ -16,7 +18,7 @@ export default function (dir: string | string[], is_folder_check: boolean = fals
         const extra = new Extra.Tre.System.Encrypt(message, key)
         switch (method) {
             case "md5":
-                writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.MD5Hash());
+                writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.MD5Hash()); 
                 break;
             case "sha1":
                 writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.Sha1Hash());
@@ -73,16 +75,19 @@ export default function (dir: string | string[], is_folder_check: boolean = fals
     }
     if (!is_folder_check) {
         if (typeof dir === "string") {
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`)}`);
             ExtraCompression(dir);
         }
         else {
-            dir.forEach((file) => {
+            (dir).forEach((file) => {
+                console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(file).name}${path.parse(file).ext}.bin`)}`);
                 ExtraCompression(file);
             })
         }
     }
     else {
-        if (dir === "string") {
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}`)}`);
+        if (typeof dir === "string") {
             read_dir(dir).forEach(async (file_directory: string) => {
                 await ExtraCompression(file_directory);
             })

@@ -2,6 +2,9 @@
 import path from "path";
 import { readjson, writejson, makefolder, check_is_file, read_dir } from "../../../Tre.Libraries/Tre.FileSystem/util.js";
 import { Console } from "../../../Tre.Callback/console.js";
+import localization from "../../../Tre.Callback/localization.js";
+import * as color from "../../../Tre.Libraries/Tre.Color/color.js";
+
 namespace PopCapPackages.Json {
 
     export interface PopCapCommonJSON {
@@ -29,6 +32,7 @@ namespace PopCapPackages.Json {
         const directory_contain_popcap_splitable_data: string = `${popcap_common_json_file_location}/../${path.parse(popcap_common_json_file_location).name}.pgj`;
         if (popcap_common_json.objects != undefined) {
             makefolder(directory_contain_popcap_splitable_data);
+            Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(directory_contain_popcap_splitable_data)}`);
             for (let i: number = 0; i < popcap_common_json.objects.length; i++) {
                 switch (popcap_split_method_selector) {
                     case 1:
@@ -76,6 +80,7 @@ namespace PopCapPackages.Json {
 
     export function CatToFile(popcap_common_directory_file_location: string): void {
         const create_popcap_common_json_object = PopCapPackages.Json.Cat(popcap_common_directory_file_location) as PopCapCommonJSON;
+        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.json`)}`);
         return writejson(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.json`, create_popcap_common_json_object)
     }
 

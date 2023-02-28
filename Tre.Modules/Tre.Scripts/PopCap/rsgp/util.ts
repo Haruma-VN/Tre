@@ -8,10 +8,8 @@ import { read_dir, readjson } from '../../../Tre.Libraries/Tre.FileSystem/util.j
 import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
 import { readline_integer } from '../../../../Tre.Modules/Tre.Progress/Readline/util.js';
 import localization from "../../../Tre.Callback/localization.js";
-export async function unpack_rsgp(dir: string, arg: number): Promise<void> {
-    const rsgp_array = await unpack(dir, arg);
-    const output_directory_folder_tre_info = `${dir}/../${path.parse(dir).name}.rsg`
-    await writejson(`${output_directory_folder_tre_info}/TreRSGPInfo.json`, rsgp_array.Treinfo);
+export function unpack_rsgp(rsgp_data: any, rsgp_path: string, decode_image: boolean, decode_rton: boolean, removeinfo: boolean): void {
+    unpack(rsgp_data, rsgp_path, decode_image, decode_rton, removeinfo);
     return;
 }
 export async function pack_rsgp(dir: string) {

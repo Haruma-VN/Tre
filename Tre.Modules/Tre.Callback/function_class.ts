@@ -1,6 +1,7 @@
 "use strict";
 export default class Void {
     constructor(private name: string, private void_number: number) { }
+    
     //#region Class Display
     public display(): string {
         switch (this.void_number.toString().length) {
@@ -23,9 +24,15 @@ export default class Void {
     public void_number_readline_argument(): number {
         return this.void_number;
     }
-    public change_void_display_number(new_void_display_number: number){
+
+    public change_void_display_number(new_void_display_number: number): void {
         this.void_number = new_void_display_number;
     }
+
+    public display_text_only(): string {
+        return this.name;
+    }
+
     protected error_void_display(error: string) {
         return console.log(`${error}`);
     }

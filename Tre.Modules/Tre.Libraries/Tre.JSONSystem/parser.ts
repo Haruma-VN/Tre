@@ -8,7 +8,7 @@ export interface json_config {
 }
 import JSONC from 'jsonc-simple-parser';
 export default function (data: string | {}): {} {
-  const json_config: json_config = JSONC.parse(fs.readFileSync("C:/Tre.Vietnam/Tre.Extension/Tre.Settings/toolkit.json", { encoding: "utf-8", flag: "r" }));
+  const json_config: json_config = JSONC.parse(fs.readFileSync(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", { encoding: "utf-8", flag: "r" }));
   if (typeof data === 'object') {
     return data;
   }
@@ -19,21 +19,24 @@ export default function (data: string | {}): {} {
         return jsonData;
       } catch (error: any) {
         if (error instanceof SyntaxError) {
-          let position = error.message.match(/\d+/g)[0];
-          let lines = data.split('\n');
-          let lineNumber = 1;
-          let currentPosition = 0;
-          for (let line of lines) {
-            if (currentPosition + line.length >= position) {
-              if (line.match(/,\s*[\]\}]/)) {
-                TreErrorMessage({ system: `Trailing comma at line ${lineNumber}: ${line.trim()}` }, `Trailing comma at line ${lineNumber}: ${line.trim()}`);
+          if (error.message != null) {
+            let position = error.message.match(/\d+/g)[0];
+            let lines = data.split('\n');
+            let lineNumber = 1;
+            let currentPosition = 0;
+            for (let line of lines) {
+              if (currentPosition + line.length >= position) {
+                if (line.match(/,\s*[\]\}]/)) {
+                  TreErrorMessage({ system: `Trailing comma at line ${lineNumber}: ${line.trim()}` }, `Trailing comma at line ${lineNumber}: ${line.trim()}`);
+                }
+                break;
               }
-              break;
+              currentPosition += line.length + 1;
+              lineNumber++;
             }
-            currentPosition += line.length + 1;
-            lineNumber++;
+            TreErrorMessage({ system: error.message.toString() }, `SyntaxError: Unexpected token } in JSON at line ${lineNumber}: ${lines[lineNumber - 1]}`);
+
           }
-          TreErrorMessage({ system: error.message.toString() }, `SyntaxError: Unexpected token } in JSON at line ${lineNumber}: ${lines[lineNumber - 1]}`);
         } else if (error instanceof TypeError) {
           TreErrorMessage({ system: `TypeError: The JSON data is not a string` }, `TypeError: The JSON data is not a string`);
         } else if (error instanceof URIError) {

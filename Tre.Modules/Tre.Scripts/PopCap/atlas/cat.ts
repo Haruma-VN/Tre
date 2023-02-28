@@ -5,7 +5,10 @@ import { TreErrorMessage } from "../../../Tre.Debug/Tre.ErrorSystem.js";
 import { dimension, cat } from "../../../Tre.Libraries/Tre.Images/util.js";
 import best_sorting from '../../../Tre.Libraries/Tre.Sort/ArraySortSystem.js';
 import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
-type AtlasImage = {
+import localization from "../../../Tre.Callback/localization.js";
+import path from "node:path";
+
+export type AtlasImage = {
     slot: number;
     id: string;
     path: string[];
@@ -22,21 +25,23 @@ type AtlasImage = {
     y?: number,
     cols?: number,
 }
-interface result_json {
+
+export interface result_json {
     id: string,
     type: string,
     parent: string,
     res: string,
     resources: Array<AtlasImage>,
 }
-export default async function (dir: string, width: number, height: number,is_simple_pack: boolean = true, display_not_atlas_info: string = "Not AtlasInfo.json",
+
+export default async function (dir: string, width: number, height: number, is_simple_pack: boolean = true, display_not_atlas_info: string = "Not AtlasInfo.json",
     cannot_find_groups_array_in_atlasinfo: string = "Cannot find groups array in AtlasInfo.json", cannot_find_subgroup_in_atlas_info: string = "Cannot find subgroup in AtlasInfo.json",
     cannot_find_method_in_atlas_info: string = "Cannot find method in AtlasInfo.json", cannot_get_res_data: string = "Cannot get res data",
     not_found_res_indicated_in_subgroups = "Not found res data indicated in subgroup",
     total_sprites_process_in_thiz_function: string = "Total sprites process:", thiz_selection_max_rects_bin_iz_smart: boolean = true, thiz_selection_max_rects_bin_iz_pot: boolean = false,
     thiz_selection_max_rects_bin_iz_square: boolean = true, thiz_selection_max_rects_bin_can_be_rotation: boolean = false, thiz_selection_max_rects_bin_padding_size: number = 1) {
-    const config_json: any = readjson("C:/Tre.Vietnam/Tre.Extension/Tre.Settings/toolkit.json");
-    let padding:number = config_json.atlas.max_rects_bin_pack_simple.padding;
+    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
+    let padding: number = config_json.atlas.max_rects_bin_pack_simple.padding;
     thiz_selection_max_rects_bin_padding_size = (is_simple_pack) ? padding : thiz_selection_max_rects_bin_padding_size;
     const img_list = new Array();
     const atlas_info: any = readjson(dir + "/AtlasInfo.json");
@@ -57,7 +62,7 @@ export default async function (dir: string, width: number, height: number,is_sim
         atlas_info.groups[i].extension = atlas_info.groups[i].path[(atlas_info.groups[i].path.length - 1)];
     };
     for (let i in atlas_info.groups) {
-        const sprite_dimension = await dimension(dir + "/" + atlas_info.groups[i][selection] + ".png").finally((result: any) => {
+        const sprite_dimension: any = await dimension(dir + "/" + atlas_info.groups[i][selection] + ".png").then((result: any) => {
             return result;
         });
         atlas_info.groups[i].x = (atlas_info.groups[i].x != undefined) ? atlas_info.groups[i].x : 0;
@@ -145,8 +150,10 @@ export default async function (dir: string, width: number, height: number,is_sim
     for (let i = 0; i < append_array.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i.toString()) : i;
         await cat(append_array[i], `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`, width, height);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`)}`);
     };
     writejson(dir + "/../" + atlas_info.subgroup + '.json', result_json);
-    console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function} ${img_list.length}`));
+    console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function}`)+`${img_list.length}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(dir + "/../" + atlas_info.subgroup + '.json')}`);
     return 0;
 }

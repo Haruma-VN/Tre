@@ -7,7 +7,14 @@ interface DimensionX {
 export default async function (file: any): Promise<DimensionX> {
     const image = await sharp(file);
     const metadata = await image.metadata();
-    return {
-        width: metadata.width, height: metadata.height
+    if (metadata.width != undefined && metadata.height != undefined) {
+        return {
+            width: metadata.width, height: metadata.height
+        }
+    }
+    else{
+        return {
+            width: 0, height: 0
+        }
     }
 };

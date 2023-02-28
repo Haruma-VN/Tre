@@ -33,8 +33,8 @@ export default class {
     size() {
         readline_size();
     };
-    readline_expand() {
-        readline_expand();
+    readline_expand(bundles: number[]) {
+        readline_expand(bundles);
     };
     readline_normal() {
         readline_normal();

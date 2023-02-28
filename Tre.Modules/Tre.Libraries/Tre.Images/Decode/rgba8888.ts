@@ -1,20 +1,19 @@
 "use strict";
 import sharp from 'sharp';
-import fs from 'fs';
 import { basename, extname } from '../../Tre.Basename/util.js';
-import { writefile } from '../../Tre.FileSystem/util.js';
+import { writefile, readfilebuffer } from '../../Tre.FileSystem/util.js';
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
-export default async function (dir: string, width:number, height:number): Promise<void> {
-    console.log("Decoding: " + basename(dir) + extname(dir));
-    console.log("Width: " + width);
-    console.log("Height: " + height);
-    const data = await sharp((fs.readFileSync(dir)), { raw: { width: (width), height: (height), channels: 4 } }).png().toBuffer().then((result) => {
-        return result;
+import localization from '../../../Tre.Callback/localization.js';
+import * as color from "../../Tre.Color/color.js";
+import path from "node:path";
+export default async function (dir: string, width: number, height:number): Promise<void> {
+    console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
+    console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
+    console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+    await sharp(readfilebuffer(dir), { raw: { width: (width), height: (height), channels: 4 } }).png().toBuffer().then((result) => {
+        console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(`${dir}/../${basename(dir)}.png`)}`);
+        return writefile(`${dir}/../${basename(dir)}.png`, result);
     }).catch((error) => {
-        TreErrorMessage({ error: "Unknown", reason: "Recheck input data or file is not PopCap PTX file", system: error.toString() }, "Recheck input data or file is not PopCap PTX file");
+        TreErrorMessage({ error: localization("unknown"), reason: localization("popcap_ptx_decode_native_error"), system: error.toString() }, localization("popcap_ptx_decode_native_error"));
     });
-    if(data){
-        return writefile(dir + '/../' + basename(dir) + '.png', data);
-    }
-    return;
 }

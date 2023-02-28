@@ -8,7 +8,7 @@ export default function (list_ban_function: string[], code: string): boolean {
         for (const line of lines) {
             let match;
             while ((match = regex.exec(line))) {
-                TreErrorMessage({ error: `${localization("js_shell_execute_fail")}`, reason: `${bannedWord} ${localization("is_not_defined")}` }, `${bannedWord} ${localization("is_not_defined")}`);
+                TreErrorMessage({ error: `${localization("js_shell_execute_fail")}`, reason: `${bannedWord} ${localization("is_not_defined")}` }, `:${bannedWord} ${localization("is_not_defined")}`);
                 return false;
             }
         }

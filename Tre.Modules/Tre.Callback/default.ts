@@ -58,7 +58,7 @@ export default async function (): Promise<void> {
     if (mode === 0) {
         switch (proc_arr.length) {
             case 0:
-                Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.no_string_has_been_passed}`));
+                Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.no_string_has_been_passed}`));
             default:
                 for (let i: number = 0; i < proc_arr.length; ++i) {
                     await functions((i + 1), proc_arr[i], proc_arr.length, mode).finally(() => { });

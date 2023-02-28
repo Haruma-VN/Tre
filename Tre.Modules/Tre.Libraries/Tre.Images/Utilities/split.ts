@@ -4,6 +4,9 @@ import { split } from '../util.js';
 import { extname, basename } from '../../Tre.Basename/util.js';
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import fix_duplicate_res from '../../../Tre.Scripts/Tre/Repair/duplicate_res.js';
+import localization from '../../../Tre.Callback/localization.js';
+import * as color from "../../Tre.Color/color.js";
+import path from "node:path";
 export interface PopCapResJsonDataBundle {
     resources?: PopCapResJsonDetailInfo[],
     id?: string,
@@ -28,8 +31,8 @@ export interface configAtlas {
     }
 }
 export default async function (opt: number) {
-    const json_config: configAtlas = readjson("C:/Tre.Vietnam/Tre.Extension/Tre.Settings/toolkit.json");
-    let json: PopCapResJsonDataBundle = {};
+    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
+    let json: any = {};
     const img_list = new Array();
     let directory_name = new String();
     let dir_sys = new String();
@@ -38,12 +41,12 @@ export default async function (opt: number) {
             case '.json':
                 json = readjson(process.argv[i]);
                 if (json.resources == undefined) {
-                    TreErrorMessage({ error: "Cannot access file data", reason: "Not valid PopCap Resources Data" }, "Not valid PopCap Resources Data");
+                    TreErrorMessage({ error: localization("cannot_access_file_data"), reason: localization("not_popcap_res") }, localization("not_popcap_res"));
                     return 0;
                 }
                 directory_name = basename(process.argv[i]) + ".spg";
                 dir_sys = process.argv[i] + '/../' + (directory_name);
-                makefolder(dir_sys);
+                makefolder(dir_sys.toString());
                 break;
             case '.png':
             case '.jpg':
@@ -55,6 +58,7 @@ export default async function (opt: number) {
         }
     };
     if (json.resources != undefined) {
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir_sys}`)}`);
         if (json_config.atlas.split.repairDuplicateFolder === true) {
             json.resources = fix_duplicate_res(json.resources);
         };
@@ -79,18 +83,24 @@ export default async function (opt: number) {
             };
         };
         let parent_list = new Array();
+        const promises = new Array();
+        let extension_list = new Array();
         let option = (opt == 1) ? 'extension' : 'id';
+        const actual_splitting_items = [...new Set(extend_info.map((a) => a[option]))];
         for (const i in extend_info) {
             for (const img of img_list) {
                 if (extend_info[i].parent.toUpperCase() === basename(img).toUpperCase()) {
                     parent_list.push(extend_info[i].parent);
-                    await split(img, extend_info[i].ax, extend_info[i].ay, extend_info[i].aw, extend_info[i].ah, dir_sys + '/' + extend_info[i][option] + '.png');
+                    const process = await split(img, extend_info[i].ax, extend_info[i].ay, extend_info[i].aw, extend_info[i].ah, dir_sys + '/' + extend_info[i][option] + '.png', extend_info[i][option], extension_list);
+                    extension_list = process[0];
+                    promises.push(process[1]);
                 }
                 else {
                     continue;
                 }
             }
         };
+        await Promise.all(promises).catch(err => { return TreErrorMessage({ error: localization("error"), system: err.toString(), reason: localization("native_atlas_splitting_error") }, localization("native_atlas_splitting_error")) });
         parent_list = [...new Set(parent_list)];
         for (let info of extend_info) {
             for (let parent of parent_list) {
@@ -108,11 +118,11 @@ export default async function (opt: number) {
             }
         };
         atlas_info.method = (option == 'extension') ? "path" : "id";
-        await writejson(dir_sys + '/' + 'AtlasInfo.json', atlas_info);
-        await console.log("Total Spritesheet extracted: " + atlas_info.groups.length);
+        writejson(dir_sys + '/' + 'AtlasInfo.json', atlas_info);
+        console.log(color.fgcyan_string("◉ " + localization("execution_actual_size")+ ": " + actual_splitting_items.length + "/" + atlas_info.groups.length));
     }
     else {
-        TreErrorMessage({ error: "No json file", reason: "Cannot detect json file" }, "Cannot detect json file");
+        TreErrorMessage({ error: localization("no_json_file"), reason: localization("cannot_detect_json") }, localization("cannot_detect_json"));
         return 0;
     }
     return 0;

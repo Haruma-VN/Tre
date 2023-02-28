@@ -3,7 +3,7 @@ import fs from 'fs';
 import stringify from '../Tre.Libraries/Tre.JSONSystem/stringify.js';
 import localization from "../Tre.Callback/localization.js";
 function TreErrorSystem(error: {} | string): void {
-    const dir = "C:/Tre.Vietnam/Tre.Debug/";
+    const dir = process.cwd() + "/Tre.Debug/";
     const DateBug = new Date();
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const filename = ((Math.floor(Date.now() / 1000)) + '.' + month[DateBug.getMonth()] + '.' + DateBug.getDate() + '.' + DateBug.getFullYear());
@@ -22,7 +22,7 @@ function TreErrorMessage(error: {}, message: string): void {
     if (typeof error == 'object') {
         error = stringify(error);
     };
-    const dir = "C:/Tre.Vietnam/Tre.Debug/";
+    const dir = process.cwd() + "/Tre.Debug/";
     const DateBug = new Date();
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const filename = ((Math.floor(Date.now() / 1000)) + '.' + month[DateBug.getMonth()] + '.' + DateBug.getDate() + '.' + DateBug.getFullYear());
@@ -36,9 +36,9 @@ function TreErrorMessage(error: {}, message: string): void {
     else {
         fs.writeFileSync(dir + filename + '.json', stringify(error));
     }
-    return console.log('\x1b[31m' + localization("execution_failed") + + message + '\x1b[0m');
+    return console.log('\x1b[31m◉ ' + localization("execution_failed") + ": " + message + '\x1b[0m');
 }
-function MessageOnly(message) {
+function MessageOnly(message: any) {
     return console.log('\x1b[31m' + message + '\x1b[0m');
 }
 export {

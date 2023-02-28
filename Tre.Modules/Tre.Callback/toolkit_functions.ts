@@ -33,12 +33,11 @@ export namespace Display.Tre.Function {
     //todo
     export const popcap_resources_export_packet_data = new Void(localization("popcap_resources_export_bundle_data"), 22);
     export const popcap_resources_remove_unused_texture_format = new Void(localization("popcap_resources_remove_texture_format"), 23);
-    // missing?
-    // export const popcap_resources_cat = new Void("PopCap Resources Concat", 24);
-    // export const popcap_resources_cat = new Void("PopCap Resources Concat", 25);
-    // export const popcap_resources_cat = new Void("PopCap Resources Concat", 26);
-    // finish
-    // exception as this.awaiting_for_finish
+    // todo
+    export const popcap_resources_local_data_compare = new Void(localization("popcap_resources_local_compare"), 24);
+    export const popcap_resources_to_tre_info = new Void(localization("popcap_resources_to_tre_info"), 25);
+    // export const popcap_resources_cat = new Void("PopCap Resources Beautify", 26);
+    // todo
     export const popcap_resources_repair = new Void(localization("popcap_resources_repair_packet"), 26);
     // finish
     export const popcap_resources_to_atlasinfo = new Void(localization("popcap_res_to_atlasinfo"), 27);
@@ -59,7 +58,7 @@ export namespace Display.Tre.Function {
     // todo
     export const popcap_texture_encode_etc1a_index = new Void(`PopCap PTX RGB_ETC1_A_8_Index ${localization("encode")} (147)`, 40);
     // finish
-    export const popcap_texture_decode_rgba8888 = new Void(`PopCap PTX RGBA8888  ${localization("decode")} (0)`, 41);
+    export const popcap_texture_decode_rgba8888 = new Void(`PopCap PTX RGBA8888 ${localization("decode")} (0)`, 41);
     export const popcap_texture_decode_argb8888 = new Void(`PopCap PTX ARGB8888 ${localization("decode")} (0)`, 42);
     export const popcap_texture_decode_pvrtc = new Void(`PopCap PTX RGB_PVRTC4_A_8 ${localization("decode")} (30)`, 43);
     export const popcap_texture_decode_etc1a = new Void(`PopCap PTX RGB_ETC1_A_8 ${localization("decode")} (147)`, 44);
@@ -76,14 +75,23 @@ export namespace Display.Tre.Function {
     export const popcap_zlib_rsgp_pack = new Void(localization("popcap_zlib_rsgp_pack"), 50);
     //finish
     export const popcap_zlib_rsb_unpack = new Void(localization("popcap_game_data_rsb_unpack"), 51);
-    // todo
     export const popcap_zlib_rsb_pack = new Void(localization("popcap_game_data_rsb_pack"), 52);
-    // todo
-    export const popcap_game_json_split = new Void(localization("popcap_game_packages_json_split"), 53);
-    export const popcap_game_json_pack = new Void(localization("popcap_game_packages_json_cat"), 54);
+    //finish
+    export const popcap_zlib_smf_decompress = new Void(localization("popcap_smf_decompress"), 53);
+    export const popcap_zlib_smf_compress = new Void(localization("popcap_smf_compress"), 54);
     // finish
-    export const tre_void_json_patch_work = new Void(localization("json_patch"), 55);
-    export const tre_void_json_patch_generator = new Void(localization("json_patch_generator"), 56);
+    export const popcap_game_json_split = new Void(localization("popcap_game_packages_json_split"), 55);
+    export const popcap_game_json_pack = new Void(localization("popcap_game_packages_json_cat"), 56);
+    // finish
+    export const tre_void_json_patch_work = new Void(localization("json_patch"), 57);
+    export const tre_void_json_patch_generator = new Void(localization("json_patch_generator"), 58);
+    export const popcap_texture_atlas_pack_cross_resolution = new Void(localization("popcap_atlas_pack_cross_resolution"), 59);
+    export const popcap_lawnstrings_diff = new Void(localization("popcap_lawnstrings_diff"), 60);
+    export const popcap_lawnstrings_convert_to_localization = new Void(localization("popcap_lawnstrings_convert_to_localization"), 61);
+    export const popcap_lawnstrings_convert_from_localization = new Void(localization("popcap_lawnstrings_convert_from_localization"), 62);
+    export const popcap_zlib_rsb_repair = new Void(localization("rsb_repair"), 63);
+    export const popcap_rton_to_json = new Void(localization("rton_to_json"), 64);
+    
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {
             Console.WriteLine(display_item_list.display());

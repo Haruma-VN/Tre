@@ -19,7 +19,7 @@ export default async function (RSGP_data: any, pool_index: number, rsgp_file: st
     let autopool_buffer: SmartBuffer = SmartBuffer.fromBuffer(Buffer.alloc(152));
     let rsgp_info_buffer: SmartBuffer = SmartBuffer.fromBuffer(Buffer.alloc(204));
     let ptx_number: number = 0;
-    function Decompression(image: boolean, temp_offset: number, name_path: string): void {
+    function Decompression(image: boolean, temp_offset: number, name_path: string, any_any?: any): void {
         const file_data_size = file_data.toBuffer().slice(temp_offset - 4, temp_offset).readInt32LE();
         if (image) {
             const image_width = file_data.toBuffer().slice(temp_offset + 12, temp_offset + 16).readInt32LE();
@@ -51,7 +51,7 @@ export default async function (RSGP_data: any, pool_index: number, rsgp_file: st
         }
     }
     function GetSmartPath(image: boolean, temp_offset: number): void {
-        let name_path: string = "";
+        let name_path: any = "";
         let name_dict: NameArray[] = new Array();
         while (temp_offset < info_limit) {
             let character_byte = file_data.toBuffer().slice(temp_offset, temp_offset + 1);

@@ -26,14 +26,14 @@ export default function processFilePaths(executor_file_need_avoid: string): stri
                 filePath =  Console.ReadLine();
                 continue;
             }
-            if (!stats.isFile() || !filePath.endsWith('.json')) {
+            if (!stats.isFile() || !filePath.toLowerCase().endsWith('.json')) {
                 TreErrorMessage({ error: `${localization("stopped")}`, system: `${filePath} ${localization("is_a_directory_not_a_valid_json_file")}` }, `${filePath} ${localization("is_a_directory_not_a_valid_json_file")}`);
                 filePath =  Console.ReadLine();
                 continue;
             }
             break;
         } catch (err) {
-            TreErrorMessage({ error: `${localization("stopped")}`, system: `Error: ${filePath} ${localization("not_a_valid_file_path")}` }, `${filePath} ${localization("not_a_valid_file_path")}`);
+            TreErrorMessage({ error: `${localization("stopped")}`, system: `${filePath} ${localization("not_a_valid_file_path")}` }, `${filePath} ${localization("not_a_valid_file_path")}`);
             filePath =  Console.ReadLine();
         }
     }

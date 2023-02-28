@@ -1,6 +1,7 @@
 "use strict";
 import readlineSync from "readline-sync";
 import localization from "../../Tre.Callback/localization.js";
+import * as color from "../../Tre.Libraries/Tre.Color/color.js";
 export default function (min: number, max: number): number {
     const args = new Array();
     for (let i = min; i <= max; i++) {
@@ -15,7 +16,7 @@ export default function (min: number, max: number): number {
     }
     const value = readlineSync.prompt({
         limit: args,
-        limitMessage: message,
+        limitMessage: color.fgred_string(message.toString()),
     });
     return parseInt(value);
 }

@@ -1,6 +1,8 @@
 "use strict";
 import path from "path";
 import { readjson, writejson } from "../../../Tre.Libraries/Tre.FileSystem/util.js";
+import localization from "../../../Tre.Callback/localization.js";
+import * as color from "../../../Tre.Libraries/Tre.Color/color.js";
 
 export namespace Lawnstrings.PopCap {
     export interface PopCapLawnstring {
@@ -26,7 +28,7 @@ export namespace Lawnstrings.PopCap {
     }
 
     export function GetLawnstringsProperty(popcap_lawnstrings_file_location: string): LawnstringsPropertyKeyAndValue {
-        const lawnstrings_json: PopCapLawnstring = readjson(popcap_lawnstrings_file_location);
+        const lawnstrings_json: PopCapLawnstring = readjson(popcap_lawnstrings_file_location) as PopCapLawnstring;
         const key: string[] = new Array();
         const value: string[] = new Array();
         for (let i: number = 0; i < lawnstrings_json.objects[0].objdata.LocStringValues.length; i++) {
@@ -81,10 +83,12 @@ export namespace Lawnstrings.PopCap {
     }
 
     export function WriteDiffJSON(original_directory: string, modified_directory: string): void {
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${modified_directory}/../${path.parse(modified_directory).name}.diff.json`)}`);
         return writejson(`${modified_directory}/../${path.parse(modified_directory).name}.diff.json`, LawnstringDiff(original_directory, modified_directory));
     }
 
     export function WriteLocalizationJSON(directory: string): void {
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${directory}/../${path.parse(directory).name}.structure.json`)}`);
         return writejson(`${directory}/../${path.parse(directory).name}.structure.json`, GetLawnstringsProperty(directory));
     }
 
@@ -109,6 +113,7 @@ export namespace Lawnstrings.PopCap {
     }
 
     export function WritePopCapLawnstringsFromLocalizationLawnstrings(directory: string): void {
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${directory}/../${path.parse(directory).name}.default.json`)}`);
         return writejson(`${directory}/../${path.parse(directory).name}.default.json`, ConvertLocalizationJSONtoPopCapJSON(directory));
     }
 

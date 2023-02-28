@@ -11,6 +11,8 @@ import read_no_dir from './ReadFolder/all/withdir.js';
 import outfile from './OutFile/outfile.js';
 import check_is_file from './CheckItems/check.js';
 import delete_file from "./DeleteFile/delete.js";
+import create_multiple_parent from './Auto/main.js';
+import file_stats from "./file_stats/stats.js";
 export {
     readfile,
     readfilebuffer,
@@ -24,4 +26,6 @@ export {
     outfile,
     delete_file,
     check_is_file,
+    create_multiple_parent,
+    file_stats,
 };
