@@ -1,20 +1,36 @@
 {
-    "json": {
-        "strict_mode": false
-    },
-    "display": {
-        "disable_display_full_path_execution": false
-    },
-    "user": {
-        "cpu_usage_for_images": 7
-    },
-    "resources": {
-        "split": {
-            "beautify_res": false,
-            "remove_unused_info": true
-        },
-        "beautify_order": {
-            "slot": 1,
+	"atlas": {
+		"cross_resolution": {
+			"allow_384": false
+		},
+		"max_rects_bin_pack_simple": {
+			"padding": 1
+		},
+		"split": {
+			"notify_duplicate": true,
+			"repairDuplicateFolder": false
+		}
+	},
+	"display": {
+		"disable_display_full_path_execution": false
+	},
+	"extension": {
+		"use_other_voids": false
+	},
+	"json": {
+		"strict_mode": false,
+		"allow_trailing_commas": true,
+		"space": "\t"
+	},
+	"language": "English",
+	"popcap_rton_conversion": {
+		"rton": {
+			"rton_cipher": "65bd1b2305f46eb2806b935aab7630bb"
+		}
+	},
+	"resources": {
+		"beautify_order": {
+			"slot": 1,
             "id": 2,
             "path": 3,
             "type": 4,
@@ -29,27 +45,13 @@
             "cols": 13,
             "x": 14,
             "y": 15
-        }
-    },
-    "atlas": {
-        "split": {
-            "repairDuplicateFolder": false,
-            "notify_duplicate": true
-        },
-        "max_rects_bin_pack_simple": {
-            "padding": 1
-        },
-        "cross_resolution": {
-            "allow_384": false
-        }
-    },
-    "extension": {
-        "use_other_voids": false
-    },
-    "popcap_rton_conversion": {
-        "rton": {
-            "rton_cipher": "65bd1b2305f46eb2806b935aab7630bb"
-        }
-    },
-    "language": "English"
+		},
+		"split": {
+			"beautify_res": true,
+			"remove_unused_info": false
+		}
+	},
+	"user": {
+		"cpu_usage_for_images": 7
+	}
 }
