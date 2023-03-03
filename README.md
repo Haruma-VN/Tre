@@ -14,6 +14,7 @@ Tre is a modding tool for Plants vs. Zombies 2, written in TypeScript and being 
 - Unpack and Pack RSGP (PGSR, RSG, etc.).
 - Unpack and Pack RSB (OBB, SMF, etc.).
 - Split and Concat PopCap JSON: Can also patch JSON and generate the patch for JSONs. Adding diff to compare Localization PopCap Lawnstrings, now the tool can simply diff the json very fast without using WinDiff.
+- PopCap RTON ~ JSON Conversion: Can do RTON to JSON, JSON to RTON. Can also support PvZ2C's RTONs and the tool will provide you the key.
 
 ## Third Party Libraries
 
