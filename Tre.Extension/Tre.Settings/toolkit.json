@@ -8,7 +8,8 @@
 		},
 		"split": {
 			"notify_duplicate": true,
-			"repairDuplicateFolder": false
+			"repairDuplicateFolder": false,
+			"allow_atlas_info": true
 		}
 	},
 	"display": {
@@ -31,27 +32,25 @@
 	"resources": {
 		"beautify_order": {
 			"slot": 1,
-            "id": 2,
-            "path": 3,
-            "type": 4,
-            "atlas": 5,
-            "width": 6,
-            "height": 7,
-            "parent": 8,
-            "ah": 9,
-            "aw": 10,
-            "ax": 11,
-            "ay": 12,
-            "cols": 13,
-            "x": 14,
-            "y": 15
+			"id": 2,
+			"path": 3,
+			"type": 4,
+			"atlas": 5,
+			"width": 6,
+			"height": 7,
+			"parent": 8,
+			"ah": 9,
+			"aw": 10,
+			"ax": 11,
+			"ay": 12,
+			"cols": 13,
+			"x": 14,
+			"y": 15,
+			"srcpath": 16
 		},
 		"split": {
 			"beautify_res": true,
 			"remove_unused_info": false
 		}
-	},
-	"user": {
-		"cpu_usage_for_images": 7
 	}
 }
