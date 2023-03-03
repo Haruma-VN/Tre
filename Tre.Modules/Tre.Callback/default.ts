@@ -64,13 +64,24 @@ export default async function (): Promise<void> {
                 Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.no_string_has_been_passed}`));
             default:
                 for (let i: number = 0; i < proc_arr.length; ++i) {
-                    await functions((i + 1), proc_arr[i], proc_arr.length, mode).finally(() => { });
+                    if (fs.existsSync(proc_arr[i])) {
+                        await functions((i + 1), proc_arr[i], proc_arr.length, mode);
+                    }
+                    else{
+                        Console.WriteLine(color.fgred_string(`◉ ${localization("execution_failed")}: ${localization("cannot_find_specific_file")} ${proc_arr[i]}`));
+                    }
                 };
                 break
         }
     }
     else {
-        functions(1, proc_arr, 1, mode).finally(() => { });
-    };
+        for(let i: number = 0; i < proc_arr.length; ++i){
+            if(!fs.existsSync(proc_arr[i])){
+                Console.WriteLine(color.fgred_string(`◉ ${localization("execution_failed")}: ${localization("cannot_find_specific_file")} ${proc_arr[i]}`));
+                return;
+            }
+        }
+        functions(1, proc_arr, 1, mode);
+    }
     return;
 }
