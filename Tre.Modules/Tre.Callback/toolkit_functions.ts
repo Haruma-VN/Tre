@@ -30,15 +30,14 @@ export namespace Display.Tre.Function {
     export const popcap_resources_split = new Void(localization("popcap_resources_split"), 19);
     export const popcap_resources_cat = new Void(localization("popcap_resources_cat"), 20);
     export const popcap_resources_rewrite = new Void(localization("popcap_resources_rewrite"), 21);
-    //todo
-    export const popcap_resources_export_packet_data = new Void(localization("popcap_resources_export_bundle_data"), 22);
-    export const popcap_resources_remove_unused_texture_format = new Void(localization("popcap_resources_remove_texture_format"), 23);
+    //finish
+    export const popcap_old_resources_conversion_to_new_resources = new Void(localization("popcap_old_resources_conversion_to_new_resources"), 22);
+    export const popcap_new_resources_conversion_to_old_resources = new Void(localization("popcap_new_resources_conversion_to_old_resources"), 23);
     // todo
     export const popcap_resources_local_data_compare = new Void(localization("popcap_resources_local_compare"), 24);
     export const popcap_resources_to_tre_info = new Void(localization("popcap_resources_to_tre_info"), 25);
-    // export const popcap_resources_cat = new Void("PopCap Resources Beautify", 26);
     // todo
-    export const popcap_resources_repair = new Void(localization("popcap_resources_repair_packet"), 26);
+    // export const popcap_resources_repair = new Void(localization("popcap_old_resources_conversion_to_new_resources"), 26);
     // finish
     export const popcap_resources_to_atlasinfo = new Void(localization("popcap_res_to_atlasinfo"), 27);
     export const popcap_resources_beautify = new Void(localization("popcap_res_beautify"), 28);
@@ -91,6 +90,18 @@ export namespace Display.Tre.Function {
     export const popcap_lawnstrings_convert_from_localization = new Void(localization("popcap_lawnstrings_convert_from_localization"), 62);
     export const popcap_zlib_rsb_repair = new Void(localization("rsb_repair"), 63);
     export const popcap_rton_to_json = new Void(localization("rton_to_json"), 64);
+    export const popcap_json_to_rton = new Void(localization("json_to_rton"), 65);
+    export const popcap_rton_decrypt_and_decode = new Void(localization("rton_to_json"), 66);
+    export const popcap_rton_encode_and_encrypt = new Void(localization("json_to_rton"), 67);
+    // todo
+    // export const popcap_rton_decrypt_and_decode = new Void(localization("rton_to_json"), 66);
+    // export const popcap_rton_encode_and_encrypt = new Void(localization("json_to_rton"), 67);
+    // finish
+    export const popcap_atlas_split_experimental = new Void(localization("popcap_atlas_split_experimental"), 70);
+    export const popcap_atlas_pack_experimental = new Void(localization("popcap_atlas_pack_experimental"), 71);
+    export const popcap_rsb_unpack_simple = new Void(localization("popcap_rsb_unpack_simple"), 72);
+    //todo
+    export const popcap_rsb_pack_simple = new Void(localization("popcap_rsb_pack_simple"), 73);
     
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {

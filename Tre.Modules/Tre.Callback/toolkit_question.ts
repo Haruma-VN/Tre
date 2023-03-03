@@ -9,6 +9,9 @@ export namespace Argument.Tre.Packages {
     export const concat_mode_argument_rton = `◉ ${localization("execution_argument")}: ${localization("encode_rton")}`;
     export const concat_atlas_width_argument = `◉ ${localization("execution_argument")}: ${localization("concat_width")}`;
     export const concat_atlas_height_argument = `◉ ${localization("execution_argument")}: ${localization("concat_height")}`;
+    export const decode_width = `◉ ${localization("execution_argument")}: ${localization("decode_width")}`;
+    export const decode_height = `◉ ${localization("execution_argument")}: ${localization("decode_height")}`;
+    export const concat_atlas_subgroup_argument = `◉ ${localization("execution_argument")}: ${localization("concat_subgroup")}`;
     export const popcap_atlas_member_resize_original_quality = `◉ ${localization("execution_argument")}: ${localization("orig_texture_quality")}`;
     export const popcap_atlas_member_resize_modifier_after_quality = `◉ ${localization("execution_argument")}: ${localization("new_texture_quality")}`;
     export const method_split_popcap_atlas_texture = `◉ ${localization("execution_argument")}: ${localization("method_split")}`;
@@ -26,6 +29,7 @@ export namespace Argument.Tre.Packages {
     export const execute_error_not_valid_file_path = `${localization("not_a_valid_file_path")}`;
     export const execute_reminder_quick_tip = `◉ ${localization("execution_reminder")}: ${localization("pass_me_an_empty_string_to_stop")}`;
     export const execute_when_there_is_no_directory_passes_in_tre = `◉ ${localization("execution_warning")}: ${localization("no_args_found")}`;
+    export const skip_this_argument_to_take_folder_name_as_file_name = `◉ ${localization("execution_reminder")}: ${localization("skip_this_argument_to_take_folder_name_as_file_name")}`;
     export const execution_warning_log = `◉ ${localization("execution_warning")}:`;
     export const popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info = `${localization("not_atlas_info")}`;
     export const popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo = `${localization("cannot_find_groups_array")}`;

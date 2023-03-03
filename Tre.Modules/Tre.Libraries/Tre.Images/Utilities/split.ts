@@ -20,13 +20,14 @@ export interface PopCapResJsonDetailInfo {
     aw: number,
     atlas?: boolean,
     id: string,
-    path: string[],
+    path: string[] | string,
     parent: string,
 }
 export interface configAtlas {
     atlas: {
         split: {
             repairDuplicateFolder: boolean,
+            allow_atlas_info: boolean,
         }
     }
 }
@@ -66,6 +67,9 @@ export default async function (opt: number) {
         let extend_info = new Array();
         for (const info of json.resources) {
             if (info.atlas != true) {
+                if (typeof info.path === "string") {
+                    info.path = info.path.split("\\");
+                }
                 info.x = (info.x != undefined) ? info.x : 0;
                 info.y = (info.y != undefined) ? info.y : 0;
                 extend_info.push({
@@ -112,14 +116,13 @@ export default async function (opt: number) {
                         y: info.y,
                     });
                 }
-                else {
-                    continue;
-                };
             }
         };
         atlas_info.method = (option == 'extension') ? "path" : "id";
-        writejson(dir_sys + '/' + 'AtlasInfo.json', atlas_info);
-        console.log(color.fgcyan_string("◉ " + localization("execution_actual_size")+ ": " + actual_splitting_items.length + "/" + atlas_info.groups.length));
+        if (json_config.atlas.split.allow_atlas_info) {
+            writejson(dir_sys + '/' + 'AtlasInfo.json', atlas_info);
+        }
+        console.log(color.fggreen_string("◉ " + localization("execution_actual_size") + ": ") + actual_splitting_items.length + "/" + atlas_info.groups.length);
     }
     else {
         TreErrorMessage({ error: localization("no_json_file"), reason: localization("cannot_detect_json") }, localization("cannot_detect_json"));

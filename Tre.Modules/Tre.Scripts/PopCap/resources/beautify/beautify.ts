@@ -15,7 +15,7 @@ namespace BeautifyRes.Tre.Resources {
     export type PopCapCommonObjectInResources = {
         slot: number,
         id: string,
-        path: Array<string>,
+        path: Array<string> | string,
         type?: string,
         atlas?: boolean,
         width?: number,
@@ -35,7 +35,9 @@ namespace BeautifyRes.Tre.Resources {
         x?: number,
         y?: number,
         cols?: number,
+        srcpath?: Array<string>,
     }
+
     export function PopCapSortOrderNumber(popcap_location_in_setting_display: string): number {
         const PopCapSortOrderNumber: PopCapAnyResources = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
         return PopCapSortOrderNumber.resources.beautify_order[popcap_location_in_setting_display];
@@ -43,7 +45,7 @@ namespace BeautifyRes.Tre.Resources {
 
     export const allowed_items_in_popcap_small_list_for_resources: Array<string> = ["id", "type", "parent", "res", "resources", "subgroups"];
 
-    export const allowed_items_in_popcap_object_in_small_resources: Array<string> = ["slot", "id", "path", "type", "atlas", "width", "height", "parent", "aw", "ah", "ax", "ay", "x", "y", "cols", "width", "height"];
+    export const allowed_items_in_popcap_object_in_small_resources: Array<string> = ["slot", "id", "path", "type", "atlas", "width", "height", "parent", "aw", "ah", "ax", "ay", "x", "y", "cols", "width", "height", "srcpath"];
 
     export type PopCapAnyResources = {
         [key: string]: any;
@@ -65,7 +67,9 @@ namespace BeautifyRes.Tre.Resources {
         x = PopCapSortOrderNumber("x"),
         y = PopCapSortOrderNumber("y"),
         cols = PopCapSortOrderNumber("cols"),
+        srcpath = PopCapSortOrderNumber("srcpath"),
     }
+    
     export function beautify_res(popcap_common_json_item_in_list_resources: PopCapAnyResources) {
         const PopCapSortOrder: any = {
             slot: PopCapSort.slot,
@@ -83,6 +87,7 @@ namespace BeautifyRes.Tre.Resources {
             x: PopCapSort.x,
             y: PopCapSort.y,
             cols: PopCapSort.cols,
+            srcpath: PopCapSort.srcpath,
         };
         const popcap_common_json_item_in_new_resources_list_with_beautify: PopCapCommonResources | PopCapAnyResources = Object.keys(popcap_common_json_item_in_list_resources).sort().map(function (popcap_common_item_in_small_res_list: string) {
             if (allowed_items_in_popcap_small_list_for_resources.includes(popcap_common_item_in_small_res_list)) {

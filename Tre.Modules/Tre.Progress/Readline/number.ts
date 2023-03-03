@@ -9,10 +9,10 @@ export default function (min: number, max: number): number {
     };
     let message = new String();
     if (max - min === 1) {
-        message = '$<lastInput> ' + localization("not_a_valid_integer_number") + ' ' + localization("it_should_be") + ' ' + min + ' ' + localization("or") + ' ' + max;
+        message = `! ${localization("execution_error")}:` + ' $<lastInput> ' + localization("not_a_valid_integer_number") + ' ' + localization("it_should_be") + ' ' + min + ' ' + localization("or") + ' ' + max;
     }
     else {
-        message = '$<lastInput> ' + localization("not_a_valid_integer_number") + '. ' + localization("should_be_from_min_to_max") + ' [' + min + ' - ' + max + ']';
+        message = `! ${localization("execution_error")}:` +' $<lastInput> ' + localization("not_a_valid_integer_number") + '. ' + localization("should_be_from_min_to_max") + ' [' + min + ' - ' + max + ']';
     }
     const value = readlineSync.prompt({
         limit: args,

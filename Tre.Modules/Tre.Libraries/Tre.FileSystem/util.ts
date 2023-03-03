@@ -13,6 +13,7 @@ import check_is_file from './CheckItems/check.js';
 import delete_file from "./DeleteFile/delete.js";
 import create_multiple_parent from './Auto/main.js';
 import file_stats from "./file_stats/stats.js";
+import if_file_exists from './ExistFile/exist.js';
 export {
     readfile,
     readfilebuffer,
@@ -28,4 +29,5 @@ export {
     check_is_file,
     create_multiple_parent,
     file_stats,
+    if_file_exists,
 };

@@ -15,7 +15,7 @@ export interface SimpleData {
 export interface MainData {
     slot: number;
     id: string;
-    path: string[];
+    path: string[] | string;
     type: string;
     atlas?: boolean;
     width?: number;

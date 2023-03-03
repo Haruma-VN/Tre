@@ -1,7 +1,7 @@
 "use strict";
 import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, encode_etc1a, encode_pvrtc, decode_etc1a, decode_pvrtc } from "../Tre.Libraries/Tre.Images/util.js";
-import { res_pack, res_split, res_rewrite, res_beautify, LocalResourcesCompare, small_res_beautify } from '../../Tre.Modules/Tre.Scripts/PopCap/resources/util.js';
-import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution } from '../../Tre.Modules/Tre.Scripts/PopCap/atlas/util.js';
+import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, } from '../../Tre.Modules/Tre.Scripts/PopCap/resources/util.js';
+import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution, atlas_split_experimental, atlas_pack_experimental } from '../../Tre.Modules/Tre.Scripts/PopCap/atlas/util.js';
 import { TreErrorMessage } from '../../Tre.Modules/Tre.Debug/Tre.ErrorSystem.js';
 import { readjson, readfile, writefile, writejson, check_is_file, file_stats, readfilebuffer, makefolder, delete_file, read_dir, read_single_folder } from "../Tre.Libraries/Tre.FileSystem/util.js";
 import { Display } from './toolkit_functions.js';
@@ -11,7 +11,7 @@ import { Console } from "./console.js";
 import { atlasinfo_cat, atlasinfo_split } from "../../Tre.Modules/Tre.Scripts/Tre/AtlasInfo/util.js";
 import * as color from '../Tre.Libraries/Tre.Color/color.js';
 import extra_system from '../Tre.Libraries/Tre.Extra/outfile.js';
-import path, { dirname } from "node:path";
+import path from "node:path";
 import { unpack_rsgp, pack_rsgp } from '../Tre.Scripts/PopCap/rsgp/util.js';
 import readline_for_json from "./Public/ReadLine/readline_for_json.js";
 import ban from "./Public/JSExecutor/ban.js";
@@ -22,7 +22,7 @@ import * as popcap_game_content_edit from "../Tre.Scripts/PopCap/rsb/utilities.j
 import { Lawnstrings } from "../../Tre.Modules/Tre.Scripts/PopCap/localization/lawnstrings.js";
 import PopCapPackages from "../Tre.Scripts/PopCap/json/utilities.js";
 import RSBInfo from "../Tre.Scripts/Tre/Support/utilities.js";
-import { rton_to_json } from "../Tre.Scripts/PopCap/rton/util.js";
+import { rton_to_json, json_to_rton } from "../Tre.Scripts/PopCap/rton/util.js";
 import resolveFilePath from "./Public/FilePath/path_result.js";
 import js_checker from "./Default/checker.js";
 import localization from "./localization.js";
@@ -43,7 +43,6 @@ export default async function (execute_file_count: number, execute_file_dir: str
         }
     }
     const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
-    Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_all_module_have_been_loaded}`));
     execute_file_count = (Array.isArray(execute_file_dir)) ? execute_file_dir.length : execute_file_count;
     execute_file_length = (Array.isArray(execute_file_dir)) ? execute_file_dir.length : execute_file_length;
     const start_timer: number = Date.now();
@@ -110,6 +109,8 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     if (Display.Tre.Function.BaseNameChecker(execute_file_dir, 'resources')) {
                         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_resources_split);
                         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_resources_rewrite);
+                        Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_old_resources_conversion_to_new_resources);
+                        Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_new_resources_conversion_to_old_resources);
                     }
                     if (Display.Tre.Function.BaseNameChecker(execute_file_dir, 'atlasinfo')) {
                         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.tre_void_atlas_info_split);
@@ -124,6 +125,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_lawnstrings_convert_to_localization);
                         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_lawnstrings_convert_from_localization);
                     }
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_json_to_rton);
                     break;
                 case ".jpg":
                 case ".png":
@@ -148,6 +150,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                 case ".obb":
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_rsb_unpack);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_smf_compress);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_unpack_simple);
                     break;
                 case ".smf":
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_smf_decompress);
@@ -173,6 +176,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_resize_atlas);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.tre_void_real_esrgan_upscaler_bitmap_content);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_atlas_pack_cross_resolution);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_atlas_pack_experimental);
                     break;
                 case ".atlasinfo":
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.tre_void_atlas_info_cat);
@@ -199,6 +203,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_argb8888);
         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_pvrtc);
         Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_etc1a);
+        Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_atlas_split_experimental);
     }
     if (tre_selector.length === 0) {
         Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.cannot_load_any_modules}`));
@@ -246,7 +251,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     try {
                         if (!Array.isArray(execute_file_dir)) {
                             const js_shell_string_await_for_executor: string = (readfile(execute_file_dir));
-                            let javascript_shell_allow_this_funcction: boolean = ban(["eval", "exec", "spawn", "setTimeout", "console", "setInterval", "require", "import", "export", "fs", "window", "interface", "abstract", "with", "var", "readline", "JSON", "fetch", "document"], js_shell_string_await_for_executor);
+                            let javascript_shell_allow_this_funcction: boolean = ban(["eval", "exec", "execSync", "spawn", "setTimeout", "console", "setInterval", "require", "import", "export", "fs", "window", "interface", "abstract", "with", "var", "readline", "JSON", "fetch", "document"], js_shell_string_await_for_executor);
                             if (javascript_shell_allow_this_funcction) {
                                 await eval(js_shell_string_await_for_executor);
                             }
@@ -255,7 +260,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                             }
                         }
                     } catch (error: any) {
-                        TreErrorMessage({ error: `${Argument.Tre.Packages.error_syntax}`, reason: `${Argument.Tre.Packages.unknown_reason}`, system: error.toString() }, `${Argument.Tre.Packages.js_shell_error}\n${error}`)
+                        TreErrorMessage({ error: `${Argument.Tre.Packages.error_syntax}`, reason: `${Argument.Tre.Packages.unknown_reason}`, system: error.message.toString() }, `${error.message.toString()}`)
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_encode_rgba8888.void_number_readline_argument():
@@ -317,36 +322,36 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_rgba8888.void_number_readline_argument():
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                     width = Console.IntegerReadLine(1, 16384);
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
                     height = Console.IntegerReadLine(1, 16384);
                     if (!Array.isArray(execute_file_dir)) {
                         await decode_rgba8888(execute_file_dir, width, height);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_argb8888.void_number_readline_argument():
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                     width = Console.IntegerReadLine(1, 16384);
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
                     height = Console.IntegerReadLine(1, 16384);
                     if (!Array.isArray(execute_file_dir)) {
                         await decode_argb8888(execute_file_dir, width, height);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_etc1a.void_number_readline_argument():
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                     width = Console.IntegerReadLine(1, 16384);
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
                     height = Console.IntegerReadLine(1, 16384);
                     if (!Array.isArray(execute_file_dir)) {
                         await decode_etc1a(execute_file_dir, width, height);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_pvrtc.void_number_readline_argument():
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                     width = Console.IntegerReadLine(1, 16384);
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
                     height = Console.IntegerReadLine(1, 16384);
                     if (!Array.isArray(execute_file_dir)) {
                         await decode_pvrtc(execute_file_dir, width, height);
@@ -377,6 +382,18 @@ export default async function (execute_file_count: number, execute_file_dir: str
                             Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                             Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
                             Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void).finally(() => { });
+                    }
+                    break;
+                case Display.Tre.Function.popcap_atlas_pack_experimental.void_number_readline_argument():
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
+                    width = Console.SizeReadLine();
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
+                    height = Console.SizeReadLine();
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_subgroup_argument}`));
+                    Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
+                    let popcap_subgroup_name: string = Console.ReadLine();
+                    if (!Array.isArray(execute_file_dir)) {
+                        await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_atlas_pack_cross_resolution.void_number_readline_argument():
@@ -454,6 +471,11 @@ export default async function (execute_file_count: number, execute_file_dir: str
                 case Display.Tre.Function.tre_void_third_party_zlib_deflate_compress.void_number_readline_argument():
                     extra_system(execute_file_dir, check_if_the_directories_iz_folder, "deflate-compress");
                     break;
+                case Display.Tre.Function.popcap_json_to_rton.void_number_readline_argument():
+                    if (!Array.isArray(execute_file_dir)) {
+                        json_to_rton(execute_file_dir);
+                    }
+                    break;
                 case Display.Tre.Function.tre_void_third_party_zlib_deflate_decompress.void_number_readline_argument():
                     extra_system(execute_file_dir, check_if_the_directories_iz_folder, "deflate-decompress");
                     break;
@@ -494,6 +516,18 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         PopCapPackages.Json.CatToFile(execute_file_dir);
                     }
                     break;
+                case Display.Tre.Function.popcap_old_resources_conversion_to_new_resources.void_number_readline_argument():
+                    if (!Array.isArray(execute_file_dir)) {
+                        let old_to_new_conversion: AdaptPvZ2InternationalResPath.res_conversion = new AdaptPvZ2InternationalResPath.res_conversion();
+                        old_to_new_conversion.write_fs_js_json(execute_file_dir, 1);
+                    }
+                    break;
+                case Display.Tre.Function.popcap_new_resources_conversion_to_old_resources.void_number_readline_argument():
+                    if (!Array.isArray(execute_file_dir)) {
+                        let old_to_new_conversion: AdaptPvZ2InternationalResPath.res_conversion = new AdaptPvZ2InternationalResPath.res_conversion();
+                        old_to_new_conversion.write_fs_js_json(execute_file_dir, 2);
+                    }
+                    break;
                 case Display.Tre.Function.popcap_resources_beautify.void_number_readline_argument():
                     if (!Array.isArray(execute_file_dir)) {
                         small_res_beautify(execute_file_dir);
@@ -516,6 +550,11 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         await atlas_split(parseInt(atlas_split_method));
                     }
                     break;
+                case Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument():
+                    if (Array.isArray(execute_file_dir)) {
+                        await atlas_split_experimental();
+                    }
+                    break;
                 case Display.Tre.Function.tre_void_atlas_info_split.void_number_readline_argument():
                     if (!Array.isArray(execute_file_dir)) {
                         console.log('hello')
@@ -530,6 +569,11 @@ export default async function (execute_file_count: number, execute_file_dir: str
                 case Display.Tre.Function.popcap_zlib_rsb_unpack.void_number_readline_argument():
                     if (!Array.isArray(execute_file_dir)) {
                         await popcap_game_content_edit.rsb_unpack(execute_file_dir, false);
+                    }
+                    break;
+                case Display.Tre.Function.popcap_rsb_unpack_simple.void_number_readline_argument():
+                    if (!Array.isArray(execute_file_dir)) {
+                        await popcap_game_content_edit.rsb_unpack(execute_file_dir, true);
                     }
                     break;
                 case Display.Tre.Function.popcap_zlib_rsb_pack.void_number_readline_argument():
@@ -641,12 +685,12 @@ export default async function (execute_file_count: number, execute_file_dir: str
         if (typeof execute_file_dir === "string") {
             await execute_function_from_core(execute_file_dir);
         }
-        else if (typeof execute_file_dir === "object" && option != 33) {
+        else if (typeof execute_file_dir === "object" && (option != 33) && option != 70) {
             execute_file_dir.forEach(async (file_in_this_directory) => {
                 await execute_function_from_core(file_in_this_directory);
             })
         }
-        else if (typeof execute_file_dir === "object" && option === 33) {
+        else if (typeof execute_file_dir === "object" && (option === 33 || option === 70)) {
             await execute_function_from_core(execute_file_dir);
         }
     }

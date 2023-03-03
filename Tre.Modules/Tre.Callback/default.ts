@@ -4,14 +4,17 @@ import { Console } from './console.js';
 import functions from "./functions.js";
 import * as color from '../Tre.Libraries/Tre.Color/color.js';
 import fs from 'node:fs';
-import { Argument } from './toolkit_question.js';
+import { Argument } from "./toolkit_question.js";
+import version from "./Default/version.js";
+import localization from './localization.js';
 export default async function (): Promise<void> {
+    Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd()} | ${version.tre_version}`);
     const proc_arr: string[] = new Array();
     for (let i: number = 2; i < process.argv.length; ++i) {
         proc_arr.push(process.argv[i]);
     };
     let mode: number;
-    let __check_while_loop__end: boolean;
+    let __check_while_loop__end: boolean = false;
     const start_timer: number = Date.now();
     if (proc_arr.length == 0) {
         __check_while_loop__end = true;
@@ -45,7 +48,7 @@ export default async function (): Promise<void> {
     };
     if (__check_while_loop__end) {
         const end_timer: number = Date.now();
-        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_execution_time_after_process} ${(end_timer - start_timer) / 1000}s`));
+        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_execution_time_after_process} `) + `${(end_timer - start_timer) / 1000}s`);
         Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_status_finish}`));
     }
     if (proc_arr.length > 1) {
