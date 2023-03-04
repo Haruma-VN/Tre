@@ -27,12 +27,12 @@ Tre currently uses the following third-party libraries:
 | Crypto-JS | https://github.com/brix/crypto-js |
 | fs-extra | https://github.com/jprichardson/node-fs-extra|
 | maxrects-packer | https://github.com/soimy/maxrects-packer|
-| readline-sync | https://github.com/anseki/readline-sync |
+| prompt-sync | https://github.com/heapwolf/prompt-sync |
 | smart-buffer | https://github.com/JoshGlazebrook/smart-buffer |
 | etcpak | https://github.com/wolfpld/etcpak |
 | PVRTexTool-Cli | https://developer.imaginationtech.com/pvrtextool/ |
 | Real_Esrgan | https://github.com/xinntao/Real-ESRGAN/ |
-| cross-path-sort | https://www.npmjs.com/package/cross-path-sort |
+| cross-path-sort | https://github.com/mdjermanovic/cross-path-sort |
 | stream-slice | https://github.com/yorkie/stream-slice |
 ## Installation
 
