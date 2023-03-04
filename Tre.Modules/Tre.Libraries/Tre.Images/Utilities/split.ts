@@ -63,12 +63,16 @@ export default async function (opt: number) {
         if (json_config.atlas.split.repairDuplicateFolder === true) {
             json.resources = fix_duplicate_res(json.resources);
         };
-        let atlas_info = { method: "", subgroup: json.id, groups: new Array() };
+        let atlas_info = { method: "", subgroup: json.id, expand_path: "", groups: new Array() };
         let extend_info = new Array();
         for (const info of json.resources) {
             if (info.atlas != true) {
                 if (typeof info.path === "string") {
                     info.path = info.path.split("\\");
+                    atlas_info.expand_path = "string";
+                }
+                else {
+                    atlas_info.expand_path = "array";
                 }
                 info.x = (info.x != undefined) ? info.x : 0;
                 info.y = (info.y != undefined) ? info.y : 0;

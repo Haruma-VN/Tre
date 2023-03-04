@@ -1,11 +1,10 @@
 import { SmartBuffer } from "smart-buffer";
 import { signed, unsigned } from "big-varint";
 export default function (rton_data: any) {
-    const json_data:SmartBuffer = new SmartBuffer(); 
-    const cached_strings:any = new Object(); 
-    let index:number = 0;
-
-    function RtonNumber(unsigned_number:number, signed_number?:any) {
+    const json_data = new SmartBuffer();
+    const cached_strings:any = new Object();
+    let index = 0;
+    function RtonNumber(unsigned_number:any, signed_number?:boolean) {
         if (signed_number) {
             return Buffer.from(signed.encode(BigInt(unsigned_number)));
         }
@@ -13,7 +12,6 @@ export default function (rton_data: any) {
             return Buffer.from(unsigned.encode(BigInt(unsigned_number)));
         }
     }
-
     function EncodeIntNumber(int:any) {
         if (int == 0) {
             json_data.writeString('21', 'hex');
@@ -49,9 +47,8 @@ export default function (rton_data: any) {
             json_data.writeString('25', 'hex').writeBuffer(RtonNumber(int, true));
         }
     }
-
-    function CheckFloatInfinity(float: any) {
-        let floatcheck:SmartBuffer = new SmartBuffer();
+    function CheckFloatInfinity(float:any) {
+        let floatcheck = new SmartBuffer();
         const floatnumber = floatcheck.writeFloatLE(float).readFloatLE();
         if (floatnumber == Infinity || floatnumber == -Infinity) {
             return false;
@@ -60,8 +57,7 @@ export default function (rton_data: any) {
             return true;
         }
     }
-
-    function EncodeFloatNumber(float: any) {
+    function EncodeFloatNumber(float:any) {
         if (float == 0) {
             json_data.writeString('23', 'hex');
         }
@@ -72,16 +68,13 @@ export default function (rton_data: any) {
             json_data.writeString('42', 'hex').writeDoubleLE(float);
         }
     }
-
-    function EncodeBoolean(boolean: boolean) {
+    function EncodeBoolean(boolean:any) {
         boolean ? json_data.writeInt8(0) : json_data.writeInt8(1);
     }
-
-    function EncodeUTF8String(string: string) {
+    function EncodeUTF8String(string:any) {
         json_data.writeBuffer(RtonNumber(Buffer.byteLength(string))).writeBuffer(RtonNumber(Buffer.byteLength(string))).writeString(string);
     }
-
-    function EncodeRTID(value: any) {
+    function EncodeRTID(value:any) {
         if (value.includes('@')) {
             const [name_str, type] = value.slice(5, -1).split('@');
             if ((name_str.match(/\./g) || []).length == 2) {
@@ -100,45 +93,42 @@ export default function (rton_data: any) {
             json_data.writeString('84', 'hex');
         }
     }
-
-    function EncodeCacheString(string: string) {
+    function EncodeCacheString(string:any) {
         if (string in cached_strings) {
             json_data.writeString('91', 'hex').writeBuffer(RtonNumber(cached_strings[string]));
-
         }
         else {
             cached_strings[string] = index++;
             json_data.writeString('90', 'hex').writeBuffer(RtonNumber(Buffer.byteLength(string))).writeString(string);
         }
     }
-
-    function EncodeArray(array_value: any) {
+    function EncodeArray(array_value:any) {
         json_data.writeString('86fd', 'hex').writeBuffer(RtonNumber(array_value.length));
         for (let value of array_value) {
-            GetVauleJson(value);
-        };
-        json_data.writeString('fe', 'hex')
+            GetValueJson(value);
+        }
+        ;
+        json_data.writeString('fe', 'hex');
     }
-
-    function EncodeObject(rton_value: any) {
+    function EncodeObject(rton_value:any) {
         json_data.writeString('85', 'hex');
         for (let [key, value] of Object.entries(rton_value)) {
             EncodeCacheString(key);
-            GetVauleJson(value);
-        };
+            GetValueJson(value);
+        }
+        ;
         json_data.writeString('ff', 'hex');
     }
-
     function EncodeRootObject() {
         json_data.writeString('RTON\x01\0\0\0');
         for (let [key, value] of Object.entries(rton_data)) {
             EncodeCacheString(key);
-            GetVauleJson(value);
-        };
+            GetValueJson(value);
+        }
+        ;
         json_data.writeString('ff', 'hex').writeString('DONE');
     }
-
-    function GetVauleJson(value:any) {
+    function GetValueJson(value:any) {
         switch (typeof value) {
             case 'string':
                 if ("RTID()" == value.slice(0, 5) + value.slice(-1)) {
@@ -153,13 +143,12 @@ export default function (rton_data: any) {
                 EncodeBoolean(value);
                 break;
             case 'number':
-                if (Number.isFinite(value)) {
-                    EncodeFloatNumber(value);
+                if (Number.isInteger(value)) {
+                    EncodeIntNumber(value);
                     break;
-                    
                 }
                 else {
-                    EncodeIntNumber(value);
+                    EncodeFloatNumber(value);
                     break;
                 }
             case 'object':

@@ -1,6 +1,6 @@
 "use strict";
-import readlineSync from "readline-sync";
+import prompt from "./prompt.js";
 export default function (): string {
-    const value = readlineSync.prompt({});
+    const value = prompt("\x1b[36m◉ ", undefined);
     return (value).toString();
 }

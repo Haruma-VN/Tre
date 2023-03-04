@@ -26,8 +26,8 @@ export interface popcap_extra_information {
     cols?: number,
 }
 
-async function atlas_pack_experimental(directory: string, width: number, height: number, popcap_output_subgroup_name?: string) {
-    if(popcap_output_subgroup_name === "" || popcap_output_subgroup_name === undefined || popcap_output_subgroup_name === null || popcap_output_subgroup_name === void 0){
+async function atlas_pack_experimental(directory: string, width: number, height: number, popcap_output_subgroup_name?: string, extend_for_new_pvz2_int_version: boolean = false) {
+    if (popcap_output_subgroup_name === "" || popcap_output_subgroup_name === undefined || popcap_output_subgroup_name === null || popcap_output_subgroup_name === void 0) {
         popcap_output_subgroup_name = basename(directory);
     }
     const containable_files: Array<string> = file_system.read_dir(directory);
@@ -56,7 +56,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     else {
         TreErrorMessage({ error: localization("cannot_get_res_data"), reason: localization("cannot_find_res_data_indicated_in_subgroup") }, localization("cannot_find_res_data_indicated_in_subgroup"));
     }
-    const img_list: Array<sprite_template> = new Array();
+    const img_list: Array<any> = new Array();
     for (let i in containable_pngs) {
         const sprite_dimension: { width: number, height: number } = await portal.dimension(containable_pngs[i]).then((result: { width: number, height: number }) => {
             return result;
@@ -144,6 +144,13 @@ async function atlas_pack_experimental(directory: string, width: number, height:
         await portal.cat(append_array[i], `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`, width, height);
         console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`)}`);
     };
+    if (extend_for_new_pvz2_int_version) {
+        for (let i: number = 0; i < result_json.resources.length; ++i) {
+            if ("path" in result_json.resources[i] && Array.isArray(result_json.resources[i].path)) {
+                result_json.resources[i].path = result_json.resources[i].path.join("\\");
+            }
+        }
+    }
     file_system.writejson(directory + "/../" + popcap_output_subgroup_name + '.json', result_json);
     console.log(color.fggreen_string("◉ " + `${localization("execution_actual_size")}: `) + `${img_list.length}`);
     console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(directory + "/../" + popcap_output_subgroup_name + '.json')}`);

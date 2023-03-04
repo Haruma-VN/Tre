@@ -21,7 +21,7 @@ export interface PopCapResJsonDetailInfo {
     aw: number,
     atlas?: boolean,
     id: string,
-    path: string[],
+    path: string[] | string,
     parent: string,
 }
 
@@ -67,6 +67,9 @@ async function atlas_split_experimental(): Promise<void> {
             if (json.resources[i].atlas != undefined) {
                 continue;
             }
+            if(typeof json.resources[i].path === "string"){
+                json.resources[i].path = json.resources[i].path.split("\\");
+            };
             const popcap_atlas_output_atlas_directory: string = dir_sys + "/" + path.join(...json.resources[i].path);
             file_system.create_multiple_parent(popcap_atlas_output_atlas_directory);
             for (const img of img_list) {

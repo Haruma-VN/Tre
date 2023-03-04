@@ -13,9 +13,9 @@ import * as color from "../../../../Tre.Libraries/Tre.Color/color.js";
 import path from "node:path";
 
 export default function (rsb_path: string, experimental: boolean = false) {
+    let extract_filesystem:boolean = false;
     if (experimental) {
-        console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("extract_working_files")}`));
-        var extract_filesystem = readline_integer(0, 1) == 1 ? true : false;
+        extract_filesystem = true;
         if (extract_filesystem) {
             console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_rtons")}`));
             var decode_rton = readline_integer(0, 1) == 1 ? true : false;

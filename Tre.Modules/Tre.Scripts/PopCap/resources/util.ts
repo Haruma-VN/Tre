@@ -1,7 +1,7 @@
 "use strict";
 import pack from './cat.js';
 import split from './split.js';
-import { read_single_folder, readjson, writejson } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
+import { read_single_folder, readjson, writejson, outfile } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import sortResObjects from "../../../Tre.Libraries/Tre.Sort/ArraySortSystem.js";
 import local_res_compare from './compare/local.js';
 import path from 'path';
@@ -9,6 +9,7 @@ import BeautifyRes from './beautify/beautify.js';
 import * as color from "../../../Tre.Libraries/Tre.Color/color.js";
 import localization from '../../../Tre.Callback/localization.js';
 import AdaptPvZ2InternationalResPath from "./expands/resources.js";
+import json_to_rton from "../rton/json2rton.js";
 
 export function LocalResourcesCompare(vanilla_directory: string, modded_directory: string) {
     local_res_compare(vanilla_directory, modded_directory);
@@ -42,15 +43,18 @@ export function res_pack(dir: string, mode: number, encode: number): void {
             }
         }
     });
+    const is_return_mode: boolean = (encode === 1) ? true : false;
+    const resource_return_output_data = pack(dir, mode, encode, res_groups, false, is_return_mode);
     switch (encode) {
         case 1:
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(dir).name}.rton`)}`);
+            outfile(`${path.resolve(`${dir}/../RESOURCES.rton`)}`, json_to_rton(resource_return_output_data));
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(dir).name}.RTON`)}`);
             break;
         case 0:
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(dir).name}.json`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../RESOURCES.json`)}`);
             break
     }
-    pack(dir, mode, encode, res_groups);
+
     return;
 }
 export function small_res_beautify(directory: string): void {
@@ -65,6 +69,7 @@ export function res_rewrite(dir: string, mode: number, encode: number): void {
     });
     switch (encode) {
         case 1:
+
             console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(dir).name}.rewrite.rton`)}`);
             break;
         case 0:

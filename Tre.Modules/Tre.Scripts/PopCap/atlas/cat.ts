@@ -57,7 +57,8 @@ export default async function (dir: string, width: number, height: number, is_si
         TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_method_in_atlas_info }, cannot_find_method_in_atlas_info);
         return 0;
     };
-    const selection = (atlas_info.method == 'path') ? 'extension' : 'id';
+    const selection: string = (atlas_info.method == 'path') ? 'extension' : 'id';
+    const expand_path_for_new_version: boolean = (atlas_info.expand_path === 'array') ? false : true;
     for (let i in atlas_info.groups) {
         atlas_info.groups[i].extension = atlas_info.groups[i].path[(atlas_info.groups[i].path.length - 1)];
     };
@@ -152,8 +153,15 @@ export default async function (dir: string, width: number, height: number, is_si
         await cat(append_array[i], `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`, width, height);
         console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`)}`);
     };
+    if (expand_path_for_new_version) {
+        for (let i: number = 0; i < result_json.resources.length; ++i) {
+            if ("path" in result_json.resources[i] && Array.isArray(result_json.resources[i].path)) {
+                result_json.resources[i].path = result_json.resources[i].path.join("\\");
+            }
+        }
+    }
     writejson(dir + "/../" + atlas_info.subgroup + '.json', result_json);
-    console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function}`)+`${img_list.length}`);
+    console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function}`) + `${img_list.length}`);
     console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(dir + "/../" + atlas_info.subgroup + '.json')}`);
     return 0;
 }

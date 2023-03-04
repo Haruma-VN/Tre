@@ -11,7 +11,7 @@
 	"atlasinfo_constructor": "AtlasInfo Constructor",
 	"atlasinfo_method_split": "AtlasInfo Split Method",
 	"atlasinfo_split": "AtlasInfo Split",
-	"available": "Available options:",
+	"available": "Available options",
 	"bad_extract_area": "Bad extract area",
 	"base64_decode": "Base64 Decode",
 	"base64_encode": "Base64 Encode",
@@ -196,7 +196,12 @@
 	"execution_start": "Execution start",
 	"decode_height": "Decode Height",
 	"decode_width": "Decode Width",
-	"popcap_old_resources_conversion_to_new_resources": "PopCap New Resources to Old Resources",
-	"popcap_new_resources_conversion_to_old_resources": "PopCap Old Resources to New Resources",
-	"cannot_find_specific_file": "Cannot find specific file"
+	"popcap_old_resources_conversion_to_new_resources": "PopCap Old Resources to New Resources",
+	"popcap_new_resources_conversion_to_old_resources": "PopCap New Resources to Old Resources",
+	"cannot_find_specific_file": "Cannot find specific file",
+	"popcap_support_utilities_for_new_pvz2_international": "Expand for PvZ2 International Resources's path",
+	"old_popcap_support": "List of string items (10.3 or lower support)",
+	"new_popcap_support": "String items (10.4 or above support)",
+	"popcap_resource_support_argument": "PopCap Resources's Path",
+	"press_any_key_to_exit": "Press any key to exit the program..."
 }

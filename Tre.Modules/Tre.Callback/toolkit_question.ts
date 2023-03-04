@@ -67,4 +67,7 @@ export namespace Argument.Tre.Packages {
     export const popcap_lawnstrings_new_require = `◉ ${localization("execution_argument")}: ${localization("popcap_lawnstrings_new_require")}`;
     export const res_rewrite_mode_safe = `      1. ${localization("res_rewrite_mode_safe")}`;
     export const res_rewrite_mode_safe_fix = `      2. ${localization("res_rewrite_mode_safe_fix")}`;
+    export const old_popcap_support = `      1. ${localization("old_popcap_support")}`;
+    export const new_popcap_support = `      2. ${localization("new_popcap_support")}`;
+    export const popcap_resource_support_argument = `◉ ${localization("execution_argument")}: ${localization("popcap_resource_support_argument")}`;
 }

@@ -392,8 +392,13 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_subgroup_argument}`));
                     Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
                     let popcap_subgroup_name: string = Console.ReadLine();
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resource_support_argument}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.old_popcap_support}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.new_popcap_support}`);
+                    let popcap_support_utilities_for_new_pvz2_international: boolean | number = Console.IntegerReadLine(1,2);
+                    popcap_support_utilities_for_new_pvz2_international = (popcap_support_utilities_for_new_pvz2_international === 2) ? true : false;
                     if (!Array.isArray(execute_file_dir)) {
-                        await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name);
+                        await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_atlas_pack_cross_resolution.void_number_readline_argument():

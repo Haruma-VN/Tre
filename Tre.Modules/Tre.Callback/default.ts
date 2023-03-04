@@ -7,8 +7,9 @@ import fs from 'node:fs';
 import { Argument } from "./toolkit_question.js";
 import version from "./Default/version.js";
 import localization from './localization.js';
+import exit_program from "./Default/exit.js";
 export default async function (): Promise<void> {
-    Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd()} | ${version.tre_version}`);
+    Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd().replace(/\\/g, '/')} | ${version.tre_version}`);
     const proc_arr: string[] = new Array();
     for (let i: number = 2; i < process.argv.length; ++i) {
         proc_arr.push(process.argv[i]);
@@ -68,7 +69,10 @@ export default async function (): Promise<void> {
                         await functions((i + 1), proc_arr[i], proc_arr.length, mode);
                     }
                     else{
-                        Console.WriteLine(color.fgred_string(`◉ ${localization("execution_failed")}: ${localization("cannot_find_specific_file")} ${proc_arr[i]}`));
+                        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.command_execute_in_progress} (${(i+1)}/${proc_arr.length})`));
+                        Console.WriteLine(proc_arr[i]);
+                        Console.WriteLine(color.fgred_string(`◉ ${localization("execution_failed")}: ${localization("cannot_find_specific_file")}`));
+                        continue;
                     }
                 };
                 break
@@ -81,7 +85,7 @@ export default async function (): Promise<void> {
                 return;
             }
         }
-        functions(1, proc_arr, 1, mode);
+        await functions(1, proc_arr, 1, mode);
     }
-    return;
+    return await exit_program();
 }
