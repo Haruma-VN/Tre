@@ -1,7 +1,8 @@
 "use strict";
-import { read_single_folder, readjson, writejson } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
+import { read_single_folder, readjson, writejson, outfile } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import BeautifyRes from './beautify/beautify.js';
 import path from 'node:path';
+import json2rton from '../rton/json2rton.js';
 
 export interface SimpleData {
     id: string;
@@ -31,6 +32,7 @@ export interface MainData {
 }
 
 export default function (dir: string, mode: number, encode: any, res_array_for_data: any[], is_rewrite_mode: boolean = false, is_return_output_mode: boolean = false): any {
+    let config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
     const rsg_data: any[] = res_array_for_data;
     let slot_count = 0;
     const resources_output_result: any = { "version": 1, "slot_count": 0, "groups": [] };
@@ -40,8 +42,13 @@ export default function (dir: string, mode: number, encode: any, res_array_for_d
         }
         if ("resources" in rsg_data[i]) {
             for (let j: number = 0; j < rsg_data[i].resources.length; j++) {
-                rsg_data[i].resources.slot = slot_count;
+                rsg_data[i].resources[j].slot = slot_count;
                 slot_count++;
+                if(config_json.resources.cat.fix_double_shadows){
+                    if(rsg_data[i].resources[j].id == "IMAGE_PEA_SHADOWS"){
+                        rsg_data[i].resources[j].cols = 2;
+                    }
+                }
             }
         }
     };
@@ -54,7 +61,12 @@ export default function (dir: string, mode: number, encode: any, res_array_for_d
         writejson(`${dir}/../${path.parse(dir).name}.json`, resources_output_result);
     }
     else {
-        writejson(`${dir}/../${path.parse(dir).name}.rewrite.json`, resources_output_result);
+        if(encode){
+            outfile(`${dir}/../${path.parse(dir).name}.rewrite.rton`, json2rton(resources_output_result));
+        }
+        else{
+            writejson(`${dir}/../${path.parse(dir).name}.rewrite.json`, resources_output_result);
+        }
     }
     return 0;
 }

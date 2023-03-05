@@ -269,7 +269,9 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     }
                     else {
                         execute_file_dir.forEach(async (file: string) => {
-                            await encode_rgba8888(file);
+                            if (path.parse(file).ext.toString().toLowerCase() === ".png" || path.parse(file).ext.toString().toLowerCase() === ".jpg" || path.parse(file).ext.toString().toLowerCase() === ".jpeg") {
+                                await encode_rgba8888(file);
+                            }
                         })
                     }
                     break;
@@ -279,7 +281,9 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     }
                     else {
                         execute_file_dir.forEach(async (file: string) => {
-                            await encode_argb8888(file);
+                            if (path.parse(file).ext.toString().toLowerCase() === ".png" || path.parse(file).ext.toString().toLowerCase() === ".jpg" || path.parse(file).ext.toString().toLowerCase() === ".jpeg") {
+                                await encode_argb8888(file);
+                            }
                         })
                     }
                     break;
@@ -289,7 +293,9 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     }
                     else {
                         execute_file_dir.forEach(async (file: string) => {
-                            await encode_etc1a(file);
+                            if (path.parse(file).ext.toString().toLowerCase() === ".png" || path.parse(file).ext.toString().toLowerCase() === ".jpg" || path.parse(file).ext.toString().toLowerCase() === ".jpeg") {
+                                await encode_etc1a(file);
+                            }
                         })
                     }
                     break;
@@ -299,7 +305,9 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     }
                     else {
                         execute_file_dir.forEach(async (file: string) => {
-                            await encode_pvrtc(file);
+                            if (path.parse(file).ext.toString().toLowerCase() === ".png" || path.parse(file).ext.toString().toLowerCase() === ".jpg" || path.parse(file).ext.toString().toLowerCase() === ".jpeg") {
+                                await encode_pvrtc(file);
+                            }
                         })
                     }
                     break;
@@ -395,7 +403,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resource_support_argument}`));
                     Console.WriteLine(`${Argument.Tre.Packages.old_popcap_support}`);
                     Console.WriteLine(`${Argument.Tre.Packages.new_popcap_support}`);
-                    let popcap_support_utilities_for_new_pvz2_international: boolean | number = Console.IntegerReadLine(1,2);
+                    let popcap_support_utilities_for_new_pvz2_international: boolean | number = Console.IntegerReadLine(1, 2);
                     popcap_support_utilities_for_new_pvz2_international = (popcap_support_utilities_for_new_pvz2_international === 2) ? true : false;
                     if (!Array.isArray(execute_file_dir)) {
                         await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international);

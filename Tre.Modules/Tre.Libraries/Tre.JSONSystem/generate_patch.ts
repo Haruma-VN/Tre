@@ -27,7 +27,7 @@ export default function (input1: any, input2: any): JSONPatch {
             if (Array.isArray(val1) && Array.isArray(val2)) {
                 val1.forEach((val, i) => {
                     if (val2.length <= i) {
-                        for (let j = i; j < val1.length; j++) {
+                        for (let j:any = i; j < val1.length; j++) {
                             patch.push({
                                 op: 'remove',
                                 path: currentPath.concat([j]).join('/')
@@ -43,10 +43,10 @@ export default function (input1: any, input2: any): JSONPatch {
                         });
                     }
                 });
-                for (let i = val1.length; i < val2.length; i++) {
+                for (let i:any = val1.length; i < val2.length; i++) {
                     patch.push({
                         op: 'add',
-                        path: currentPath.concat([i]).join('/'),
+                        path: currentPath.concat([(i)]).join('/'),
                         value: val2[i]
                     });
                 }
@@ -69,7 +69,7 @@ export default function (input1: any, input2: any): JSONPatch {
             if (!(key in obj1)) {
                 patch.push({
                     op: 'add',
-                    path: path.concat(key).join('/'),
+                    path: path.concat((key as any)).join('/'),
                     value: obj2[key]
                 });
             }
@@ -77,7 +77,6 @@ export default function (input1: any, input2: any): JSONPatch {
     };
 
     walk(input1, input2);
-    // forgot "/" before patch oof
     for (let i = 0; i < patch.length; i++) {
         if (!patch[i].path.startsWith("/")) {
             patch[i].path = "/" + patch[i].path;

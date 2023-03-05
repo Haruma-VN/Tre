@@ -25,7 +25,7 @@ namespace BeautifyRes.Tre.Resources {
     export type PopCapCommonObjectInAtlasResources = {
         slot?: number,
         id?: string,
-        path?: Array<string>,
+        path?: Array<string> | string,
         type: string,
         parent: string,
         ax?: number,
@@ -42,6 +42,8 @@ namespace BeautifyRes.Tre.Resources {
         const PopCapSortOrderNumber: PopCapAnyResources = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
         return PopCapSortOrderNumber.resources.beautify_order[popcap_location_in_setting_display];
     }
+
+    export const repairable_data_for_integer_negative_number: Array<string> = ["width", "height", "cols", "aw", "ah", "ax", "ay"]
 
     export const allowed_items_in_popcap_small_list_for_resources: Array<string> = ["id", "type", "parent", "res", "resources", "subgroups"];
 
@@ -69,7 +71,7 @@ namespace BeautifyRes.Tre.Resources {
         cols = PopCapSortOrderNumber("cols"),
         srcpath = PopCapSortOrderNumber("srcpath"),
     }
-    
+
     export function beautify_res(popcap_common_json_item_in_list_resources: PopCapAnyResources) {
         const PopCapSortOrder: any = {
             slot: PopCapSort.slot,
@@ -102,11 +104,14 @@ namespace BeautifyRes.Tre.Resources {
                     return PopCapSortOrder[a] - PopCapSortOrder[b];
                 }).map(function (popcap_common_item_in_small_res_list: string) {
                     if (allowed_items_in_popcap_object_in_small_resources.includes(popcap_common_item_in_small_res_list)) {
+                        if (repairable_data_for_integer_negative_number.includes(popcap_common_item_in_small_res_list)) {
+                            popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] = (popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] > 0) ? popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] : popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] * -1;
+                        }
                         return { [popcap_common_item_in_small_res_list]: popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] };
                     }
 
-                }).reduce(function (merged, obj) {
-                    return { ...merged, ...obj };
+                }).reduce(function (popcap_resource_common_item_object_key, popcap_resource_common_item_object_value) {
+                    return { ...popcap_resource_common_item_object_key, ...popcap_resource_common_item_object_value };
                 }, {}) as PopCapCommonObjectInAtlasResources;
             }
         }

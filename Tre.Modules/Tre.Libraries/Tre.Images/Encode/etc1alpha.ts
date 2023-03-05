@@ -12,7 +12,7 @@ export default async function (dir: string): Promise<void> {
     try {
         const tre_thirdparty: string = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
         const etc_process: string = `etcpak.exe --etc1 "${dir}" "${dirname(dir)}/${basename(dir).toUpperCase()}.ptx"`;
-        const dimension_x: { width: number, height: number } = await dimension(dir).then((result) => result).finally(() => { });
+        const dimension_x: { width: number, height: number } = await dimension(dir).then((result) => result);
         const width: number = dimension_x.width;
         const height: number = dimension_x.height;
         const offset = width * height / 2;

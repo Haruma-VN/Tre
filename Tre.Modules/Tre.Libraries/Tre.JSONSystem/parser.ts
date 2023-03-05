@@ -1,13 +1,15 @@
 "use strict";
 import fs from 'node:fs';
-import { TreErrorMessage } from '../../Tre.Debug/Tre.ErrorSystem.js';
+import JSONC from 'jsonc-simple-parser';
+import localization from "../../Tre.Callback/localization.js";
+
 export interface json_config {
   json: {
     "strict_mode": boolean
   }
 }
-import JSONC from 'jsonc-simple-parser';
-export default function (data: string | {}): {} {
+
+export default function (data: any): {} {
   const json_config: json_config = JSONC.parse(fs.readFileSync(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", { encoding: "utf-8", flag: "r" }));
   if (typeof data === 'object') {
     return data;
@@ -20,29 +22,29 @@ export default function (data: string | {}): {} {
       } catch (error: any) {
         if (error instanceof SyntaxError) {
           if (error.message != null) {
-            let position = error.message.match(/\d+/g)[0];
+            let position = (error.message as any).match(/\d+/g)[0];
             let lines = data.split('\n');
             let lineNumber = 1;
             let currentPosition = 0;
             for (let line of lines) {
               if (currentPosition + line.length >= position) {
                 if (line.match(/,\s*[\]\}]/)) {
-                  TreErrorMessage({ system: `Trailing comma at line ${lineNumber}: ${line.trim()}` }, `Trailing comma at line ${lineNumber}: ${line.trim()}`);
+                  throw new Error(localization("trailing_commas_at_line") + `${lineNumber}: ${line.trim()}`);
                 }
                 break;
               }
               currentPosition += line.length + 1;
               lineNumber++;
             }
-            TreErrorMessage({ system: error.message.toString() }, `SyntaxError: Unexpected token } in JSON at line ${lineNumber}: ${lines[lineNumber - 1]}`);
+            throw new Error(localization("syntax_error") + ` ${lineNumber}: ${lines[lineNumber - 1]}`);
 
           }
         } else if (error instanceof TypeError) {
-          TreErrorMessage({ system: `TypeError: The JSON data is not a string` }, `TypeError: The JSON data is not a string`);
+          throw new Error(`${localization("type_error")}`);
         } else if (error instanceof URIError) {
-          TreErrorMessage({ system: `URIError: The string contains illegal characters` }, `URIError: The string contains illegal characters`);
+          throw new Error(`${localization("invalid_char")}`);
         } else {
-          TreErrorMessage({ system: `Error: ${error.message}` }, `Error: ${error.message}`);
+          throw new Error(error.message.toString());
         }
         return {};
       }

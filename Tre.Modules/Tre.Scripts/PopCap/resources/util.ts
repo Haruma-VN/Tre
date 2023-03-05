@@ -10,6 +10,7 @@ import * as color from "../../../Tre.Libraries/Tre.Color/color.js";
 import localization from '../../../Tre.Callback/localization.js';
 import AdaptPvZ2InternationalResPath from "./expands/resources.js";
 import json_to_rton from "../rton/json2rton.js";
+import filter_json from './filter/json_filter.js';
 
 export function LocalResourcesCompare(vanilla_directory: string, modded_directory: string) {
     local_res_compare(vanilla_directory, modded_directory);
@@ -42,7 +43,8 @@ export function res_pack(dir: string, mode: number, encode: number): void {
                 return json;
             }
         }
-    });
+    }).filter(file => file !== undefined)
+    .map(file => file as any);;
     const is_return_mode: boolean = (encode === 1) ? true : false;
     const resource_return_output_data = pack(dir, mode, encode, res_groups, false, is_return_mode);
     switch (encode) {
@@ -69,7 +71,6 @@ export function res_rewrite(dir: string, mode: number, encode: number): void {
     });
     switch (encode) {
         case 1:
-
             console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(dir).name}.rewrite.rton`)}`);
             break;
         case 0:
