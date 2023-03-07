@@ -7,6 +7,7 @@ import best_sorting from '../../../Tre.Libraries/Tre.Sort/ArraySortSystem.js';
 import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
 import localization from "../../../Tre.Callback/localization.js";
 import path from "node:path";
+import getTrim from "./helper/trim.js";
 
 export type AtlasImage = {
     slot: number;
@@ -40,7 +41,7 @@ export default async function (dir: string, width: number, height: number, is_si
     not_found_res_indicated_in_subgroups = "Not found res data indicated in subgroup",
     total_sprites_process_in_thiz_function: string = "Total sprites process:", thiz_selection_max_rects_bin_iz_smart: boolean = true, thiz_selection_max_rects_bin_iz_pot: boolean = false,
     thiz_selection_max_rects_bin_iz_square: boolean = true, thiz_selection_max_rects_bin_can_be_rotation: boolean = false, thiz_selection_max_rects_bin_padding_size: number = 1) {
-    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
+    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true);
     let padding: number = config_json.atlas.max_rects_bin_pack_simple.padding;
     thiz_selection_max_rects_bin_padding_size = (is_simple_pack) ? padding : thiz_selection_max_rects_bin_padding_size;
     const img_list = new Array();
@@ -57,6 +58,7 @@ export default async function (dir: string, width: number, height: number, is_si
         TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_method_in_atlas_info }, cannot_find_method_in_atlas_info);
         return 0;
     };
+    const is_trim_mode: boolean = ("trim" in atlas_info && atlas_info.trim) ? true : false;
     const selection: string = (atlas_info.method == 'path') ? 'extension' : 'id';
     const expand_path_for_new_version: boolean = (atlas_info.expand_path === 'array') ? false : true;
     for (let i in atlas_info.groups) {
@@ -108,9 +110,11 @@ export default async function (dir: string, width: number, height: number, is_si
         resources: new Array(),
     };
     const append_array = new Array();
+    const dimension_array_value: Array<{ width: number, height: number }> = new Array();
     for (let i = 0; i < img_data.length; ++i) {
         img_data[i] = best_sorting(img_data[i]);
         const count = (i < 9 && i >= 0) ? ("0" + i) : i;
+        dimension_array_value.push(is_trim_mode ? getTrim(img_data[i]) : {width: width, height: height});
         result_json.resources.push({
             slot: 0,
             id: "ATLASIMAGE_ATLAS_" + atlas_info.subgroup.toUpperCase() + "_" + count,
@@ -120,8 +124,8 @@ export default async function (dir: string, width: number, height: number, is_si
             ],
             type: "Image",
             atlas: true,
-            width: parseInt(width.toString()),
-            height: parseInt(height.toString()),
+            width: parseInt(dimension_array_value[i].width.toString()),
+            height: parseInt(dimension_array_value[i].height.toString()),
         },)
         const child_array = new Array();
         for (let j in img_data[i]) {
@@ -150,7 +154,7 @@ export default async function (dir: string, width: number, height: number, is_si
     };
     for (let i = 0; i < append_array.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i.toString()) : i;
-        await cat(append_array[i], `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`, width, height);
+        await cat(append_array[i], `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`, dimension_array_value[i].width, dimension_array_value[i].height);
         console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`)}`);
     };
     if (expand_path_for_new_version) {

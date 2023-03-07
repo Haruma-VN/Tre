@@ -5,7 +5,7 @@ import { TreErrorMessage } from "../../../../Tre.Debug/Tre.ErrorSystem.js";
 import localization from "../../../../Tre.Callback/localization.js";
 import * as color from "../../../../Tre.Libraries/Tre.Color/color.js";
 import path from "node:path";
-import sharp from "sharp";
+import getTrim from "../helper/trim.js";
 import { MaxRectsPacker } from "maxrects-packer";
 import * as portal from "../../../../Tre.Libraries/Tre.Images/util.js";
 
@@ -26,7 +26,7 @@ export interface popcap_extra_information {
     cols?: number,
 }
 
-async function atlas_pack_experimental(directory: string, width: number, height: number, popcap_output_subgroup_name?: string, extend_for_new_pvz2_int_version: boolean = false) {
+async function atlas_pack_experimental(directory: string, width: number, height: number, popcap_output_subgroup_name?: string, extend_for_new_pvz2_int_version: boolean = false, is_trim_mode:boolean = false) {
     if (popcap_output_subgroup_name === "" || popcap_output_subgroup_name === undefined || popcap_output_subgroup_name === null || popcap_output_subgroup_name === void 0) {
         popcap_output_subgroup_name = basename(directory);
     }
@@ -99,8 +99,10 @@ async function atlas_pack_experimental(directory: string, width: number, height:
         resources: new Array(),
     };
     const append_array = new Array();
+    const dimension_array_value: Array<{ width: number, height: number }> = new Array();
     for (let i = 0; i < img_data.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i) : i;
+        dimension_array_value.push(is_trim_mode ? getTrim(img_data[i]) : {width: width, height: height});
         result_json.resources.push({
             slot: 0,
             id: "ATLASIMAGE_ATLAS_" + popcap_output_subgroup_name.toUpperCase() + "_" + count,
@@ -110,8 +112,8 @@ async function atlas_pack_experimental(directory: string, width: number, height:
             ],
             type: "Image",
             atlas: true,
-            width: parseInt(width.toString()),
-            height: parseInt(height.toString()),
+            width: parseInt(dimension_array_value[i].width.toString()),
+            height: parseInt(dimension_array_value[i].height.toString()),
         },)
         const child_array = new Array();
         for (let j in img_data[i]) {
@@ -141,7 +143,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     };
     for (let i = 0; i < append_array.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i.toString()) : i;
-        await portal.cat(append_array[i], `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`, width, height);
+        await portal.cat(append_array[i], `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`, dimension_array_value[i].width, dimension_array_value[i].height);
         console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`)}`);
     };
     if (extend_for_new_pvz2_int_version) {

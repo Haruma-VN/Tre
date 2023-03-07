@@ -42,7 +42,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
             }
         }
     }
-    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
+    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true);
     execute_file_count = (Array.isArray(execute_file_dir)) ? execute_file_dir.length : execute_file_count;
     execute_file_length = (Array.isArray(execute_file_dir)) ? execute_file_dir.length : execute_file_length;
     const start_timer: number = Date.now();
@@ -428,8 +428,11 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Console.WriteLine(`${Argument.Tre.Packages.new_popcap_support}`);
                     let popcap_support_utilities_for_new_pvz2_international: boolean | number = Console.IntegerReadLine(1, 2);
                     popcap_support_utilities_for_new_pvz2_international = (popcap_support_utilities_for_new_pvz2_international === 2) ? true : false;
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_support_trim}`));
+                    let popcap_support_trimming_mode_for_pvz2_texfmt_0: boolean | number = Console.IntegerReadLine(0, 1);
+                    popcap_support_trimming_mode_for_pvz2_texfmt_0 = (popcap_support_trimming_mode_for_pvz2_texfmt_0 === 1) ? true : false;
                     if (!Array.isArray(execute_file_dir)) {
-                        await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international);
+                        await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international, popcap_support_trimming_mode_for_pvz2_texfmt_0);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_atlas_pack_cross_resolution.void_number_readline_argument():

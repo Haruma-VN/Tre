@@ -32,7 +32,7 @@ export interface configAtlas {
     }
 }
 export default async function (opt: number) {
-    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
+    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true);
     let json: any = {};
     const img_list = new Array();
     let directory_name = new String();
@@ -63,7 +63,7 @@ export default async function (opt: number) {
         if (json_config.atlas.split.repairDuplicateFolder === true) {
             json.resources = fix_duplicate_res(json.resources);
         };
-        let atlas_info = { method: "", subgroup: json.id, expand_path: "", groups: new Array() };
+        let atlas_info = { method: "", subgroup: json.id, expand_path: "", trim: false, groups: new Array() };
         let extend_info = new Array();
         for (const info of json.resources) {
             if (info.atlas != true) {
@@ -123,6 +123,7 @@ export default async function (opt: number) {
             }
         };
         atlas_info.method = (option == 'extension') ? "path" : "id";
+        atlas_info.trim = false;
         if (json_config.atlas.split.allow_atlas_info) {
             writejson(dir_sys + '/' + 'AtlasInfo.json', atlas_info);
         }
