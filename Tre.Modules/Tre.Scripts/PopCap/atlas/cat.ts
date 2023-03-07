@@ -40,7 +40,7 @@ export default async function (dir: string, width: number, height: number, is_si
     not_found_res_indicated_in_subgroups = "Not found res data indicated in subgroup",
     total_sprites_process_in_thiz_function: string = "Total sprites process:", thiz_selection_max_rects_bin_iz_smart: boolean = true, thiz_selection_max_rects_bin_iz_pot: boolean = false,
     thiz_selection_max_rects_bin_iz_square: boolean = true, thiz_selection_max_rects_bin_can_be_rotation: boolean = false, thiz_selection_max_rects_bin_padding_size: number = 1) {
-    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
+    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
     let padding: number = config_json.atlas.max_rects_bin_pack_simple.padding;
     thiz_selection_max_rects_bin_padding_size = (is_simple_pack) ? padding : thiz_selection_max_rects_bin_padding_size;
     const img_list = new Array();

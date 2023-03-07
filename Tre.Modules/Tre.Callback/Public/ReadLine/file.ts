@@ -6,7 +6,7 @@ import * as color from "../../../Tre.Libraries/Tre.Color/color.js";
 import fs from "node:fs";
 import localization from "../../localization.js";
 
-export default function TypeReadChecker(): string {
+export default function FileChecker(): string {
     let dir: string = readline_normal();
     while (dir !== '') {
         if (dir === "./") {
@@ -19,14 +19,14 @@ export default function TypeReadChecker(): string {
         }
         try {
             const stats = fs.statSync(dir);
-            if (stats.isDirectory() || stats.isFile()) {
+            if (stats.isFile()) {
                 return dir;
             } else {
                 Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.execute_error_log} ${dir} `));
                 dir = readline_normal();
             }
         } catch (err) {
-            Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.execute_error_log} ${dir} ${localization("not_a_directory_or_file")}`));
+            Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.execute_error_log} ${dir} ${localization("not_a_file")}`));
             dir = readline_normal();
         }
     };

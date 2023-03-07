@@ -9,7 +9,7 @@ import version from "./Default/version.js";
 import localization from './localization.js';
 import exit_program from "./Default/exit.js";
 export default async function (): Promise<void> {
-    Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd().replace(/\\/g, '/')} | ${version.tre_version}`);
+    Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd().replace(/\\/g, '/')} | ${version.tre_version} | ${localization("this.language")}`);
     const proc_arr: string[] = new Array();
     for (let i: number = 2; i < process.argv.length; ++i) {
         proc_arr.push(process.argv[i]);

@@ -1,10 +1,10 @@
 import { SmartBuffer } from "smart-buffer";
 import { signed, unsigned } from "big-varint";
-export default function (rton_data: any) {
+export default function (rton_data: any): any {
     const json_data = new SmartBuffer();
-    const cached_strings:any = new Object();
+    const cached_strings = new Object();
     let index = 0;
-    function RtonNumber(unsigned_number:any, signed_number?:boolean) {
+    function RtonNumber(unsigned_number: number, signed_number?: boolean) {
         if (signed_number) {
             return Buffer.from(signed.encode(BigInt(unsigned_number)));
         }
@@ -12,7 +12,7 @@ export default function (rton_data: any) {
             return Buffer.from(unsigned.encode(BigInt(unsigned_number)));
         }
     }
-    function EncodeIntNumber(int:any) {
+    function EncodeIntNumber(int) {
         if (int == 0) {
             json_data.writeString('21', 'hex');
         }
@@ -47,7 +47,7 @@ export default function (rton_data: any) {
             json_data.writeString('25', 'hex').writeBuffer(RtonNumber(int, true));
         }
     }
-    function CheckFloatInfinity(float:any) {
+    function CheckFloatInfinity(float) {
         let floatcheck = new SmartBuffer();
         const floatnumber = floatcheck.writeFloatLE(float).readFloatLE();
         if (floatnumber == Infinity || floatnumber == -Infinity) {
@@ -57,7 +57,7 @@ export default function (rton_data: any) {
             return true;
         }
     }
-    function EncodeFloatNumber(float:any) {
+    function EncodeFloatNumber(float) {
         if (float == 0) {
             json_data.writeString('23', 'hex');
         }
@@ -68,13 +68,13 @@ export default function (rton_data: any) {
             json_data.writeString('42', 'hex').writeDoubleLE(float);
         }
     }
-    function EncodeBoolean(boolean:any) {
+    function EncodeBoolean(boolean) {
         boolean ? json_data.writeInt8(0) : json_data.writeInt8(1);
     }
-    function EncodeUTF8String(string:any) {
+    function EncodeUTF8String(string) {
         json_data.writeBuffer(RtonNumber(Buffer.byteLength(string))).writeBuffer(RtonNumber(Buffer.byteLength(string))).writeString(string);
     }
-    function EncodeRTID(value:any) {
+    function EncodeRTID(value) {
         if (value.includes('@')) {
             const [name_str, type] = value.slice(5, -1).split('@');
             if ((name_str.match(/\./g) || []).length == 2) {
@@ -93,7 +93,7 @@ export default function (rton_data: any) {
             json_data.writeString('84', 'hex');
         }
     }
-    function EncodeCacheString(string:any) {
+    function EncodeCacheString(string) {
         if (string in cached_strings) {
             json_data.writeString('91', 'hex').writeBuffer(RtonNumber(cached_strings[string]));
         }
@@ -102,7 +102,7 @@ export default function (rton_data: any) {
             json_data.writeString('90', 'hex').writeBuffer(RtonNumber(Buffer.byteLength(string))).writeString(string);
         }
     }
-    function EncodeArray(array_value:any) {
+    function EncodeArray(array_value) {
         json_data.writeString('86fd', 'hex').writeBuffer(RtonNumber(array_value.length));
         for (let value of array_value) {
             GetValueJson(value);
@@ -110,7 +110,7 @@ export default function (rton_data: any) {
         ;
         json_data.writeString('fe', 'hex');
     }
-    function EncodeObject(rton_value:any) {
+    function EncodeObject(rton_value) {
         json_data.writeString('85', 'hex');
         for (let [key, value] of Object.entries(rton_value)) {
             EncodeCacheString(key);
@@ -128,7 +128,7 @@ export default function (rton_data: any) {
         ;
         json_data.writeString('ff', 'hex').writeString('DONE');
     }
-    function GetValueJson(value:any) {
+    function GetValueJson(value) {
         switch (typeof value) {
             case 'string':
                 if ("RTID()" == value.slice(0, 5) + value.slice(-1)) {
@@ -156,12 +156,16 @@ export default function (rton_data: any) {
                     EncodeArray(value);
                     break;
                 }
+                else if (value == null) {
+                    json_data.writeString('84', 'hex');
+                    break;
+                }
                 else {
                     EncodeObject(value);
                     break;
                 }
-            case null:
-                EncodeRTID(value);
+            case undefined:
+                json_data.writeString('90\0', 'hex');
                 break;
             default:
                 console.log("error: ", value);

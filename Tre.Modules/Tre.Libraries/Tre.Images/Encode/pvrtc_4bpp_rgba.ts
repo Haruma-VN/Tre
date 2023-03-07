@@ -14,13 +14,14 @@ export default async function (dir: string): Promise<void> {
     const width: number = dimension_x.width;
     const height: number = dimension_x.height;
     const offset: number = width * height / 2;
+    console.log(color.fggreen_string(`◉ ${localization("execution_information")}: `) + "rgb_pvrtc4_a_8");
     console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
     try {
         await execSync(pvrtc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
     } catch (error: any) {
-        TreErrorMessage({ error: localization("cannot_encode_ptx"), reason: localization("unknown"), system: error.toString() }, `${localization("cannot_encode_ptx")} ${dir}`);
+        TreErrorMessage({ error: localization("cannot_encode_ptx"), reason: localization("unknown"), system: error.message.toString() }, `${localization("cannot_encode_ptx")} ${dir}`);
         return;
     }
     const originalImage = await fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`).slice(fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`).length - offset);

@@ -3,11 +3,11 @@ import { signed, unsigned } from "big-varint";
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import { readjson } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import localization from "../../../Tre.Callback/localization.js";
-export default function (rton_data:any) {
-    let index_count:number = 8;
-    let indent_number:number = 0;
-    let currrent_indent:string = '\r\n';
-    let indent:string = '\t';
+export default function (rton_data: any): any {
+    let index_count = 8;
+    let indent_number = 0;
+    let currrent_indent = '\r\n';
+    let indent = '\t';
     let R0x90List = new Array();
     let R0x92List = new Array();
     const Str_Null = "*";
@@ -22,7 +22,7 @@ export default function (rton_data:any) {
         }
         indent = (config_json.json.space != undefined) ? config_json.json.space : '\t';
     }
-    function RtonNumber(unsigned_number:any, utf8:boolean = false) {
+    function RtonNumber(unsigned_number, utf8 = false) {
         let offset_start = index_count;
         let number = rton_data[index_count];
         while (number > 127) {
@@ -42,7 +42,7 @@ export default function (rton_data:any) {
         }
     }
     ;
-    function ReadString(string_length:any, rtid:any) {
+    function ReadString(string_length, rtid) {
         let string = rton_data.slice(index_count, index_count += parseInt(string_length)).toString('utf8');
         if (rtid) {
             return string;
@@ -72,7 +72,7 @@ export default function (rton_data:any) {
                 const string_temp_02 = ReadString(RtonNumber(true, true), true);
                 return `"${util.format(Str_RTID_3, string_temp_02, string_temp_01)}"`;
             default:
-                return null;
+                return `""`;
         }
     }
     ;
@@ -92,7 +92,7 @@ export default function (rton_data:any) {
             return `[${new_indent}${items.join(`,${new_indent}`)}${trailing_commas}${currrent_indent}${indent.repeat(indent_number)}]`;
         }
         ;
-        return `[],`;
+        return `[]`;
     }
     ;
     function ReadObject() {
@@ -113,10 +113,10 @@ export default function (rton_data:any) {
             return `{${new_indent}${items.join(`,${new_indent}`)}${trailing_commas}${currrent_indent}${indent.repeat(indent_number)}}`;
         }
         ;
-        return `{},`;
+        return `{}`;
     }
     ;
-    function ReadByteCode(bytecode:any) {
+    function ReadByteCode(bytecode) {
         index_count++;
         switch (bytecode) {
             case 0:
@@ -206,5 +206,5 @@ export default function (rton_data:any) {
     else {
         TreErrorMessage({ error: localization("this_file_is_not_rton"), reason: localization("this_file_is_not_rton"), system: "this_file_is_not_RTON" }, localization("this_file_is_not_rton"));
     }
+    ;
 }
-;

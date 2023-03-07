@@ -47,7 +47,7 @@ export default async function (RSB_composite_files: string[], TreRSBInfo: any[],
                             rsgp_unpacked.push(file);
                         });
                     } catch (error: any) {
-                        TreErrorMessage({ error: "Can't open " + rsgp_item, reason: "Can't open " + rsgp_item, system: error.toString() }, "Can't open " + rsgp_item);
+                        TreErrorMessage({ error: "Can't open " + rsgp_item, reason: "Can't open " + rsgp_item, system: error.message.toString() }, "Can't open " + rsgp_item);
                         return;
                     }
                     if (rsgp_item.indexOf('_1536') !== -1 || rsgp_item.indexOf('_768') !== -1 || rsgp_item.indexOf('_384') !== -1 || rsgp_item.indexOf('_1200') !== -1 || rsgp_item.toUpperCase().indexOf('_COMMON') !== -1) {

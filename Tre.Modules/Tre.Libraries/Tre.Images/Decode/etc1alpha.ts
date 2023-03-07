@@ -4,11 +4,11 @@ import { execSync } from 'node:child_process';
 import { parse } from "node:path";
 import sharp from 'sharp';
 import * as color from "../../Tre.Color/color.js";
-import { basename, extname } from '../../Tre.Basename/util.js';
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import localization from '../../../Tre.Callback/localization.js';
 import path from "node:path";
 export default async function (dir: string, width: number, height: number): Promise<void> {
+    console.log(color.fggreen_string(`◉ ${localization("execution_information")}: `) + "rgb_etc1_a_8");
     console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
@@ -30,7 +30,7 @@ export default async function (dir: string, width: number, height: number): Prom
                 parse(item).ext.toUpperCase() != '.EXE' ? fs.unlinkSync(`${tre_thirdparty}${item}`) : {};
             }
         }).catch((error: any) => {
-            TreErrorMessage({ error: localization("unknown"), reason: localization("popcap_ptx_decode_native_error"), system: error.toString() }, localization("popcap_ptx_decode_native_error"));
+            TreErrorMessage({ error: localization("unknown"), reason: localization("popcap_ptx_decode_native_error"), system: error.message.toString() }, localization("popcap_ptx_decode_native_error"));
         });
     });
-};
+}

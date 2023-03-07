@@ -46,8 +46,8 @@ export default function sortResObjects(array: ResObjectSortingItem[]): ResObject
         TreErrorMessage({
             error: "Bug",
             Reason: "Unexpected error while sorting resources objects",
-            system: error.toString()
-        }, error.toString());
+            system: error.message.toString()
+        }, error.message.toString());
         return [];
     }
 }

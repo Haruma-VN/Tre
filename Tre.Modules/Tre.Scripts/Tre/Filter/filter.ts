@@ -13,7 +13,7 @@ interface res_data {
     y?: number,
 }
 export default function (data:res_data[]): res_data[] {
-    data = (typeof data == "string") ? parse(data) : data;
+    (data as any) = (typeof data == "string") ? parse(data) : data;
     const Res_Duplicate: res_data[] = new Array();
     for (let i: number = 0; i < data.length; ++i) {
         if(data[i].slot != undefined){

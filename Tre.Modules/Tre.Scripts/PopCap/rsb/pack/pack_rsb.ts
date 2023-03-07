@@ -12,7 +12,7 @@ export default async function (rsb_path: string): Promise<void> {
     try {
         var TreRSBInfo = Object.entries(readjson(`${rsb_path}/TreRSBInfo.json`));
     } catch (error: any) {
-        TreErrorMessage({ error: "Can't read TreRSBInfo", reason: "Can't read TreRSBInfo", system: error.toString() }, "Can't read TreRSBInfo");
+        TreErrorMessage({ error: "Can't read TreRSBInfo", reason: "Can't read TreRSBInfo", system: error.message.toString() }, "Can't read TreRSBInfo");
         return;
     }
     let RSB_composite_files: string[] = new Array();

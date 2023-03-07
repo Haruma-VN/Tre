@@ -6,7 +6,7 @@ import localization from "../../../Tre.Callback/localization.js";
 import * as color from "../../../Tre.Libraries/Tre.Color/color.js";
 
 export default async function (dir: string, width: number, height: number, display_not_atlas_info?: string, cannot_find_groups_array_in_atlasinfo?: string, cannot_find_subgroup_in_atlas_info?: string, cannot_find_method_in_atlas_info?: string, cannot_get_res_data?: string, not_found_res_indicated_in_subgroups?: string, total_sprites_process_in_thiz_function?: string): Promise<void> {
-    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
+    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
     // 1536
     await cat(dir, width, height, true, display_not_atlas_info, cannot_find_groups_array_in_atlasinfo, cannot_find_subgroup_in_atlas_info, cannot_find_method_in_atlas_info, cannot_get_res_data, not_found_res_indicated_in_subgroups, total_sprites_process_in_thiz_function);
     // 768

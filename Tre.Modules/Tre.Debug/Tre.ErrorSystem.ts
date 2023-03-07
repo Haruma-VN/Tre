@@ -2,7 +2,10 @@
 import fs from 'fs';
 import stringify from '../Tre.Libraries/Tre.JSONSystem/stringify.js';
 import localization from "../Tre.Callback/localization.js";
+import readjson from '../Tre.Libraries/Tre.FileSystem/ReadFile/readfilejson.js';
+
 function TreErrorSystem(error: {} | string): void {
+    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true);
     const dir = process.cwd() + "/Tre.Debug/";
     const DateBug = new Date();
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -12,13 +15,18 @@ function TreErrorSystem(error: {} | string): void {
         fs.mkdirSync(dir);
     };
     if (typeof error === "string") {
-        return fs.writeFileSync(dir + filename + '.json', error);
+        if (config_json.debugger.allow_tracking_bugs) {
+            return fs.writeFileSync(dir + filename + '.json', error.toString());
+        }
     }
     else {
-        return fs.writeFileSync(dir + filename + '.json', stringify(error));
+        if (config_json.debugger.allow_tracking_bugs) {
+            return fs.writeFileSync(dir + filename + '.json', stringify(error));
+        }
     }
 };
 function TreErrorMessage(error: {}, message: string): void {
+    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true);
     if (typeof error == 'object') {
         error = stringify(error);
     };
@@ -31,10 +39,14 @@ function TreErrorMessage(error: {}, message: string): void {
         fs.mkdirSync(dir);
     };
     if (typeof error === "string") {
-        fs.writeFileSync(dir + filename + '.json', error);
+        if (config_json.debugger.allow_tracking_bugs) {
+            return fs.writeFileSync(dir + filename + '.json', error.toString());
+        }
     }
     else {
-        fs.writeFileSync(dir + filename + '.json', stringify(error));
+        if (config_json.debugger.allow_tracking_bugs) {
+            return fs.writeFileSync(dir + filename + '.json', stringify(error));
+        }
     }
     return console.log('\x1b[31m◉ ' + localization("execution_failed") + ": " + message + '\x1b[0m');
 }

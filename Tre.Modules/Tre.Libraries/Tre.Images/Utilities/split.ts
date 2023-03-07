@@ -32,7 +32,7 @@ export interface configAtlas {
     }
 }
 export default async function (opt: number) {
-    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
+    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
     let json: any = {};
     const img_list = new Array();
     let directory_name = new String();
@@ -108,7 +108,7 @@ export default async function (opt: number) {
                 }
             }
         };
-        await Promise.all(promises).catch(err => { return TreErrorMessage({ error: localization("error"), system: err.toString(), reason: localization("native_atlas_splitting_error") }, localization("native_atlas_splitting_error")) });
+        await Promise.all(promises).catch((err: any) => { return TreErrorMessage({ error: localization("error"), system: err.message.toString(), reason: localization("native_atlas_splitting_error") }, localization("native_atlas_splitting_error")) });
         parent_list = [...new Set(parent_list)];
         for (let info of extend_info) {
             for (let parent of parent_list) {

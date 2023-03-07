@@ -1,5 +1,5 @@
 "use strict";
-import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, encode_etc1a, encode_pvrtc, decode_etc1a, decode_pvrtc } from "../Tre.Libraries/Tre.Images/util.js";
+import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, encode_etc1a, encode_pvrtc, decode_etc1a, decode_pvrtc, decode_etc1alpha_palette, encode_etc1alpha_palette, } from "../Tre.Libraries/Tre.Images/util.js";
 import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, } from '../../Tre.Modules/Tre.Scripts/PopCap/resources/util.js';
 import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution, atlas_split_experimental, atlas_pack_experimental } from '../../Tre.Modules/Tre.Scripts/PopCap/atlas/util.js';
 import { TreErrorMessage } from '../../Tre.Modules/Tre.Debug/Tre.ErrorSystem.js';
@@ -42,7 +42,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
             }
         }
     }
-    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
+    const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
     execute_file_count = (Array.isArray(execute_file_dir)) ? execute_file_dir.length : execute_file_count;
     execute_file_length = (Array.isArray(execute_file_dir)) ? execute_file_dir.length : execute_file_length;
     const start_timer: number = Date.now();
@@ -133,6 +133,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_argb8888);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_pvrtc);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_etc1a);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_encode_etc1a_index);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.tre_void_real_esrgan_upscaler_bitmap_content);
                     break;
                 case ".ptx":
@@ -140,6 +141,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_decode_argb8888);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_decode_pvrtc);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_decode_etc1a);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_texture_decode_etc1a_index);
                     break;
                 case ".rsgp":
                 case ".rsg":
@@ -299,6 +301,18 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         })
                     }
                     break;
+                case Display.Tre.Function.popcap_texture_encode_etc1a_index.void_number_readline_argument():
+                    if (!Array.isArray(execute_file_dir)) {
+                        await encode_etc1alpha_palette(execute_file_dir);
+                    }
+                    else {
+                        execute_file_dir.forEach(async (file: string) => {
+                            if (path.parse(file).ext.toString().toLowerCase() === ".png" || path.parse(file).ext.toString().toLowerCase() === ".jpg" || path.parse(file).ext.toString().toLowerCase() === ".jpeg") {
+                                await encode_etc1alpha_palette(file);
+                            }
+                        })
+                    }
+                    break;
                 case Display.Tre.Function.popcap_texture_encode_pvrtc.void_number_readline_argument():
                     if (!Array.isArray(execute_file_dir)) {
                         await encode_pvrtc(execute_file_dir);
@@ -354,6 +368,15 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     height = Console.IntegerReadLine(1, 16384);
                     if (!Array.isArray(execute_file_dir)) {
                         await decode_etc1a(execute_file_dir, width, height);
+                    }
+                    break;
+                case Display.Tre.Function.popcap_texture_decode_etc1a_index.void_number_readline_argument():
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
+                    width = Console.IntegerReadLine(1, 16384);
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
+                    height = Console.IntegerReadLine(1, 16384);
+                    if (!Array.isArray(execute_file_dir)) {
+                        await decode_etc1alpha_palette(execute_file_dir, width, height);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_pvrtc.void_number_readline_argument():

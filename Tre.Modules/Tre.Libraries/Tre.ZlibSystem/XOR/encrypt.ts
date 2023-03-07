@@ -10,7 +10,7 @@ export default function (string: string, key: string): string {
 
         let xorValue = value1 ^ value2;
 
-        let xorValueAsHexString = xorValue.toString("16");
+        let xorValueAsHexString = xorValue.toString("16" as any);
 
         if (xorValueAsHexString.length < 2) {
             xorValueAsHexString = "0" + xorValueAsHexString;

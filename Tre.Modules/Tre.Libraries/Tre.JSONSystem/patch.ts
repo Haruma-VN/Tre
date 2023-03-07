@@ -95,7 +95,7 @@ export default function applyPatch(source: any, patch: PatchX): any {
             return source;
         }
     } catch (error: any) {
-        TreErrorMessage({ error: error.toString() }, error.toString());
+        TreErrorMessage({ error: error.message.toString() }, error.toString());
         return source;
     }
 }

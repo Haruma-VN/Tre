@@ -3,6 +3,8 @@ import * as color from '../Tre.Libraries/Tre.Color/color.js';
 import TypeReadChecker from './Public/ReadLine/origin.js';
 import readline_for_json from "./Public/ReadLine/readline_for_json.js";
 import any_readline from "./Public/ReadLine/any.js";
+import DirectoryChecker from './Public/ReadLine/directory.js';
+import FileChecker from './Public/ReadLine/file.js';
 import { readline_argument, readline_char, readline_integer, readline_size, readline_texture, readline_expand, readline_normal } from '../../Tre.Modules/Tre.Progress/Readline/util.js';
 export namespace Console {
     export function WriteLine(...params: any[]): void {
@@ -11,6 +13,14 @@ export namespace Console {
             text += param;
         });
         return console.log(text);
+    }
+    
+    export function ReadFile(): string {
+        return FileChecker();
+    }
+
+    export function ReadDir(): string {
+        return DirectoryChecker();
     }
 
     export function ReadPath(): string {

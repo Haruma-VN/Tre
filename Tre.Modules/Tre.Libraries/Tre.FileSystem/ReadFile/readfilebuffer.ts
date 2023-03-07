@@ -1,5 +1,11 @@
 "use strict";
 import fs from "fs-extra";
+import localization from "../../../Tre.Callback/localization.js";
+
 export default function (buffer: string): any {
-    return fs.readFileSync(buffer)
+    try {
+        return fs.readFileSync(buffer)
+    } catch (error: any) {
+        throw new Error(`${localization("cannot_read")} ${buffer}. ${buffer}: ${error.message.toString()}`);
+    }
 }

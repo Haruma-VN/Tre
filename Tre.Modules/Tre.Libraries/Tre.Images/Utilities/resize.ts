@@ -10,8 +10,8 @@ export default async function (dir: string, orig: number | string, mod: number |
     if (typeof mod === 'string') {
         mod = parseInt(mod);
     }
-    const input: { width: number, height: number } = await imageSize(dir).then((data: any) => data).catch((error) => {
-        TreErrorMessage({ error: localization("cannot_get_image_dimension"), system: error.toString() }, error)
+    const input: { width: number, height: number } = await imageSize(dir).then((data: any) => data).catch((error: any) => {
+        TreErrorMessage({ error: localization("cannot_get_image_dimension"), system: error.message.toString() }, error)
     }).finally(() => { });
     const transform_x = calculate(orig, mod);
     if (input.width / transform_x <= 1 || input.height / transform_x <= 1) {

@@ -1,5 +1,4 @@
 "use strict";
-import JSONC from 'jsonc-simple-parser';
 import { readjson } from '../Tre.FileSystem/util.js';
 import addTrailingCommas from './support/trailing_commas.js';
 export interface stringify_data {
@@ -14,7 +13,7 @@ export default function (data: {}): string {
     if("space" in config_json.json){
         space = config_json.json.space;
     }
-    let output_data: string = JSONC.stringify(data, null, space);
+    let output_data: string = JSON.stringify(data, null, space);
     if("allow_trailing_commas" in config_json.json){
         if(config_json.json.allow_trailing_commas){
             output_data = addTrailingCommas(output_data);

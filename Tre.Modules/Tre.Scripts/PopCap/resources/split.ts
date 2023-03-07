@@ -14,7 +14,7 @@ export interface TreSetting {
 }
 export default async function (dir: string = process.argv[2]) {
     const json: any = readjson(dir);
-    const config: TreSetting = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json") as TreSetting;
+    const config: TreSetting = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true)  as TreSetting;
     const is_beautify_mode: boolean = (config.resources.split.beautify_res) ? true : false;
     const directories = path.parse(dir).name + '.res';
     if (json.groups != undefined) {

@@ -16,12 +16,13 @@ export default async function (dir: string): Promise<void> {
         const width: number = dimension_x.width;
         const height: number = dimension_x.height;
         const offset = width * height / 2;
+        console.log(color.fggreen_string(`◉ ${localization("execution_information")}: `) + "rgb_etc1_a_8");
         console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
         console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
         console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
         execSync(etc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
         await sharp(dir).extractChannel('alpha').raw().toBuffer().then((alpha: Buffer) => {
-            const originalImage = fs.readFileSync(`${dir.toUpperCase().replaceAll('.PNG', '.ptx')}`).slice(fs.readFileSync(`${dir.toUpperCase().replaceAll('.PNG', '.ptx')}`).length - offset);
+            const originalImage = fs.readFileSync(`${dir.toUpperCase().replace('.PNG', '.ptx')}`).slice(fs.readFileSync(`${dir.toUpperCase().replace('.PNG', '.ptx')}`).length - offset);
             const etc_image = Buffer.concat([originalImage, alpha]);
             fs.writeFileSync(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`, etc_image);
             console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(dir + '/../' + basename(dir) + '.ptx')}`);
@@ -31,6 +32,6 @@ export default async function (dir: string): Promise<void> {
         });
         return;
     } catch (error: any) {
-        TreErrorMessage({ error: localization("cannot_encode_ptx"), reason: localization("unknown"), system: error.toString() }, `${localization("cannot_encode_ptx")} ${dir}`)
+        TreErrorMessage({ error: localization("cannot_encode_ptx"), reason: localization("unknown"), system: error.message.toString() }, `${localization("cannot_encode_ptx")} ${dir}`)
     }
-};
+}
