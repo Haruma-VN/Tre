@@ -22,7 +22,6 @@ Tre currently uses the following third-party libraries:
 
 | Name | Link |
 | ------ | ------ |
-| JSONC | https://github.com/onury/jsonc |
 | Sharp | https://github.com/lovell/sharp |
 | Crypto-JS | https://github.com/brix/crypto-js |
 | fs-extra | https://github.com/jprichardson/node-fs-extra|
@@ -34,6 +33,10 @@ Tre currently uses the following third-party libraries:
 | Real_Esrgan | https://github.com/xinntao/Real-ESRGAN/ |
 | cross-path-sort | https://github.com/mdjermanovic/cross-path-sort |
 | stream-slice | https://github.com/yorkie/stream-slice |
+| rijndael-js | https://github.com/Snack-X/rijndael-js |
+| big-varint | https://www.npmjs.com/package/big-varint |
+| bit-buffer | https://github.com/inolen/bit-buffer |
+
 ## Installation
 
 To use Tre, you need to have [Node.js](https://nodejs.org/) installed on your machine. If you want to compile Tre from TypeScript source code, you can install TypeScript as well. To run Tre, use the launch.cmd script after setting up the environment in "C/Tre.Vietnam/".
@@ -78,8 +81,8 @@ $tsc
 
 I would like to extend my special thanks to the following individuals for their contributions to this project:
 
-- [TwinStar](https://github.com/twinkles-twinstar) for his [TwinStar.ToolKit](https://github.com/twinkles-twinstar/TwinStar.ToolKit), which served as the basis for this tool.
 - [迎风听雨](https://github.com/YingFengTingYu) for his [PopStudio](https://github.com/YingFengTingYu/PopStudio), from which I adapted many functions.
+- [TwinStar](https://github.com/twinkles-twinstar) for his [TwinStar.ToolKit](https://github.com/twinkles-twinstar/TwinStar.ToolKit), which served as the basis for this tool.
 - [Nineteendo](https://github.com/Nineteendo) for his invaluable help with implementation and grammar.
 
 **Happy Modding!**
