@@ -8,6 +8,8 @@ import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import * as color from "../../Tre.Color/color.js";
 import localization from '../../../Tre.Callback/localization.js';
 import path from 'node:path';
+import { delete_file } from '../../Tre.FileSystem/util.js';
+
 export default async function (dir: string): Promise<void> {
     try {
         const tre_thirdparty: string = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
@@ -20,6 +22,7 @@ export default async function (dir: string): Promise<void> {
         console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
         console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
         console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+        delete_file(path.resolve(dir + '/../' + basename(dir) + '.ptx'));
         execSync(etc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
         await sharp(dir).extractChannel('alpha').raw().toBuffer().then((alpha: Buffer) => {
             const originalImage = fs.readFileSync(`${dir.toUpperCase().replace('.PNG', '.ptx')}`).slice(fs.readFileSync(`${dir.toUpperCase().replace('.PNG', '.ptx')}`).length - offset);

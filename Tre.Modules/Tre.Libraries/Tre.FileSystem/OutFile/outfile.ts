@@ -2,7 +2,7 @@
 import fs from 'fs-extra';
 import localization from '../../../Tre.Callback/localization.js';
 
-export default function (directories: string, data: string) {
+export default function (directories: string, data: any) {
     try {
         fs.outputFileSync(directories, data);
     } catch (error: any) {

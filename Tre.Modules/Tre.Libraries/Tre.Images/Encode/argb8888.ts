@@ -7,6 +7,7 @@ import { dimension } from '../util.js';
 import localization from '../../../Tre.Callback/localization.js';
 import * as color from "../../Tre.Color/color.js";
 import path from 'node:path';
+import { delete_file } from '../../Tre.FileSystem/util.js';
 export default async function (dir: string): Promise<void> {
     const img_data: { width: number, height: number } = await dimension(dir).then((result: { width: number, height: number }) => {
         return result;
@@ -15,6 +16,7 @@ export default async function (dir: string): Promise<void> {
     console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${img_data.width}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${img_data.height}`);
+    delete_file(path.resolve(dir + '/../' + basename(dir) + '.ptx'));
     const blue = await sharp(dir).extractChannel('blue').toBuffer().catch((error: any) => {
         TreErrorMessage({ error: localization("not_a_raw_image"), reason: localization("cannot_read_image_data"), system: error.message.toString() }, localization("cannot_read_blue_channel"));
     });

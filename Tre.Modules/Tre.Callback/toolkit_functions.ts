@@ -91,17 +91,15 @@ export namespace Display.Tre.Function {
     export const popcap_zlib_rsb_repair = new Void(localization("rsb_repair"), 63);
     export const popcap_rton_to_json = new Void(localization("rton_to_json"), 64);
     export const popcap_json_to_rton = new Void(localization("json_to_rton"), 65);
-    export const popcap_rton_decrypt_and_decode = new Void(localization("rton_to_json"), 66);
-    export const popcap_rton_encode_and_encrypt = new Void(localization("json_to_rton"), 67);
-    // todo
-    // export const popcap_rton_decrypt_and_decode = new Void(localization("rton_to_json"), 66);
-    // export const popcap_rton_encode_and_encrypt = new Void(localization("json_to_rton"), 67);
-    // finish
+    export const popcap_rton_decrypt_and_decode = new Void(localization("popcap_rton_decrypt_and_decode"), 66);
+    export const popcap_rton_encode_and_encrypt = new Void(localization("popcap_rton_encode_and_encrypt"), 67);
     export const popcap_atlas_split_experimental = new Void(localization("popcap_atlas_split_experimental"), 70);
     export const popcap_atlas_pack_experimental = new Void(localization("popcap_atlas_pack_experimental"), 71);
     export const popcap_rsb_unpack_simple = new Void(localization("popcap_rsb_unpack_simple"), 72);
     //todo
     export const popcap_rsb_pack_simple = new Void(localization("popcap_rsb_pack_simple"), 73);
+    export const popcap_rsgp_unpack_simple = new Void(localization("popcap_rsgp_unpack_simple"), 74);
+    export const popcap_rsgp_pack_simple = new Void(localization("popcap_rsgp_pack_simple"), 75);
     
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {

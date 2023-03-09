@@ -7,6 +7,8 @@ import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import localization from '../../../Tre.Callback/localization.js';
 import * as color from "../../Tre.Color/color.js";
 import path from "node:path";
+import { delete_file } from '../../Tre.FileSystem/util.js';
+
 export default async function (dir: string): Promise<void> {
     const tre_thirdparty: string = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
     const pvrtc_process: string = `PVRTexToolCLI.exe -f PVRTCI_4BPP_RGBA,UBN,sRGB -q PVRTCFAST -i "${dir}" -o "${basename(dir).toUpperCase()}.pvr"`;
@@ -18,6 +20,7 @@ export default async function (dir: string): Promise<void> {
     console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+    delete_file(path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`));
     try {
         await execSync(pvrtc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
     } catch (error: any) {

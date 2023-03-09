@@ -11,7 +11,7 @@ export default async function DecodePTX(ptx_path: string, file_data_size: number
     let format: popcap_rsgp_format_type_image = { Format: 0, FormatType: 'ios' };
     switch (square_ratio) {
         case 20:
-            console.log(color.fggreen_string(`◉ ${localization("execution_argument")}: ${localization("detect_format_0_unsafe")}. ${parse(ptx_path).base} ${localization("ios_argb8888")}`));
+            console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${parse(ptx_path).base} ${localization("ios_argb8888")}`));
             const ios_argb8888 = readline_integer(0, 1) == 0 ? false : true;
             if (ios_argb8888) {
                 await image_util.decode_argb8888(ptx_path, image_width, image_height);

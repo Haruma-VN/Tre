@@ -1,7 +1,5 @@
 import zlib from "zlib";
 import rton2json from '../rton/rton2json.js';
-import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
-import { readline_integer } from '../../../Tre.Progress/Readline/util.js';
 import * as fs from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import { parse } from "node:path";
 import DecodePTX from "./decode_ptx.js";
@@ -26,11 +24,7 @@ export default async function (rsgp_data: any, rsgp_path: string, decode_image:s
         const file_data_offset = rsgp_data.slice(temp_offset - 8, temp_offset - 4).readInt32LE();
         const file_data_size = rsgp_data.slice(temp_offset - 4, temp_offset).readInt32LE();
         if (atlas) {
-            if (decode_image == 'ask') {
-                console.log(color.fggreen_string(parse(rsgp_path).name));
-                console.log('Do you want to decode PTX');
-                decode_image = readline_integer(0, 1) == 0 ? 'no' : 'yes';
-            }
+            decode_image = "yes";
             const id = rsgp_data.slice(temp_offset, temp_offset + 4).readInt32LE();
             const image_width = rsgp_data.slice(temp_offset + 12, temp_offset + 16).readInt32LE();
             const image_height = rsgp_data.slice(temp_offset + 16, temp_offset + 20).readInt32LE();
@@ -48,11 +42,7 @@ export default async function (rsgp_data: any, rsgp_path: string, decode_image:s
             }
         }
         else if (rton_decode) {
-            if (decode_rton == 'ask') {
-                console.log(color.fggreen_string(parse(rsgp_path).name));
-                console.log('Do you want to decode RTON');
-                decode_rton = readline_integer(0, 1) == 0 ? 'no' : 'yes';
-            }
+            decode_rton = "yes";
             if (decode_rton == 'yes') {
                 const json_data = await DecodeRTON(rsgp_file_data.slice(file_data_offset, file_data_offset + file_data_size));
                 fs.outfile(`${rsgp_path}/Res/${parse(name_path).dir}/${parse(name_path).name}.json`, json_data);
@@ -63,8 +53,7 @@ export default async function (rsgp_data: any, rsgp_path: string, decode_image:s
                 const rton_file_data = rsgp_file_data.slice(file_data_offset, file_data_offset + file_data_size);
                 fs.outfile(`${rsgp_path}/Res/${name_path}`, rton_file_data);
                 treRSGPinfo.Res.push({ Path: name_path.split('\\') });
-            }
-            ;
+            };
         }
         else {
             const file_data = rsgp_file_data.slice(file_data_offset, file_data_offset + file_data_size);
@@ -99,8 +88,7 @@ export default async function (rsgp_data: any, rsgp_path: string, decode_image:s
                 }
             }
         }
-    }
-    ;
+    };
     async function Unpack_Rsgp(offset: number, size: number, atlas: boolean, compression: boolean) {
         rsgp_file_data = compression ? zlib.unzipSync(rsgp_data.slice(offset, offset + size)) : rsgp_data.slice(offset, offset + size);
         await Extract_File(atlas, info_offset);
@@ -108,8 +96,7 @@ export default async function (rsgp_data: any, rsgp_path: string, decode_image:s
         if (remove_info == false) {
             await fs.writejson(`${rsgp_path}/TreRSGPInfo.json`, treRSGPinfo);
         }
-    }
-    ;
+    };
     async function CheckCompression() {
         if (part0_ZSize == part0_Size && part0_Size != 0 || part1_ZSize == part1_Size && part1_ZSize != 0 || compression_flag == 1) {
             part1_ZSize != 0 ? await Unpack_Rsgp(part1_Offset, part1_ZSize, true, false) : await Unpack_Rsgp(part0_Offset, part0_ZSize, false, false);

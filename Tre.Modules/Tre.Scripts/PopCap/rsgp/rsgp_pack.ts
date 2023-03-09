@@ -9,7 +9,7 @@ import * as fs from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import * as image_util from '../../../Tre.Libraries/Tre.Images/util.js';
 import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import localization from '../../../Tre.Callback/localization.js';
-export default async function (path_file: string) {
+export default async function (path_file: string, pack_simple:boolean = false) {
     let TreRSGPInfo: any = false;
     let RsgpCompression = true;
     let UseTreInfo = false;
@@ -19,8 +19,7 @@ export default async function (path_file: string) {
     }
     else {
         TreErrorMessage({ reason: localization("no_tre_info"), error: localization("error") }, localization("no_tre_info"));
-    }
-    ;
+    };
     function GetTreInfo() {
         RsgpCompression = TreRSGPInfo.CompressionMethod;
         UseTreInfo = TreRSGPInfo.UseTreRSGPInfo;
@@ -220,17 +219,14 @@ export default async function (path_file: string) {
                     console.log('Enter the Height');
                     const height = readline_size();
                     return { image_data, width, height, id: false };
-                }
-                ;
-            }
-            ;
+                };
+            };
         }
         else {
             const file_data = fs.readfilebuffer(`${path_file}/Res/${file_path}`);
             return file_data;
         }
-    }
-    ;
+    };
     async function PackData(filepath: any, path_temp: any, UseTreInfo: boolean, TreRSGPInfo: any) {
         const rsgp_path_info = new SmartBuffer();
         const rsgp_file_data = new SmartBuffer();
@@ -258,11 +254,9 @@ export default async function (path_file: string) {
                     break;
                 }
             }
-        }
-        ;
+        };
         return [rsgp_path_info.toBuffer(), rsgp_file_data.toBuffer(), atlas];
-    }
-    ;
+    };
     function PackRSGP(rsgp_path_info: any, rsgp_file_data: any, atlas: boolean | any, compression: boolean) {
         const rsgp_data = new SmartBuffer();
         rsgp_data.writeString('pgsr').writeInt8(4).writeBuffer(Buffer.alloc(11));
@@ -295,7 +289,7 @@ export default async function (path_file: string) {
         const [rsgp_path_info, rsgp_file_data, atlas] = await PackData(filepath, path_temp, TreInfo[1], TreRSGPInfo);
         return await PackRSGP(rsgp_path_info, rsgp_file_data, atlas, TreInfo[0]);
     }
-    if (TreRSGPInfo != false) {
+    if (TreRSGPInfo != false || pack_simple) {
         const TreInfo = GetTreInfo();
         return await PackRSGPSimple(TreInfo, TreRSGPInfo.Res);
     }

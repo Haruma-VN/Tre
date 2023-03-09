@@ -8,11 +8,14 @@ import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import localization from '../../../Tre.Callback/localization.js';
 import path from "node:path";
 import bitstream from "bit-buffer";
+import { delete_file } from '../../Tre.FileSystem/util.js';
+
 export default async function (dir: string, width: number, height: number): Promise<void> {
     console.log(color.fggreen_string(`◉ ${localization("execution_information")}: `) + "rgb_etc1_a_palette");
     console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+    delete_file(`${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`);
     const tre_thirdparty = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
     let cmd = `etcpak.exe --etc1 -v "${parse(dir).base}" "${parse(dir).name.toUpperCase()}.png"`;
     let pvr_header = Buffer.from('505652030000000006000000000000000000000000000000BBBBBBBBAAAAAAAA0100000001000000010000000100000000000000', 'hex');
@@ -25,9 +28,9 @@ export default async function (dir: string, width: number, height: number): Prom
         const alpha_channel_palette = fs.readFileSync(dir).slice(width * height / 2);
         const square = width * height;
         const indexNumber = alpha_channel_palette[0];
-        let bitsLength;
-        let indexTable;
-        let bufferbyte;
+        let bitsLength: number;
+        let indexTable: any;
+        let bufferbyte: number;
         if (indexNumber === 0) {
             bitsLength = 1;
             indexTable = Buffer.from([0, 255]);
