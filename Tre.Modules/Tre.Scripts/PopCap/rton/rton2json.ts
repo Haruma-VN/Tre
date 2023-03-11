@@ -14,7 +14,7 @@ export default function (rton_data: any): any {
     const Str_RTID_0 = "RTID(0)";
     const Str_RTID_2 = "RTID(%d.%d.%s@%s)";
     const Str_RTID_3 = "RTID(%s@%s)";
-    const config_json:any = readjson((process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json"));
+    const config_json: any = readjson((process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json"));
     let trailing_commas = "";
     if ("allow_trailing_commas" in config_json.json) {
         if (config_json.json.allow_trailing_commas) {
@@ -23,17 +23,16 @@ export default function (rton_data: any): any {
         indent = (config_json.json.space != undefined) ? config_json.json.space : '\t';
     }
     function RtonNumber(unsigned_number, utf8 = false) {
+        if (utf8) {
+            index_count++;
+        };
         let offset_start = index_count;
         let number = rton_data[index_count];
         while (number > 127) {
             number = rton_data[index_count += 1];
-        }
-        ;
+        };
         const rton_number = rton_data.slice(offset_start, index_count += 1);
-        if (utf8) {
-            index_count++;
-        }
-        ;
+
         if (unsigned_number) {
             return `${unsigned.decode(Buffer.from(rton_number, 'hex'))}`;
         }
@@ -117,6 +116,7 @@ export default function (rton_data: any): any {
     }
     ;
     function ReadByteCode(bytecode) {
+        console.log(bytecode, index_count)
         index_count++;
         switch (bytecode) {
             case 0:

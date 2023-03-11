@@ -402,12 +402,12 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     break;
                 case Display.Tre.Function.popcap_zlib_rsgp_unpack.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, "no", "no", false);
+                        await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, false, false, false);
                     }
                     break;
                 case Display.Tre.Function.popcap_rsgp_unpack_simple.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, "ask", "ask", false);
+                        await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, true, true, false);
                     }
                     break;
                 case Display.Tre.Function.popcap_zlib_rsgp_pack.void_number_readline_argument():
@@ -613,17 +613,16 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Console.WriteLine((`${Argument.Tre.Packages.method_split_popcap_atlas_texture_with_id_extension}`));
                     let atlas_split_method: any = Console.IntegerReadLine(1, 2);
                     if (js_checker.is_array(execute_file_dir)) {
-                        await atlas_split(parseInt(atlas_split_method));
+                        await atlas_split(parseInt(atlas_split_method), execute_file_dir);
                     }
                     break;
                 case Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument():
                     if (js_checker.is_array(execute_file_dir)) {
-                        await atlas_split_experimental();
+                        await atlas_split_experimental(execute_file_dir);
                     }
                     break;
                 case Display.Tre.Function.tre_void_atlas_info_split.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        Console.WriteLine('hello')
                         atlasinfo_split(execute_file_dir);
                     }
                     break;

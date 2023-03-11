@@ -14,6 +14,7 @@ import delete_file from "./DeleteFile/delete.js";
 import create_multiple_parent from './Auto/main.js';
 import file_stats from "./file_stats/stats.js";
 import if_file_exists from './ExistFile/exist.js';
+import outfile_fs_js from './CreateFile/outfile_fs_ts.js';
 export {
     readfile,
     readfilebuffer,
@@ -30,4 +31,5 @@ export {
     create_multiple_parent,
     file_stats,
     if_file_exists,
+    outfile_fs_js,
 };

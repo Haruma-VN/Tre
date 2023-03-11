@@ -8,6 +8,7 @@ import localization from '../../../Tre.Callback/localization.js';
 import * as color from "../../Tre.Color/color.js";
 import path from "node:path";
 import { delete_file } from '../../Tre.FileSystem/util.js';
+import exception_encode_dimension from '../Exception/encode.js';
 
 export default async function (dir: string): Promise<void> {
     const tre_thirdparty: string = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
@@ -20,6 +21,7 @@ export default async function (dir: string): Promise<void> {
     console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
     console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+    exception_encode_dimension(width, height);
     delete_file(path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`));
     try {
         await execSync(pvrtc_process, { cwd: tre_thirdparty, stdio: 'ignore' });

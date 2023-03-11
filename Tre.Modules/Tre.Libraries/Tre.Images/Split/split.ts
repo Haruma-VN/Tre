@@ -23,4 +23,3 @@ export default async function (dir: string, x: number, y: number, w: number, h: 
     }));
     return data;
 }
-;

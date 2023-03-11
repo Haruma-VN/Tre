@@ -17,6 +17,8 @@ import upscale_data from './Upscaler/upscale_data.js';
 import calculate from "./Resize/calculate.js";
 import decode_etc1alpha_palette from "./Decode/etc1alpha_palette.js";
 import encode_etc1alpha_palette from "./Encode/etc1alpha_palette.js";
+import max_sharp from "./Exception/evaluate.js";
+import exception_encode_dimension from "./Exception/encode.js";
 export {
     split,
     resize,
@@ -35,5 +37,7 @@ export {
     calculate,
     decode_etc1alpha_palette,
     encode_etc1alpha_palette,
+    exception_encode_dimension,
+    max_sharp,
 }
 //#endregion

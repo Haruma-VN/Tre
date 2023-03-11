@@ -33,27 +33,27 @@ export interface configAtlas {
     }
 }
 
-async function atlas_split_experimental(): Promise<void> {
+async function atlas_split_experimental(execute_file_dir: string[]): Promise<void> {
     let json: any = {};
     const img_list: Array<string> = new Array();
     let directory_name: string = "";
     let dir_sys: string = "";
-    for (let i: number = 0; i < process.argv.length; i++) {
-        switch (extname(process.argv[i]).toLowerCase()) {
+    for (let i: number = 0; i < execute_file_dir.length; i++) {
+        switch (extname(execute_file_dir[i]).toLowerCase()) {
             case '.json':
-                json = file_system.readjson(process.argv[i]);
+                json = file_system.readjson(execute_file_dir[i]);
                 if (json.resources == undefined) {
                     TreErrorMessage({ error: localization("cannot_access_file_data"), reason: localization("not_popcap_res") }, localization("not_popcap_res"));
                     return;
                 }
-                directory_name = basename(process.argv[i]) + ".spg";
-                dir_sys = process.argv[i] + '/../' + (directory_name);
+                directory_name = basename(execute_file_dir[i]) + ".spg";
+                dir_sys = execute_file_dir[i] + '/../' + (directory_name);
                 file_system.makefolder(dir_sys.toString());
                 break;
             case '.png':
             case '.jpg':
             case '.jpeg':
-                img_list.push(process.argv[i]);
+                img_list.push(execute_file_dir[i]);
                 break;
             default:
                 continue;

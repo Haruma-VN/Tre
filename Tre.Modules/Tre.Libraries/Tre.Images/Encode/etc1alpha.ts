@@ -9,6 +9,7 @@ import * as color from "../../Tre.Color/color.js";
 import localization from '../../../Tre.Callback/localization.js';
 import path from 'node:path';
 import { delete_file } from '../../Tre.FileSystem/util.js';
+import exception_encode_dimension from '../Exception/encode.js';
 
 export default async function (dir: string): Promise<void> {
     try {
@@ -22,6 +23,7 @@ export default async function (dir: string): Promise<void> {
         console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${dir}`);
         console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
         console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+        exception_encode_dimension(width, height);
         delete_file(path.resolve(dir + '/../' + basename(dir) + '.ptx'));
         execSync(etc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
         await sharp(dir).extractChannel('alpha').raw().toBuffer().then((alpha: Buffer) => {

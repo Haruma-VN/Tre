@@ -31,28 +31,28 @@ export interface configAtlas {
         }
     }
 }
-export default async function (opt: number) {
+export default async function (opt: number, execute_file_dir: string[]) {
     const json_config: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true);
     let json: any = {};
     const img_list = new Array();
     let directory_name = new String();
     let dir_sys = new String();
-    for (let i = 0; i < process.argv.length; i++) {
-        switch (extname(process.argv[i]).toLowerCase()) {
+    for (let i = 0; i < execute_file_dir.length; i++) {
+        switch (extname(execute_file_dir[i]).toLowerCase()) {
             case '.json':
-                json = readjson(process.argv[i]);
+                json = readjson(execute_file_dir[i]);
                 if (json.resources == undefined) {
                     TreErrorMessage({ error: localization("cannot_access_file_data"), reason: localization("not_popcap_res") }, localization("not_popcap_res"));
                     return 0;
                 }
-                directory_name = basename(process.argv[i]) + ".spg";
-                dir_sys = process.argv[i] + '/../' + (directory_name);
+                directory_name = basename(execute_file_dir[i]) + ".spg";
+                dir_sys = execute_file_dir[i] + '/../' + (directory_name);
                 makefolder(dir_sys.toString());
                 break;
             case '.png':
             case '.jpg':
             case '.jpeg':
-                img_list.push(process.argv[i]);
+                img_list.push(execute_file_dir[i]);
                 break;
             default:
                 continue;
