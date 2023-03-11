@@ -157,6 +157,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_rsb_unpack);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_smf_compress);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_unpack_simple);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_resource_unpack);
                     break;
                 case ".smf":
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_smf_decompress);
@@ -193,6 +194,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_rsb_pack);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_pack_simple);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsgp_pack_simple);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_resource_pack);
                     break;
                 case ".pgj":
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_game_json_pack);
@@ -633,17 +635,32 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     break;
                 case Display.Tre.Function.popcap_zlib_rsb_unpack.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await popcap_game_content_edit.rsb_unpack(execute_file_dir, false);
+                        await popcap_game_content_edit.rsb_unpack(execute_file_dir, false, false);
                     }
                     break;
                 case Display.Tre.Function.popcap_rsb_unpack_simple.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await popcap_game_content_edit.rsb_unpack(execute_file_dir, true);
+                        await popcap_game_content_edit.rsb_unpack(execute_file_dir, true, false);
+                    }
+                    break;
+                case Display.Tre.Function.popcap_rsb_resource_unpack.void_number_readline_argument():
+                    if (!js_checker.is_array(execute_file_dir)) {
+                        await popcap_game_content_edit.rsb_unpack(execute_file_dir, false, true);
                     }
                     break;
                 case Display.Tre.Function.popcap_zlib_rsb_pack.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await popcap_game_content_edit.rsb_pack(execute_file_dir);
+                        await popcap_game_content_edit.rsb_pack(execute_file_dir, false, false);
+                    }
+                    break;
+                case Display.Tre.Function.popcap_rsb_resource_pack.void_number_readline_argument():
+                    if (!js_checker.is_array(execute_file_dir)) {
+                        await popcap_game_content_edit.rsb_pack(execute_file_dir, true, false);
+                    }
+                    break;
+                case Display.Tre.Function.popcap_rsb_pack_simple.void_number_readline_argument():
+                    if (!js_checker.is_array(execute_file_dir)) {
+                        await popcap_game_content_edit.rsb_pack(execute_file_dir, false, true);
                     }
                     break;
                 case Display.Tre.Function.popcap_zlib_smf_compress.void_number_readline_argument():

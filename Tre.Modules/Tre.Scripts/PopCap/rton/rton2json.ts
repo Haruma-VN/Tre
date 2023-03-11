@@ -14,7 +14,7 @@ export default function (rton_data: any): any {
     const Str_RTID_0 = "RTID(0)";
     const Str_RTID_2 = "RTID(%d.%d.%s@%s)";
     const Str_RTID_3 = "RTID(%s@%s)";
-    const config_json: any = readjson((process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json"));
+    const config_json = readjson((process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json"));
     let trailing_commas = "";
     if ("allow_trailing_commas" in config_json.json) {
         if (config_json.json.allow_trailing_commas) {
@@ -116,7 +116,6 @@ export default function (rton_data: any): any {
     }
     ;
     function ReadByteCode(bytecode) {
-        console.log(bytecode, index_count)
         index_count++;
         switch (bytecode) {
             case 0:
@@ -174,7 +173,7 @@ export default function (rton_data: any): any {
             case 131:
                 return ReadRTID();
             case 132:
-                return Str_RTID_0;
+                return `"${Str_RTID_0}"`;
             case 133:
                 return ReadObject();
             case 134:

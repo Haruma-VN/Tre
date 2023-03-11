@@ -2,6 +2,7 @@
 import fs from "fs";
 import * as js_json from "../Tre.JSONSystem/util.js";
 import path from "path";
+import sharp from "sharp";
 
 class fs_js {
 
@@ -448,6 +449,113 @@ class fs_js {
         //#endregion
     }
     /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async get_dimension(
+        file_system_input_path: string,
+        width_output_as_property: string = "width",
+        height_output_as_property: string = "height",
+    ): Promise<{
+        [x: string]: number;
+    }> {
+        //#region 
+        if (this.js_exists(file_system_input_path)) {
+            const create_image_nodejs_sharp_view: sharp.Sharp = sharp(file_system_input_path);
+            const create_auto_view_dimension: sharp.Metadata = await create_image_nodejs_sharp_view.metadata();
+
+            if ("width" in create_auto_view_dimension && "height" in create_auto_view_dimension &&
+                typeof (create_auto_view_dimension.width) === "number" && typeof (create_auto_view_dimension.height) === "number") {
+                return {
+                    [width_output_as_property]: create_auto_view_dimension.width as number,
+                    [height_output_as_property]: create_auto_view_dimension.height as number,
+                }
+            }
+
+            else {
+                throw new Error(`Cannot get ${this.get_full_path(file_system_input_path)} dimension`);
+            }
+        }
+        else {
+            throw new Error(`Cannot read ${this.get_full_path(file_system_input_path)}`);
+        }
+
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+    static create_dimension(
+        file_system_width: number,
+        file_system_height: number,
+        width_output_as_property: string = "width",
+        height_output_as_property: string = "height",
+    ): {
+        [x: string]: number
+    } {
+        //#region 
+        if (file_system_width < 0) {
+            file_system_width = Math.abs(file_system_width);
+        }
+
+        if (file_system_height < 0) {
+            file_system_height = Math.abs(file_system_height);
+        }
+
+        return {
+            [width_output_as_property]: (typeof file_system_width === "number") ? file_system_width : parseInt(file_system_width),
+            [height_output_as_property]: (typeof file_system_height === "number") ? file_system_height : parseInt(file_system_height),
+        }
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static js_strict(
+        data_view_strict: any
+    ): data_view_strict is undefined | void | null {
+        //#region 
+        if (data_view_strict === undefined || data_view_strict === void 0 || data_view_strict === null) {
+            return true;
+        }
+        return false;
+        //#endregion
+    }
+
+
+
+    static async extract_image(
+        file_system_input_path: string,
+        sharp_data_for_width: number,
+        sharp_data_for_height: number,
+        sharp_data_for_x: number,
+        sharp_data_for_y: number,
+        file_system_output_path: string | undefined,
+    ) {
+        //#region 
+        if (file_system_output_path === undefined || file_system_input_path === void 0 || file_system_input_path === null) {
+            file_system_output_path = `${(file_system_input_path)}/../${this.js_basename(file_system_input_path)}.view.png`;
+        }
+
+        this.js_remove(file_system_output_path);
+
+
+        if (this.js_exists(file_system_input_path)) {
+            await sharp(file_system_input_path)
+                .extract({
+                    width: (sharp_data_for_width),
+                    height: (sharp_data_for_height),
+                    left: (sharp_data_for_x),
+                    top: (sharp_data_for_y)
+                }).toFile(file_system_output_path).catch(function (error: any) {
+                    throw new Error(`Cannot create ${this.get_full_path(file_system_output_path)}, and the error is ${error.message as NodeJS.ErrnoException}`);
+                })
+        }
+        //#endregion
+    }
+    /*-------------------------------------------------------------------------------------------------*/
+
+    
+
 }
 
 export default fs_js;

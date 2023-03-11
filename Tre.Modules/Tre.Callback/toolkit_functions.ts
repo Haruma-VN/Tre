@@ -96,11 +96,12 @@ export namespace Display.Tre.Function {
     export const popcap_atlas_split_experimental = new Void(localization("popcap_atlas_split_experimental"), 70);
     export const popcap_atlas_pack_experimental = new Void(localization("popcap_atlas_pack_experimental"), 71);
     export const popcap_rsb_unpack_simple = new Void(localization("popcap_rsb_unpack_simple"), 72);
-    //todo
     export const popcap_rsb_pack_simple = new Void(localization("popcap_rsb_pack_simple"), 73);
     export const popcap_rsgp_unpack_simple = new Void(localization("popcap_rsgp_unpack_simple"), 74);
     export const popcap_rsgp_pack_simple = new Void(localization("popcap_rsgp_pack_simple"), 75);
-    
+    export const popcap_rsb_resource_unpack = new Void(localization("popcap_rsb_resource_unpack"), 76);
+    export const popcap_rsb_resource_pack = new Void(localization("popcap_rsb_resource_pack"), 77);
+
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {
             Console.WriteLine(display_item_list.display());

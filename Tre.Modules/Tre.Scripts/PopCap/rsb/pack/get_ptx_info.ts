@@ -1,18 +1,14 @@
+"use strict";
 import { SmartBuffer } from 'smart-buffer';
-export interface rsgp_info_for_ptx {
-    Width: number,
-    Height: number,
-    Fmt: number
-}
-export default async function (rsgp_unpacked: rsgp_info_for_ptx[]): Promise<Buffer> {
-    let ptx_buffer: SmartBuffer = new SmartBuffer();
-    rsgp_unpacked.forEach((data: rsgp_info_for_ptx) => {
-        if (data.Width !== undefined) {
+export default async function (RSGP_items_packet_list:any) {
+    let ptx_buffer = new SmartBuffer();
+    RSGP_items_packet_list.forEach((rsgp_data:any) => {
+        if (rsgp_data.image_height != 0) {
             let ptx_info = new SmartBuffer();
-            ptx_info.writeInt32LE(data.Width);
-            ptx_info.writeInt32LE(data.Height);
-            ptx_info.writeInt32LE(data.Width * 4);
-            ptx_info.writeInt32LE(data.Fmt);
+            ptx_info.writeInt32LE(rsgp_data.image_width);
+            ptx_info.writeInt32LE(rsgp_data.image_height);
+            ptx_info.writeInt32LE(rsgp_data.image_width * 4);
+            ptx_info.writeInt32LE(rsgp_data.format);
             ptx_buffer.writeBuffer(ptx_info.toBuffer());
         }
     });
