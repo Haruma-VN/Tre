@@ -2,7 +2,7 @@ import { SmartBuffer } from "smart-buffer";
 import path, { parse } from 'node:path';
 import rsb_read_header_info from './rsb_read_header_info.js';
 import extract_rsgp_name_path from './extract_rsgp_name_path.js';
-import extract_resources_data from './extract_resources_data.js'
+import extract_resources_data from './extract_resources_data.js';
 import rsgp_file_info from "./rsgp_file_info.js";
 import rsgp_unpack from '../../rsgp/unpack_rsgp.js';
 import composite_item_list from './composite_item_list.js';
@@ -10,9 +10,7 @@ import { readline_integer } from '../../../../Tre.Progress/Readline/util.js';
 import * as fs_util from '../../../../Tre.Libraries/Tre.FileSystem/util.js';
 import localization from '../../../../Tre.Callback/localization.js';
 import * as color from "../../../../Tre.Libraries/Tre.Color/color.js";
-export default async function (rsb_data_will_not_be_cipher: string,
-    simple: boolean = false,
-    unpack_everything: boolean = false) {
+export default async function (rsb_data_will_not_be_cipher: any, simple: boolean = false, unpack_everything: boolean = false) {
     let decode_rton = false;
     let decode_ptx = false;
     let splitres = false;
@@ -29,7 +27,7 @@ export default async function (rsb_data_will_not_be_cipher: string,
     else if (unpack_everything) {
         console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_rtons")}`));
         decode_rton = readline_integer(0, 1) == 1 ? true : false;
-        console.log(color.fgcyan_string(`◉ Decode PTX`));
+        console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_ptx")}`));
         decode_ptx = readline_integer(0, 1) == 1 ? true : false;
         if (decode_ptx) {
             console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${parse(rsb_data_will_not_be_cipher).base} ${localization("ios_argb8888")}`));
@@ -68,6 +66,7 @@ export default async function (rsb_data_will_not_be_cipher: string,
                                     if (rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item.toUpperCase() == 'PACKAGES') {
                                         await rsgp_unpack(rsgp_file_data, rsb_new_extract_folder, false, decode_rton, true, 2);
                                     }
+                                    else if (rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item.toUpperCase().indexOf('__MANIFESTGROUP__') != -1) { }
                                     else {
                                         fs_util.outfile(`${rsb_new_extract_folder}/Packet/${rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item}.rsgp`, rsgp_file_data);
                                     }
@@ -94,6 +93,6 @@ export default async function (rsb_data_will_not_be_cipher: string,
         fs_util.writejson(`${rsb_new_extract_folder}/TreRSBInfo.json`, Object.fromEntries(TreRSGPInfo));
     }
     else {
-        console.log('this is not rsb');
+        throw new Error(localization("not_a_rsb"));
     }
 }

@@ -14,7 +14,7 @@ export default function (input1: any, input2: any): JSONPatch {
         Object.keys(obj1).forEach((key: any) => {
             const val1 = obj1[key];
             const val2 = obj2[key];
-            const currentPath = path.concat(key);
+            const currentPath: any = path.concat(key);
 
             if (!(key in obj2)) {
                 patch.push({

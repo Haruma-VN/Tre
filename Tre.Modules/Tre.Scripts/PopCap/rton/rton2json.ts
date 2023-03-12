@@ -1,6 +1,5 @@
 import util from "util";
 import { signed, unsigned } from "big-varint";
-import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import { readjson } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import localization from "../../../Tre.Callback/localization.js";
 export default function (rton_data: any): any {
@@ -8,8 +7,8 @@ export default function (rton_data: any): any {
     let indent_number = 0;
     let currrent_indent = '\r\n';
     let indent = '\t';
-    let R0x90List:any = new Array();
-    let R0x92List:any = new Array();
+    let R0x90List: any = new Array();
+    let R0x92List: any = new Array();
     const Str_Null = "*";
     const Str_RTID_0 = "RTID(0)";
     const Str_RTID_2 = "RTID(%d.%d.%s@%s)";
@@ -22,7 +21,7 @@ export default function (rton_data: any): any {
         }
         indent = (config_json.json.space != undefined) ? config_json.json.space : '\t';
     }
-    function RtonNumber(unsigned_number:boolean, utf8:boolean = false) {
+    function RtonNumber(unsigned_number: boolean, utf8 = false) {
         if (utf8) {
             index_count++;
         };
@@ -41,7 +40,7 @@ export default function (rton_data: any): any {
         }
     }
     ;
-    function ReadString(string_length:string, rtid:boolean) {
+    function ReadString(string_length: string, rtid: boolean) {
         let string = rton_data.slice(index_count, index_count += parseInt(string_length)).toString('utf8');
         if (rtid) {
             return string;
@@ -74,7 +73,6 @@ export default function (rton_data: any): any {
                 return `""`;
         }
     }
-    ;
     function ReadArray() {
         let items = new Array();
         indent_number++;
@@ -93,7 +91,6 @@ export default function (rton_data: any): any {
         ;
         return `[]`;
     }
-    ;
     function ReadObject() {
         let items = new Array();
         indent_number++;
@@ -111,12 +108,9 @@ export default function (rton_data: any): any {
         if (items.length != 0) {
             return `{${new_indent}${items.join(`,${new_indent}`)}${trailing_commas}${currrent_indent}${indent.repeat(indent_number)}}`;
         }
-        ;
         return `{}`;
     }
-    ;
     function ReadByteCode(bytecode: any) {
-        console.log(bytecode, index_count)
         index_count++;
         switch (bytecode) {
             case 0:
@@ -174,7 +168,7 @@ export default function (rton_data: any): any {
             case 131:
                 return ReadRTID();
             case 132:
-                return Str_RTID_0;
+                return `"${Str_RTID_0}"`;
             case 133:
                 return ReadObject();
             case 134:
@@ -194,17 +188,13 @@ export default function (rton_data: any): any {
             case 147:
                 return R0x92List[RtonNumber(true)];
             default:
-                TreErrorMessage({ error: localization("rton_bytecode_is_not_supported") + bytecode.toString('hex'), reason: localization("rton_bytecode_is_not_supported") + bytecode.toString('hex'), system: localization("rton_bytecode_is_not_supported") + bytecode.toString('hex') }, localization("rton_bytecode_is_not_supported") + bytecode.toString('hex'));
-                return;
+                throw new Error(localization("rton_bytecode_is_not_supported") + bytecode.toString('hex'));
         }
-        ;
     }
-    ;
     if (rton_data.slice(0, 4).toString() == 'RTON') {
         return ReadObject();
     }
     else {
-        TreErrorMessage({ error: localization("this_file_is_not_rton"), reason: localization("this_file_is_not_rton"), system: "this_file_is_not_RTON" }, localization("this_file_is_not_rton"));
+        throw new Error(localization("this_file_is_not_rton"));
     }
-    ;
 }

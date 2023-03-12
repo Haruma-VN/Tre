@@ -7,13 +7,13 @@ export default async function (rsb_path: string, RSGP_items_list: any, pack_meth
     const rsgp_packet_info = new Array();
     const rsgp_data_info = new Array();
     const RSGP_file_data_list_clone = RSGP_file_data_list.slice();
-    function Unpack_Packet(rsgp_data, composite_index, rsgp_name) {
+    function Unpack_Packet(rsgp_data: any, composite_index: any, rsgp_name: any) {
         const part1_ZSize = rsgp_data.slice(44, 48).readInt32LE();
         const info_size = rsgp_data.slice(72, 76).readInt32LE();
         const info_offset = rsgp_data.slice(76, 80).readInt32LE();
         const info_limit = info_size + info_offset;
         let ptx_number = 0;
-        function CheckPtxFormat(square_ratio) {
+        function CheckPtxFormat(square_ratio: any) {
             let format_ptx = 0;
             switch (square_ratio) {
                 case 20:

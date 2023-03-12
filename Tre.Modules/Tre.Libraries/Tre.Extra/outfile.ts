@@ -18,7 +18,7 @@ export default function (dir: string | string[], is_folder_check: boolean = fals
         const extra = new Extra.Tre.System.Encrypt(message, key)
         switch (method) {
             case "md5":
-                writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.MD5Hash()); 
+                writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.MD5Hash());
                 break;
             case "sha1":
                 writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.Sha1Hash());
@@ -40,12 +40,6 @@ export default function (dir: string | string[], is_folder_check: boolean = fals
                 break;
             case "xor":
                 writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.xorEncrypt());
-                break;
-            case "aes-encrypt":
-                writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.AESEncrypt(iv, mode, padding));
-                break;
-            case "aes-decrypt":
-                writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.AESEncrypt(iv, mode, padding));
                 break;
             case "base64-encode":
                 writefile(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`, extra.Base64Decode());

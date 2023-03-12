@@ -1002,7 +1002,11 @@ class fs_js {
         }
         //#endregion
 
-    } /*-------------------------------------------------------------------------------------------------*/
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
 
 
 
@@ -1029,6 +1033,37 @@ class fs_js {
             default:
                 return message as never;
         }
+        //#endregion
+
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static assertation_create(
+        notify: "failed" | "success" | "argument" | "received" | "void",
+        ...assertation_array: Array<string>
+    ): void {
+        //#region 
+        assertation_array.forEach(function (assertation_arg: string) {
+            switch (notify) {
+                case "success":
+                    return console.log(`${color.fggreen_string("◉ " + localization("execution_finish") + ":")} ` + `${(assertation_arg)}`);
+                case "failed":
+                    return console.log(`${color.fgred_string("◉ " + localization("execution_failed") + ":")} ` + `${(assertation_arg)}`);
+                case "argument":
+                    return console.log(`${color.fgcyan_string("◉ " + localization("execution_argument") + ":")} ` + `${(assertation_arg)}`);
+                case "received":
+                    return console.log(`${color.fggreen_string("◉ " + localization("execution_received") + ":")} ` + `${(assertation_arg)}`);
+                case "void":
+                    return console.log(`${color.fgwhite_string(assertation_arg)}`);
+                default:
+                    return assertation_arg as never;
+            }
+        })
         //#endregion
 
     }

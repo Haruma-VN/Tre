@@ -27,7 +27,6 @@ export default async function (path_file: string,
     else {
         throw new Error(localization("no_tre_info"));
     }
-    ;
 
     function GetTreInfo() {
         RsgpCompression = TreRSGPInfo.CompressionMethod;
@@ -215,7 +214,7 @@ export default async function (path_file: string,
                         const image_dimension = await image_util.dimension(`${path_file}/Res/${file_path}`);
                         if (format_choose == -1) {
                             const allowance_for_popcap_ptx_compression: boolean = display_argument(image_dimension.width, image_dimension.height);
-                            const notify_allowance_message:string = allowance_for_popcap_ptx_compression ? localization("atlas_is_filled_with_2n") : localization("atlas_is_not_filled_with_2n");
+                            const notify_allowance_message: string = allowance_for_popcap_ptx_compression ? localization("atlas_is_filled_with_2n") : localization("atlas_is_not_filled_with_2n");
                             console.log(color.fggreen_string(`◉ ${localization("execution_information")}: `) + `${notify_allowance_message}`);
                             console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${path.parse(file_path).base}`);
                             console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${image_dimension.width}`);

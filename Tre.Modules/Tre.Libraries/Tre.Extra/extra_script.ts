@@ -55,20 +55,6 @@ export namespace Extra.Tre.System {
             return String.fromCharCode.apply(null, encrypted);
         }
 
-        public AESEncrypt(iv: any, mode: any, padding: any): string {
-            if (this.key) {
-                return crypto.AES.encrypt(this.substr, this.key, { iv: iv, mode: crypto.mode[mode], padding: crypto.pad[padding] }).toString();
-            }
-            return "";
-        }
-
-        public AESDecrypt(iv: any, mode: any, padding: any): string {
-            if (this.key) {
-                return crypto.AES.decrypt(this.substr, this.key, { iv: iv, mode: crypto.mode[mode], padding: crypto.pad[padding] }).toString(crypto.enc.Utf8);
-            }
-            return "";
-        }
-
         public Base64Encode(): string {
             return Buffer.from(this.substr).toString('base64');
         }
