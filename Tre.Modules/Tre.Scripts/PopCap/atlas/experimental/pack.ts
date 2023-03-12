@@ -1,7 +1,6 @@
 "use strict";
 import * as file_system from "../../../../Tre.Libraries/Tre.FileSystem/util.js";
 import { extname, basename } from "../../../../Tre.Libraries/Tre.Basename/util.js";
-import { TreErrorMessage } from "../../../../Tre.Debug/Tre.ErrorSystem.js";
 import localization from "../../../../Tre.Callback/localization.js";
 import * as color from "../../../../Tre.Libraries/Tre.Color/color.js";
 import path from "node:path";
@@ -54,7 +53,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     else if (popcap_output_subgroup_name.toString().indexOf('_640') != -1) { res = "640" }
     else if (popcap_output_subgroup_name.toString().indexOf('_1200') != -1) { res = "1200" }
     else {
-        TreErrorMessage({ error: localization("cannot_get_res_data"), reason: localization("cannot_find_res_data_indicated_in_subgroup") }, localization("cannot_find_res_data_indicated_in_subgroup"));
+        throw new Error(localization("cannot_find_res_data_indicated_in_subgroup"));
     }
     const img_list: Array<any> = new Array();
     for (let i in containable_pngs) {

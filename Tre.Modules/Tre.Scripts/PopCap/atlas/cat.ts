@@ -1,7 +1,6 @@
 "use strict";
 import { MaxRectsPacker } from "maxrects-packer";
 import { readjson, writejson } from '../../../Tre.Libraries/Tre.FileSystem/util.js';
-import { TreErrorMessage } from "../../../Tre.Debug/Tre.ErrorSystem.js";
 import { dimension, cat } from "../../../Tre.Libraries/Tre.Images/util.js";
 import best_sorting from '../../../Tre.Libraries/Tre.Sort/ArraySortSystem.js';
 import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
@@ -47,16 +46,13 @@ export default async function (dir: string, width: number, height: number, is_si
     const img_list = new Array();
     const atlas_info: any = readjson(dir + "/AtlasInfo.json");
     if (atlas_info.groups == undefined) {
-        TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_groups_array_in_atlasinfo }, cannot_find_groups_array_in_atlasinfo);
-        return 0;
+        throw new Error(cannot_find_groups_array_in_atlasinfo);
     };
     if (atlas_info.subgroup == undefined) {
-        TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_subgroup_in_atlas_info }, cannot_find_subgroup_in_atlas_info);
-        return 0;
+        throw new Error(cannot_find_subgroup_in_atlas_info);
     };
     if (atlas_info.method == undefined) {
-        TreErrorMessage({ error: display_not_atlas_info, reason: cannot_find_method_in_atlas_info }, cannot_find_method_in_atlas_info);
-        return 0;
+        throw new Error(cannot_find_method_in_atlas_info);
     };
     const is_trim_mode: boolean = ("trim" in atlas_info && atlas_info.trim) ? true : false;
     const selection: string = (atlas_info.method == 'path') ? 'extension' : 'id';
@@ -99,8 +95,7 @@ export default async function (dir: string, width: number, height: number, is_si
     else if (atlas_info.subgroup.indexOf('_640') != -1) { res = "640" }
     else if (atlas_info.subgroup.indexOf('_1200') != -1) { res = "1200" }
     else {
-        TreErrorMessage({ error: cannot_get_res_data, reason: not_found_res_indicated_in_subgroups }, not_found_res_indicated_in_subgroups);
-        return 0;
+        throw new Error(not_found_res_indicated_in_subgroups);
     };
     let result_json: any = {
         id: atlas_info.subgroup,
@@ -114,7 +109,7 @@ export default async function (dir: string, width: number, height: number, is_si
     for (let i = 0; i < img_data.length; ++i) {
         img_data[i] = best_sorting(img_data[i]);
         const count = (i < 9 && i >= 0) ? ("0" + i) : i;
-        dimension_array_value.push(is_trim_mode ? getTrim(img_data[i]) : {width: width, height: height});
+        dimension_array_value.push(is_trim_mode ? getTrim(img_data[i]) : { width: width, height: height });
         result_json.resources.push({
             slot: 0,
             id: "ATLASIMAGE_ATLAS_" + atlas_info.subgroup.toUpperCase() + "_" + count,

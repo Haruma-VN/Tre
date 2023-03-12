@@ -2,7 +2,6 @@
 import sharp from 'sharp';
 import { basename, extname } from '../../Tre.Basename/util.js';
 import { writefile, readfilebuffer } from '../../Tre.FileSystem/util.js';
-import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import * as color from "../../Tre.Color/color.js";
 import localization from '../../../Tre.Callback/localization.js';
 import path from 'node:path';
@@ -25,7 +24,9 @@ export default async function (dir: string, width: number, height: number, not_n
                 await sharp(argb32).extractChannel('red').toBuffer().then(async (red) => {
                     await sharp(argb32).extractChannel('alpha').toBuffer().then(async (alpha) => {
                         await sharp(blue).joinChannel(green).joinChannel(red).joinChannel(alpha).toBuffer().then(async (image) => {
-                            console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(dir + '/../' + basename(dir) + '.png')}`);
+                            if (!not_notify_console_log) {
+                                console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(dir + '/../' + basename(dir) + '.png')}`);
+                            }
                             return await writefile(dir + '/../' + basename(dir) + '.png', image);
                         });
                     });
@@ -33,7 +34,7 @@ export default async function (dir: string, width: number, height: number, not_n
             });
         });
     }).catch((error: any) => {
-        TreErrorMessage({ error: localization("unknown"), reason: localization("popcap_ptx_decode_native_error"), system: error.message.toString() }, localization("popcap_ptx_decode_native_error"));
+        throw new Error(localization("popcap_ptx_decode_native_error"));
     });
     return
 }

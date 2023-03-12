@@ -1,5 +1,7 @@
-import { TreErrorMessage } from "../../Tre.Debug/Tre.ErrorSystem.js";
-interface PatchX{
+"use strict";
+import localization from "../../Tre.Callback/localization.js";
+
+interface PatchX {
     loop: boolean,
     patch: any[],
 }
@@ -13,7 +15,7 @@ export default function applyPatch(source: any, patch: PatchX): any {
                 }
                 return result;
             } else {
-                TreErrorMessage({ error: "Cannot apply loop operation on non-array source." }, "Cannot apply loop operation on non-array source.");
+                throw new Error(localization("json_patch_error_apply"));
             }
         } else {
             if (patch.patch) {
@@ -95,7 +97,6 @@ export default function applyPatch(source: any, patch: PatchX): any {
             return source;
         }
     } catch (error: any) {
-        TreErrorMessage({ error: error.message.toString() }, error.toString());
-        return source;
+        throw new Error(error.message);
     }
 }

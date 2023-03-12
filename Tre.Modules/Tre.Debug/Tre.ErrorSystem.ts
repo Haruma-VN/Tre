@@ -48,7 +48,7 @@ function TreErrorMessage(error: {}, message: string): void {
             return fs.writeFileSync(dir + filename + '.json', stringify(error));
         }
     }
-    return console.log('\x1b[31m◉ ' + localization("execution_failed") + ": " + message + '\x1b[0m');
+    throw new Error(message);
 }
 function MessageOnly(message: any) {
     return console.log('\x1b[31m' + message + '\x1b[0m');

@@ -18,7 +18,13 @@ export function LocalResourcesCompare(vanilla_directory: string, modded_director
 }
 
 export function res_split(dir: string) {
-    split(dir);
+    const json: any = readjson(dir);
+    if("groups" in json){
+        split(dir, json);
+    }
+    else{
+        throw new Error(localization("not_valid_resources"))
+    }
     console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir + '/../' + path.parse(dir).name + '.res'}`)}`);
 }
 

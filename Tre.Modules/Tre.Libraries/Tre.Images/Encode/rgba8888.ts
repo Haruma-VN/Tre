@@ -2,7 +2,6 @@
 import sharp from 'sharp';
 import { basename } from '../../Tre.Basename/util.js';
 import fs from 'node:fs';
-import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import { dimension } from '../util.js';
 import localization from '../../../Tre.Callback/localization.js';
 import * as color from "../../Tre.Color/color.js";
@@ -24,9 +23,11 @@ export default async function (dir: string, not_notify_console_log: boolean = fa
     max_sharp(img_data.width, img_data.height);
     delete_file(path.resolve(dir + '/../' + basename(dir) + '.ptx'));
     const data: any = await sharp(dir).raw().toBuffer().catch((error: any) => {
-        TreErrorMessage({ error: localization("not_a_raw_image"), reason: localization("cannot_read_image_data"), system: error.message.toString() }, localization("cannot_read_image_data"));
+        throw new Error(localization("cannot_read_image_data"));
     });
     fs.writeFileSync(dir + '/../' + basename(dir) + '.ptx', data);
-    console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(dir + '/../' + basename(dir) + '.ptx')}`);
+    if (!not_notify_console_log) {
+        console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(dir + '/../' + basename(dir) + '.ptx')}`);
+    }
     return
 }

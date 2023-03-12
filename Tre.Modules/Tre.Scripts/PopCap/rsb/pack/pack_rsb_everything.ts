@@ -1,5 +1,7 @@
 "use strict";
 import rsgp_pack from '../../rsgp/rsgp_pack.js';
+import fs_js from '../../../../Tre.Libraries/Tre.FileSystem/implement.js';
+
 export default async function (TreRSBInfo: any, rsb_path: string) {
     const New_TreRSBInfo = new Array();
     const RSGP_file_data_list = new Array();
@@ -11,7 +13,7 @@ export default async function (TreRSBInfo: any, rsb_path: string) {
             const rsgp_info = rsgp_tre_info[1];
             const rsgp_data = await rsgp_pack(rsb_path, true, false, false, true, true, rsgp_info);
             RSGP_file_data_list.push({ rsgp_name, rsgp_data });
-            console.log(rsgp_name)
+            fs_js.execution_created(rsgp_name);
             composite_rsgp_list.push(rsgp_name);
         }
         New_TreRSBInfo.push([TreRSBInfo[composite][0], composite_rsgp_list]);

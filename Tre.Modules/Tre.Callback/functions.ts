@@ -2,7 +2,6 @@
 import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, encode_etc1a, encode_pvrtc, decode_etc1a, decode_pvrtc, decode_etc1alpha_palette, encode_etc1alpha_palette, } from "../Tre.Libraries/Tre.Images/util.js";
 import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, } from '../../Tre.Modules/Tre.Scripts/PopCap/resources/util.js';
 import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution, atlas_split_experimental, atlas_pack_experimental } from '../../Tre.Modules/Tre.Scripts/PopCap/atlas/util.js';
-import { TreErrorMessage } from '../../Tre.Modules/Tre.Debug/Tre.ErrorSystem.js';
 import { readjson, readfile, writefile, writejson, check_is_file, file_stats, readfilebuffer, makefolder, delete_file, read_dir, read_single_folder } from "../Tre.Libraries/Tre.FileSystem/util.js";
 import { Display } from './toolkit_functions.js';
 import { Argument } from "./toolkit_question.js";
@@ -26,6 +25,8 @@ import { rton_to_json, json_to_rton, rton_decrypt_and_decode_to_json, json_to_rt
 import resolveFilePath from "./Public/FilePath/path_result.js";
 import js_checker from "./Default/checker.js";
 import localization from "./localization.js";
+import fs_js from "../Tre.Libraries/Tre.FileSystem/implement.js";
+import { stringify, parse } from "../Tre.Libraries/Tre.JSONSystem/util.js";
 
 export interface configAtlas {
     display: {
@@ -192,8 +193,8 @@ export default async function (execute_file_count: number, execute_file_dir: str
                 case ".rsg":
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_rsgp_pack);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_zlib_rsb_pack);
-                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_pack_simple);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsgp_pack_simple);
+                    Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_pack_simple);
                     Display.Tre.Function.DisplayItems(tre_selector, Display.Tre.Function.popcap_rsb_resource_pack);
                     break;
                 case ".pgj":
@@ -267,7 +268,11 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     try {
                         if (!js_checker.is_array(execute_file_dir)) {
                             const js_shell_string_await_for_executor: string = (readfile(execute_file_dir));
-                            let javascript_shell_allow_this_funcction: boolean = ban(["eval", "exec", "execSync", "spawn", "setTimeout", "console", "setInterval", "require", "import", "export", "fs", "window", "interface", "abstract", "with", "var", "readline", "JSON", "fetch", "document"], js_shell_string_await_for_executor);
+                            let javascript_shell_allow_this_funcction: boolean = ban(["eval",
+                                "exec", "execSync", "spawn", "setTimeout",
+                                "setInterval", "require", "import",
+                                "export", "fs", "window", "interface", "abstract", "with",
+                                "var", "readline", "fetch", "document", "console"], js_shell_string_await_for_executor);
                             if (javascript_shell_allow_this_funcction) {
                                 await eval(js_shell_string_await_for_executor);
                             }
@@ -276,7 +281,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                             }
                         }
                     } catch (error: any) {
-                        TreErrorMessage({ error: `${Argument.Tre.Packages.error_syntax}`, reason: `${Argument.Tre.Packages.unknown_reason}`, system: error.message.toString() }, `${error.message.toString()}`)
+                        throw new Error(error.message);
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_encode_rgba8888.void_number_readline_argument():
@@ -341,7 +346,12 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     break;
                 case Display.Tre.Function.popcap_resources_split.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await res_split(execute_file_dir)
+                        res_split(execute_file_dir);
+                    }
+                    else {
+                        execute_file_dir.forEach(execution_waiting => {
+                            res_split(execution_waiting);
+                        });
                     }
                     break;
                 case Display.Tre.Function.popcap_resources_cat.void_number_readline_argument():
@@ -356,6 +366,11 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     if (!js_checker.is_array(execute_file_dir)) {
                         res_pack(execute_file_dir, mode, encode);
                     }
+                    else {
+                        execute_file_dir.forEach(execution_waiting => {
+                            res_pack(execution_waiting, mode, encode);
+                        });
+                    }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_rgba8888.void_number_readline_argument():
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
@@ -364,6 +379,11 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     height = Console.IntegerReadLine(1, 16384);
                     if (!js_checker.is_array(execute_file_dir)) {
                         await decode_rgba8888(execute_file_dir, width, height);
+                    }
+                    else {
+                        execute_file_dir.forEach(execution_waiting => {
+                            decode_rgba8888(execution_waiting, width, height);
+                        })
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_argb8888.void_number_readline_argument():
@@ -655,12 +675,12 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     break;
                 case Display.Tre.Function.popcap_rsb_resource_pack.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await popcap_game_content_edit.rsb_pack(execute_file_dir, true, false);
+                        await popcap_game_content_edit.rsb_pack(execute_file_dir, false, true);
                     }
                     break;
                 case Display.Tre.Function.popcap_rsb_pack_simple.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
-                        await popcap_game_content_edit.rsb_pack(execute_file_dir, false, true);
+                        await popcap_game_content_edit.rsb_pack(execute_file_dir, true, false);
                     }
                     break;
                 case Display.Tre.Function.popcap_zlib_smf_compress.void_number_readline_argument():
@@ -789,4 +809,7 @@ export {
     readfilebuffer,
     js_checker,
     file_stats,
+    fs_js,
+    stringify,
+    parse,
 }

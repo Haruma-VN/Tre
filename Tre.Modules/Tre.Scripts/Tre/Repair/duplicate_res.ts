@@ -1,5 +1,7 @@
 "use strict";
-import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
+
+import localization from "../../../Tre.Callback/localization.js";
+
 type ResInfo = {
     path: string[],
     id: string,
@@ -19,8 +21,7 @@ export default function repairExtension(arr: ResInfo[]): ResInfo[] {
             return;
         } else {
             if (!item.hasOwnProperty('id') || !item.hasOwnProperty('path')) {
-                TreErrorMessage({error: "Cannot fix", system: `Element at index ${index} does not contain both 'id' and 'path' properties.`},`Element at index ${index} does not contain both 'id' and 'path' properties.`);
-                return;
+                throw new Error(`${localization("element_at")} ${index} ${localization("not_contain_path_and_id_property")}`);
             }
 
             let idNum = item.id.split("").pop();
@@ -29,12 +30,10 @@ export default function repairExtension(arr: ResInfo[]): ResInfo[] {
             let uppercase_id = item.id.toUpperCase();
             let lowercase_extension = (item.path[item.path.length - 1]).toLowerCase();
             if (arr[index].id !== uppercase_id) {
-                TreErrorMessage({error: "Cannot fix", system: `${arr[index].id} is not fully Upper Case, will not fix`},`${arr[index].id} is not fully Upper Case, will not fix`);
-                return;
+                throw new Error(`${arr[index].id} ${localization("not_fully_uppercase")}`);
             }
             if (arr[index].path[arr[index].path.length - 1] !== lowercase_extension) {
-                TreErrorMessage({error: "Cannot fix", system: `${arr[index].path[arr[index].path.length - 1]} is not fully Lower Case, will not fix`},`${arr[index].path[arr[index].path.length - 1]} is not fully Lower Case, will not fix`);
-                return;
+                throw new Error(`${arr[index].path[arr[index].path.length - 1]} ${localization("not_fully_uppercase")}`);
             }
             if (idNum !== extNum) {
                 arr[index].path[arr[index].path.length - 1] = arr[index].path[arr[index].path.length - 1].substring(0, arr[index].path[arr[index].path.length - 1].lastIndexOf("_") + 1) + idNum;

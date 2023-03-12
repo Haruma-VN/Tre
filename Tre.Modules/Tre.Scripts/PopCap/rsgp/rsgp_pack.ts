@@ -8,8 +8,11 @@ import json2rton from '../rton/json2rton.js';
 import BeautifyOffset from './beautify_offset.js';
 import * as fs from '../../../Tre.Libraries/Tre.FileSystem/util.js';
 import * as image_util from '../../../Tre.Libraries/Tre.Images/util.js';
-import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import localization from '../../../Tre.Callback/localization.js';
+import { Console } from '../../../Tre.Callback/console.js';
+import { Argument } from '../../../Tre.Callback/toolkit_question.js';
+import display_argument from './arguments_set.js';
+
 export default async function (path_file: string,
     pack_simple: boolean = false,
     rsb_pack = false, resources_pack: boolean = false,
@@ -22,7 +25,7 @@ export default async function (path_file: string,
         TreRSGPInfo = fs.readjson(`${path_file}/TreRSGPInfo.json`);
     }
     else {
-        TreErrorMessage({ reason: localization("no_tre_info"), error: localization("error") }, localization("no_tre_info"));
+        throw new Error(localization("no_tre_info"));
     }
     ;
 
@@ -138,26 +141,25 @@ export default async function (path_file: string,
         switch (format) {
             case 0:
                 if (format_type == 'ios') {
-                    await image_util.encode_argb8888(`${path_file}/Res/${file_path}`);
+                    await image_util.encode_argb8888(`${path_file}/Res/${file_path}`, true);
                 }
                 else {
-                    await image_util.encode_rgba8888(`${path_file}/Res/${file_path}`);
+                    await image_util.encode_rgba8888(`${path_file}/Res/${file_path}`, true);
                 }
                 break;
             case 30:
-                await image_util.encode_pvrtc(`${path_file}/Res/${file_path}`);
+                await image_util.encode_pvrtc(`${path_file}/Res/${file_path}`, true);
                 break;
             case 147:
                 if (format_type == 'android_cn') {
-                    await image_util.encode_etc1alpha_palette(`${path_file}/Res/${file_path}`);
+                    await image_util.encode_etc1alpha_palette(`${path_file}/Res/${file_path}`, true);
                 }
                 else {
-                    await image_util.encode_etc1a(`${path_file}/Res/${file_path}`);
+                    await image_util.encode_etc1a(`${path_file}/Res/${file_path}`, true);
                 }
                 break;
             default:
-                console.log('Unknown PTX format');
-                break;
+                throw new Error(localization('not_recognize_ptx'));
         }
     }
 
@@ -210,36 +212,47 @@ export default async function (path_file: string,
                 if (file_path.indexOf('.PNG') != -1) {
                     if (pack_simple) {
                         let format_type: any;
+                        const image_dimension = await image_util.dimension(`${path_file}/Res/${file_path}`);
                         if (format_choose == -1) {
-                            console.log(color.fggreen_string(`Select one encoding format: ${path.parse(file_path).base}`));
-                            console.log('0. PopCap PTX RGBA8888 Encode (0)');
-                            console.log('1. PopCap PTX ARGB8888 Encode (0)');
-                            console.log('2. PopCap PTX RGB_PVRTC4_A_8 Encode (30)');
-                            console.log('3. PopCap PTX RGB_ETC1_A_8 Encode (147)');
-                            console.log('4. PopCap PTX RGB_ETC1_A_Palette Encode (147)');
-                            format_choose = readline_integer(0, 4);
+                            const allowance_for_popcap_ptx_compression: boolean = display_argument(image_dimension.width, image_dimension.height);
+                            const notify_allowance_message:string = allowance_for_popcap_ptx_compression ? localization("atlas_is_filled_with_2n") : localization("atlas_is_not_filled_with_2n");
+                            console.log(color.fggreen_string(`◉ ${localization("execution_information")}: `) + `${notify_allowance_message}`);
+                            console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${path.parse(file_path).base}`);
+                            console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${image_dimension.width}`);
+                            console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${image_dimension.height}`);
+                            console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("popcap_ptx_encode")}`));
+                            const set_allowance_point: number = (allowance_for_popcap_ptx_compression) ? 5 : 2;
+                            console.log('      1. PopCap PTX RGBA8888 Encode (0)');
+                            console.log('      2. PopCap PTX ARGB8888 Encode (0)');
+                            if (allowance_for_popcap_ptx_compression) {
+                                console.log('      3. PopCap PTX RGB_PVRTC4_A_8 Encode (30)');
+                                console.log('      4. PopCap PTX RGB_ETC1_A_8 Encode (147)');
+                                console.log('      5. PopCap PTX RGB_ETC1_A_Palette Encode (147)');
+                            }
+                            format_choose = readline_integer(1, set_allowance_point);
                             switch (format_choose) {
-                                case 0:
+                                case 1:
                                     format_choose = 0;
                                     break;
-                                case 1:
+                                case 2:
                                     format_choose = 0;
                                     format_type = 'ios';
                                     break;
-                                case 2:
+                                case 3:
                                     format_choose = 30;
                                     break;
-                                case 3:
-                                    format_choose = 147;
                                 case 4:
+                                    format_choose = 147;
+                                case 5:
                                     format_choose = 147;
                                     format_type = 'android_cn';
                                     break;
+                                default:
+                                    format_choose = readline_integer(0, 4);
                             }
                         };
                         await EncodePTX(file_path, format_choose, format_type);
                         const image_data = await fs.readfilebuffer(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`);
-                        const image_dimension = await image_util.dimension(`${path_file}/Res/${file_path}`);
                         return { image_data, width: image_dimension.width, height: image_dimension.height, id: false };
                     }
                     else {
@@ -251,15 +264,16 @@ export default async function (path_file: string,
                 else {
                     if (pack_simple) {
                         const image_data = await fs.readfilebuffer(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`);
-                        console.log(color.fggreen_string(`Please enter the Size of Atlas: ${path.parse(file_path).base}`));
-                        console.log('Enter the Width');
-                        const width = readline_size();
-                        console.log('Enter the Height');
-                        const height = readline_size();
+                        console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("popcap_ptx_dimension")}`));
+                        console.log(color.fggreen_string(`◉ ${localization("execution_in")}: ${path.parse(file_path).base}`));
+                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
+                        let width = Console.IntegerReadLine(1, 16384);
+                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
+                        let height = Console.IntegerReadLine(1, 16384);
                         return { image_data, width, height, id: false };
                     }
                     else {
-                        throw console.error('"UseTreRSGPInfo: fasle" is not support pack PTX in this function, please turn on UseTreRSGPInfo or use RSGP Pack Simple');
+                        throw new Error(`${localization('cannot_turn_off_treinfo')}`);
                     }
                 };
             };
@@ -346,10 +360,6 @@ export default async function (path_file: string,
         const path_temp = await ConcatRSGPPath(filepath);
         const [rsgp_path_info, rsgp_file_data, atlas] = await PackData((filepath as any), path_temp, TreInfo[1], TreRSGPInfo);
         return await PackRSGP(rsgp_path_info, rsgp_file_data, (atlas as any), TreInfo[0]);
-    }
-
-    if (dont_log_notify != true) {
-        console.log('UseTreRSGPInfo: ', TreRSGPInfo);
     }
 
     if (TreRSGPInfo != false) {

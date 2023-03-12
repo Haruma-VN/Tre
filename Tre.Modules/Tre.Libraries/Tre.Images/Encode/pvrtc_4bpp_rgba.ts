@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import { execSync } from 'node:child_process';
 import { basename, extname, dirname } from '../../Tre.Basename/util.js';
 import { dimension } from '../util.js';
-import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import localization from '../../../Tre.Callback/localization.js';
 import * as color from "../../Tre.Color/color.js";
 import path from "node:path";
@@ -24,19 +23,22 @@ export default async function (dir: string, not_notify_console_log: boolean = fa
         console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
         console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
     }
-    exception_encode_dimension(width, height);
-    delete_file(path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`));
-    try {
-        await execSync(pvrtc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
-    } catch (error: any) {
-        TreErrorMessage({ error: localization("cannot_encode_ptx"), reason: localization("unknown"), system: error.message.toString() }, `${localization("cannot_encode_ptx")} ${dir}`);
-        return;
-    }
-    const originalImage = await fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`).slice(fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`).length - offset);
-    await fs.writeFileSync(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`, originalImage);
-    console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`)}`);
-    for (let item of fs.readdirSync(tre_thirdparty)) {
-        extname(item).toUpperCase() != '.EXE' ? await fs.unlinkSync(`${tre_thirdparty}${item}`) : {};
+    const get_exception: boolean = exception_encode_dimension(width, height);
+    if (get_exception && fs_js.check_pvrtc()) {
+        delete_file(path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`));
+        try {
+            await execSync(pvrtc_process, { cwd: tre_thirdparty, stdio: 'ignore' });
+        } catch (error: any) {
+            throw new Error(`${localization("cannot_encode_ptx")} ${dir}`);
+        }
+        const originalImage = await fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`).slice(fs.readFileSync(`${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`).length - offset);
+        await fs.writeFileSync(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`, originalImage);
+        if (!not_notify_console_log) {
+            console.log(color.fggreen_string(`◉ ${localization("execution_out")}: `) + `${path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`)}`);
+        }
+        for (let item of fs.readdirSync(tre_thirdparty)) {
+            extname(item).toUpperCase() != '.EXE' ? await fs.unlinkSync(`${tre_thirdparty}${item}`) : {};
+        }
     }
     return;
 }

@@ -8,8 +8,8 @@ export default function (rton_data: any): any {
     let indent_number = 0;
     let currrent_indent = '\r\n';
     let indent = '\t';
-    let R0x90List = new Array();
-    let R0x92List = new Array();
+    let R0x90List:any = new Array();
+    let R0x92List:any = new Array();
     const Str_Null = "*";
     const Str_RTID_0 = "RTID(0)";
     const Str_RTID_2 = "RTID(%d.%d.%s@%s)";
@@ -22,7 +22,7 @@ export default function (rton_data: any): any {
         }
         indent = (config_json.json.space != undefined) ? config_json.json.space : '\t';
     }
-    function RtonNumber(unsigned_number, utf8 = false) {
+    function RtonNumber(unsigned_number:boolean, utf8:boolean = false) {
         if (utf8) {
             index_count++;
         };
@@ -41,7 +41,7 @@ export default function (rton_data: any): any {
         }
     }
     ;
-    function ReadString(string_length, rtid) {
+    function ReadString(string_length:string, rtid:boolean) {
         let string = rton_data.slice(index_count, index_count += parseInt(string_length)).toString('utf8');
         if (rtid) {
             return string;
@@ -115,7 +115,8 @@ export default function (rton_data: any): any {
         return `{}`;
     }
     ;
-    function ReadByteCode(bytecode) {
+    function ReadByteCode(bytecode: any) {
+        console.log(bytecode, index_count)
         index_count++;
         switch (bytecode) {
             case 0:
@@ -173,7 +174,7 @@ export default function (rton_data: any): any {
             case 131:
                 return ReadRTID();
             case 132:
-                return `"${Str_RTID_0}"`;
+                return Str_RTID_0;
             case 133:
                 return ReadObject();
             case 134:

@@ -1,5 +1,7 @@
 "use strict";
-import { TreErrorMessage } from '../../Tre.Debug/Tre.ErrorSystem.js';
+
+import localization from "../../Tre.Callback/localization.js";
+
 interface ResObjectSortingItem {
     id: string;
 }
@@ -8,11 +10,7 @@ export default function sortResObjects(array: ResObjectSortingItem[]): ResObject
     try {
         array.sort((a, b) => {
             if (!a || !b || !a.id || !b.id) {
-                TreErrorMessage({
-                    error: "Bug",
-                    Reason: "Both a and b must have defined and non-null values for the id property",
-                    system: "Both a and b must have defined and non-null values for the id property"
-                }, "Both a and b must have defined and non-null values for the id property");
+                throw new Error(localization("defined_and_non_null"));
             }
 
             const aMatch = a.id.match(/^TEST(\d+)_(\d+)x(\d+)$/i);
@@ -28,11 +26,7 @@ export default function sortResObjects(array: ResObjectSortingItem[]): ResObject
                 const aNum = parseInt(aMatch[1], 10);
                 const bNum = parseInt(bMatch[1], 10);
                 if (isNaN(aNum) || isNaN(bNum)) {
-                    TreErrorMessage({
-                        error: "Bug",
-                        Reason: "Both aNum and bNum must be parseable as numbers",
-                        system: "Both aNum and bNum must be parseable as numbers"
-                    }, "Both aNum and bNum must be parseable as numbers");
+                    throw new Error(localization("parse_able_number"));
                 }
                 if (aNum !== bNum) {
                     return aNum - bNum;
@@ -43,11 +37,6 @@ export default function sortResObjects(array: ResObjectSortingItem[]): ResObject
         });
         return array;
     } catch (error: any) {
-        TreErrorMessage({
-            error: "Bug",
-            Reason: "Unexpected error while sorting resources objects",
-            system: error.message.toString()
-        }, error.message.toString());
-        return [];
+        throw new Error(error.message);
     }
 }

@@ -5,17 +5,22 @@ import crossPathSort from 'cross-path-sort';
 import PackRSB from './pack_rsb_data.js';
 import Unpack_NamePath from './unpack_name_path.js';
 import { parse } from 'node:path';
-import { TreErrorMessage } from '../../../../../Tre.Modules/Tre.Debug/Tre.ErrorSystem.js';
-export default async function (rsb_path: string, pack_simple:boolean = false, pack_everything:boolean = false) {
+import localization from '../../../../Tre.Callback/localization.js';
+import fs_js from '../../../../Tre.Libraries/Tre.FileSystem/implement.js';
+
+export default async function (rsb_path: string, pack_simple: boolean = false, pack_everything: boolean = false) {
     let TreRSBInfo: any = new Object();
     let pack_method: string | boolean = false;
-    let RSGP_file_data_list = new Array()
+    let RSGP_file_data_list = new Array();
+    let execution_information: string = (pack_everything) ? localization("popcap_rsb_resource_pack_information") : localization("popcap_rsb_normal_pack_information");
+    execution_information = (pack_simple) ? localization("popcap_rsb_simple_pack_information") : execution_information;
+    fs_js.execution_information(execution_information);
+    fs_js.execution_out(`${parse(rsb_path).dir}/${parse(rsb_path).name}.rsb`);
     try {
         TreRSBInfo = Object.entries(fs_util.readjson(`${rsb_path}/TreRSBInfo.json`));
     }
-    catch (error) {
-        TreErrorMessage({ error: "Can't read TreRSBInfo", reason: "Can't read TreRSBInfo", system: error.message.toString() }, "Can't read TreRSBInfo");
-        return;
+    catch (error: any) {
+        throw new Error(localization("cannot_read_tre_rsbinfo"));
     };
     if (pack_simple) {
         pack_method = 'simple';
@@ -31,13 +36,13 @@ export default async function (rsb_path: string, pack_simple:boolean = false, pa
     let RSGP_items_list_temp = new Array();
     let Resources = "";
     let composite_index = 0;
-    TreRSBInfo.forEach(files => {
+    TreRSBInfo.forEach((files: any) => {
         if (files[0].indexOf('__MANIFESTGROUP__') !== -1) {
             Resources = files[0];
         }
         else {
             RSB_composite_list.push(files[0]);
-            files[1].forEach(rsgp_item => {
+            files[1].forEach((rsgp_item: any) => {
                 RSGP_items_list_temp.push(rsgp_item);
             })
         };
@@ -55,5 +60,9 @@ export default async function (rsb_path: string, pack_simple:boolean = false, pa
     RSGP_items_list.push({ name_path: Resources, composite_index });
     const RSGP_items_packet_list = await Unpack_NamePath(rsb_path, RSGP_items_list, pack_method, RSGP_file_data_list);
     const rsb_file_data = await PackRSB(rsb_path, (pack_method as any), TreRSBInfo, RSB_composite_list, RSGP_items_list, RSGP_items_packet_list, RSGP_file_data_list);
-    fs_util.outfile(`${parse(rsb_path).dir}/${parse(rsb_path).name}.obb`, rsb_file_data);
+    fs_util.outfile(`${parse(rsb_path).dir}/${parse(rsb_path).name}.rsb`, rsb_file_data);
+    if (pack_everything) {
+        fs_js.execution_status("success", localization("finish"));
+        fs_js.execution_out(fs_js.get_full_path(`${parse(rsb_path).dir}/${parse(rsb_path).name}.rsb`));
+    }
 }

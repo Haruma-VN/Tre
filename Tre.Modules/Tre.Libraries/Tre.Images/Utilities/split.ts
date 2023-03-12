@@ -2,7 +2,6 @@
 import { writejson, readjson, makefolder } from '../../Tre.FileSystem/util.js';
 import { split } from '../util.js';
 import { extname, basename } from '../../Tre.Basename/util.js';
-import { TreErrorMessage } from '../../../Tre.Debug/Tre.ErrorSystem.js';
 import fix_duplicate_res from '../../../Tre.Scripts/Tre/Repair/duplicate_res.js';
 import localization from '../../../Tre.Callback/localization.js';
 import * as color from "../../Tre.Color/color.js";
@@ -42,8 +41,7 @@ export default async function (opt: number, execute_file_dir: string[]) {
             case '.json':
                 json = readjson(execute_file_dir[i]);
                 if (json.resources == undefined) {
-                    TreErrorMessage({ error: localization("cannot_access_file_data"), reason: localization("not_popcap_res") }, localization("not_popcap_res"));
-                    return 0;
+                    throw new Error(localization("not_popcap_res"));
                 }
                 directory_name = basename(execute_file_dir[i]) + ".spg";
                 dir_sys = execute_file_dir[i] + '/../' + (directory_name);
@@ -108,7 +106,10 @@ export default async function (opt: number, execute_file_dir: string[]) {
                 }
             }
         };
-        await Promise.all(promises).catch((err: any) => { return TreErrorMessage({ error: localization("error"), system: err.message.toString(), reason: localization("native_atlas_splitting_error") }, localization("native_atlas_splitting_error")) });
+        await Promise.all(promises).catch((err: any) => {
+            throw new Error(
+                localization("native_atlas_splitting_error"))
+        });
         parent_list = [...new Set(parent_list)];
         for (let info of extend_info) {
             for (let parent of parent_list) {
@@ -130,8 +131,7 @@ export default async function (opt: number, execute_file_dir: string[]) {
         console.log(color.fggreen_string("◉ " + localization("execution_actual_size") + ": ") + actual_splitting_items.length + "/" + atlas_info.groups.length);
     }
     else {
-        TreErrorMessage({ error: localization("no_json_file"), reason: localization("cannot_detect_json") }, localization("cannot_detect_json"));
-        return 0;
+        throw new Error(localization("cannot_detect_json"));
     }
     return 0;
 };

@@ -5,6 +5,7 @@ import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
 import localization from "../../../Tre.Callback/localization.js";
 import { parse } from "node:path";
 import { readline_integer } from '../../../Tre.Progress/Readline/util.js';
+import fs_js from '../../../Tre.Libraries/Tre.FileSystem/implement.js';
 export default async function DecodePTX(ptx_path: string, file_data_size: number, image_width: number, image_height: number, ios_argb8888: number | boolean) {
     const square_ratio = parseInt(((file_data_size / (image_width * image_height)) * 10 / 2) as any);
     let format: any = { Format: 0, Platform: 'ios' };
@@ -36,8 +37,7 @@ export default async function DecodePTX(ptx_path: string, file_data_size: number
             format = { Format: 147, Platform: 'android' };
             break;
         default:
-            console.log(color.fgred_string("Can\'t decode PTX. Unknown PTX's format"));
-            break;
+            throw new Error(`${localization("cannot_decode_ptx")}. ${fs_js.get_full_path(ptx_path)} ${localization("unknown_ptx_format")}`);
     }
 
     if (fs.check_is_file(ptx_path)) {

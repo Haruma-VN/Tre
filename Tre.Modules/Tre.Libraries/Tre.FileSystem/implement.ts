@@ -3,6 +3,8 @@ import fs from "fs";
 import * as js_json from "../Tre.JSONSystem/util.js";
 import path from "path";
 import sharp from "sharp";
+import * as color from "../Tre.Color/color.js";
+import localization from "../../Tre.Callback/localization.js";
 
 class fs_js {
 
@@ -451,15 +453,24 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
+    static js_dir(
+        file_system_input_path: string,
+    ): string {
+        //#region 
+        return path.dirname(file_system_input_path);
+        //#endregion
+    }
+
+
     static async get_dimension(
         file_system_input_path: string,
         width_output_as_property: string = "width",
-        height_output_as_property: string = "height",
+        height_output_as_property: string = "height"
     ): Promise<{
         [x: string]: number;
     }> {
         //#region 
-        if (this.js_exists(file_system_input_path)) {
+        if (!this.js_exists(file_system_input_path)) {
             const create_image_nodejs_sharp_view: sharp.Sharp = sharp(file_system_input_path);
             const create_auto_view_dimension: sharp.Metadata = await create_image_nodejs_sharp_view.metadata();
 
@@ -530,7 +541,7 @@ class fs_js {
         sharp_data_for_x: number,
         sharp_data_for_y: number,
         file_system_output_path: string | undefined,
-    ) {
+    ): Promise<void> {
         //#region 
         if (file_system_output_path === undefined || file_system_input_path === void 0 || file_system_input_path === null) {
             file_system_output_path = `${(file_system_input_path)}/../${this.js_basename(file_system_input_path)}.view.png`;
@@ -547,15 +558,480 @@ class fs_js {
                     left: (sharp_data_for_x),
                     top: (sharp_data_for_y)
                 }).toFile(file_system_output_path).catch(function (error: any) {
-                    throw new Error(`Cannot create ${this.get_full_path(file_system_output_path)}, and the error is ${error.message as NodeJS.ErrnoException}`);
+                    throw new Error(`Cannot create ${fs_js.get_full_path(file_system_output_path as string)}, and the error is ${error.message as NodeJS.ErrnoException}`);
                 })
         }
         //#endregion
     }
+
+
     /*-------------------------------------------------------------------------------------------------*/
 
-    
 
+    static async pack_image(
+        file_system_directory_file_path_output: string,
+        file_system_width: number,
+        file_system_height: number,
+        file_system_assertation_array: Array<{
+            input: string,
+            left: number,
+            top: number,
+        }>,
+        file_system_channel_output: 3 | 4 = 4,
+        file_system_adjustment_background:
+            {
+                file_system_output_red_channel?: number,
+                file_system_output_blue_channel?: number,
+                file_system_output_green_channel?: number,
+                file_system_output_alpha_channel?: number,
+            }
+    ): Promise<void> {
+        //#region 
+        if (file_system_adjustment_background.file_system_output_red_channel == undefined || file_system_adjustment_background.file_system_output_red_channel == void 0
+            || file_system_adjustment_background.file_system_output_red_channel == null) {
+            file_system_adjustment_background.file_system_output_red_channel = 0;
+        }
+
+        if (file_system_adjustment_background.file_system_output_blue_channel == undefined || file_system_adjustment_background.file_system_output_blue_channel == void 0
+            || file_system_adjustment_background.file_system_output_blue_channel == null) {
+            file_system_adjustment_background.file_system_output_blue_channel = 0;
+        }
+
+        if (file_system_adjustment_background.file_system_output_green_channel == undefined || file_system_adjustment_background.file_system_output_green_channel == void 0
+            || file_system_adjustment_background.file_system_output_green_channel == null) {
+            file_system_adjustment_background.file_system_output_green_channel = 0;
+        }
+
+        if (file_system_adjustment_background.file_system_output_alpha_channel == undefined || file_system_adjustment_background.file_system_output_alpha_channel == void 0
+            || file_system_adjustment_background.file_system_output_alpha_channel == null) {
+            file_system_adjustment_background.file_system_output_alpha_channel = 0;
+        }
+
+        const create_new_sharp_composite: sharp.Sharp = sharp({
+            create: {
+                width: file_system_width,
+                height: file_system_height,
+                channels: file_system_channel_output,
+                background: ({
+                    r: file_system_adjustment_background.file_system_output_red_channel,
+                    b: file_system_adjustment_background.file_system_output_blue_channel,
+                    g: file_system_adjustment_background.file_system_output_green_channel,
+                    alpha: file_system_adjustment_background.file_system_output_alpha_channel,
+                })
+            }
+        })
+        await create_new_sharp_composite.composite(file_system_assertation_array)
+            .toFile(file_system_directory_file_path_output).catch((error: any) => {
+                throw new Error(`Cannot pack image because ${error.message as NodeJS.ErrnoException}`);
+            });
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static async extract_alpha_channel(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        return await sharp(file_system_input_path).extractChannel("alpha").toBuffer();
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static async extract_red_channel(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        return await sharp(file_system_input_path).extractChannel("red").toBuffer();
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+    static async extract_blue_channel(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        return await sharp(file_system_input_path).extractChannel("blue").toBuffer();
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static async extract_green_channel(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        return await sharp(file_system_input_path).extractChannel("green").toBuffer();
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static async extract_raw(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        return await sharp(file_system_input_path).raw().toBuffer();
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    /* 720 = 0 + 2*360 ( k = 2 ), bỏ k*360 lấy 0 */
+    /* 780 = 60 + 2*360 ( k = 2 ), bỏ k*360 lấy 60 */
+    /* 810 = 110 + 2*360 ( k = 2 ), bỏ k*360 lấy 110 */
+
+    static degree_circle(
+        degree: number
+    ): number {
+        const k: number = Math.floor(degree / 360);
+        const offset: number = k * 360;
+        const result: number = degree - offset;
+        return result;
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static async rotate_image(
+        file_system_input_path: string,
+        angle: number,
+    ): Promise<Buffer> {
+        //#region
+        angle = (angle > 360) ? this.degree_circle(angle) : angle;
+        const create_sharp_rotation: Buffer = await sharp(file_system_input_path)
+            .rotate(angle).toBuffer();
+
+        return create_sharp_rotation;
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static async flip_image(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        const create_sharp_flip: Buffer = await sharp(file_system_input_path).flip().toBuffer();
+        return create_sharp_flip
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static async flop_image(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        const create_sharp_flop: Buffer = await sharp(file_system_input_path).flop().toBuffer();
+        return create_sharp_flop
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static async blur_image(
+        file_system_input_path: string,
+        blur_level: number,
+    ): Promise<Buffer> {
+        //#region 
+        const create_js_sharp_blur: Buffer = await sharp(file_system_input_path)
+            .blur(blur_level).toBuffer();
+        return create_js_sharp_blur
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static async negate_image(
+        file_system_input_path: string,
+        negate_channel_alpha: boolean = false,
+    ): Promise<Buffer> {
+        //#region 
+        const create_js_sharp_negate: Buffer = (negate_channel_alpha) ? await sharp(file_system_input_path)
+            .negate({ alpha: true })
+            .toBuffer() : await sharp(file_system_input_path)
+                .negate()
+                .toBuffer();
+
+        return create_js_sharp_negate;
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async normalize_image(
+        file_system_input_path: string,
+    ): Promise<Buffer> {
+        //#region 
+        const create_sharp_js_normalize: Buffer = await sharp(file_system_input_path).normalize().toBuffer();
+        return create_sharp_js_normalize;
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static readonly tre_thirdparty_for_encode = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static readonly tre_thirdparty_location_etcpak = this.tre_thirdparty_for_encode + "etcpak.exe";
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static readonly tre_thirdparty_location_pvrtc = this.tre_thirdparty_for_encode + "PVRTexToolCLI.exe";
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static check_etcpak(
+        file_system_etcpak_default_path?: string,
+    ): boolean {
+        //#region 
+
+        if (file_system_etcpak_default_path === undefined || file_system_etcpak_default_path === void 0 || file_system_etcpak_default_path === null) {
+            file_system_etcpak_default_path = this.tre_thirdparty_location_etcpak;
+        }
+
+
+        if (this.js_exists(file_system_etcpak_default_path)) {
+            return true;
+        }
+        else {
+            throw new Error(`Cannot find ETCPAK in ${this.get_full_path(file_system_etcpak_default_path)}`);
+        }
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static check_pvrtc(
+        file_system_pvrtc_default_path?: string,
+    ): boolean {
+        //#region 
+
+        if (file_system_pvrtc_default_path === undefined || file_system_pvrtc_default_path === void 0 || file_system_pvrtc_default_path === null) {
+            file_system_pvrtc_default_path = this.tre_thirdparty_location_pvrtc;
+        }
+
+
+        if (this.js_exists(file_system_pvrtc_default_path)) {
+            return true;
+        }
+
+
+        else {
+            throw new Error(`Cannot find PVRTCTexToolCli in ${this.get_full_path(file_system_pvrtc_default_path)}`);
+        }
+
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static readonly tre_thirdparty_real_esrgan_location = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Upscale";
+
+
+    static check_real_esrgan(
+        file_system_real_esrgan_third_default_path?: string,
+    ): boolean {
+        //#region 
+        if (file_system_real_esrgan_third_default_path === undefined || file_system_real_esrgan_third_default_path === void 0 || file_system_real_esrgan_third_default_path === null) {
+            file_system_real_esrgan_third_default_path = this.tre_thirdparty_real_esrgan_location;
+        }
+
+
+        if (this.js_exists(file_system_real_esrgan_third_default_path)) {
+            return true;
+        }
+
+
+        else {
+            throw new Error(`Cannot find Real-ESRGAN in ${this.get_full_path(file_system_real_esrgan_third_default_path)}`);
+        }
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static execution_out(
+        ...message: Array<any>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${this.get_full_path(text)}`);
+        //#endregion
+
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static execution_in(
+        ...message: Array<any>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_in"))}: ${this.get_full_path(text)}`);
+        //#endregion
+
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static execution_information(
+        ...message: Array<any>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_information") + ":")} ` + `${(text)}`);
+        //#endregion
+
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static execution_finish(
+        ...message: Array<any>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_finish") + ":")} ` + `${(text)}`);
+        //#endregion
+
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static execution_created(
+        ...message: Array<any>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_created") + ":")} ` + `${(text)}`);
+        //#endregion
+
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static execution_status(
+        status: "failed" | "success" | "argument" | "none",
+        ...message: Array<any>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        switch (status) {
+            case "success":
+                return console.log(`${color.fggreen_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`);
+            case "failed":
+                return console.log(`${color.fgred_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`);
+            case "argument":
+                return console.log(`${color.fgcyan_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`);
+            case "none":
+                return console.log(`${color.fgwhite_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`);
+            default:
+                return message as never;
+        }
+        //#endregion
+
+    } /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static execution_notify(
+        notify: "failed" | "success" | "argument" | "received" | "void",
+        ...message: Array<any>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        switch (notify) {
+            case "success":
+                return console.log(`${color.fggreen_string("◉ " + localization("execution_finish") + ":")} ` + `${(text)}`);
+            case "failed":
+                return console.log(`${color.fgred_string("◉ " + localization("execution_failed") + ":")} ` + `${(text)}`);
+            case "argument":
+                return console.log(`${color.fgcyan_string("◉ " + localization("execution_argument") + ":")} ` + `${(text)}`);
+            case "received":
+                return console.log(`${color.fggreen_string("◉ " + localization("execution_received") + ":")} ` + `${(text)}`);
+            case "void":
+                return console.log(`${color.fgwhite_string(text)}`);
+            default:
+                return message as never;
+        }
+        //#endregion
+
+    }
 }
 
 export default fs_js;

@@ -7,7 +7,7 @@ export default function (rsgp_head_offset: number, rsgp_list_data_info: any) {
             rsgp_item_offset: rsgp_head_offset, 
             rsgp_item_size: (rsgp_list_item.slice(164, 168).readUInt32LE() + rsgp_list_item.slice(168, 172).readUInt32LE()),
             rsgp_item_pool_index: rsgp_list_item.slice(136, 140).readUInt32LE(),
-            rsgp_temp_info_fixing_rac_shuttle_obb: rsgp_list_item.slice(140, 188)
+            rsgp_temp_info_fixing_rac_rsb: rsgp_list_item.slice(140, 188)
         });
         rsgp_head_offset += (rsgp_list_item.slice(164, 168).readUInt32LE() + rsgp_list_item.slice(168, 172).readUInt32LE());
     };

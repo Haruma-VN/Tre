@@ -18,7 +18,7 @@ export default async function (rsgp_name_list_uppercase:any,
                     if (resources_rsgp_package.slice(0, 4).toString() != 'pgsr') {
                         const resources_header_info_repair = new SmartBuffer();
                         resources_header_info_repair.writeString('pgsr').writeInt8(4).writeBuffer(Buffer.alloc(11));
-                        resources_header_info_repair.writeBuffer(rsgp_list_info[i].rsgp_temp_info_fixing_rac_shuttle_obb);
+                        resources_header_info_repair.writeBuffer(rsgp_list_info[i].rsgp_temp_info_fixing_rac_rsb);
                         resources_rsgp_package.fill(resources_header_info_repair.toBuffer(), 0, 64);
                     }
                     const resources_zlib_data = resources_rsgp_package.slice(28, 32).readUInt32LE() !== resources_rsgp_package.slice(32, 36).readUInt32LE() ?
@@ -42,7 +42,7 @@ export default async function (rsgp_name_list_uppercase:any,
                             };
                             const rsgp_header_info_repair = new SmartBuffer();
                             rsgp_header_info_repair.writeString('pgsr').writeInt8(4).writeBuffer(Buffer.alloc(11));
-                            rsgp_header_info_repair.writeBuffer(rsgp_list_info[rsgp_index].rsgp_temp_info_fixing_rac_shuttle_obb);
+                            rsgp_header_info_repair.writeBuffer(rsgp_list_info[rsgp_index].rsgp_temp_info_fixing_rac_rsb);
                             rsb_buffer_for_unpacking.fill(rsgp_header_info_repair.toBuffer(), rsgp_list_info[rsgp_index].rsgp_item_offset, rsgp_list_info[rsgp_index].rsgp_item_offset + 64);
                             rsb_buffer_for_unpacking.fill(Buffer.alloc(4), rsgp_list_info[rsgp_index].rsgp_item_offset + 48, rsgp_list_info[rsgp_index].rsgp_item_offset + 52)
 
