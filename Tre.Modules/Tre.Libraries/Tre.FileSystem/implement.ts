@@ -1548,6 +1548,101 @@ class fs_js {
         //#endregion
     }
 
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async create_resize(
+        file_system_path_for_image_as_string: string,
+        allocate_width: number,
+        allocate_height: number,
+        file_system_path_for_output_image?: string,
+    ): Promise<void> {
+        //#region 
+        if (file_system_path_for_output_image === null || file_system_path_for_output_image === undefined || file_system_path_for_output_image === void 0) {
+            // create output
+            file_system_path_for_output_image = `${file_system_path_for_image_as_string}/../${this.js_basename(file_system_path_for_image_as_string)}.output.png`;
+        }
+
+        const create_new_sharp_view = await sharp(file_system_path_for_image_as_string)
+            .resize(allocate_width, allocate_height);
+
+        await create_new_sharp_view
+            .toFile(file_system_path_for_output_image, (err: any) => {
+                if ((err as any)) {
+                    throw new Error(`Cannot resize ${this.get_full_path(`${file_system_path_for_image_as_string}`)}, code ${err.message as string}`);
+                }
+            });
+
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static evaluate_resize_percentages(
+        evaluate_percentages_number: number,
+        evaluate_width: number,
+        evaluate_height: number,
+    ): {
+        [x: string]: number;
+    } {
+        //#region 
+        return this.create_dimension(evaluate_width * evaluate_percentages_number,
+            evaluate_percentages_number * evaluate_height);
+
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async create_dimension_resize(
+        file_system_path_for_image_as_string: string,
+        evaluate_number: number,
+        file_system_path_for_output_image?: string,
+    ) {
+        //#region 
+        const create_dimension_view: {
+            width: number,
+            height: number
+        } = await this.get_dimension(file_system_path_for_image_as_string) as {
+            width: number,
+            height: number
+        };
+
+        const create_evaluate_resize_percentages: {
+            width: number,
+            height: number
+        } = this.evaluate_resize_percentages(
+            evaluate_number, create_dimension_view.width, create_dimension_view.height
+        ) as {
+            width: number,
+            height: number
+        };
+
+        /*-------------------------------------------------------------------------------------------------*/
+        /**
+         * Evaluate this if file_system_path_for_output_image != undefined
+         * @param file_system_path_for_output_image can be undefined ?
+         * @param file_system_path_for_image_as_string cannot be undefined
+         * @throws might thrown an error if no file access perm granted
+         */
+
+        (file_system_path_for_output_image != undefined && file_system_path_for_output_image != null && file_system_path_for_output_image != void 0) ?
+            await this.create_resize(file_system_path_for_image_as_string,
+                create_evaluate_resize_percentages.width,
+                create_evaluate_resize_percentages.height,
+                file_system_path_for_output_image) : await this.create_resize(file_system_path_for_image_as_string,
+                    create_evaluate_resize_percentages.width,
+                    create_evaluate_resize_percentages.height);
+        //#endregion
+
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
 }
 
 export default fs_js;
