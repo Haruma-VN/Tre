@@ -7,15 +7,12 @@ import * as color from "../Tre.Color/color.js";
 import localization from "../../Tre.Callback/localization.js";
 import zlib from "zlib";
 import crypto from "crypto";
+import dataview_checker from "../../Tre.Callback/Default/checker.js";
 
 class fs_js {
 
-    constructor() {
-
-    }
-
     /*-------------------------------------------------------------------------------------------------*/
-    static get_full_path(
+    public static get_full_path(
         file_system_path_as_string: string,
     ): string {
         //#region 
@@ -24,46 +21,46 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static write_file<T,>(
+    public static write_file<T,>(
         file_system_path: string,
         file_system_data_write_to_file: Buffer | ArrayBuffer | string
     ): void {
         //#region 
-        const auto_encoding_system: "hex" | "utf-8" = (file_system_data_write_to_file instanceof Buffer) ? "hex" : "utf-8";
+        const auto_encoding_system: auto_file_system_encoding = (file_system_data_write_to_file instanceof Buffer) ? "hex" : "utf-8";
         try {
             fs.writeFileSync(file_system_path,
-                (file_system_data_write_to_file as any),
+                (file_system_data_write_to_file as auto),
                 {
                     encoding: auto_encoding_system,
                     flag: "w",
                 })
-        } catch (error: any) {
+        } catch (error: auto) {
             throw new Error(`Write ${this.get_full_path(file_system_path)} failed, code ${error.message}`)
         }
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static read_file(
+    public static read_file(
         file_system_path: string,
         file_system_encoding_view: "buffer" | "utf8",
-    ): any {
+    ): auto {
         //#region 
-        const create_file_system_encoding_view: "hex" | "utf-8" = (file_system_encoding_view == "buffer") ? "hex" : "utf-8";
+        const create_file_system_encoding_view: auto_file_system_encoding = (file_system_encoding_view == "buffer") ? "hex" : "utf-8";
         try {
             return fs.readFileSync(file_system_path, {
                 encoding: create_file_system_encoding_view,
                 flag: "r"
             })
-        } catch (error: any) {
+        } catch (error: auto) {
             throw new Error(`Read ${this.get_full_path(file_system_path)} failed, code ${error.message}`);
         }
         //#endregion
     }
 
-    static is_json_extension(
+    public static is_json_extension(
         file_system_path: string,
-    ): boolean {
+    ): bool {
         if (path.parse(file_system_path).ext.toString().toLowerCase() === ".json") {
             return true;
         }
@@ -71,9 +68,9 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static read_json(
+    public static read_json(
         file_system_path: string,
-        file_system_force_reading_trailing_commas: boolean = true,
+        file_system_force_reading_trailing_commas: bool = true,
     ): {} {
         //#region 
         if (!this.is_json_extension(file_system_path)) {
@@ -81,13 +78,13 @@ class fs_js {
         }
         try {
             return js_json.parse(this.read_file(file_system_path, "utf8"), file_system_force_reading_trailing_commas);
-        } catch (error: any) {
-            throw new Error(`Read ${this.get_full_path(file_system_path)} failed, the json file might be corrupted ${error.message}`)
+        } catch (error: auto) {
+            throw new Error(`Read ${this.get_full_path(file_system_path)} failed, the json file might be corrupted ${error.message as evaluate_error}`)
         }
         //#endregion
     }
 
-    static write_json(
+    public static write_json(
         file_system_output_path: string,
         file_system_json_data_view: string | {} | object
     ): void {
@@ -107,19 +104,19 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static js_exists(
+    public static js_exists(
         file_system_path: string,
-    ): boolean {
+    ): bool {
         //#region 
         return fs.existsSync(file_system_path);
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static outfile_fs(
+    public static outfile_fs(
         file_system_directory_output: string,
-        file_system_data_output: any,
-        file_system_is_output_directory: boolean = true,
+        file_system_data_output: auto,
+        file_system_is_output_directory: bool = true,
     ): void {
         //#region 
         const file_system_directory_output_as_list_string: Array<string> = file_system_directory_output
@@ -138,7 +135,7 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static view_io_stream(
+    public static view_io_stream(
         file_system_file_path_as_string: string,
     ): fs.Stats {
         if (this.js_exists(file_system_file_path_as_string)) {
@@ -150,9 +147,9 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static is_file(
+    public static is_file(
         file_system_directory_input_as_string: string
-    ): boolean {
+    ): bool {
         //#region 
         if (this.js_exists(file_system_directory_input_as_string)) {
             return (this.view_io_stream(file_system_directory_input_as_string).isFile());
@@ -165,9 +162,9 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static is_directory(
+    public static is_directory(
         file_system_directory_input_as_string: string
-    ): boolean {
+    ): bool {
         //#region 
         if (this.js_exists(file_system_directory_input_as_string)) {
             return (this.view_io_stream(file_system_directory_input_as_string).isDirectory()
@@ -181,7 +178,7 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static js_remove(
+    public static js_remove(
         file_system_delete_path: string,
     ): void {
         //#region 
@@ -193,8 +190,9 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static create_directory(
-        file_system_directory_file_path_output: string
+    public static create_directory(
+        file_system_directory_file_path_output: string,
+        file_system_create_auto_recursive: bool = false,
     ): void {
 
         //#region 
@@ -202,14 +200,16 @@ class fs_js {
             this.js_remove(file_system_directory_file_path_output);
         }
 
-        fs.mkdirSync(file_system_directory_file_path_output);
+        fs.mkdirSync(file_system_directory_file_path_output, {
+            recursive: file_system_create_auto_recursive,
+        });
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static full_reader(
+    public static full_reader(
         file_system_directory_file_path_input: string
-    ): any {
+    ): auto {
         //#region 
         const create_output_strings_array: Array<string> = new Array();
         fs.readdirSync(file_system_directory_file_path_input).forEach((file: string) => {
@@ -225,18 +225,18 @@ class fs_js {
             file_system_resolve_path: string
         ) {
             return (file_system_specific_file_path as string).concat((file_system_resolve_path as string))
-        }, (new Array() as any));
+        }, (new Array() as auto));
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static one_reader(
+    public static one_reader(
         file_system_path: string
     ): Array<string> {
         //#region 
         try {
             return fs.readdirSync(file_system_path);
-        } catch (error: any) {
+        } catch (error: auto) {
             throw new Error(`Cannot read the path ${this.get_full_path(file_system_path)}, code ${error.message}`);
         }
         //#endregion
@@ -244,7 +244,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static get_file_extension(
+    public static get_file_extension(
         file_system_file_path: string,
     ): string {
         //#region 
@@ -254,7 +254,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static throw_error(
+    public static throw_error(
         ...expected_error_message: Array<string>
     ): string {
         //#region 
@@ -263,14 +263,14 @@ class fs_js {
             text += expected_error_message;
         }
 
-        return (text) as string;
+        throw new Error(text as view_debug_text);
         //#endregion
     }
 
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static write_stream(
+    public static write_stream(
         file_system_static_path: string,
         file_system_write_data_view: Buffer | ArrayBuffer | string,
     ): void {
@@ -279,7 +279,7 @@ class fs_js {
             file_system_static_path, {
             flags: 'w'
         });
-        create_write_stream_fs_js.on('error', function (error: any) {
+        create_write_stream_fs_js.on('error', function (error: auto) {
             throw new Error(`${fs_js.throw_error(`Write failed to ${error.message as string}`)}`);
         });
         create_write_stream_fs_js.write(file_system_write_data_view);
@@ -289,19 +289,19 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static read_stream(
+    public static read_stream(
         file_system_static_path: string,
     ): Promise<Buffer> {
         return new Promise(function (
-            resolve: any,
-            reject: any) {
+            resolve: auto,
+            reject: auto) {
             //#region 
             const create_read_stream_view: fs.ReadStream = fs.createReadStream(file_system_static_path);
-            create_read_stream_view.on('error', (err: NodeJS.ErrnoException) => {
+            create_read_stream_view.on('error', (err: evaluate_error) => {
                 if ((err.code) as string === 'ENOENT') {
                     reject(new Error(`Not found ${file_system_static_path}`));
                 } else {
-                    reject(err as NodeJS.ErrnoException);
+                    reject(err as evaluate_error);
                 }
             });
             const chunks: Array<Buffer> = new Array();
@@ -317,7 +317,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static return_this_tool_current_location(): string {
+    public static return_this_tool_current_location(): string {
         //#region 
         return this.get_full_path(process.cwd());
         //#endregion
@@ -325,7 +325,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static return_this_tool_toolkit_json_location(): string {
+    public static return_this_tool_toolkit_json_location(): string {
         //#region 
         return this.get_full_path(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
         //#endregion
@@ -333,10 +333,10 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static js_basename(
+    public static js_basename(
         file_system_path: string,
-        force_lower_case: boolean = false,
-        force_upper_case: boolean = false,
+        force_lower_case: bool = false,
+        force_upper_case: bool = false,
     ): string {
         //#region 
         if (force_lower_case) {
@@ -351,10 +351,10 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static js_extname(
+    public static js_extname(
         file_system_path: string,
-        force_lower_case: boolean = false,
-        force_upper_case: boolean = false,
+        force_lower_case: bool = false,
+        force_upper_case: bool = false,
     ): string {
         //#region 
         if (force_lower_case) {
@@ -370,10 +370,10 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static js_check_extname(
+    public static js_check_extname(
         file_system_path: string,
         input_the_system_extname_checker_as_string: string,
-    ): boolean {
+    ): bool {
         //#region 
         const create_auto_checker: string = (!(input_the_system_extname_checker_as_string.indexOf(".") === -1)) ? input_the_system_extname_checker_as_string :
             "." + input_the_system_extname_checker_as_string;
@@ -384,10 +384,10 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static js_check_basename(
+    public static js_check_basename(
         file_system_path: string,
         input_the_system_basename_checker_as_string: string,
-    ): boolean {
+    ): bool {
         //#region 
         return (this.js_basename(file_system_path, true).toString().toLowerCase() === input_the_system_basename_checker_as_string.toString().toLowerCase());
         //#endregion
@@ -402,7 +402,7 @@ class fs_js {
      */
 
 
-    static fs_copy(
+    public static fs_copy(
         file_system_path_of_the_copy_start: string,
         file_system_path_of_the_copy_end: string
     ): void {
@@ -413,7 +413,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static fs_move(
+    public static fs_move(
         file_system_path_of_the_move_start: string,
         file_system_path_of_the_move_end: string
     ): void {
@@ -426,7 +426,7 @@ class fs_js {
     }
     /*-------------------------------------------------------------------------------------------------*/
 
-    static fs_filesize(
+    public static fs_filesize(
         file_system_directory_get_file_size: string,
     ): number {
         //#region 
@@ -434,8 +434,8 @@ class fs_js {
         try {
             const check_fs_js_stats: fs.Stats = fs.statSync(file_system_directory_get_file_size);
             create_view_file_size = check_fs_js_stats.size as number;
-        } catch (err: any) {
-            throw new Error(`${err.message as NodeJS.ErrnoException}`);
+        } catch (err: auto) {
+            throw new Error(`${err.message as evaluate_error}`);
         }
         return create_view_file_size;
         //#endregion
@@ -443,7 +443,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    protected fs_write_success(...messages: string[]): void {
+    protected static fs_write_success(...messages: string[]): void {
         //#region 
         let text: string = "";
         for (let i: number = 0; i < messages.length; ++i) {
@@ -455,7 +455,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static js_dir(
+    public static js_dir(
         file_system_input_path: string,
     ): string {
         //#region 
@@ -464,7 +464,7 @@ class fs_js {
     }
 
 
-    static async get_dimension(
+    public static async get_dimension(
         file_system_input_path: string,
         width_output_as_property: string = "width",
         height_output_as_property: string = "height"
@@ -496,7 +496,7 @@ class fs_js {
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    static create_dimension(
+    public static create_dimension(
         file_system_width: number,
         file_system_height: number,
         width_output_as_property: string = "width",
@@ -523,8 +523,8 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static js_strict(
-        data_view_strict: any
+    public static js_strict(
+        data_view_strict: auto
     ): data_view_strict is undefined | void | null {
         //#region 
         if (data_view_strict === undefined || data_view_strict === void 0 || data_view_strict === null) {
@@ -536,14 +536,14 @@ class fs_js {
 
 
 
-    static async extract_image(
+    public static async extract_image(
         file_system_input_path: string,
         sharp_data_for_width: number,
         sharp_data_for_height: number,
         sharp_data_for_x: number,
         sharp_data_for_y: number,
         file_system_output_path: string | undefined,
-    ): Promise<void> {
+    ): Promise<Void> {
         //#region 
         if (file_system_output_path === undefined || file_system_input_path === void 0 || file_system_input_path === null) {
             file_system_output_path = `${(file_system_input_path)}/../${this.js_basename(file_system_input_path)}.view.png`;
@@ -559,8 +559,8 @@ class fs_js {
                     height: (sharp_data_for_height),
                     left: (sharp_data_for_x),
                     top: (sharp_data_for_y)
-                }).toFile(file_system_output_path).catch(function (error: any) {
-                    throw new Error(`Cannot create ${fs_js.get_full_path(file_system_output_path as string)}, and the error is ${error.message as NodeJS.ErrnoException}`);
+                }).toFile(file_system_output_path).catch(function (error: auto) {
+                    throw new Error(`Cannot create ${fs_js.get_full_path(file_system_output_path as string)}, and the error is ${error.message as evaluate_error}`);
                 })
         }
         //#endregion
@@ -570,7 +570,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async pack_image(
+    public static async pack_image(
         file_system_directory_file_path_output: string,
         file_system_width: number,
         file_system_height: number,
@@ -587,7 +587,7 @@ class fs_js {
                 file_system_output_green_channel?: number,
                 file_system_output_alpha_channel?: number,
             }
-    ): Promise<void> {
+    ): Promise<Void> {
         //#region 
         if (file_system_adjustment_background.file_system_output_red_channel == undefined || file_system_adjustment_background.file_system_output_red_channel == void 0
             || file_system_adjustment_background.file_system_output_red_channel == null) {
@@ -623,8 +623,8 @@ class fs_js {
             }
         })
         await create_new_sharp_composite.composite(file_system_assertation_array)
-            .toFile(file_system_directory_file_path_output).catch((error: any) => {
-                throw new Error(`Cannot pack image because ${error.message as NodeJS.ErrnoException}`);
+            .toFile(file_system_directory_file_path_output).catch((error: auto) => {
+                throw new Error(`Cannot pack image because ${error.message as evaluate_error}`);
             });
         //#endregion
     }
@@ -633,7 +633,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static async extract_alpha_channel(
+    public static async extract_alpha_channel(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -644,7 +644,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static async extract_red_channel(
+    public static async extract_red_channel(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -654,7 +654,7 @@ class fs_js {
 
 
     /*-------------------------------------------------------------------------------------------------*/
-    static async extract_blue_channel(
+    public static async extract_blue_channel(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -665,7 +665,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static async extract_green_channel(
+    public static async extract_green_channel(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -676,7 +676,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static async extract_raw(
+    public static async extract_raw(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -691,7 +691,7 @@ class fs_js {
     /* 780 = 60 + 2*360 ( k = 2 ), bỏ k*360 lấy 60 */
     /* 810 = 110 + 2*360 ( k = 2 ), bỏ k*360 lấy 110 */
 
-    static degree_circle(
+    public static degree_circle(
         degree: number
     ): number {
         const k: number = Math.floor(degree / 360);
@@ -703,7 +703,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static async rotate_image(
+    public static async rotate_image(
         file_system_input_path: string,
         angle: number,
     ): Promise<Buffer> {
@@ -720,7 +720,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static async flip_image(
+    public static async flip_image(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -732,7 +732,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static async flop_image(
+    public static async flop_image(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -746,7 +746,7 @@ class fs_js {
 
 
 
-    static async blur_image(
+    public static async blur_image(
         file_system_input_path: string,
         blur_level: number,
     ): Promise<Buffer> {
@@ -764,9 +764,9 @@ class fs_js {
 
 
 
-    static async negate_image(
+    public static async negate_image(
         file_system_input_path: string,
-        negate_channel_alpha: boolean = false,
+        negate_channel_alpha: bool = false,
     ): Promise<Buffer> {
         //#region 
         const create_js_sharp_negate: Buffer = (negate_channel_alpha) ? await sharp(file_system_input_path)
@@ -784,7 +784,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async normalize_image(
+    public static async normalize_image(
         file_system_input_path: string,
     ): Promise<Buffer> {
         //#region 
@@ -798,26 +798,26 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static readonly tre_thirdparty_for_encode = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
+    protected static readonly tre_thirdparty_for_encode = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Raw/";
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static readonly tre_thirdparty_location_etcpak = this.tre_thirdparty_for_encode + "etcpak.exe";
-
-
-    /*-------------------------------------------------------------------------------------------------*/
-
-
-
-    static readonly tre_thirdparty_location_pvrtc = this.tre_thirdparty_for_encode + "PVRTexToolCLI.exe";
-
+    protected static readonly tre_thirdparty_location_etcpak = this.tre_thirdparty_for_encode + "etcpak.exe";
 
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static check_etcpak(
+
+
+    protected static readonly tre_thirdparty_location_pvrtc = this.tre_thirdparty_for_encode + "PVRTexToolCLI.exe";
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static check_etcpak(
         file_system_etcpak_default_path?: string,
-    ): boolean {
+    ): bool {
         //#region 
 
         if (file_system_etcpak_default_path === undefined || file_system_etcpak_default_path === void 0 || file_system_etcpak_default_path === null) {
@@ -839,9 +839,9 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static check_pvrtc(
+    public static check_pvrtc(
         file_system_pvrtc_default_path?: string,
-    ): boolean {
+    ): bool {
         //#region 
 
         if (file_system_pvrtc_default_path === undefined || file_system_pvrtc_default_path === void 0 || file_system_pvrtc_default_path === null) {
@@ -867,12 +867,12 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static readonly tre_thirdparty_real_esrgan_location = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Upscale";
+    protected static readonly tre_thirdparty_real_esrgan_location = process.cwd() + "/Tre.Extension/Tre.ThirdParty/Upscale";
 
 
-    static check_real_esrgan(
+    public static check_real_esrgan(
         file_system_real_esrgan_third_default_path?: string,
-    ): boolean {
+    ): bool {
         //#region 
         if (file_system_real_esrgan_third_default_path === undefined || file_system_real_esrgan_third_default_path === void 0 || file_system_real_esrgan_third_default_path === null) {
             file_system_real_esrgan_third_default_path = this.tre_thirdparty_real_esrgan_location;
@@ -897,8 +897,8 @@ class fs_js {
 
 
 
-    static execution_out(
-        ...message: Array<any>
+    public static execution_out(
+        ...message: Array<auto>
     ): void {
         //#region 
         let text: string = "";
@@ -914,8 +914,8 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static execution_in(
-        ...message: Array<any>
+    public static execution_in(
+        ...message: Array<auto>
     ): void {
         //#region 
         let text: string = "";
@@ -931,8 +931,8 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static execution_information(
-        ...message: Array<any>
+    public static execution_information(
+        ...message: Array<auto>
     ): void {
         //#region 
         let text: string = "";
@@ -947,8 +947,8 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static execution_finish(
-        ...message: Array<any>
+    public static execution_finish(
+        ...message: Array<auto>
     ): void {
         //#region 
         let text: string = "";
@@ -963,8 +963,8 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static execution_created(
-        ...message: Array<any>
+    public static execution_created(
+        ...message: Array<auto>
     ): void {
         //#region 
         let text: string = "";
@@ -981,9 +981,9 @@ class fs_js {
 
 
 
-    static execution_status(
+    public static execution_status(
         status: "failed" | "success" | "argument" | "none",
-        ...message: Array<any>
+        ...message: Array<auto>
     ): void {
         //#region 
         let text: string = "";
@@ -1012,9 +1012,9 @@ class fs_js {
 
 
 
-    static execution_notify(
+    public static execution_notify(
         notify: "failed" | "success" | "argument" | "received" | "void",
-        ...message: Array<any>
+        ...message: Array<auto>
     ): void {
         //#region 
         let text: string = "";
@@ -1045,7 +1045,7 @@ class fs_js {
 
 
 
-    static assertation_create(
+    public static assertation_create(
         notify: "failed" | "success" | "argument" | "received" | "void",
         ...assertation_array: Array<string>
     ): void {
@@ -1077,10 +1077,10 @@ class fs_js {
 
 
 
-    static create_dimension_validate(
+    public static create_dimension_validate(
         evaluate_width: number,
         evaluate_height: number,
-    ): boolean {
+    ): bool {
         //#region 
         if (evaluate_width <= 1 || evaluate_width >= 16384) {
             throw new Error(`The width is not in range of 1 to 16384`);
@@ -1100,9 +1100,9 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async create_dimension_view_and_validate(
+    public static async create_dimension_view_and_validate(
         evaluate_file_system_as_string: string,
-    ): Promise<boolean> {
+    ): Promise<bool> {
 
         //#region 
 
@@ -1112,7 +1112,7 @@ class fs_js {
             evaluate_file_system_as_string,
             "width",
             "height");
-        const create_dimension_validator: boolean = this.create_dimension_validate(
+        const create_dimension_validator: bool = this.create_dimension_validate(
             create_image_dimension_view.width,
             create_image_dimension_view.height);
         if (create_dimension_validator) {
@@ -1130,7 +1130,7 @@ class fs_js {
 
 
 
-    static base64_encode(
+    public static base64_encode(
         file_input_as_string: string,
     ): string {
         //#region 
@@ -1145,9 +1145,9 @@ class fs_js {
 
 
 
-    static base64_decode(
+    public static base64_decode(
         file_input_as_string: string,
-        encoding: "ascii" | "base64" | "base64url" | "utf-8" | "binary" | "hex" | "latin1" | "ucs-2" | "ucs2" | "utf16le" | "utf8"
+        encoding: js_encode,
     ): string {
         //#region 
         return Buffer.from(file_input_as_string, "base64")
@@ -1159,8 +1159,8 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static get_filename(
-        file_input_as_string: string
+    public static get_filename(
+        file_input_as_string: string,
     ): string {
         //#region 
         return (path.parse(file_input_as_string).name + path.parse(file_input_as_string).ext);
@@ -1172,7 +1172,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async create_zlib_fs_js(
+    public static async create_zlib_fs_js(
         file_input_as_string: string,
         zlib_level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
         file_output_as_string?: string,
@@ -1206,7 +1206,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async create_deflate_fs_js(
+    public static async create_deflate_fs_js(
         file_input_as_string: string,
         zlib_level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
         file_output_as_string?: string,
@@ -1240,7 +1240,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async create_gzip_fs_js(
+    public static async create_gzip_fs_js(
         file_input_as_string: string,
         zlib_level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
         file_output_as_string?: string,
@@ -1277,7 +1277,7 @@ class fs_js {
 
 
 
-    static async create_brotli_fs_js(
+    public static async create_brotli_fs_js(
         file_input_as_string: string,
         file_output_as_string?: string,
     ) {
@@ -1300,7 +1300,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static md5_hash(
+    protected static md5_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1312,7 +1312,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static sha1_hash(
+    protected static sha1_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1327,7 +1327,7 @@ class fs_js {
 
 
 
-    static sha256_hash(
+    protected static sha256_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1342,7 +1342,7 @@ class fs_js {
 
 
 
-    static sha512_hash(
+    protected static sha512_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1355,7 +1355,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static ripemd160_hash(
+    protected static ripemd160_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1367,7 +1367,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static whirlpool_hash(
+    protected static whirlpool_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1380,7 +1380,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static sha3_224_hash(
+    protected static sha3_224_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1393,7 +1393,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static sha3_256_hash(
+    protected static sha3_256_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1407,7 +1407,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static sha3_384_hash(
+    protected static sha3_384_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1420,7 +1420,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static sha3_512_hash(
+    protected static sha3_512_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1433,7 +1433,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static blake2b_hash(
+    protected static blake2b_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1445,7 +1445,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static blake2s_hash(
+    protected static blake2s_hash(
         input_string: string,
     ): string {
         //#region 
@@ -1460,9 +1460,9 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static create_hash(
+    public static create_hash(
         allocate_string: string,
-        method: "md5" | "sha1" | "sha256" | "sha512" | "ripemd160" | "whirlpool" | "sha3-224" | "sha3-256" | "sha3-384" | "sha3-512" | "blake2b" | "blake2s",
+        method: hash_method,
     ): string {
 
         //#region 
@@ -1504,12 +1504,12 @@ class fs_js {
 
 
 
-    static readonly dimension_view_for_2n_square: Array<number> = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
+    protected static readonly dimension_view_for_2n_square: Array<number> = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
 
 
-    static async create_square_view(
+    public static async create_square_view(
         file_input_as_string: string,
-    ): Promise<boolean> {
+    ): Promise<bool> {
         //#region 
         const create_sharp_data_view: {
             [x: string]: number
@@ -1518,11 +1518,11 @@ class fs_js {
             height: number
         };
 
-        let is_valid_height: boolean = false;
-        let is_valid_width: boolean = false;
+        let is_valid_height: bool = false;
+        let is_valid_width: bool = false;
 
 
-        const create_validate: boolean = this.create_dimension_validate(create_sharp_data_view.width,
+        const create_validate: bool = this.create_dimension_validate(create_sharp_data_view.width,
             create_sharp_data_view.height);
 
 
@@ -1551,12 +1551,12 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async create_resize(
+    public static async create_resize(
         file_system_path_for_image_as_string: string,
         allocate_width: number,
         allocate_height: number,
         file_system_path_for_output_image?: string,
-    ): Promise<void> {
+    ): Promise<Void> {
         //#region 
         if (file_system_path_for_output_image === null || file_system_path_for_output_image === undefined || file_system_path_for_output_image === void 0) {
             // create output
@@ -1567,8 +1567,8 @@ class fs_js {
             .resize(allocate_width, allocate_height);
 
         await create_new_sharp_view
-            .toFile(file_system_path_for_output_image, (err: any) => {
-                if ((err as any)) {
+            .toFile(file_system_path_for_output_image, (err: auto) => {
+                if ((err as auto)) {
                     throw new Error(`Cannot resize ${this.get_full_path(`${file_system_path_for_image_as_string}`)}, code ${err.message as string}`);
                 }
             });
@@ -1578,16 +1578,20 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    static evaluate_resize_percentages(
-        evaluate_percentages_number: number,
-        evaluate_width: number,
-        evaluate_height: number,
+    public static evaluate_resize_percentages(
+        evaluate_percentages_number: evaluate_percentages_number,
+        evaluate_width: evaluate_width,
+        evaluate_height: evaluate_height,
     ): {
-        [x: string]: number;
+        width: number,
+        height: number,
     } {
         //#region 
         return this.create_dimension(evaluate_width * evaluate_percentages_number,
-            evaluate_percentages_number * evaluate_height);
+            evaluate_percentages_number * evaluate_height) as {
+                width: number,
+                height: number,
+            };
 
         //#endregion
     }
@@ -1595,28 +1599,28 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    static async create_dimension_resize(
+    public static async create_dimension_resize(
         file_system_path_for_image_as_string: string,
         evaluate_number: number,
         file_system_path_for_output_image?: string,
-    ) {
+    ): Promise<Void> {
         //#region 
         const create_dimension_view: {
             width: number,
-            height: number
+            height: number,
         } = await this.get_dimension(file_system_path_for_image_as_string) as {
             width: number,
-            height: number
+            height: number,
         };
 
         const create_evaluate_resize_percentages: {
             width: number,
-            height: number
+            height: number,
         } = this.evaluate_resize_percentages(
             evaluate_number, create_dimension_view.width, create_dimension_view.height
         ) as {
             width: number,
-            height: number
+            height: number,
         };
 
         /*-------------------------------------------------------------------------------------------------*/
@@ -1631,7 +1635,7 @@ class fs_js {
             await this.create_resize(file_system_path_for_image_as_string,
                 create_evaluate_resize_percentages.width,
                 create_evaluate_resize_percentages.height,
-                file_system_path_for_output_image) : await this.create_resize(file_system_path_for_image_as_string,
+                (file_system_path_for_output_image as string)) : await this.create_resize(file_system_path_for_image_as_string,
                     create_evaluate_resize_percentages.width,
                     create_evaluate_resize_percentages.height);
         //#endregion
@@ -1641,6 +1645,163 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
+    public static assertation_test(
+        assertation_arg: assertation_arg,
+    ): bool {
+        //#region 
+
+        if (this.js_exists(assertation_arg) && this.is_file(assertation_arg) || this.is_directory(assertation_arg)) {
+            return true;
+        }
+
+        return false;
+
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static view_assertation(
+    ): arguments_asserations {
+        //#region 
+        if (process.argv.length >= 2) {
+            return this.create_assertation(process.argv);
+        }
+        else {
+            throw new Error(`Assertation exception: process.argv.length >= 2`);
+        }
+
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static create_assertation(
+        assertation_args: assertation_arguments,
+    ): arguments_asserations {
+        //#region 
+        const create_assertation_for_execution: arguments_asserations = new Array();
+        assertation_args.slice(2);
+        if (assertation_args.length > 0) {
+            for (let arg of assertation_args satisfies arguments_asserations) {
+                create_assertation_for_execution.push(arg as assertation_view);
+            }
+        }
+        return create_assertation_for_execution;
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    protected static readonly tre_debug_directory: string = process.cwd() + "/Tre.Debug";
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    protected static readonly month_short: Array<string> = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    protected static readonly month_full: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static create_debug(
+        is_full_month: bool = false,
+        ...debug_message_as_string: debug_message
+    ): Void {
+        //#region 
+        if (!this.js_exists(this.tre_debug_directory)) {
+            this.create_directory(this.tre_debug_directory, true);
+        }
+
+        let view_debug_text: view_debug_text = "";
+
+        if (dataview_checker.is_array(debug_message_as_string)) {
+            debug_message_as_string.forEach((debug_message: auto) => {
+
+                if (typeof debug_message === "string") {
+                    (view_debug_text as view_debug_text) += debug_message satisfies view_debug_text;
+                }
+
+                if (dataview_checker.is_object(debug_message)) {
+                    (view_debug_text as view_debug_text) += js_json.stringify(debug_message) satisfies view_debug_text;
+                }
+
+            })
+        }
+        const create_new_date_have_exception_error: Date = new Date() as Date;
+        const create_new_file_name: string = (is_full_month) ? ((Math.floor(Date.now() / 1000)) + '.' + this.month_full[create_new_date_have_exception_error.getMonth()] +
+            '.' + create_new_date_have_exception_error.getDate() + '.' + create_new_date_have_exception_error.getFullYear()) satisfies file_name : ((Math.floor(Date.now() / 1000)) + '.' + this.month_short[create_new_date_have_exception_error.getMonth()] +
+                '.' + create_new_date_have_exception_error.getDate() + '.' + create_new_date_have_exception_error.getFullYear()) satisfies file_name;
+        const create_new_debug_file_save: string = `${this.tre_debug_directory}/${create_new_file_name}.txt` satisfies file_save;
+        if (this.js_exists(create_new_debug_file_save)) {
+            this.js_remove(create_new_debug_file_save);
+        }
+        this.write_file(create_new_debug_file_save as file_system_full_path_directory, view_debug_text satisfies view_debug_text);
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static delete_debug(
+
+    ): Void {
+        //#region 
+        return this.js_remove(this.tre_debug_directory);
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    public static clear_console(
+    ): void {
+        //#region 
+        return console.clear();
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    public static async progress_bar(
+        Callback_function: auto,
+        create_new_total_progress_bar?: number,
+    ): Promise<Void> {
+        //#region 
+        const total: number = (create_new_total_progress_bar != undefined && create_new_total_progress_bar != null && create_new_total_progress_bar != void 0) ? 
+        create_new_total_progress_bar satisfies number : 10;
+        let create_new_progress_process: number = 0;
+        for (let i: number = 0; i < total; i++) {
+            await Callback_function as void;
+            create_new_progress_process++;
+            const create_new_percentages_view:number = Math.round((create_new_progress_process satisfies number / total as number) * 100);
+            const create_new_progress_bar:string = Array(Math.round(create_new_percentages_view as number / 10) + 1).join('#');
+            const create_new_empty_progress:string = Array(11 - Math.round(create_new_percentages_view as number / 10)).join('-');
+            process.stdout.write(`[${create_new_progress_bar}${create_new_empty_progress}] ${create_new_percentages_view}%\r`);
+        }
+        process.stdout.write('\n');
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
 
 
 }
