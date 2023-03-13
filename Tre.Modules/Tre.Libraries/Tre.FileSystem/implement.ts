@@ -277,10 +277,10 @@ class fs_js {
         //#region 
         const create_write_stream_fs_js: fs.WriteStream = fs.createWriteStream(
             file_system_static_path, {
-            flags: 'w'
+            flags: 'w',
         });
-        create_write_stream_fs_js.on('error', function (error: auto) {
-            throw new Error(`${fs_js.throw_error(`Write failed to ${error.message as string}`)}`);
+        create_write_stream_fs_js.on('error', (error: auto) => {
+            throw new Error(`${this.throw_error(`Write failed to ${error.message as string}`)}`);
         });
         create_write_stream_fs_js.write(file_system_write_data_view);
         create_write_stream_fs_js.end();
@@ -905,7 +905,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${this.get_full_path(text)}`);
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")}${this.get_full_path(text)}`);
         //#endregion
 
     }

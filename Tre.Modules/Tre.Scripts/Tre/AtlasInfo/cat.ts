@@ -24,6 +24,6 @@ export default function (dir: string): number {
         }
     };
     writejson(`${dir}/../AtlasInfo.json`, info);
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../AtlasInfo.json`)}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}/../AtlasInfo.json`)}`);
     return 0;
 }

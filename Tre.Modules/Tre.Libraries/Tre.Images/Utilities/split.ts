@@ -57,7 +57,7 @@ export default async function (opt: number, execute_file_dir: string[]) {
         }
     };
     if (json.resources != undefined) {
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir_sys}`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir_sys}`)}`);
         if (json_config.atlas.split.repairDuplicateFolder === true) {
             json.resources = fix_duplicate_res(json.resources);
         };

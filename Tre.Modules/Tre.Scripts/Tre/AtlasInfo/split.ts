@@ -20,7 +20,7 @@ export default function (dir: string): number {
     let method: string = (atlasinfo.method != undefined && atlasinfo.method != void 0 && atlasinfo.method != null) ? atlasinfo.method : "id";
     const info_folder = dir + "/../" + "AtlasInfo.Bundles";
     const resources_bundles_folder = dir + "/../" + "AtlasInfo.Bundles/Bundles";
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(info_folder)}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(info_folder)}`);
     makefolder(`${info_folder}`);
     makefolder(`${resources_bundles_folder}`);
     if (atlasinfo.groups != undefined && atlasinfo.groups != null && atlasinfo.groups != void 0) {

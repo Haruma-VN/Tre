@@ -143,7 +143,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     for (let i = 0; i < append_array.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i.toString()) : i;
         await portal.cat(append_array[i], `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`, dimension_array_value[i].width, dimension_array_value[i].height);
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`)}`);
     };
     if (extend_for_new_pvz2_int_version) {
         for (let i: number = 0; i < result_json.resources.length; ++i) {
@@ -154,7 +154,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     }
     file_system.writejson(directory + "/../" + popcap_output_subgroup_name + '.json', result_json);
     console.log(color.fggreen_string("◉ " + `${localization("execution_actual_size")}: `) + `${img_list.length}`);
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(directory + "/../" + popcap_output_subgroup_name + '.json')}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(directory + "/../" + popcap_output_subgroup_name + '.json')}`);
     return 0;
 }
 export default atlas_pack_experimental;

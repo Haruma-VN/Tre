@@ -965,7 +965,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                     }
                     else {
                         execute_file_dir.forEach(async file => {
-                            await popcap_game_content_edit.smf_decompress(file);
+                            await popcap_game_content_edit.smf_decompress(file);    
                         })
                     }
                     break;
@@ -978,7 +978,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         if (apply_patch.loop != undefined && apply_patch.patch != undefined) {
                             const finish_apply_patch_json = await applyPatch(readjson(json_apply_path), apply_patch);
                             writejson(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`, finish_apply_patch_json);
-                            Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`)}`);
+                            Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`)}`);
                             Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_void_json_patch_finish_apply_patch}`));
                         }
                     }
@@ -990,7 +990,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.tre_void_json_patch_generator_new_execution_generator}`));
                         let json_new_file_compare_diff: string = readline_for_json(execute_file_dir);
                         writejson(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`, generatePatch(readjson(execute_file_dir), readjson(json_new_file_compare_diff)));
-                        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`)}`);
+                        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`)}`);
                         Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_void_json_patch_finish_write_patch}`));
                     }
                     break;
@@ -1022,7 +1022,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                             upscale_data = 4;
                         }
                         await ImagesUtilities.real_esrgan(execute_file_dir, upscale_model, upscale_data, `${execute_file_dir}/../${path.parse(execute_file_dir).name}_x${upscale_data}.png`);
-                        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${execute_file_dir}/../${path.parse(execute_file_dir).name}_x${upscale_data}.png`)}`);
+                        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${execute_file_dir}/../${path.parse(execute_file_dir).name}_x${upscale_data}.png`)}`);
                     }
                     else if (!js_checker.is_array(execute_file_dir) && check_if_the_directories_iz_folder) {
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.tre_void_upscaler_real_esrgan_upscale_model}`));
@@ -1043,7 +1043,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         }
                         const new_folder_contain_upscale_images: string = `${execute_file_dir}_x${upscale_data}`;
                         makefolder(new_folder_contain_upscale_images);
-                        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${new_folder_contain_upscale_images}`)}`);
+                        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${new_folder_contain_upscale_images}`)}`);
                         await ImagesUtilities.real_esrgan(execute_file_dir, upscale_model, upscale_data, new_folder_contain_upscale_images, true);
                     }
                     break;

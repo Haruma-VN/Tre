@@ -150,7 +150,7 @@ export default async function (dir: string, width: number, height: number, is_si
     for (let i = 0; i < append_array.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i.toString()) : i;
         await cat(append_array[i], `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`, dimension_array_value[i].width, dimension_array_value[i].height);
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`)}`);
     };
     if (expand_path_for_new_version) {
         for (let i: number = 0; i < result_json.resources.length; ++i) {
@@ -161,6 +161,6 @@ export default async function (dir: string, width: number, height: number, is_si
     }
     writejson(dir + "/../" + atlas_info.subgroup + '.json', result_json);
     console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function}`) + `${img_list.length}`);
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(dir + "/../" + atlas_info.subgroup + '.json')}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(dir + "/../" + atlas_info.subgroup + '.json')}`);
     return 0;
 }

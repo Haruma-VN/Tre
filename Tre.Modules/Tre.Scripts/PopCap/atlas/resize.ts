@@ -17,7 +17,7 @@ export default async function (dir: string, orig: number, mod: number): Promise<
     const new_set_entry_point: string = `${dir}/../${path.parse(dir).name.replace(`_${orig.toString()}`, `_${mod.toString()}`)}.spg`;
     let upscaler_model_default: string = (parseInt(calculator.toString()) === 4) ? "realesrgan-x4plus-anime" : "realesr-animevideov3";
     makefolder(new_set_entry_point);
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${new_set_entry_point}`)}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${new_set_entry_point}`)}`);
     let check_if_atlas_info_is_located: boolean = false;
     for (let i: number = 0; i < files_process.length; ++i) {
         if (path.extname(`${dir}/${files_process[i]}`).toLowerCase() === '.json') {

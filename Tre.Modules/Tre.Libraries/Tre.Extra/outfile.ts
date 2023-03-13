@@ -69,18 +69,18 @@ export default function (dir: string | string[], is_folder_check: boolean = fals
     }
     if (!is_folder_check) {
         if (typeof dir === "string") {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}/../${path.parse(dir).name}${path.parse(dir).ext}.bin`)}`);
             ExtraCompression(dir);
         }
         else {
             (dir).forEach((file) => {
-                console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../${path.parse(file).name}${path.parse(file).ext}.bin`)}`);
+                console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}/../${path.parse(file).name}${path.parse(file).ext}.bin`)}`);
                 ExtraCompression(file);
             })
         }
     }
     else {
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}`)}`);
         if (typeof dir === "string") {
             read_dir(dir).forEach(async (file_directory: string) => {
                 await ExtraCompression(file_directory);

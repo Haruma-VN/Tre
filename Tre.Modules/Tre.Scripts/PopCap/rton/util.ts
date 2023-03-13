@@ -24,12 +24,12 @@ export function rton_to_json(filepath?: string, this_will_stop_console_log: bool
             }
         }
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${filepath}_json`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${filepath}_json`)}`);
         }
     } else {
         outfile(`${parse(filepath).dir}/${parse(filepath).name}.json`, rton2json(readfilebuffer(filepath)) as any);
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.json`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.json`)}`);
         }
     }
 }
@@ -51,13 +51,13 @@ export function rton_decrypt_and_decode_to_json(filepath?: string, this_will_sto
             }
         }
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${filepath}_json`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${filepath}_json`)}`);
         }
     } else {
         const rton_cipher_file = rton_plain(readfilebuffer(filepath), rton_cipher_key);
         outfile(`${filepath}/../${path.parse(filepath).name}.json`, rton2json(rton_cipher_file as any));
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.json`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.json`)}`);
         }
     }
 }
@@ -78,12 +78,12 @@ export function json_to_rton_and_encrypt(filepath?: string, this_will_stop_conso
             }
         }
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${filepath}_rton`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${filepath}_rton`)}`);
         }
     } else {
         outfile(`${parse(filepath).dir}/${parse(filepath).name}.rton`, rton_cipher(json2rton(readjson(filepath)) as any, rton_cipher_key));
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.rton`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.rton`)}`);
         }
     }
 }
@@ -102,12 +102,12 @@ export function json_to_rton(filepath?: string, this_will_stop_console_log: bool
             }
         }
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${filepath}_rton`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${filepath}_rton`)}`);
         }
     } else {
         outfile(`${parse(filepath).dir}/${parse(filepath).name}.rton`, json2rton(readjson(filepath)) as any);
         if (!this_will_stop_console_log) {
-            console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.rton`)}`);
+            console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${parse(filepath).dir}/${parse(filepath).name}.rton`)}`);
         }
     }
 }

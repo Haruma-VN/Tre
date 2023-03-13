@@ -20,7 +20,7 @@ export default function (method: string, dir: string): void {
             }
         }
         writejson(`${dir}/../AtlasInfo.json`, atlasinfo);
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir}/../AtlasInfo.json`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}/../AtlasInfo.json`)}`);
     }
     return
 }

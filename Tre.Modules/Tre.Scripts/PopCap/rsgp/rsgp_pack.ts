@@ -2,7 +2,8 @@
 import zlib from 'zlib';
 import path, { parse } from 'node:path';
 import { SmartBuffer } from 'smart-buffer';
-import { readline_size, readline_integer } from '../../../Tre.Progress/Readline/util.js';
+import { readline_integer } from '../../../Tre.Progress/Readline/util.js';
+import rton_cipher from '../rton/rijndael/rton_cipher.js';
 import * as color from '../../../Tre.Libraries/Tre.Color/color.js';
 import json2rton from '../rton/json2rton.js';
 import BeautifyOffset from './beautify_offset.js';
@@ -12,30 +13,26 @@ import localization from '../../../Tre.Callback/localization.js';
 import { Console } from '../../../Tre.Callback/console.js';
 import { Argument } from '../../../Tre.Callback/toolkit_question.js';
 import display_argument from './arguments_set.js';
-
-export default async function (path_file: string,
-    pack_simple: boolean = false,
-    rsb_pack = false, resources_pack: boolean = false,
-    dont_log_notify: boolean = false, rsb_pack_everything: boolean = false, rsgp_tre_info?: any) {
+export default async function (path_file: string, pack_simple: boolean = false, rsb_pack: boolean = false, resources_pack: boolean = false, dont_log_notify: boolean = false, rsb_pack_everything: boolean = false, rsgp_tre_info?: any) {
     let TreRSGPInfo: any = false;
-    let RsgpCompression: boolean = true;
-    let UseTreInfo: boolean = false;
-    let format_choose: number = -1;
-    if (fs.if_file_exists(`${path_file}/TreRSGPInfo.json`)) {
-        TreRSGPInfo = fs.readjson(`${path_file}/TreRSGPInfo.json`);
+    let RsgpCompression: any = true;
+    let UseTreInfo: any = false;
+    let format_choose = -1;
+    if (rsb_pack != true && resources_pack != true && rsb_pack_everything != true) {
+        if (fs.if_file_exists(`${path_file}/TreRSGPInfo.json`)) {
+            TreRSGPInfo = fs.readjson(`${path_file}/TreRSGPInfo.json`);
+        }
+        else {
+            console.log(`${localization("excecution_exception")}: ${localization("no_tre_info")}`);
+        }
     }
-    else {
-        throw new Error(localization("no_tre_info"));
-    }
-
     function GetTreInfo() {
         RsgpCompression = TreRSGPInfo.CompressionMethod;
         UseTreInfo = TreRSGPInfo.UseTreRSGPInfo;
         return [RsgpCompression, UseTreInfo];
     }
     ;
-    function GetFilePath(UseTreInfo: boolean,
-        TreRSGPInfo: any) {
+    function GetFilePath(UseTreInfo: boolean, TreRSGPInfo: any) {
         let all_files = new Array();
         if (UseTreInfo) {
             for (let rsgp of TreRSGPInfo) {
@@ -48,7 +45,7 @@ export default async function (path_file: string,
                 for (let item in all_files) {
                     if (parse(all_files[item]).ext.toUpperCase())
                         all_files[item] = all_files[item].slice(`${parse(path_file).dir}/`.length).toUpperCase();
-                };
+                }
             }
             else if (rsb_pack && resources_pack) {
                 all_files = [path_file.slice(path_file.length - 25)];
@@ -58,9 +55,8 @@ export default async function (path_file: string,
                 for (let item in all_files) {
                     if (parse(all_files[item]).ext.toUpperCase())
                         all_files[item] = all_files[item].slice(`${path_file}/RES/`.length).toUpperCase();
-                };
-            };
-
+                }
+            }
             if (pack_simple) {
                 const pngFiles = all_files.filter(fileName => fileName.endsWith(".PNG"));
                 const jsonFiles = all_files.filter(fileName => fileName.endsWith(".JSON"));
@@ -69,18 +65,17 @@ export default async function (path_file: string,
                     if (all_files.includes(ptxFile)) {
                         all_files.splice(all_files.indexOf(ptxFile), 1);
                     }
-                };
+                }
                 for (let jsonFile of jsonFiles) {
                     const rtonFile = `${parse(jsonFile).dir}\\${parse(jsonFile).name}.RTON`;
                     if (all_files.includes(rtonFile)) {
                         all_files.splice(all_files.indexOf(rtonFile), 1);
                     }
-                };
+                }
             }
         }
         return [...[""], ...all_files].sort();
     }
-
     function ConvertPathBuffer(path: string) {
         let itempath = SmartBuffer.fromOptions({ size: path.length });
         if (pack_simple) {
@@ -89,15 +84,14 @@ export default async function (path_file: string,
             }
             else if (path.indexOf('.PNG') != -1) {
                 path = `${path.slice(0, path.indexOf('.PNG'))}.PTX`;
-            };
+            }
         }
         for (let char of path + '\0') {
             itempath.writeString(char + '\0\0\0');
         }
         return itempath;
     }
-
-    async function ConcatRSGPPath(filepath: string[]) {
+    async function ConcatRSGPPath(filepath: string) {
         const path_temp = new Array();
         let position = 0;
         for (let i = 0; i < filepath.length - 1; i++) {
@@ -112,7 +106,8 @@ export default async function (path_file: string,
                             path_temp[h].path_compare.writeBuffer(int32.toBuffer().slice(0, 3), k * 4 + 1);
                             break;
                         }
-                    };
+                    }
+                    ;
                     position += filepath[i + 1].indexOf('ATLASES') != -1 ? (filepath[i + 1].length - k) + 9 : (filepath[i + 1].length - k) + 4;
                     path_temp.push({ path_compare, key: k });
                     break;
@@ -121,7 +116,6 @@ export default async function (path_file: string,
         }
         return path_temp;
     }
-
     function ZlibDeflate(rsgp_file_data: any, compression: boolean) {
         if (compression) {
             const zlib_deflate = SmartBuffer.fromBuffer(zlib.deflateSync(rsgp_file_data, { level: 9 }));
@@ -131,12 +125,10 @@ export default async function (path_file: string,
             return rsgp_file_data;
         }
     }
-
     async function EncodePTX(file_path: string, format: number, format_type: string) {
         if (fs.if_file_exists(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`)) {
             fs.delete_file(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`);
         }
-
         switch (format) {
             case 0:
                 if (format_type == 'ios') {
@@ -161,24 +153,42 @@ export default async function (path_file: string,
                 throw new Error(localization('not_recognize_ptx'));
         }
     }
-
-    async function GetInfoRSGP(file_path: string, UseTreInfo: string, TreRSGPInfo: any) {
+    async function EncodeJson(path: any, rton_2c_encrypted: boolean) {
+        if (rton_2c_encrypted) {
+            const rton_cipher_key = fs.readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true).popcap_rton_conversion.rton.rton_cipher;
+            const rton_data = await json2rton(path);
+            return await rton_cipher(rton_data, rton_cipher_key);
+        }
+        else {
+            const rton_data = await json2rton(path);
+            return rton_data;
+        }
+    }
+    async function GetInfoRSGP(file_path: string, UseTreInfo: boolean, TreRSGPInfo: any) {
         if (file_path.indexOf('.JSON') != -1 && pack_simple) {
+            let rton_2c_encrypted = false;
+            for (let json_key in TreRSGPInfo) {
+                if ((parse(file_path).base).toUpperCase() == TreRSGPInfo[json_key].Path[TreRSGPInfo[json_key].Path.length - 1]) {
+                    if (TreRSGPInfo[json_key].Rton_encrypted == true) {
+                        rton_2c_encrypted = true;
+                        break;
+                    }
+                }
+            }
             if (rsb_pack) {
                 if (resources_pack) {
-                    const rton_data = await json2rton(fs.readjson(`${path_file}`));
+                    const rton_data = await EncodeJson(fs.readjson(`${path_file}`), rton_2c_encrypted);
                     return rton_data;
                 }
                 else {
-                    const rton_data = await json2rton(fs.readjson(`${parse(path_file).dir}/${file_path}`));
+                    const rton_data = await EncodeJson(fs.readjson(`${parse(path_file).dir}/${file_path}`), rton_2c_encrypted);
                     return rton_data;
                 }
             }
             else {
-                const rton_data = await json2rton(fs.readjson(`${path_file}/Res/${file_path}`));
+                const rton_data = await EncodeJson(fs.readjson(`${path_file}/Res/${file_path}`), rton_2c_encrypted);
                 return rton_data;
             }
-
         }
         else if (file_path.indexOf('ATLASES') != -1) {
             if (UseTreInfo) {
@@ -213,14 +223,14 @@ export default async function (path_file: string,
                         let format_type: any;
                         const image_dimension = await image_util.dimension(`${path_file}/Res/${file_path}`);
                         if (format_choose == -1) {
-                            const allowance_for_popcap_ptx_compression: boolean = display_argument(image_dimension.width, image_dimension.height);
-                            const notify_allowance_message: string = allowance_for_popcap_ptx_compression ? localization("atlas_is_filled_with_2n") : localization("atlas_is_not_filled_with_2n");
+                            const allowance_for_popcap_ptx_compression = display_argument(image_dimension.width, image_dimension.height);
+                            const notify_allowance_message = allowance_for_popcap_ptx_compression ? localization("atlas_is_filled_with_2n") : localization("atlas_is_not_filled_with_2n");
                             console.log(color.fggreen_string(`◉ ${localization("execution_information")}: `) + `${notify_allowance_message}`);
                             console.log(color.fggreen_string(`◉ ${localization("execution_in")}: `) + `${path.parse(file_path).base}`);
                             console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${image_dimension.width}`);
                             console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${image_dimension.height}`);
                             console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("popcap_ptx_encode")}`));
-                            const set_allowance_point: number = (allowance_for_popcap_ptx_compression) ? 5 : 2;
+                            const set_allowance_point = (allowance_for_popcap_ptx_compression) ? 5 : 2;
                             console.log('      1. PopCap PTX RGBA8888 Encode (0)');
                             console.log('      2. PopCap PTX ARGB8888 Encode (0)');
                             if (allowance_for_popcap_ptx_compression) {
@@ -249,7 +259,7 @@ export default async function (path_file: string,
                                 default:
                                     format_choose = readline_integer(0, 4);
                             }
-                        };
+                        }
                         await EncodePTX(file_path, format_choose, format_type);
                         const image_data = await fs.readfilebuffer(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`);
                         return { image_data, width: image_dimension.width, height: image_dimension.height, id: false };
@@ -274,10 +284,9 @@ export default async function (path_file: string,
                     else {
                         throw new Error(`${localization('cannot_turn_off_treinfo')}`);
                     }
-                };
-            };
+                }
+            }
         }
-
         else {
             if (rsb_pack) {
                 if (resources_pack) {
@@ -295,8 +304,7 @@ export default async function (path_file: string,
             }
         }
     }
-
-    async function PackData(filepath: string, path_temp: any, UseTreInfo: any, TreRSGPInfo: any) {
+    async function PackData(filepath: string[], path_temp: any, UseTreInfo: boolean, TreRSGPInfo: any) {
         const rsgp_path_info = new SmartBuffer();
         const rsgp_file_data = new SmartBuffer();
         let PTX_id_index = -1;
@@ -323,11 +331,11 @@ export default async function (path_file: string,
                     break;
                 }
             }
-        };
+        }
+        ;
         return [rsgp_path_info.toBuffer(), rsgp_file_data.toBuffer(), atlas];
     }
-
-    function PackRSGP(rsgp_path_info: any, rsgp_file_data: any, atlas: boolean, compression: boolean) {
+    function PackRSGP(rsgp_path_info: any, rsgp_file_data: any, atlas: any, compression: boolean) {
         const rsgp_data = new SmartBuffer();
         rsgp_data.writeString('pgsr').writeInt8(4).writeBuffer(Buffer.alloc(11));
         compression ? rsgp_data.writeInt32LE(3) : rsgp_data.writeInt32LE(1);
@@ -353,24 +361,20 @@ export default async function (path_file: string,
             return rsgp_data.toBuffer();
         }
     }
-
     async function PackRSGPSimple(TreInfo: any, TreRSGPInfo: any) {
         const filepath = await GetFilePath(TreInfo[1], TreRSGPInfo);
-        const path_temp = await ConcatRSGPPath(filepath);
-        const [rsgp_path_info, rsgp_file_data, atlas] = await PackData((filepath as any), path_temp, TreInfo[1], TreRSGPInfo);
-        return await PackRSGP(rsgp_path_info, rsgp_file_data, (atlas as any), TreInfo[0]);
+        const path_temp = await ConcatRSGPPath((filepath as any));
+        const [rsgp_path_info, rsgp_file_data, atlas] = await PackData(filepath, path_temp, TreInfo[1], TreRSGPInfo);
+        return await PackRSGP(rsgp_path_info, rsgp_file_data, atlas, TreInfo[0]);
     }
-
     if (TreRSGPInfo != false) {
         const TreInfo = await GetTreInfo();
         return await PackRSGPSimple(TreInfo, TreRSGPInfo.Res);
     }
-
     else if (rsb_pack_everything) {
         return await PackRSGPSimple([rsgp_tre_info.CompressionMethod, true], rsgp_tre_info.Res);
     }
     else {
         return await PackRSGPSimple([RsgpCompression, UseTreInfo], false);
     }
-
 }

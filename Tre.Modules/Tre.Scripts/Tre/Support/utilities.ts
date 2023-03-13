@@ -77,8 +77,8 @@ namespace RSBInfo.Tre.Utilities {
                     }
                 }
             }
-            if (((this.res.parent === undefined || this.res.parent === null || this.res.parent === void 0) && this.res.type === "simple") && 
-            (this.res.id !== undefined)) {
+            if (((this.res.parent === undefined || this.res.parent === null || this.res.parent === void 0) && this.res.type === "simple") &&
+                (this.res.id !== undefined)) {
                 rsb_info[this.res.id] = new Array();
                 rsb_info[this.res.id].push(this.res.id);
             }
@@ -86,7 +86,7 @@ namespace RSBInfo.Tre.Utilities {
         }
 
         protected CreateRSBInfoError(error: any): void {
-            return console.error(error);
+            return console.error(error.message as NodeJS.ErrnoException);
         }
 
         public WriteRSBInfo(old_directory: string): void {

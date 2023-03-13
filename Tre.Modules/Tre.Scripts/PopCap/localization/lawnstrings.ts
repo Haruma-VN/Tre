@@ -83,12 +83,12 @@ export namespace Lawnstrings.PopCap {
     }
 
     export function WriteDiffJSON(original_directory: string, modified_directory: string): void {
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${modified_directory}/../${path.parse(modified_directory).name}.diff.json`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${modified_directory}/../${path.parse(modified_directory).name}.diff.json`)}`);
         return writejson(`${modified_directory}/../${path.parse(modified_directory).name}.diff.json`, LawnstringDiff(original_directory, modified_directory));
     }
 
     export function WriteLocalizationJSON(directory: string): void {
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${directory}/../${path.parse(directory).name}.structure.json`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${directory}/../${path.parse(directory).name}.structure.json`)}`);
         return writejson(`${directory}/../${path.parse(directory).name}.structure.json`, GetLawnstringsProperty(directory));
     }
 
@@ -113,7 +113,7 @@ export namespace Lawnstrings.PopCap {
     }
 
     export function WritePopCapLawnstringsFromLocalizationLawnstrings(directory: string): void {
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${directory}/../${path.parse(directory).name}.default.json`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${directory}/../${path.parse(directory).name}.default.json`)}`);
         return writejson(`${directory}/../${path.parse(directory).name}.default.json`, ConvertLocalizationJSONtoPopCapJSON(directory));
     }
 

@@ -68,16 +68,18 @@ export default async function (): Promise<void> {
                 for (let i: number = 0; i < proc_arr.length; ++i) {
                     if (fs.existsSync(proc_arr[i])) {
                         let hasError: boolean = false;
-                        process.on('exit', function (code) {
+                        process.on("exit", function (code) {
                             if (hasError || code !== 0) {
                                 prompt('', '');
+                                process.stdin.pause();
+                                process.stdin.removeAllListeners('data');
                             }
                         });
 
                         try {
                             await functions((i + 1), proc_arr[i], proc_arr.length, mode);
                         } catch (error: any) {
-                            console.log(color.fgred_string(`◉ ${localization("execution_error")}: ${error.message}`));
+                            console.log(color.fgred_string(`◉ ${localization("execution_error")+":"} ${error.message}`));
                             hasError = true;
                         }
                     }
@@ -109,7 +111,7 @@ export default async function (): Promise<void> {
         try {
             await functions(1, proc_arr, 1, mode);
         } catch (error: any) {
-            console.log(color.fgred_string(`◉ ${localization("execution_error")}: ${error.message}`));
+            console.log(color.fgred_string(`◉ ${localization("execution_error")+":"} ${error.message}`));
             hasError = true;
         }
     }

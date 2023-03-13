@@ -59,7 +59,7 @@ async function atlas_split_experimental(execute_file_dir: string[]): Promise<voi
     };
     let count_images_split: number = 0;
     if ("resources" in json && json.resources != undefined && json.resources != null && json.resources != void 0) {
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out"))}: ${path.resolve(`${dir_sys}`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir_sys}`)}`);
         const promises: Array<Promise<any>> = new Array();
         for (let i: number = 0; i < json.resources.length; ++i) {
             if (json.resources[i].atlas != undefined) {

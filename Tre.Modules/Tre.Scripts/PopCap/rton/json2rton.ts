@@ -1,5 +1,8 @@
+"use strict";
 import { SmartBuffer } from "smart-buffer";
 import { signed, unsigned } from "big-varint";
+import localization from "../../../Tre.Callback/localization.js";
+import { fgred_string } from "../../../Tre.Libraries/Tre.Color/color.js";
 export default function (rton_data: any): any {
     const json_data = new SmartBuffer();
     const cached_strings: any = new Object();
@@ -168,7 +171,7 @@ export default function (rton_data: any): any {
                 json_data.writeString('90\0', 'hex');
                 break;
             default:
-                console.log("error: ", value);
+                console.log(fgred_string("◉ "+localization("excecution_exception"), value));
                 break;
         }
     }

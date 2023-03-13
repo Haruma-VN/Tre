@@ -3,6 +3,7 @@ import * as fs_util from '../../../../Tre.Libraries/Tre.FileSystem/util.js';
 import { res_pack } from '../../../../Tre.Scripts/PopCap/resources/util.js';
 import rsgp_pack from '../../rsgp/rsgp_pack.js';
 import * as color from '../../../../Tre.Libraries/Tre.Color/color.js';
+import localization from '../../../../Tre.Callback/localization.js';
 export default async function (rsb_path: string, RSGP_items_list: any, pack_method: any, RSGP_file_data_list: any) {
     const rsgp_packet_info = new Array();
     const rsgp_data_info = new Array();
@@ -26,7 +27,7 @@ export default async function (rsb_path: string, RSGP_items_list: any, pack_meth
                     format_ptx = 147;
                     break;
                 default:
-                    console.log(color.fgred_string("Unknown PTX's format_ptx. Defaut Format 0."));
+                    console.log(color.fgred_string(localization("unknown_ptx_format_detected")));
                     break;
             }
             return format_ptx;
@@ -83,7 +84,7 @@ export default async function (rsb_path: string, RSGP_items_list: any, pack_meth
         else if (pack_method == 'simple' && rsgp_item.name_path.toUpperCase().indexOf('__MANIFESTGROUP__') !== -1) {
             let resources_data;
             if (fs_util.if_file_exists(`${rsb_path}/Res/PROPERTIES/RESOURCES.res`)) {
-                await res_pack(`${rsb_path}/Res/PROPERTIES/RESOURCES.res`, 0, 0);
+                await res_pack(`${rsb_path}/Res/PROPERTIES/RESOURCES.res`, 0, 0), true;
                 resources_data = await rsgp_pack(`${rsb_path}/Res\\PROPERTIES\\RESOURCES.JSON`, true, true, true, true);
             }
             else {
@@ -94,7 +95,7 @@ export default async function (rsb_path: string, RSGP_items_list: any, pack_meth
                     resources_data = await rsgp_pack(`${rsb_path}/Res\\PROPERTIES\\RESOURCES.RTON`, true, true, true, true);
                 }
                 else {
-                    throw console.error('Can not read Resources');
+                    throw new Error(localization("cannot_get_res_data"));
                 }
             }
             Unpack_Packet(resources_data, rsgp_item.composite_index, rsgp_item.name_path);
