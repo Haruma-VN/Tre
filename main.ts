@@ -7,26 +7,13 @@ import localization from './Tre.Modules/Tre.Callback/localization.js';
 export namespace Tre.Public {
     export async function Main(): Promise<void> {
         const exception_error: boolean = System.Tre.Checker.execute();
-        
+
         if (!exception_error) {
-            console.log('\x1b[32m◉ Execution finish: Press any key to continue...\x1b[0m');
+            console.log('\x1b[32m◉ ' + localization("execution_finish") + ': ' + localization("press_any_key_to_exit") + '\x1b[0m');
             await prompt('', '');
             return;
         }
-        let hasError: boolean = false;
-        process.on('exit', function (code) {
-            if (hasError || code !== 0) {
-                console.log('\x1b[32m◉ Execution finish: Press any key to continue...\x1b[0m');
-                prompt('', '');
-            }
-        });
-
-        try {
-            await default_function();
-        } catch (error: any) {
-            console.log(fgred_string(`◉ ${localization("execution_error")}: ${error.message}`));
-            hasError = true;
-        }
+        await default_function();
     };
 }
 Tre.Public.Main();

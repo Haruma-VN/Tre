@@ -5,6 +5,8 @@ import path from "path";
 import sharp from "sharp";
 import * as color from "../Tre.Color/color.js";
 import localization from "../../Tre.Callback/localization.js";
+import zlib from "zlib";
+import crypto from "crypto";
 
 class fs_js {
 
@@ -1067,6 +1069,485 @@ class fs_js {
         //#endregion
 
     }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static create_dimension_validate(
+        evaluate_width: number,
+        evaluate_height: number,
+    ): boolean {
+        //#region 
+        if (evaluate_width <= 1 || evaluate_width >= 16384) {
+            throw new Error(`The width is not in range of 1 to 16384`);
+        }
+
+        if (evaluate_height <= 1 || evaluate_height >= 16384) {
+            throw new Error(`The height is not in range of 1 to 16384`);
+        }
+
+        return true;
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async create_dimension_view_and_validate(
+        evaluate_file_system_as_string: string,
+    ): Promise<boolean> {
+
+        //#region 
+
+        const create_image_dimension_view: {
+            [x: string]: number
+        } = await this.get_dimension(
+            evaluate_file_system_as_string,
+            "width",
+            "height");
+        const create_dimension_validator: boolean = this.create_dimension_validate(
+            create_image_dimension_view.width,
+            create_image_dimension_view.height);
+        if (create_dimension_validator) {
+            return true;
+        }
+        return false;
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+    static base64_encode(
+        file_input_as_string: string,
+    ): string {
+        //#region 
+        return Buffer.from(file_input_as_string)
+            .toString("base64");
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static base64_decode(
+        file_input_as_string: string,
+        encoding: "ascii" | "base64" | "base64url" | "utf-8" | "binary" | "hex" | "latin1" | "ucs-2" | "ucs2" | "utf16le" | "utf8"
+    ): string {
+        //#region 
+        return Buffer.from(file_input_as_string, "base64")
+            .toString(encoding);
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static get_filename(
+        file_input_as_string: string
+    ): string {
+        //#region 
+        return (path.parse(file_input_as_string).name + path.parse(file_input_as_string).ext);
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async create_zlib_fs_js(
+        file_input_as_string: string,
+        zlib_level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+        file_output_as_string?: string,
+    ) {
+        //#region 
+        if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
+            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+        }
+
+
+        if (zlib_level === undefined || zlib_level === null || zlib_level === void 0) {
+            zlib_level = 0;
+        }
+
+        const create_fs_js_read_stream: fs.ReadStream = await fs.createReadStream(file_input_as_string);
+        const create_fs_js_out_stream: fs.WriteStream = await fs.createWriteStream(file_output_as_string);
+        const zlib_compression_option: {
+            level: number,
+        } = {
+            level: zlib_level
+        };
+        await create_fs_js_read_stream
+            .pipe(zlib.createGzip(zlib_compression_option))
+            .pipe(create_fs_js_out_stream);
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async create_deflate_fs_js(
+        file_input_as_string: string,
+        zlib_level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+        file_output_as_string?: string,
+    ) {
+        //#region 
+        if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
+            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+        }
+
+
+        if (zlib_level === undefined || zlib_level === null || zlib_level === void 0) {
+            zlib_level = 0;
+        }
+
+        const create_fs_js_read_stream: fs.ReadStream = fs.createReadStream(file_input_as_string);
+        const create_fs_js_out_stream: fs.WriteStream = fs.createWriteStream(file_output_as_string);
+        const zlib_compression_option: {
+            level: number,
+        } = {
+            level: zlib_level
+        };
+        await create_fs_js_read_stream
+            .pipe(zlib.createDeflate(zlib_compression_option))
+            .pipe(create_fs_js_out_stream);
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static async create_gzip_fs_js(
+        file_input_as_string: string,
+        zlib_level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+        file_output_as_string?: string,
+    ) {
+        //#region 
+        if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
+            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+        }
+
+
+        if (zlib_level === undefined || zlib_level === null || zlib_level === void 0) {
+            zlib_level = 0;
+        }
+
+        const create_fs_js_read_stream: fs.ReadStream = fs.createReadStream(file_input_as_string);
+        const create_fs_js_out_stream: fs.WriteStream = fs.createWriteStream(file_output_as_string);
+        const zlib_compression_option: {
+            level: number,
+        } = {
+            level: zlib_level
+        };
+        await create_fs_js_read_stream
+            .pipe(zlib.createGunzip(zlib_compression_option))
+            .pipe(create_fs_js_out_stream);
+
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+    static async create_brotli_fs_js(
+        file_input_as_string: string,
+        file_output_as_string?: string,
+    ) {
+        //#region 
+        if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
+            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+        }
+
+        const create_fs_js_read_stream: fs.ReadStream = fs.createReadStream(file_input_as_string);
+        const create_fs_js_out_stream: fs.WriteStream = fs.createWriteStream(file_output_as_string);
+        await create_fs_js_read_stream
+            .pipe(zlib.createBrotliCompress())
+            .pipe(create_fs_js_out_stream);
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static md5_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("md5").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static sha1_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("sha1").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static sha256_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("sha256").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static sha512_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("sha512").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static ripemd160_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("ripemd160").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static whirlpool_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("whirlpool").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static sha3_224_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("sha3-224").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static sha3_256_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("sha3-256").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static sha3_384_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("sha3-384").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static sha3_512_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("sha3-512").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    static blake2b_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("blake2b").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static blake2s_hash(
+        input_string: string,
+    ): string {
+        //#region 
+        return crypto.createHash("blake2s").update(input_string).digest("hex");
+
+        //#endregion
+    }
+
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    static create_hash(
+        allocate_string: string,
+        method: "md5" | "sha1" | "sha256" | "sha512" | "ripemd160" | "whirlpool" | "sha3-224" | "sha3-256" | "sha3-384" | "sha3-512" | "blake2b" | "blake2s",
+    ): string {
+
+        //#region 
+        switch (method) {
+            case "md5":
+                return this.md5_hash(allocate_string);
+            case "blake2b":
+                return this.blake2b_hash(allocate_string);
+            case "blake2s":
+                return this.blake2s_hash(allocate_string);
+            case "ripemd160":
+                return this.ripemd160_hash(allocate_string);
+            case "sha1":
+                return this.sha1_hash(allocate_string);
+            case "sha256":
+                return this.sha256_hash(allocate_string);
+            case "sha3-224":
+                return this.sha3_224_hash(allocate_string);
+            case "sha3-256":
+                return this.sha3_256_hash(allocate_string);
+            case "sha3-384":
+                return this.sha3_384_hash(allocate_string);
+            case "sha3-512":
+                return this.sha3_512_hash(allocate_string);
+            case "sha512":
+                return this.sha512_hash(allocate_string);
+            case "whirlpool":
+                return this.whirlpool_hash(allocate_string);
+            default:
+                return allocate_string as never;
+        }
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    static readonly dimension_view_for_2n_square: Array<number> = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
+
+
+    static async create_square_view(
+        file_input_as_string: string,
+    ): Promise<boolean> {
+        //#region 
+        const create_sharp_data_view: {
+            [x: string]: number
+        } = await this.get_dimension(file_input_as_string) as {
+            width: number,
+            height: number
+        };
+
+        let is_valid_height: boolean = false;
+        let is_valid_width: boolean = false;
+
+
+        const create_validate: boolean = this.create_dimension_validate(create_sharp_data_view.width,
+            create_sharp_data_view.height);
+
+
+        if (create_validate) {
+            if (!this.dimension_view_for_2n_square.includes(create_sharp_data_view.height)) {
+                is_valid_height = true;
+            }
+
+            if (!this.dimension_view_for_2n_square.includes(create_sharp_data_view.width)) {
+                is_valid_width = true;
+            }
+
+        }
+        if (!is_valid_width) {
+            throw new Error(`The width is not filled with 2^n square or rectangle`);
+        }
+
+        if (!is_valid_height) {
+            throw new Error(`The height is not filled with 2^n square or rectangle`);
+        }
+        return (is_valid_height && is_valid_width);
+
+        //#endregion
+    }
+
 }
 
 export default fs_js;

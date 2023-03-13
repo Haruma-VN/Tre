@@ -54,18 +54,18 @@ export default async function (execute_file_count: number, execute_file_dir: str
         execute_file_dir.forEach((child_file_bundle: string, index: number) => {
             if (json_config.display.disable_display_full_path_execution) {
                 if (index === (execute_file_dir.length - 1)) {
-                    Console.WriteLine(`${path.basename(child_file_bundle)}\n`);
+                    Console.WriteLine(`     ${path.basename(child_file_bundle)}\n`);
                 }
                 else {
-                    Console.WriteLine(`${path.basename(child_file_bundle)}\n`);
+                    Console.WriteLine(`     ${path.basename(child_file_bundle)}\n`);
                 };
             }
             else {
                 if (index === (execute_file_dir.length - 1)) {
-                    Console.WriteLine(`${((child_file_bundle))}\n`);
+                    Console.WriteLine(`     ${((child_file_bundle))}\n`);
                 }
                 else {
-                    Console.WriteLine(`${(child_file_bundle)}`);
+                    Console.WriteLine(`     ${(child_file_bundle)}`);
                 };
 
             }
@@ -73,10 +73,10 @@ export default async function (execute_file_count: number, execute_file_dir: str
     }
     else {
         if (json_config.display.disable_display_full_path_execution) {
-            Console.WriteLine(`${path.basename(execute_file_dir)}\n`);
+            Console.WriteLine(`     ${path.basename(execute_file_dir)}\n`);
         }
         else {
-            Console.WriteLine(`${execute_file_dir}\n`);
+            Console.WriteLine(`     ${execute_file_dir}\n`);
         }
     }
     const tre_selector: Array<number> = new Array();
@@ -257,7 +257,12 @@ export default async function (execute_file_count: number, execute_file_dir: str
                 case Display.Tre.Function.popcap_rton_decrypt_and_decode.void_number_readline_argument():
                     if (!js_checker.is_array(execute_file_dir)) {
                         rton_decrypt_and_decode_to_json(execute_file_dir);
-                    };
+                    }
+                    else {
+                        execute_file_dir.forEach(file => {
+                            rton_decrypt_and_decode_to_json(file);
+                        })
+                    }
                     break;
                 case Display.Tre.Function.tre_void_third_party_xor_encrypt.void_number_readline_argument():
                     Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.display_cipher_key_readline_argument}`));
@@ -381,18 +386,27 @@ export default async function (execute_file_count: number, execute_file_dir: str
                         await decode_rgba8888(execute_file_dir, width, height);
                     }
                     else {
-                        execute_file_dir.forEach(execution_waiting => {
-                            decode_rgba8888(execution_waiting, width, height);
+                        execute_file_dir.forEach(async execution_waiting => {
+                            await decode_rgba8888(execution_waiting, width, height);
                         })
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_argb8888.void_number_readline_argument():
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
-                    width = Console.IntegerReadLine(1, 16384);
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
-                    height = Console.IntegerReadLine(1, 16384);
                     if (!js_checker.is_array(execute_file_dir)) {
+                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
+                        width = Console.IntegerReadLine(1, 16384);
+                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
+                        height = Console.IntegerReadLine(1, 16384);
                         await decode_argb8888(execute_file_dir, width, height);
+                    }
+                    else {
+                        execute_file_dir.forEach(async file => {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
+                            width = Console.IntegerReadLine(1, 16384);
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_height}`));
+                            height = Console.IntegerReadLine(1, 16384);
+                            await decode_argb8888(file, width, height);
+                        })
                     }
                     break;
                 case Display.Tre.Function.popcap_texture_decode_etc1a.void_number_readline_argument():

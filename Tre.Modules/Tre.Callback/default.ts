@@ -8,6 +8,7 @@ import { Argument } from "./toolkit_question.js";
 import version from "./Default/version.js";
 import localization from './localization.js';
 import exit_program from "./Default/exit.js";
+import {prompt} from '../../Tre.Modules/Tre.Progress/Readline/util.js';
 export default async function (): Promise<void> {
     Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd()} | ${version.tre_version} | ${localization("this.language")}`);
     const proc_arr: string[] = new Array();
@@ -66,10 +67,22 @@ export default async function (): Promise<void> {
             default:
                 for (let i: number = 0; i < proc_arr.length; ++i) {
                     if (fs.existsSync(proc_arr[i])) {
-                        await functions((i + 1), proc_arr[i], proc_arr.length, mode);
+                        let hasError: boolean = false;
+                        process.on('exit', function (code) {
+                            if (hasError || code !== 0) {
+                                prompt('', '');
+                            }
+                        });
+
+                        try {
+                            await functions((i + 1), proc_arr[i], proc_arr.length, mode);
+                        } catch (error: any) {
+                            console.log(color.fgred_string(`◉ ${localization("execution_error")}: ${error.message}`));
+                            hasError = true;
+                        }
                     }
-                    else{
-                        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.command_execute_in_progress} (${(i+1)}/${proc_arr.length})`));
+                    else {
+                        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.command_execute_in_progress} (${(i + 1)}/${proc_arr.length})`));
                         Console.WriteLine(proc_arr[i]);
                         Console.WriteLine(color.fgred_string(`◉ ${localization("execution_failed")}: ${localization("cannot_find_specific_file")}`));
                         continue;
@@ -79,13 +92,26 @@ export default async function (): Promise<void> {
         }
     }
     else {
-        for(let i: number = 0; i < proc_arr.length; ++i){
-            if(!fs.existsSync(proc_arr[i])){
+        for (let i: number = 0; i < proc_arr.length; ++i) {
+            if (!fs.existsSync(proc_arr[i])) {
                 Console.WriteLine(color.fgred_string(`◉ ${localization("execution_failed")}: ${localization("cannot_find_specific_file")} ${proc_arr[i]}`));
                 return;
             }
         }
-        await functions(1, proc_arr, 1, mode);
+        let hasError: boolean = false;
+        process.on('exit', function (code) {
+            if (hasError || code !== 0) {
+                console.log('\x1b[32m◉ ' + localization("execution_finish") + ': ' + localization("press_any_key_to_exit") + '\x1b[0m');
+                prompt('', '');
+            }
+        });
+
+        try {
+            await functions(1, proc_arr, 1, mode);
+        } catch (error: any) {
+            console.log(color.fgred_string(`◉ ${localization("execution_error")}: ${error.message}`));
+            hasError = true;
+        }
     }
     return await exit_program();
 }
