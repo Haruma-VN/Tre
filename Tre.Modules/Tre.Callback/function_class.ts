@@ -1,7 +1,7 @@
 "use strict";
 export default class Void {
-    constructor(private name: string, private void_number: number) { }
-    
+    constructor(private name: string, private void_number: number, private filter: Array<string>, private allow: bool) { }
+
     //#region Class Display
     public display(): string {
         switch (this.void_number.toString().length) {
@@ -35,6 +35,16 @@ export default class Void {
 
     protected error_void_display(error: string) {
         return console.log(`${error}`);
+    }
+
+    public static_filter(
+    ): Array<str> {
+        return this.filter;
+    }
+
+    public static_allowance(
+    ): bool {
+        return this.allow;
     }
     //#endregion
 }

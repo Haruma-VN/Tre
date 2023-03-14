@@ -20,14 +20,20 @@
 	},
 	"json": {
 		"strict_mode": false,
-		"allow_trailing_commas": true,
+		"allow_trailing_commas": false,
 		"space": "\t"
 	},
-	"language": "Vietnamese",
+	"debugger": {
+		"allow_tracking_bugs": true
+	},
+	"language": "English",
 	"popcap_rton_conversion": {
 		"rton": {
 			"rton_cipher": "65bd1b2305f46eb2806b935aab7630bb"
 		}
+	},
+	"user": {
+		"using_extension_for_rsb_pack": "rsb"
 	},
 	"resources": {
 		"beautify_order": {
@@ -46,11 +52,16 @@
 			"cols": 13,
 			"x": 14,
 			"y": 15,
-			"srcpath": 16
+			"srcpath": 16,
+			"runtime": 18,
+			"forceOriginalVectorSymbolSize": 19
 		},
 		"split": {
 			"beautify_res": true,
 			"remove_unused_info": false
+		},
+		"cat": {
+			"fix_double_shadows": true
 		}
 	}
 }

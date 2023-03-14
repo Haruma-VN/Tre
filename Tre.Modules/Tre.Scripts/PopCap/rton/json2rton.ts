@@ -5,9 +5,9 @@ import localization from "../../../Tre.Callback/localization.js";
 import { fgred_string } from "../../../Tre.Libraries/Tre.Color/color.js";
 export default function (rton_data: any): any {
     const json_data = new SmartBuffer();
-    const cached_strings: any = new Object();
+    const cached_strings:any = new Object();
     let index = 0;
-    function RtonNumber(unsigned_number: number, signed_number?: boolean) {
+    function RtonNumber(unsigned_number: boolean, signed_number?: boolean) {
         if (signed_number) {
             return Buffer.from(signed.encode(BigInt(unsigned_number)));
         }
@@ -50,7 +50,7 @@ export default function (rton_data: any): any {
             json_data.writeString('25', 'hex').writeBuffer(RtonNumber(int, true));
         }
     }
-    function CheckFloatInfinity(float: any) {
+    function CheckFloatInfinity(float: number) {
         let floatcheck = new SmartBuffer();
         const floatnumber = floatcheck.writeFloatLE(float).readFloatLE();
         if (floatnumber == Infinity || floatnumber == -Infinity) {
@@ -60,7 +60,7 @@ export default function (rton_data: any): any {
             return true;
         }
     }
-    function EncodeFloatNumber(float: any) {
+    function EncodeFloatNumber(float: number) {
         if (float == 0) {
             json_data.writeString('23', 'hex');
         }
@@ -71,11 +71,11 @@ export default function (rton_data: any): any {
             json_data.writeString('42', 'hex').writeDoubleLE(float);
         }
     }
-    function EncodeBoolean(boolean: any) {
-        boolean ? json_data.writeInt8(0) : json_data.writeInt8(1);
+    function EncodeBoolean(boolean:boolean) {
+        boolean ? json_data.writeInt8(1) : json_data.writeInt8(0);
     }
-    function EncodeUTF8String(string: any) {
-        json_data.writeBuffer(RtonNumber(Buffer.byteLength(string))).writeBuffer(RtonNumber(Buffer.byteLength(string))).writeString(string);
+    function EncodeUTF8String(string: string) {
+        json_data.writeBuffer(RtonNumber(Buffer.byteLength(string) as any)).writeBuffer(RtonNumber(Buffer.byteLength(string) as any)).writeString(string);
     }
     function EncodeRTID(value: any) {
         if (value.includes('@')) {
@@ -96,13 +96,13 @@ export default function (rton_data: any): any {
             json_data.writeString('84', 'hex');
         }
     }
-    function EncodeCacheString(string: any) {
+    function EncodeCacheString(string: string) {
         if (string in cached_strings) {
             json_data.writeString('91', 'hex').writeBuffer(RtonNumber((cached_strings[string])));
         }
         else {
-            cached_strings[string] = index++;
-            json_data.writeString('90', 'hex').writeBuffer(RtonNumber(Buffer.byteLength(string))).writeString(string);
+            cached_strings[string] = index++ as any;
+            json_data.writeString('90', 'hex').writeBuffer(RtonNumber(Buffer.byteLength(string) as any)).writeString(string);
         }
     }
     function EncodeArray(array_value: any) {
@@ -113,7 +113,7 @@ export default function (rton_data: any): any {
         ;
         json_data.writeString('fe', 'hex');
     }
-    function EncodeObject(rton_value: any) {
+    function EncodeObject(rton_value:boolean) {
         json_data.writeString('85', 'hex');
         for (let [key, value] of Object.entries(rton_value)) {
             EncodeCacheString(key);
@@ -171,7 +171,7 @@ export default function (rton_data: any): any {
                 json_data.writeString('90\0', 'hex');
                 break;
             default:
-                console.log(fgred_string("◉ "+localization("excecution_exception"), value));
+                console.log(fgred_string("◉ " + localization("excecution_exception"), value));
                 break;
         }
     }

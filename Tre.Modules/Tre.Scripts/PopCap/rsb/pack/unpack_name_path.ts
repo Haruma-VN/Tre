@@ -84,7 +84,7 @@ export default async function (rsb_path: string, RSGP_items_list: any, pack_meth
         else if (pack_method == 'simple' && rsgp_item.name_path.toUpperCase().indexOf('__MANIFESTGROUP__') !== -1) {
             let resources_data;
             if (fs_util.if_file_exists(`${rsb_path}/Res/PROPERTIES/RESOURCES.res`)) {
-                await res_pack(`${rsb_path}/Res/PROPERTIES/RESOURCES.res`, 0, 0), true;
+                res_pack(`${rsb_path}/Res/PROPERTIES/RESOURCES.res`, 0, 0, true), true;
                 resources_data = await rsgp_pack(`${rsb_path}/Res\\PROPERTIES\\RESOURCES.JSON`, true, true, true, true);
             }
             else {

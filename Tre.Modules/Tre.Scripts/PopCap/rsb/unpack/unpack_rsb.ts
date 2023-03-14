@@ -1,3 +1,4 @@
+"use strict";
 import { SmartBuffer } from "smart-buffer";
 import path, { parse } from 'node:path';
 import rsb_read_header_info from './rsb_read_header_info.js';
@@ -36,7 +37,7 @@ export default async function (rsb_data_will_not_be_cipher: any, simple: boolean
     }
     const rsb_buffer_for_unpacking = fs_util.readfilebuffer(rsb_data_will_not_be_cipher);
     const rsb_new_extract_folder = `${rsb_data_will_not_be_cipher}/../${parse(rsb_data_will_not_be_cipher).name}.rsg`;
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(rsb_new_extract_folder)}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out")) + ":\n     "} ${path.resolve(rsb_new_extract_folder)}`);
     fs_util.makefolder(`${rsb_new_extract_folder}`);
     const iz_magic_header_rsb = SmartBuffer.fromBuffer(rsb_buffer_for_unpacking.slice(0, 0x70));
     const rsb_header_info_for_unpacking = await rsb_read_header_info(iz_magic_header_rsb);

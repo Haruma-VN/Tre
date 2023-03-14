@@ -1,6 +1,5 @@
 "use strict";
 import path from "path";
-import localization from "../../../../Tre.Callback/localization.js";
 import { readjson, writejson } from "../../../../Tre.Libraries/Tre.FileSystem/util.js";
 namespace BeautifyRes.Tre.Resources {
 
@@ -20,6 +19,8 @@ namespace BeautifyRes.Tre.Resources {
         atlas?: boolean,
         width?: number,
         height?: number,
+        runtime?: boolean,
+        forceOriginalVectorSymbolSize?: boolean,
     }
 
     export type PopCapCommonObjectInAtlasResources = {
@@ -36,10 +37,13 @@ namespace BeautifyRes.Tre.Resources {
         y?: number,
         cols?: number,
         srcpath?: Array<string>,
+        atlas?: boolean,
+        runtime?: boolean,
+        forceOriginalVectorSymbolSize?: boolean,
     }
 
     export function PopCapSortOrderNumber(popcap_location_in_setting_display: string): number {
-        const PopCapSortOrderNumber: PopCapAnyResources = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) ;
+        const PopCapSortOrderNumber: PopCapAnyResources = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true) as PopCapAnyResources;
         return PopCapSortOrderNumber.resources.beautify_order[popcap_location_in_setting_display];
     }
 
@@ -47,7 +51,9 @@ namespace BeautifyRes.Tre.Resources {
 
     export const allowed_items_in_popcap_small_list_for_resources: Array<string> = ["id", "type", "parent", "res", "resources", "subgroups"];
 
-    export const allowed_items_in_popcap_object_in_small_resources: Array<string> = ["slot", "id", "path", "type", "atlas", "width", "height", "parent", "aw", "ah", "ax", "ay", "x", "y", "cols", "width", "height", "srcpath"];
+    export const allowed_items_in_popcap_object_in_small_resources: Array<string> = ["slot",
+        "id", "path", "type", "atlas", "width", "height", "parent", "aw", "ah", "ax", "ay", "x", "y", "cols", "width", "height", "srcpath", "runtime",
+        "forceOriginalVectorSymbolSize"];
 
     export type PopCapAnyResources = {
         [key: string]: any;
@@ -70,6 +76,8 @@ namespace BeautifyRes.Tre.Resources {
         y = PopCapSortOrderNumber("y"),
         cols = PopCapSortOrderNumber("cols"),
         srcpath = PopCapSortOrderNumber("srcpath"),
+        runtime = PopCapSortOrderNumber("runtime"),
+        forceOriginalVectorSymbolSize = PopCapSortOrderNumber("forceOriginalVectorSymbolSize"),
     }
 
     export function beautify_res(popcap_common_json_item_in_list_resources: PopCapAnyResources) {
@@ -90,13 +98,15 @@ namespace BeautifyRes.Tre.Resources {
             y: PopCapSort.y,
             cols: PopCapSort.cols,
             srcpath: PopCapSort.srcpath,
+            runtime: PopCapSort.runtime,
+            forceOriginalVectorSymbolSize: PopCapSort.forceOriginalVectorSymbolSize,
         };
         const popcap_common_json_item_in_new_resources_list_with_beautify: PopCapCommonResources | PopCapAnyResources = Object.keys(popcap_common_json_item_in_list_resources).sort().map(function (popcap_common_item_in_small_res_list: string) {
             if (allowed_items_in_popcap_small_list_for_resources.includes(popcap_common_item_in_small_res_list)) {
                 return { [popcap_common_item_in_small_res_list]: popcap_common_json_item_in_list_resources[popcap_common_item_in_small_res_list] };
             }
-        }).reduce(function (merged, obj) {
-            return { ...merged, ...obj };
+        }).reduce(function (popcap_item_merged, popcap_item_as_object) {
+            return { ...popcap_item_merged, ...popcap_item_as_object };
         }, {}) as PopCapCommonResources;
         if ("resources" in popcap_common_json_item_in_new_resources_list_with_beautify) {
             for (let i: number = 0; i < popcap_common_json_item_in_new_resources_list_with_beautify.resources.length; i++) {
@@ -105,7 +115,8 @@ namespace BeautifyRes.Tre.Resources {
                 }).map(function (popcap_common_item_in_small_res_list: string) {
                     if (allowed_items_in_popcap_object_in_small_resources.includes(popcap_common_item_in_small_res_list)) {
                         if (repairable_data_for_integer_negative_number.includes(popcap_common_item_in_small_res_list)) {
-                            popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] = (popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] > 0) ? popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] : popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] * -1;
+                            popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] = (Number.isInteger(popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list]) && popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] > 0) ? popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] :
+                                (Math.abs(popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list]));
                         }
                         return { [popcap_common_item_in_small_res_list]: popcap_common_json_item_in_new_resources_list_with_beautify.resources[i][popcap_common_item_in_small_res_list] };
                     }
@@ -115,7 +126,7 @@ namespace BeautifyRes.Tre.Resources {
                 }, {}) as PopCapCommonObjectInAtlasResources;
             }
         }
-        return popcap_common_json_item_in_new_resources_list_with_beautify;
+        return popcap_common_json_item_in_new_resources_list_with_beautify satisfies PopCapAnyResources | PopCapCommonResources;
     }
 
     export function execute(dir: string): void {

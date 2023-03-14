@@ -14,8 +14,9 @@ export default async function (rsb_path: string, pack_simple: boolean = false, p
     let RSGP_file_data_list = new Array();
     let execution_information: string = (pack_everything) ? localization("popcap_rsb_resource_pack_information") : localization("popcap_rsb_normal_pack_information");
     execution_information = (pack_simple) ? localization("popcap_rsb_simple_pack_information") : execution_information;
+    const file_extension_output:string = fs_js.create_toolkit_view("using_extension_for_rsb_pack") as string;
     fs_js.execution_information(execution_information);
-    fs_js.execution_out(`${parse(rsb_path).dir}/${parse(rsb_path).name}.rsb`);
+    fs_js.execution_out(`${parse(rsb_path).dir}/${parse(rsb_path).name}.${file_extension_output}`);
     try {
         TreRSBInfo = Object.entries(fs_util.readjson(`${rsb_path}/TreRSBInfo.json`));
     }
@@ -60,7 +61,7 @@ export default async function (rsb_path: string, pack_simple: boolean = false, p
     RSGP_items_list.push({ name_path: Resources, composite_index });
     const RSGP_items_packet_list = await Unpack_NamePath(rsb_path, RSGP_items_list, pack_method, RSGP_file_data_list);
     const rsb_file_data = await PackRSB(rsb_path, (pack_method as any), TreRSBInfo, RSB_composite_list, RSGP_items_list, RSGP_items_packet_list, RSGP_file_data_list);
-    fs_util.outfile(`${parse(rsb_path).dir}/${parse(rsb_path).name}.rsb`, rsb_file_data);
+    fs_util.outfile(`${parse(rsb_path).dir}/${parse(rsb_path).name}.${file_extension_output}`, rsb_file_data);
     if (pack_everything) {
         fs_js.execution_status("success", localization("finish"));
         fs_js.execution_out(fs_js.get_full_path(`${parse(rsb_path).dir}/${parse(rsb_path).name}.rsb`));

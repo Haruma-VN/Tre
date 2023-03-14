@@ -4,12 +4,12 @@ import zlib from 'zlib';
 import { res_split } from '../../../../Tre.Scripts/PopCap/resources/util.js';
 import * as fs_util from '../../../../Tre.Libraries/Tre.FileSystem/util.js';
 import { SmartBuffer } from 'smart-buffer';
-export default async function (rsgp_name_list_uppercase:any,
-     rsgp_list_info:any, 
-     rsb_buffer_for_unpacking:any, 
-     simple_unpack_method:any, decode_rton:boolean,
-      splitres:boolean, rsb_new_extract_folder:any) {
-    let resources_file_data:any;
+export default async function (rsgp_name_list_uppercase: any,
+    rsgp_list_info: any,
+    rsb_buffer_for_unpacking: any,
+    simple_unpack_method: any, decode_rton: boolean,
+    splitres: boolean, rsb_new_extract_folder: any) {
+    let resources_file_data: any;
     for (let k = rsgp_name_list_uppercase.length - 1; k >= 0; k--) {
         if (rsgp_name_list_uppercase[k].name_path.indexOf('__MANIFESTGROUP__') != -1) {
             for (let i = rsgp_list_info.length - 1; i >= 0; i--) {
@@ -66,7 +66,7 @@ export default async function (rsgp_name_list_uppercase:any,
                         if (decode_rton) {
                             fs_util.outfile(`${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.json`, resources_file_data);
                             if (splitres) {
-                                await res_split(`${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.json`);
+                                res_split(`${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.json`, true);
                                 fs_util.delete_file(`${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.json`);
                             };
                         }

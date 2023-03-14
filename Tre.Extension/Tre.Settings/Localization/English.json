@@ -98,7 +98,7 @@
 	"new_texture_quality": "Output Texture quality",
 	"no_args_found": "No input data have been found. Please drag a directory or file here to continue...",
 	"no_json_file": "No JSON file",
-	"no_tre_info": "No TreRSGPInfo.json file found.",
+	"no_tre_info": "No TreRSGPInfo.json file founded",
 	"not_a_directory": "is not a directory. Please try again",
 	"not_a_raw_image": "Not a PTX file",
 	"not_a_valid_boolean_input_argument": "is not a valid boolean input data. It should be either \"y\" or \"n\".",
@@ -233,7 +233,7 @@
 	"atlas_is_filled_with_2n": "The atlas is filled to a 2^n square or rectangle",
 	"atlas_is_not_filled_with_2n": "The atlas is not filled to a 2^n square or rectangle",
 	"the_height_is_too_small": "The height is too small",
-	"the_width_is_too_small": "The height is too small",
+	"the_width_is_too_small": "The width is too small",
 	"popcap_rsb_resource_pack_information": "PopCap RSB ~ Resource Pack",
 	"popcap_rsb_normal_pack_information": "PopCap RSB ~ Normal Pack",
 	"popcap_rsb_simple_pack_information": "PopCap RSB ~ Simple Pack",
@@ -245,5 +245,8 @@
 	"element_at": "Element at index",
 	"not_contain_path_and_id_property": "does not contain both 'id' and 'path' properties",
 	"not_fully_uppercase": "is not fully Upper Case, will not be safe to fix",
-	"not_a_rsb": "Not a RSB"
+	"not_a_rsb": "Not a RSB",
+	"is_encrypted_pvz2c_rton": "RTON Encrypted",
+	"unknown_ptx_format_detected": "Unknown PTX's format. Set the default format to 0",
+	"rton_file_is_not_encrypted": "The RTON file is not encrypted"
 }

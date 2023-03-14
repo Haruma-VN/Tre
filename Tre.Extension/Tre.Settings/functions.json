@@ -1,0 +1,390 @@
+{
+    "javascript_evaluate": {
+        "filter": [
+            ".js"
+        ],
+        "allow": true,
+        "option": 1
+    },
+    "popcap_resources_split": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 2
+    },
+    "popcap_resources_cat": {
+        "filter": [
+            ".res"
+        ],
+        "allow": true,
+        "option": 3
+    },
+    "popcap_resources_rewrite": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 4
+    },
+    "popcap_old_resources_conversion_to_new_resources": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 5
+    },
+    "popcap_new_resources_conversion_to_old_resources": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 6
+    },
+    "popcap_resources_local_data_compare": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 7
+    },
+    "popcap_resources_to_tre_info": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 8
+    },
+    "popcap_resources_to_atlasinfo": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 9
+    },
+    "popcap_resources_beautify": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 10
+    },
+    "atlas_info_split": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 11
+    },
+    "atlas_info_cat": {
+        "filter": [
+            ".Bundles"
+        ],
+        "allow": true,
+        "option": 12
+    },
+    "atlas_info_constructor": {
+        "filter": [],
+        "allow": true,
+        "option": 13
+    },
+    "popcap_texture_atlas_split": {
+        "filter": [
+            "$*/"
+        ],
+        "allow": true,
+        "option": 14
+    },
+    "popcap_texture_atlas_cat_simple": {
+        "filter": [
+            ".spg"
+        ],
+        "allow": true,
+        "option": 15
+    },
+    "popcap_texture_atlas_cat": {
+        "filter": [
+            ".spg"
+        ],
+        "allow": true,
+        "option": 16
+    },
+    "popcap_texture_encode_rgba8888": {
+        "filter": [
+            ".png"
+        ],
+        "allow": true,
+        "option": 17
+    },
+    "popcap_texture_encode_argb8888": {
+        "filter": [
+            ".png"
+        ],
+        "allow": true,
+        "option": 18
+    },
+    "popcap_texture_encode_pvrtc": {
+        "filter": [
+            ".png"
+        ],
+        "allow": true,
+        "option": 19
+    },
+    "popcap_texture_encode_etc1a": {
+        "filter": [
+            ".png"
+        ],
+        "allow": true,
+        "option": 20
+    },
+    "popcap_texture_encode_etc1a_index": {
+        "filter": [
+            ".png"
+        ],
+        "allow": true,
+        "option": 21
+    },
+    "popcap_texture_decode_rgba8888": {
+        "filter": [
+            ".ptx"
+        ],
+        "allow": true,
+        "option": 22
+    },
+    "popcap_texture_decode_argb8888": {
+        "filter": [
+            ".ptx"
+        ],
+        "allow": true,
+        "option": 23
+    },
+    "popcap_texture_decode_pvrtc": {
+        "filter": [
+            ".ptx"
+        ],
+        "allow": true,
+        "option": 24
+    },
+    "popcap_texture_decode_etc1a": {
+        "filter": [
+            ".ptx"
+        ],
+        "allow": true,
+        "option": 25
+    },
+    "popcap_texture_decode_etc1a_index": {
+        "filter": [
+            ".ptx"
+        ],
+        "allow": true,
+        "option": 26
+    },
+    "popcap_texture_resize_atlas_simple": {
+        "filter": [
+            ".spg"
+        ],
+        "allow": true,
+        "option": 27
+    },
+    "popcap_texture_resize_atlas": {
+        "filter": [
+            ".spg"
+        ],
+        "allow": true,
+        "option": 28
+    },
+    "real_esrgan_upscaler_image": {
+        "filter": [
+            "./",
+            ".png"
+        ],
+        "allow": true,
+        "option": 29
+    },
+    "popcap_zlib_rsgp_unpack": {
+        "filter": [
+            ".rsgp"
+        ],
+        "allow": true,
+        "option": 30
+    },
+    "popcap_zlib_rsgp_pack": {
+        "filter": [
+            ".rsg"
+        ],
+        "allow": true,
+        "option": 31
+    },
+    "popcap_zlib_rsb_unpack": {
+        "filter": [
+            ".rsb",
+            ".obb"
+        ],
+        "allow": true,
+        "option": 32
+    },
+    "popcap_zlib_rsb_pack": {
+        "filter": [
+            ".rsg"
+        ],
+        "allow": true,
+        "option": 33
+    },
+    "popcap_zlib_smf_decompress": {
+        "filter": [
+            ".smf"
+        ],
+        "allow": true,
+        "option": 34
+    },
+    "popcap_zlib_smf_compress": {
+        "filter": [
+            ".rsb",
+            ".obb"
+        ],
+        "allow": true,
+        "option": 35
+    },
+    "popcap_game_json_split": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 36
+    },
+    "popcap_game_json_pack": {
+        "filter": [
+            ".pgj"
+        ],
+        "allow": true,
+        "option": 37
+    },
+    "json_patch": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 38
+    },
+    "json_patch_generator": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 39
+    },
+    "popcap_texture_atlas_pack_cross_resolution": {
+        "filter": [
+            ".spg"
+        ],
+        "allow": true,
+        "option": 40
+    },
+    "popcap_lawnstrings_diff": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 41
+    },
+    "popcap_lawnstrings_convert_to_localization": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 42
+    },
+    "popcap_lawnstrings_convert_from_localization": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 43
+    },
+    "popcap_rton_to_json": {
+        "filter": [
+            ".rton"
+        ],
+        "allow": true,
+        "option": 44
+    },
+    "popcap_json_to_rton": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 45
+    },
+    "popcap_rton_decrypt_and_decode": {
+        "filter": [
+            ".rton"
+        ],
+        "allow": true,
+        "option": 46
+    },
+    "popcap_rton_encode_and_encrypt": {
+        "filter": [
+            ".rton"
+        ],
+        "allow": true,
+        "option": 47
+    },
+    "popcap_atlas_split_advanced": {
+        "filter": [
+            "$*/"
+        ],
+        "allow": true,
+        "option": 48
+    },
+    "popcap_atlas_pack_advanced": {
+        "filter": [
+            ".spg"
+        ],
+        "allow": true,
+        "option": 49
+    },
+    "popcap_rsgp_unpack_simple": {
+        "filter": [
+            ".rsgp"
+        ],
+        "allow": true,
+        "option": 50
+    },
+    "popcap_rsgp_pack_simple": {
+        "filter": [
+            ".rsg"
+        ],
+        "allow": true,
+        "option": 51
+    },
+    "popcap_rsb_unpack_simple": {
+        "filter": [
+            ".rsb",
+            ".obb"
+        ],
+        "allow": true,
+        "option": 52
+    },
+    "popcap_rsb_pack_simple": {
+        "filter": [
+            ".rsg"
+        ],
+        "allow": true,
+        "option": 53
+    },
+    "popcap_rsb_resource_unpack": {
+        "filter": [
+            ".rsb",
+            ".obb"
+        ],
+        "allow": true,
+        "option": 54
+    },
+    "popcap_rsb_resource_pack": {
+        "filter": [
+            ".rsg"
+        ],
+        "allow": true,
+        "option": 55
+    }
+}

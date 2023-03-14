@@ -13,17 +13,17 @@ import localization from '../../../Tre.Callback/localization.js';
 import { Console } from '../../../Tre.Callback/console.js';
 import { Argument } from '../../../Tre.Callback/toolkit_question.js';
 import display_argument from './arguments_set.js';
-export default async function (path_file: string, pack_simple: boolean = false, rsb_pack: boolean = false, resources_pack: boolean = false, dont_log_notify: boolean = false, rsb_pack_everything: boolean = false, rsgp_tre_info?: any) {
+export default async function (path_file: any, pack_simple = false, rsb_pack = false, resources_pack = false, dont_log_notify = false, rsb_pack_everything = false, rsgp_tre_info?: any) {
     let TreRSGPInfo: any = false;
-    let RsgpCompression: any = true;
+    let RsgpCompression : any= true;
     let UseTreInfo: any = false;
-    let format_choose = -1;
+    let format_choose : any= -1;
     if (rsb_pack != true && resources_pack != true && rsb_pack_everything != true) {
         if (fs.if_file_exists(`${path_file}/TreRSGPInfo.json`)) {
             TreRSGPInfo = fs.readjson(`${path_file}/TreRSGPInfo.json`);
         }
         else {
-            console.log(`${localization("excecution_exception")}: ${localization("no_tre_info")}`);
+            console.log(localization("no_tre_info"));
         }
     }
     function GetTreInfo() {
@@ -32,7 +32,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
         return [RsgpCompression, UseTreInfo];
     }
     ;
-    function GetFilePath(UseTreInfo: boolean, TreRSGPInfo: any) {
+    function GetFilePath(UseTreInfo:bool, TreRSGPInfo: any) {
         let all_files = new Array();
         if (UseTreInfo) {
             for (let rsgp of TreRSGPInfo) {
@@ -46,6 +46,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
                     if (parse(all_files[item]).ext.toUpperCase())
                         all_files[item] = all_files[item].slice(`${parse(path_file).dir}/`.length).toUpperCase();
                 }
+                ;
             }
             else if (rsb_pack && resources_pack) {
                 all_files = [path_file.slice(path_file.length - 25)];
@@ -56,7 +57,9 @@ export default async function (path_file: string, pack_simple: boolean = false, 
                     if (parse(all_files[item]).ext.toUpperCase())
                         all_files[item] = all_files[item].slice(`${path_file}/RES/`.length).toUpperCase();
                 }
+                ;
             }
+            ;
             if (pack_simple) {
                 const pngFiles = all_files.filter(fileName => fileName.endsWith(".PNG"));
                 const jsonFiles = all_files.filter(fileName => fileName.endsWith(".JSON"));
@@ -66,12 +69,14 @@ export default async function (path_file: string, pack_simple: boolean = false, 
                         all_files.splice(all_files.indexOf(ptxFile), 1);
                     }
                 }
+                ;
                 for (let jsonFile of jsonFiles) {
                     const rtonFile = `${parse(jsonFile).dir}\\${parse(jsonFile).name}.RTON`;
                     if (all_files.includes(rtonFile)) {
                         all_files.splice(all_files.indexOf(rtonFile), 1);
                     }
                 }
+                ;
             }
         }
         return [...[""], ...all_files].sort();
@@ -85,13 +90,14 @@ export default async function (path_file: string, pack_simple: boolean = false, 
             else if (path.indexOf('.PNG') != -1) {
                 path = `${path.slice(0, path.indexOf('.PNG'))}.PTX`;
             }
+            ;
         }
         for (let char of path + '\0') {
             itempath.writeString(char + '\0\0\0');
         }
         return itempath;
     }
-    async function ConcatRSGPPath(filepath: string) {
+    async function ConcatRSGPPath(filepath: string[]) {
         const path_temp = new Array();
         let position = 0;
         for (let i = 0; i < filepath.length - 1; i++) {
@@ -116,7 +122,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
         }
         return path_temp;
     }
-    function ZlibDeflate(rsgp_file_data: any, compression: boolean) {
+    function ZlibDeflate(rsgp_file_data: any, compression: any) {
         if (compression) {
             const zlib_deflate = SmartBuffer.fromBuffer(zlib.deflateSync(rsgp_file_data, { level: 9 }));
             return zlib_deflate.toBuffer();
@@ -125,7 +131,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
             return rsgp_file_data;
         }
     }
-    async function EncodePTX(file_path: string, format: number, format_type: string) {
+    async function EncodePTX(file_path:string, format:number, format_type:file_name) {
         if (fs.if_file_exists(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`)) {
             fs.delete_file(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`);
         }
@@ -153,7 +159,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
                 throw new Error(localization('not_recognize_ptx'));
         }
     }
-    async function EncodeJson(path: any, rton_2c_encrypted: boolean) {
+    async function EncodeJson(path: file_name, rton_2c_encrypted: bool) {
         if (rton_2c_encrypted) {
             const rton_cipher_key = fs.readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true).popcap_rton_conversion.rton.rton_cipher;
             const rton_data = await json2rton(path);
@@ -164,7 +170,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
             return rton_data;
         }
     }
-    async function GetInfoRSGP(file_path: string, UseTreInfo: boolean, TreRSGPInfo: any) {
+    async function GetInfoRSGP(file_path: file_name, UseTreInfo:bool, TreRSGPInfo: any) {
         if (file_path.indexOf('.JSON') != -1 && pack_simple) {
             let rton_2c_encrypted = false;
             for (let json_key in TreRSGPInfo) {
@@ -260,6 +266,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
                                     format_choose = readline_integer(0, 4);
                             }
                         }
+                        ;
                         await EncodePTX(file_path, format_choose, format_type);
                         const image_data = await fs.readfilebuffer(`${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`);
                         return { image_data, width: image_dimension.width, height: image_dimension.height, id: false };
@@ -285,7 +292,9 @@ export default async function (path_file: string, pack_simple: boolean = false, 
                         throw new Error(`${localization('cannot_turn_off_treinfo')}`);
                     }
                 }
+                ;
             }
+            ;
         }
         else {
             if (rsb_pack) {
@@ -304,7 +313,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
             }
         }
     }
-    async function PackData(filepath: string[], path_temp: any, UseTreInfo: boolean, TreRSGPInfo: any) {
+    async function PackData(filepath: string, path_temp: any, UseTreInfo: any, TreRSGPInfo: any) {
         const rsgp_path_info = new SmartBuffer();
         const rsgp_file_data = new SmartBuffer();
         let PTX_id_index = -1;
@@ -335,7 +344,7 @@ export default async function (path_file: string, pack_simple: boolean = false, 
         ;
         return [rsgp_path_info.toBuffer(), rsgp_file_data.toBuffer(), atlas];
     }
-    function PackRSGP(rsgp_path_info: any, rsgp_file_data: any, atlas: any, compression: boolean) {
+    function PackRSGP(rsgp_path_info: any, rsgp_file_data: any, atlas: any, compression: any) {
         const rsgp_data = new SmartBuffer();
         rsgp_data.writeString('pgsr').writeInt8(4).writeBuffer(Buffer.alloc(11));
         compression ? rsgp_data.writeInt32LE(3) : rsgp_data.writeInt32LE(1);
@@ -363,8 +372,8 @@ export default async function (path_file: string, pack_simple: boolean = false, 
     }
     async function PackRSGPSimple(TreInfo: any, TreRSGPInfo: any) {
         const filepath = await GetFilePath(TreInfo[1], TreRSGPInfo);
-        const path_temp = await ConcatRSGPPath((filepath as any));
-        const [rsgp_path_info, rsgp_file_data, atlas] = await PackData(filepath, path_temp, TreInfo[1], TreRSGPInfo);
+        const path_temp = await ConcatRSGPPath(filepath);
+        const [rsgp_path_info, rsgp_file_data, atlas] = await PackData((filepath as any), path_temp, TreInfo[1], TreRSGPInfo);
         return await PackRSGP(rsgp_path_info, rsgp_file_data, atlas, TreInfo[0]);
     }
     if (TreRSGPInfo != false) {

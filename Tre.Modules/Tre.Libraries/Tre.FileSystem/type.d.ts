@@ -26,6 +26,13 @@ declare type dimension_view = {
     [x: string]: number;
 };
 
+declare type auto_dimension = {
+    width: evaluate_width,
+    height: evaluate_height,
+}
+
+declare type int = number;
+
 declare type assertation_arguments = Array<string>;
 
 declare type arguments_asserations = Array<string>;
@@ -46,3 +53,89 @@ declare type encoding_view = "hex" | "utf8" | "buffer";
 
 declare type popcap_extension_checker = ".ptx" | ".rsb" | ".rton" | ".json" | ".rsgp" | ".smf";
 
+declare type view_option =
+    "allow_384" |
+    "padding" |
+    "notify_duplicate" |
+    "repairDuplicateFolder" |
+    "allow_atlas_info" |
+    "disable_display_full_path_execution" |
+    "use_other_voids" |
+    "strict_mode" |
+    "allow_trailing_commas" |
+    "space" |
+    "language" |
+    "rton_cipher" |
+    "using_extension_for_rsb_pack" |
+    "beautify_order" |
+    "beautify_res" |
+    "remove_unused_info" |
+    "fix_double_shadows";
+
+declare type popcap_resources_render = {
+    slot: int,
+    id: int,
+    path: int,
+    type: int,
+    atlas: int,
+    width: int,
+    height: int,
+    parent: int,
+    ah: int,
+    aw: int,
+    ax: int,
+    ay: int,
+    cols: int,
+    x: int,
+    y: int,
+    srcpath: int,
+};
+
+declare type toolkit_json = {
+    atlas: {
+        cross_resolution: {
+            allow_384: bool,
+        },
+        max_rects_bin_pack_simple: {
+            padding: int,
+        },
+        split: {
+            notify_duplicate: bool,
+            repairDuplicateFolder: bool,
+            allow_atlas_info: bool,
+        },
+    },
+    display: {
+        disable_display_full_path_execution: bool,
+    },
+    extension: {
+        use_other_voids: bool,
+    },
+    json: {
+        strict_mode: bool,
+        allow_trailing_commas: bool,
+        space: str,
+    },
+    debugger: {
+        allow_tracking_bugs: bool,
+    },
+    language: str,
+    popcap_rton_conversion: {
+        rton: {
+            rton_cipher: str,
+        },
+    },
+    user: {
+        using_extension_for_rsb_pack: str,
+    },
+    resources: {
+        beautify_order:popcap_resources_render,
+        split: {
+            beautify_res: bool,
+            remove_unused_info: bool,
+        },
+        cat: {
+            fix_double_shadows: bool,
+        },
+    },
+};

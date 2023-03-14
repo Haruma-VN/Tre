@@ -203,9 +203,10 @@
 	"old_popcap_support": "List of string items (10.3 or lower support)",
 	"new_popcap_support": "String items (10.4 or above support)",
 	"popcap_resource_support_argument": "PopCap Resources's Path",
-	"press_any_key_to_exit": "Press any key to exit the program...",
+	"press_any_key_to_exit": "Press any key to continue...",
 	"trailing_commas_at_line": "Trailing comma at line ",
     "syntax_error": "Unexpected token in JSON at line",
     "type_error": "The JSON data is not a string",
-    "invalid_char": "The string contains illegal characters"
+    "invalid_char": "The string contains illegal characters",
+	"this.language": "简化字"
 }

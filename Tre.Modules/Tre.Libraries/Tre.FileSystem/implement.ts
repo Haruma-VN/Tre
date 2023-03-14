@@ -336,7 +336,9 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static return_this_tool_toolkit_json_location(): string {
+    public static return_this_tool_toolkit_json_location(
+    ):
+        string {
         //#region 
         return this.get_full_path(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json");
         //#endregion
@@ -1834,6 +1836,83 @@ class fs_js {
 
 
     /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static create_toolkit_view(
+        create_view_option:
+            "allow_384" |
+            "padding" |
+            "notify_duplicate" |
+            "repairDuplicateFolder" |
+            "allow_atlas_info" |
+            "disable_display_full_path_execution" |
+            "use_other_voids" |
+            "strict_mode" |
+            "allow_trailing_commas" |
+            "space" |
+            "language" |
+            "rton_cipher" |
+            "using_extension_for_rsb_pack" |
+            "beautify_order" |
+            "beautify_res" |
+            "remove_unused_info" |
+            "fix_double_shadows",
+    ): bool | str | int | popcap_resources_render {
+        //#region 
+        const toolkit_json: toolkit_json = this.read_json(this.return_this_tool_toolkit_json_location() satisfies str) as toolkit_json;
+        switch (create_view_option as view_option) {
+            case "allow_384":
+                return toolkit_json.atlas.cross_resolution.allow_384 as bool;
+            case "allow_atlas_info":
+                return toolkit_json.atlas.split.allow_atlas_info as bool;
+            case "notify_duplicate":
+                return toolkit_json.atlas.split.notify_duplicate as bool;
+            case "padding":
+                return toolkit_json.atlas.max_rects_bin_pack_simple.padding as int;
+            case "repairDuplicateFolder":
+                return toolkit_json.atlas.split.repairDuplicateFolder as bool;
+            case "allow_trailing_commas":
+                return toolkit_json.json.allow_trailing_commas as bool;
+            case "beautify_order":
+                return toolkit_json.resources.beautify_order as popcap_resources_render;
+            case "beautify_res":
+                return toolkit_json.resources.split.beautify_res as bool;
+            case "disable_display_full_path_execution":
+                return toolkit_json.display.disable_display_full_path_execution as bool;
+            case "fix_double_shadows":
+                return toolkit_json.resources.cat.fix_double_shadows as bool;
+            case "language":
+                return toolkit_json.language as str;
+            case "remove_unused_info":
+                return toolkit_json.resources.split.remove_unused_info satisfies bool;
+            case "rton_cipher":
+                return toolkit_json.popcap_rton_conversion.rton.rton_cipher as str;
+            case "space":
+                return toolkit_json.json.space satisfies str;
+            case "strict_mode":
+                return toolkit_json.json.strict_mode satisfies bool;
+            case "use_other_voids":
+                return toolkit_json.extension.use_other_voids as bool;
+            case "using_extension_for_rsb_pack":
+                return toolkit_json.user.using_extension_for_rsb_pack as str;
+            default:
+                return toolkit_json as never;
+        }
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static readonly functions_json_location:str = this.get_full_path(process.cwd() + "/Tre.Extension/Tre.Settings/functions.json");
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
 
 
 }
