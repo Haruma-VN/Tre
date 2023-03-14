@@ -42,3 +42,7 @@ declare type file_save = file_name;
 
 declare type file_system_full_path_directory = file_name;
 
+declare type encoding_view = "hex" | "utf8" | "buffer";
+
+declare type popcap_extension_checker = ".ptx" | ".rsb" | ".rton" | ".json" | ".rsgp" | ".smf";
+

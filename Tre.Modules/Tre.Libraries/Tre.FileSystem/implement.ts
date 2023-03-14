@@ -43,15 +43,26 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
     public static read_file(
         file_system_path: string,
-        file_system_encoding_view: "buffer" | "utf8",
+        file_system_encoding_view: encoding_view,
     ): auto {
         //#region 
-        const create_file_system_encoding_view: auto_file_system_encoding = (file_system_encoding_view == "buffer") ? "hex" : "utf-8";
         try {
-            return fs.readFileSync(file_system_path, {
-                encoding: create_file_system_encoding_view,
-                flag: "r"
-            })
+            switch (file_system_encoding_view) {
+                case "hex":
+                    return fs.readFileSync(file_system_path, {
+                        encoding: "hex",
+                        flag: "r",
+                    })
+                case "buffer":
+                    return fs.readFileSync(file_system_path);
+                case "utf8":
+                    return fs.readFileSync(file_system_path, {
+                        encoding: "utf-8",
+                        flag: "r",
+                    })
+                default:
+                    return fs.readFileSync(file_system_path) as never;
+            }
         } catch (error: auto) {
             throw new Error(`Read ${this.get_full_path(file_system_path)} failed, code ${error.message}`);
         }
@@ -905,7 +916,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")}${this.get_full_path(text)}`);
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")}${this.get_full_path(text)}`);
         //#endregion
 
     }
@@ -1783,20 +1794,41 @@ class fs_js {
         create_new_total_progress_bar?: number,
     ): Promise<Void> {
         //#region 
-        const total: number = (create_new_total_progress_bar != undefined && create_new_total_progress_bar != null && create_new_total_progress_bar != void 0) ? 
-        create_new_total_progress_bar satisfies number : 10;
+        const total: number = (create_new_total_progress_bar != undefined && create_new_total_progress_bar != null && create_new_total_progress_bar != void 0) ?
+            create_new_total_progress_bar satisfies number : 10;
         let create_new_progress_process: number = 0;
         for (let i: number = 0; i < total; i++) {
             await Callback_function as void;
             create_new_progress_process++;
-            const create_new_percentages_view:number = Math.round((create_new_progress_process satisfies number / total as number) * 100);
-            const create_new_progress_bar:string = Array(Math.round(create_new_percentages_view as number / 10) + 1).join('#');
-            const create_new_empty_progress:string = Array(11 - Math.round(create_new_percentages_view as number / 10)).join('-');
+            const create_new_percentages_view: number = Math.round((create_new_progress_process satisfies number / total as number) * 100);
+            const create_new_progress_bar: string = Array(Math.round(create_new_percentages_view as number / 10) + 1).join('#');
+            const create_new_empty_progress: string = Array(11 - Math.round(create_new_percentages_view as number / 10)).join('-');
             process.stdout.write(`[${create_new_progress_bar}${create_new_empty_progress}] ${create_new_percentages_view}%\r`);
         }
         process.stdout.write('\n');
         //#endregion
     }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static popcap_check_extname(
+        file_system_path: string,
+        input_the_system_extname_checker_as_string: ".ptx" | ".rsb" | ".rton" | ".json" | ".rsgp" | ".smf" | ".obb" | ".rsb1" | ".pgsr" | ".rsg",
+    ): bool {
+        //#region 
+        const create_auto_checker: string = (!(input_the_system_extname_checker_as_string.indexOf(".") === -1)) ? input_the_system_extname_checker_as_string :
+            "." + input_the_system_extname_checker_as_string;
+        return (this.js_extname(file_system_path, true).toString().toLowerCase() === create_auto_checker.toString().toLowerCase());
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static readonly popcap_extension_list: Array<string> = [".ptx", ".rsb", ".rton", ".json", ".rsgp", ".smf", ".obb", ".rsb1", ".pgsr", ".rsg"]
 
 
 
