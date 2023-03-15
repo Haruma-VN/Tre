@@ -1,16 +1,14 @@
 "use strict";
-import { readjson, readfile, writefile, writejson, check_is_file, file_stats, readfilebuffer, delete_file, read_dir, read_single_folder } from "../Tre.Libraries/Tre.FileSystem/util.js";
+import { readjson } from "../Tre.Libraries/Tre.FileSystem/util.js";
 import { Display } from './toolkit_functions.js';
 import { Argument } from "./toolkit_question.js";
-import { extname, basename } from '../Tre.Libraries/Tre.Basename/util.js';
 import { Console } from "./console.js";
 import * as color from '../Tre.Libraries/Tre.Color/color.js';
 import path from "node:path";
 import resolveFilePath from "./Public/FilePath/path_result.js";
 import js_checker from "./Default/checker.js";
 import fs_js from "../Tre.Libraries/Tre.FileSystem/implement.js";
-import { stringify, parse } from "../Tre.Libraries/Tre.JSONSystem/util.js";
-import execute_function_from_core from "./execute_from_core.js";
+import create_evaluate_argument from "./evaluate.js";
 
 export interface configAtlas {
     display: {
@@ -92,33 +90,19 @@ export default async function (execute_file_count: number, execute_file_dir: str
     else {
         const option: number = Console.ExpandReadLine(tre_selector);
         if (typeof execute_file_dir === "string") {
-            await execute_function_from_core(execute_file_dir, option);
+            await create_evaluate_argument(execute_file_dir, option);
         }
         else if (typeof execute_file_dir === "object" && (option != Display.Tre.Function.popcap_texture_atlas_split.void_number_readline_argument())
             && option != Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument()) {
             execute_file_dir.forEach(async (file_in_this_directory) => {
-                await execute_function_from_core(file_in_this_directory, option);
+                await create_evaluate_argument(file_in_this_directory, option);
             })
         }
         else if (typeof execute_file_dir === "object" && ((option === Display.Tre.Function.popcap_texture_atlas_split.void_number_readline_argument())
             || option === Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument())) {
-            await execute_function_from_core(execute_file_dir, option);
+            await create_evaluate_argument(execute_file_dir, option);
         }
     }
     const end_timer: number = Date.now();
     return Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_execution_time_after_process} `) + `${(end_timer - start_timer) / 1000}s`);
-}
-export {
-    writefile,
-    writejson,
-    basename,
-    delete_file,
-    read_single_folder,
-    read_dir,
-    readfilebuffer,
-    js_checker,
-    file_stats,
-    fs_js,
-    stringify,
-    parse,
 }

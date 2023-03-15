@@ -2,9 +2,9 @@
 import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, encode_etc1a, encode_pvrtc, decode_etc1a, decode_pvrtc, decode_etc1alpha_palette, encode_etc1alpha_palette, } from "../Tre.Libraries/Tre.Images/util.js";
 import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, } from '../../Tre.Modules/Tre.Scripts/PopCap/resources/util.js';
 import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution, atlas_split_experimental, atlas_pack_experimental } from '../../Tre.Modules/Tre.Scripts/PopCap/atlas/util.js';
-import { readjson, readfile, writejson, check_is_file, file_stats, readfilebuffer, makefolder } from "../Tre.Libraries/Tre.FileSystem/util.js";
-import { Display } from './toolkit_functions.js';
+import { readjson, readfile, writefile, writejson, check_is_file, file_stats, readfilebuffer, makefolder, delete_file, read_dir, read_single_folder } from "../Tre.Libraries/Tre.FileSystem/util.js";
 import { Argument } from "./toolkit_question.js";
+import { extname, basename } from '../Tre.Libraries/Tre.Basename/util.js';
 import { Console } from "./console.js";
 import { atlasinfo_cat, atlasinfo_split } from "../../Tre.Modules/Tre.Scripts/Tre/AtlasInfo/util.js";
 import * as color from '../Tre.Libraries/Tre.Color/color.js';
@@ -21,20 +21,24 @@ import { Lawnstrings } from "../../Tre.Modules/Tre.Scripts/PopCap/localization/l
 import PopCapPackages from "../Tre.Scripts/PopCap/json/utilities.js";
 import RSBInfo from "../Tre.Scripts/Tre/Support/utilities.js";
 import { rton_to_json, json_to_rton, rton_decrypt_and_decode_to_json, json_to_rton_and_encrypt } from "../Tre.Scripts/PopCap/rton/util.js";
+import resolveFilePath from "./Public/FilePath/path_result.js";
 import js_checker from "./Default/checker.js";
 import localization from "./localization.js";
 import fs_js from "../Tre.Libraries/Tre.FileSystem/implement.js";
-async function execute_function_from_core(execute_file_dir: string | string[], option: number): Promise<void> {
+import { stringify, parse } from "../Tre.Libraries/Tre.JSONSystem/util.js";
+
+async function execute_function_from_core(execute_file_dir: string | string[], method: string): Promise<void> {
     let width: number;
     let height: number;
     const check_if_the_directories_iz_folder: boolean = (!js_checker.is_array(execute_file_dir) && check_is_file(execute_file_dir)) ? false : true;
-    switch (option) {
-        case Display.Tre.Function.popcap_rton_to_json.void_number_readline_argument():
+    const arguments_default_modifier: any = fs_js.read_json((fs_js.functions_json_location as string), true);
+    switch (method) {
+        case "popcap_rton_to_json" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 rton_to_json(execute_file_dir);
             };
             break;
-        case Display.Tre.Function.popcap_rton_decrypt_and_decode.void_number_readline_argument():
+        case "popcap_rton_decrypt_and_decode" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 rton_decrypt_and_decode_to_json(execute_file_dir);
             }
@@ -46,7 +50,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.javascript_evaluate.void_number_readline_argument():
+        case "javascript_evaluate" as popcap_game_edit_method:
             try {
                 if (!js_checker.is_array(execute_file_dir)) {
                     const js_shell_string_await_for_executor: string = (readfile(execute_file_dir));
@@ -63,10 +67,10 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                     }
                 }
             } catch (error: any) {
-                throw new Error(error.message);
+                throw new Error(error.message as evaluation_error);
             }
             break;
-        case Display.Tre.Function.popcap_texture_encode_rgba8888.void_number_readline_argument():
+        case "popcap_texture_encode_rgba8888" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await encode_rgba8888(execute_file_dir);
             }
@@ -78,7 +82,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_encode_argb8888.void_number_readline_argument():
+        case "popcap_texture_encode_argb8888" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await encode_argb8888(execute_file_dir);
             }
@@ -90,7 +94,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_encode_etc1a.void_number_readline_argument():
+        case "popcap_texture_encode_etc1a" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await encode_etc1a(execute_file_dir);
             }
@@ -102,7 +106,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_encode_etc1a_index.void_number_readline_argument():
+        case "popcap_texture_encode_etc1a_index" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await encode_etc1alpha_palette(execute_file_dir);
             }
@@ -114,7 +118,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_encode_pvrtc.void_number_readline_argument():
+        case "popcap_texture_encode_pvrtc" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await encode_pvrtc(execute_file_dir);
             }
@@ -126,7 +130,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_resources_split.void_number_readline_argument():
+        case "popcap_resources_split" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 res_split(execute_file_dir);
             }
@@ -138,35 +142,63 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 });
             }
             break;
-        case Display.Tre.Function.popcap_resources_cat.void_number_readline_argument():
+        case "popcap_resources_cat" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
-                Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe}`);
-                Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe_fix}`);
-                let mode: number = Console.IntegerReadLine(1, 2);
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
-                Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
-                Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
-                let encode: number = Console.IntegerReadLine(0, 1);
+                const argument_checker_for_mode: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_cat.arguments.mode != undefined && arguments_default_modifier.popcap_resources_cat.arguments.mode != null && arguments_default_modifier.popcap_resources_cat.arguments.mode != void 0 &&
+                    (typeof arguments_default_modifier.popcap_resources_cat.arguments.mode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_cat.arguments.mode)) && arguments_default_modifier.popcap_resources_cat.arguments.mode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_cat.arguments.mode) === 1 || parseInt(arguments_default_modifier.popcap_resources_cat.arguments.mode) === 2))
+                    ? parseInt(arguments_default_modifier.popcap_resources_cat.arguments.mode) as 1 | 2 : 0;
+                if ((argument_checker_for_mode === 0)) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe_fix}`);
+                }
+                if ((argument_checker_for_mode !== 0)) {
+                    const execution_information_message: string = (argument_checker_for_mode === 1) ? localization("res_cat_concat_mode_safe") : localization("res_cat_concat_mode_safe_fix");
+                    fs_js.execution_auto(`${localization("popcap_resources_cat")} ~ ${execution_information_message}`);
+                }
+                const mode: number = (argument_checker_for_mode !== 0) ? argument_checker_for_mode : Console.IntegerReadLine(1, 2);
+                const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_cat.arguments.encode != undefined && arguments_default_modifier.popcap_resources_cat.arguments.encode != null && arguments_default_modifier.popcap_resources_cat.arguments.encode != void 0 &&
+                    (typeof arguments_default_modifier.popcap_resources_cat.arguments.encode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_cat.arguments.encode)) && arguments_default_modifier.popcap_resources_cat.arguments.encode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_cat.arguments.encode) === 1 || parseInt(arguments_default_modifier.popcap_resources_cat.arguments.encode) === 0))
+                    ? (parseInt(arguments_default_modifier.popcap_resources_cat.arguments.encode) as 0 | 1) : 2;
+                if (argument_checker_for_encoding === 2) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
+                }
+                if ((argument_checker_for_encoding !== 2)) {
+                    const execution_information_message: string = (argument_checker_for_encoding === 0) ? localization("res_cat_concat_no_encode_rton") : localization("res_cat_concat_encode_rton");
+                    fs_js.execution_auto(`${localization("popcap_resources_cat")} ~ ${execution_information_message}`);
+                }
+                const encode: number = (argument_checker_for_encoding === 2) ? Console.IntegerReadLine(0, 1) : argument_checker_for_encoding;
                 res_pack(execute_file_dir, mode, encode);
             }
             else {
                 execute_file_dir.forEach(execution_waiting => {
                     if (fs_js.is_directory(execution_waiting)) {
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
-                        Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe}`);
-                        Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe_fix}`);
-                        let mode: number = Console.IntegerReadLine(1, 2);
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
-                        Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
-                        Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
-                        let encode: number = Console.IntegerReadLine(0, 1);
+                        const argument_checker_for_mode: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_cat.arguments.mode != undefined && arguments_default_modifier.popcap_resources_cat.arguments.mode != null && arguments_default_modifier.popcap_resources_cat.arguments.mode != void 0 &&
+                            (typeof arguments_default_modifier.popcap_resources_cat.arguments.mode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_cat.arguments.mode)) && arguments_default_modifier.popcap_resources_cat.arguments.mode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_cat.arguments.mode) === 1 || parseInt(arguments_default_modifier.popcap_resources_cat.arguments.mode) === 2))
+                            ? parseInt(arguments_default_modifier.popcap_resources_cat.arguments.mode) as 1 | 2 : 0;
+                        if ((argument_checker_for_mode === 0)) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_res}`));
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe}`);
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_mode_safe_fix}`);
+                        }
+                        const mode: number = (argument_checker_for_mode !== 0) ? argument_checker_for_mode : Console.IntegerReadLine(1, 2);
+                        const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_cat.arguments.encode != undefined && arguments_default_modifier.popcap_resources_cat.arguments.encode != null && arguments_default_modifier.popcap_resources_cat.arguments.encode != void 0 &&
+                            (typeof arguments_default_modifier.popcap_resources_cat.arguments.encode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_cat.arguments.encode)) && arguments_default_modifier.popcap_resources_cat.arguments.encode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_cat.arguments.encode) === 1 || parseInt(arguments_default_modifier.popcap_resources_cat.arguments.encode) === 0))
+                            ? (parseInt(arguments_default_modifier.popcap_resources_cat.arguments.encode) as 0 | 1) : 2;
+                        if (argument_checker_for_encoding === 2) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
+                        }
+                        const encode: number = (argument_checker_for_encoding === 2) ? Console.IntegerReadLine(0, 1) : argument_checker_for_encoding;
                         res_pack(execution_waiting, mode, encode);
                     }
                 });
             }
             break;
-        case Display.Tre.Function.popcap_texture_decode_rgba8888.void_number_readline_argument():
+        case "popcap_texture_decode_rgba8888" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                 width = Console.IntegerReadLine(1, 16384);
@@ -186,7 +218,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_decode_argb8888.void_number_readline_argument():
+        case "popcap_texture_decode_argb8888" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                 width = Console.IntegerReadLine(1, 16384);
@@ -206,7 +238,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_decode_etc1a.void_number_readline_argument():
+        case "popcap_texture_decode_etc1a" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                 width = Console.IntegerReadLine(1, 16384);
@@ -226,7 +258,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_decode_etc1a_index.void_number_readline_argument():
+        case "popcap_texture_decode_etc1a_index" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                 width = Console.IntegerReadLine(1, 16384);
@@ -246,7 +278,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_decode_pvrtc.void_number_readline_argument():
+        case "popcap_texture_decode_pvrtc" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.decode_width}`));
                 width = Console.IntegerReadLine(1, 16384);
@@ -266,7 +298,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_zlib_rsgp_unpack.void_number_readline_argument():
+        case "popcap_zlib_rsgp_unpack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, false, false, false);
             }
@@ -278,7 +310,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_rsgp_unpack_simple.void_number_readline_argument():
+        case "popcap_rsgp_unpack_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, true, true, false);
             }
@@ -292,7 +324,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_zlib_rsgp_pack.void_number_readline_argument():
+        case "popcap_zlib_rsgp_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await pack_rsgp(execute_file_dir);
             }
@@ -304,7 +336,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_rsgp_pack_simple.void_number_readline_argument():
+        case "popcap_rsgp_pack_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await pack_rsgp(execute_file_dir, true);
             }
@@ -316,7 +348,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_resources_to_tre_info.void_number_readline_argument():
+        case "popcap_resources_to_tre_info" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 RSBInfo.Tre.Utilities.create_tre_rsb_info(execute_file_dir);
             }
@@ -328,16 +360,27 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_atlas_cat_simple.void_number_readline_argument():
+        case "popcap_texture_atlas_cat_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
                 width = Console.SizeReadLine();
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
                 height = Console.SizeReadLine();
+                const atlas_pack_size_view: number = (arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding != undefined && arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding != null && arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding != void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding === "string" || Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding)) && arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== "?" && (parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) >= 0 && parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) <= width))
+                    ? parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) : -1;
+                if ((atlas_pack_size_view === -1)) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`));
+                }
+                else {
+                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack_simple")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                }
+                const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, width) : atlas_pack_size_view;
                 await atlas_cat(execute_file_dir, (width), (height), true, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
                     Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                     Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
-                    Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void);
+                    Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                    true, false, true, false, atlas_cat_padding_size);
             }
             else {
                 execute_file_dir.forEach(async file => {
@@ -346,67 +389,176 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                         width = Console.SizeReadLine();
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
                         height = Console.SizeReadLine();
+                        const atlas_pack_size_view: number = (arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding != undefined && arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding != null && arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding != void 0 &&
+                            (typeof arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding === "string" || Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding)) && arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== "?" && (parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) >= 0 && parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) <= width))
+                            ? parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) : -1;
+                        if ((atlas_pack_size_view === -1)) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`));
+                        }
+                        else {
+                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack_simple")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                        }
+                        const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, width) : atlas_pack_size_view;
                         await atlas_cat(file, (width), (height), true, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
                             Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                             Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
-                            Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void);
+                            Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                            true, false, true, false, atlas_cat_padding_size);
                     }
                 })
             }
             break;
-        case Display.Tre.Function.popcap_atlas_pack_experimental.void_number_readline_argument():
+        case "popcap_atlas_pack_experimental" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
                 width = Console.SizeReadLine();
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
                 height = Console.SizeReadLine();
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_subgroup_argument}`));
-                Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
-                let popcap_subgroup_name: string = Console.ReadLine();
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resource_support_argument}`));
-                Console.WriteLine(`${Argument.Tre.Packages.old_popcap_support}`);
-                Console.WriteLine(`${Argument.Tre.Packages.new_popcap_support}`);
-                let popcap_support_utilities_for_new_pvz2_international: boolean | number = Console.IntegerReadLine(1, 2);
+                const subgroup_name_argument_check = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup != undefined && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup != null &&
+                    arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup != void 0 && (typeof (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup) === "string")
+                    && (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup == "$")) ? true : false;
+                if (!subgroup_name_argument_check) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_subgroup_argument}`));
+                    Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
+                }
+                else {
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("get_subgroup_name")}`)
+                }
+                let popcap_subgroup_name: string = (!subgroup_name_argument_check) ? Console.ReadLine() : "";
+                const popcap_support_multiple_version: 1 | 2 | 0 = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != undefined &&
+                    arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != null &&
+                    arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != void 0
+                    && (typeof (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) === "string" || Number.isInteger(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version))
+                    && ((parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) === 1) || (parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) === 2))) ?
+                    parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) as 1 | 2 : 0;
+                if (popcap_support_multiple_version === 0) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resource_support_argument}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.old_popcap_support}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.new_popcap_support}`);
+                }
+                else {
+                    const generate_new_console_message: string = ((popcap_support_multiple_version as 1 | 2) === 1) ? localization("support_old_version") : localization("support_new_version");
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                }
+                let popcap_support_utilities_for_new_pvz2_international: boolean | number = (popcap_support_multiple_version === 0) ? Console.IntegerReadLine(1, 2) : popcap_support_multiple_version;
                 popcap_support_utilities_for_new_pvz2_international = (popcap_support_utilities_for_new_pvz2_international === 2) ? true : false;
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_support_trim}`));
-                let popcap_support_trimming_mode_for_pvz2_texfmt_0: boolean | number = Console.IntegerReadLine(0, 1);
+                const popcap_support_trim_for_argb8888: 1 | 2 | 0 = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim != undefined &&
+                    arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim != null &&
+                    arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim != void 0
+                    && (typeof (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) === "string" || Number.isInteger(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim))
+                    && ((parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) === 1) || (parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) === 0))) ?
+                    parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) as 1 | 0 : 2;
+                if (popcap_support_trim_for_argb8888 === 2) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_support_trim}`));
+                }
+                else {
+                    const generate_new_console_message: string = ((popcap_support_trim_for_argb8888 as 0 | 1) === 1) ? localization("auto_trim") : localization("no_trim");
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                }
+                let popcap_support_trimming_mode_for_pvz2_texfmt_0: boolean | number = (popcap_support_trim_for_argb8888 === 2) ? Console.IntegerReadLine(0, 1) : popcap_support_trim_for_argb8888 as 1 | 0;
                 popcap_support_trimming_mode_for_pvz2_texfmt_0 = (popcap_support_trimming_mode_for_pvz2_texfmt_0 === 1) ? true : false;
-                await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international, popcap_support_trimming_mode_for_pvz2_texfmt_0);
+
+                const atlas_pack_size_view: number = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding != undefined && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding != null && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding != void 0 &&
+                    (typeof arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding === "string" || Number.isInteger(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding)) && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding !== "?" && (parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding) >= 0 && parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding) <= width))
+                    ? parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding) : -1;
+                if ((atlas_pack_size_view === -1)) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`));
+                }
+                else {
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                }
+                const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, width) : atlas_pack_size_view;
+                await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international,
+                    popcap_support_trimming_mode_for_pvz2_texfmt_0, atlas_cat_padding_size);
             }
             else {
                 execute_file_dir.forEach(async file => {
                     if (fs_js.is_directory(file)) {
-
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
                         width = Console.SizeReadLine();
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
                         height = Console.SizeReadLine();
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_subgroup_argument}`));
-                        Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
-                        let popcap_subgroup_name: string = Console.ReadLine();
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resource_support_argument}`));
-                        Console.WriteLine(`${Argument.Tre.Packages.old_popcap_support}`);
-                        Console.WriteLine(`${Argument.Tre.Packages.new_popcap_support}`);
-                        let popcap_support_utilities_for_new_pvz2_international: boolean | number = Console.IntegerReadLine(1, 2);
+                        const subgroup_name_argument_check = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup != undefined && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup != null &&
+                            arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup != void 0 && (typeof (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup) === "string")
+                            && (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.subgroup == "$")) ? true : false;
+                        if (!subgroup_name_argument_check) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_subgroup_argument}`));
+                            Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
+                        }
+                        else {
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("get_subgroup_name")}`)
+                        }
+                        let popcap_subgroup_name: string = (!subgroup_name_argument_check) ? Console.ReadLine() : "";
+                        const popcap_support_multiple_version: 1 | 2 | 0 = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != undefined &&
+                            arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != null &&
+                            arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != void 0
+                            && (typeof (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) === "string" || Number.isInteger(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version))
+                            && ((parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) === 1) || (parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) === 2))) ?
+                            parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version) as 1 | 2 : 0;
+                        if (popcap_support_multiple_version === 0) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resource_support_argument}`));
+                            Console.WriteLine(`${Argument.Tre.Packages.old_popcap_support}`);
+                            Console.WriteLine(`${Argument.Tre.Packages.new_popcap_support}`);
+                        }
+                        else {
+                            const generate_new_console_message: string = ((popcap_support_multiple_version as 1 | 2) === 1) ? localization("support_old_version") : localization("support_new_version");
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                        }
+                        let popcap_support_utilities_for_new_pvz2_international: boolean | number = (popcap_support_multiple_version === 0) ? Console.IntegerReadLine(1, 2) : popcap_support_multiple_version;
                         popcap_support_utilities_for_new_pvz2_international = (popcap_support_utilities_for_new_pvz2_international === 2) ? true : false;
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_support_trim}`));
-                        let popcap_support_trimming_mode_for_pvz2_texfmt_0: boolean | number = Console.IntegerReadLine(0, 1);
+                        const popcap_support_trim_for_argb8888: 1 | 2 | 0 = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim != undefined &&
+                            arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim != null &&
+                            arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim != void 0
+                            && (typeof (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) === "string" || Number.isInteger(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim))
+                            && ((parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) === 1) || (parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) === 0))) ?
+                            parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.trim) as 1 | 0 : 2;
+                        if (popcap_support_trim_for_argb8888 === 2) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_support_trim}`));
+                        }
+                        else {
+                            const generate_new_console_message: string = ((popcap_support_trim_for_argb8888 as 0 | 1) === 1) ? localization("auto_trim") : localization("no_trim");
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                        }
+                        let popcap_support_trimming_mode_for_pvz2_texfmt_0: boolean | number = (popcap_support_trim_for_argb8888 === 2) ? Console.IntegerReadLine(0, 1) : popcap_support_trim_for_argb8888 as 1 | 0;
                         popcap_support_trimming_mode_for_pvz2_texfmt_0 = (popcap_support_trimming_mode_for_pvz2_texfmt_0 === 1) ? true : false;
-                        await atlas_pack_experimental(file, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international, popcap_support_trimming_mode_for_pvz2_texfmt_0);
+
+                        const atlas_pack_size_view: number = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding != undefined && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding != null && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding != void 0 &&
+                            (typeof arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding === "string" || Number.isInteger(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding)) && arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding !== "?" && (parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding) >= 0 && parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding) <= width))
+                            ? parseInt(arguments_default_modifier.popcap_atlas_pack_advanced.arguments.padding) : -1;
+                        if ((atlas_pack_size_view === -1)) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`));
+                        }
+                        else {
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                        }
+                        const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, width) : atlas_pack_size_view;
+                        await atlas_pack_experimental(file, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international,
+                            popcap_support_trimming_mode_for_pvz2_texfmt_0, atlas_cat_padding_size);
                     }
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_atlas_pack_cross_resolution.void_number_readline_argument():
+        case "popcap_texture_atlas_pack_cross_resolution" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
                 width = Console.SizeReadLine();
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
                 height = Console.SizeReadLine();
+                const atlas_pack_size_view: number = (arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding != undefined && arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding != null && arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding != void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding === "string" || Number.isInteger(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding)) && arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !== "?" && (parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) >= 0 && parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) <= width))
+                    ? parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) : -1;
+                if ((atlas_pack_size_view === -1)) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`));
+                }
+                else {
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                }
+                const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, width) : atlas_pack_size_view;
                 await cross_resolution(execute_file_dir, (width), (height), Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
                     Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                     Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
-                    Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void);
+                    Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                    atlas_cat_padding_size);
             }
             else {
                 execute_file_dir.forEach(async file => {
@@ -415,15 +567,26 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                         width = Console.SizeReadLine();
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_height_argument}`));
                         height = Console.SizeReadLine();
+                        const atlas_pack_size_view: number = (arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding != undefined && arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding != null && arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding != void 0 &&
+                            (typeof arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding === "string" || Number.isInteger(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding)) && arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !== "?" && (parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) >= 0 && parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) <= width))
+                            ? parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) : -1;
+                        if ((atlas_pack_size_view === -1)) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`));
+                        }
+                        else {
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                        }
+                        const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, width) : atlas_pack_size_view;
                         await cross_resolution(file, (width), (height), Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
                             Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                             Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
-                            Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void);
+                            Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                            atlas_cat_padding_size);
                     }
                 })
             }
             break;
-        case Display.Tre.Function.popcap_resources_local_data_compare.void_number_readline_argument():
+        case "popcap_resources_local_data_compare" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.local_compare_received}`));
                 Console.WriteLine(execute_file_dir);
@@ -443,7 +606,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_atlas_cat.void_number_readline_argument():
+        case "popcap_texture_atlas_cat" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
                 width = Console.SizeReadLine();
@@ -517,7 +680,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_resize_atlas_simple.void_number_readline_argument():
+        case "popcap_texture_resize_atlas_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_atlas_member_resize_original_quality}`));
                 let orig: number = Console.TextureQualityReadLine();
@@ -537,7 +700,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_json_to_rton.void_number_readline_argument():
+        case "popcap_json_to_rton" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 json_to_rton(execute_file_dir);
             }
@@ -547,7 +710,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_rton_encode_and_encrypt.void_number_readline_argument():
+        case "popcap_rton_encode_and_encrypt" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 json_to_rton_and_encrypt(execute_file_dir);
             }
@@ -559,35 +722,71 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_resources_rewrite.void_number_readline_argument():
+        case "popcap_resources_rewrite" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_rewrite_mode}`));
-                Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe}`);
-                Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe_fix}`);
-                let mode_for_res_rewriter = Console.IntegerReadLine(1, 2);
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
-                Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
-                Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
-                let encode_for_res_rewriter = Console.IntegerReadLine(0, 1);
+                const argument_checker_for_mode: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_rewrite.arguments.mode != undefined && arguments_default_modifier.popcap_resources_rewrite.arguments.mode != null && arguments_default_modifier.popcap_resources_rewrite.arguments.mode != void 0 &&
+                    (typeof arguments_default_modifier.popcap_resources_rewrite.arguments.mode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_rewrite.arguments.mode)) && arguments_default_modifier.popcap_resources_rewrite.arguments.mode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.mode) === 1 || parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.mode) === 2))
+                    ? parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.mode) as 1 | 2 : 0;
+                if ((argument_checker_for_mode === 0)) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_rewrite_mode}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe_fix}`);
+                }
+                if ((argument_checker_for_mode !== 0)) {
+                    const execution_information_message: string = (argument_checker_for_mode === 1) ? localization("res_rewrite_mode_safe") : localization("res_rewrite_mode_safe_fix");
+                    fs_js.execution_auto(`${localization("popcap_resources_rewrite")} ~ ${execution_information_message}`);
+                }
+                const mode_for_res_rewriter: number = (argument_checker_for_mode !== 0) ? argument_checker_for_mode : Console.IntegerReadLine(1, 2);
+                const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_rewrite.arguments.encode != undefined && arguments_default_modifier.popcap_resources_rewrite.arguments.encode != null && arguments_default_modifier.popcap_resources_rewrite.arguments.encode != void 0 &&
+                    (typeof arguments_default_modifier.popcap_resources_rewrite.arguments.encode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_rewrite.arguments.encode)) && arguments_default_modifier.popcap_resources_rewrite.arguments.encode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.encode) === 1 || parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.encode) === 0))
+                    ? (parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.encode) as 0 | 1) : 2;
+                if (argument_checker_for_encoding === 2) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
+                }
+                if ((argument_checker_for_encoding !== 2)) {
+                    const execution_information_message: string = (argument_checker_for_encoding === 0) ? localization("res_cat_concat_no_encode_rton") : localization("res_cat_concat_encode_rton");
+                    fs_js.execution_auto(`${localization("popcap_resources_rewrite")} ~ ${execution_information_message}`);
+                }
+                const encode_for_res_rewriter: number = (argument_checker_for_encoding === 2) ? Console.IntegerReadLine(0, 1) : argument_checker_for_encoding;
                 res_rewrite(execute_file_dir, mode_for_res_rewriter, encode_for_res_rewriter);
             }
             else {
                 execute_file_dir.forEach(file => {
                     if (fs_js.popcap_check_extname(file, ".json")) {
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_rewrite_mode}`));
-                        Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe}`);
-                        Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe_fix}`);
-                        let mode_for_res_rewriter = Console.IntegerReadLine(1, 2);
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
-                        Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
-                        Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
-                        let encode_for_res_rewriter = Console.IntegerReadLine(0, 1);
+                        const argument_checker_for_mode: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_rewrite.arguments.mode != undefined && arguments_default_modifier.popcap_resources_rewrite.arguments.mode != null && arguments_default_modifier.popcap_resources_rewrite.arguments.mode != void 0 &&
+                            (typeof arguments_default_modifier.popcap_resources_rewrite.arguments.mode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_rewrite.arguments.mode)) && arguments_default_modifier.popcap_resources_rewrite.arguments.mode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.mode) === 1 || parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.mode) === 2))
+                            ? parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.mode) as 1 | 2 : 0;
+                        if ((argument_checker_for_mode === 0)) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_rewrite_mode}`));
+                            Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe}`);
+                            Console.WriteLine(`${Argument.Tre.Packages.res_rewrite_mode_safe_fix}`);
+                        }
+                        if ((argument_checker_for_mode !== 0)) {
+                            const execution_information_message: string = (argument_checker_for_mode === 1) ? localization("res_rewrite_mode_safe") : localization("res_rewrite_mode_safe_fix");
+                            fs_js.execution_auto(`${localization("popcap_resources_rewrite")} ~ ${execution_information_message}`);
+                        }
+                        const mode_for_res_rewriter: number = (argument_checker_for_mode !== 0) ? argument_checker_for_mode : Console.IntegerReadLine(1, 2);
+                        const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_resources_rewrite.arguments.encode != undefined && arguments_default_modifier.popcap_resources_rewrite.arguments.encode != null && arguments_default_modifier.popcap_resources_rewrite.arguments.encode != void 0 &&
+                            (typeof arguments_default_modifier.popcap_resources_rewrite.arguments.encode === "string" || Number.isInteger(arguments_default_modifier.popcap_resources_rewrite.arguments.encode)) && arguments_default_modifier.popcap_resources_rewrite.arguments.encode !== "?" && (parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.encode) === 1 || parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.encode) === 0))
+                            ? (parseInt(arguments_default_modifier.popcap_resources_rewrite.arguments.encode) as 0 | 1) : 2;
+                        if (argument_checker_for_encoding === 2) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
+                        }
+                        if ((argument_checker_for_encoding !== 2)) {
+                            const execution_information_message: string = (argument_checker_for_encoding === 0) ? localization("res_cat_concat_no_encode_rton") : localization("res_cat_concat_encode_rton");
+                            fs_js.execution_auto(`${localization("popcap_resources_rewrite")} ~ ${execution_information_message}`);
+                        }
+                        const encode_for_res_rewriter: number = (argument_checker_for_encoding === 2) ? Console.IntegerReadLine(0, 1) : argument_checker_for_encoding;
                         res_rewrite(file, mode_for_res_rewriter, encode_for_res_rewriter);
                     }
                 })
             }
             break;
-        case Display.Tre.Function.popcap_game_json_split.void_number_readline_argument():
+        case "popcap_game_json_split" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_rewrite_mode}`));
                 const popcap_json_split_mode_selector: number = Console.IntegerReadLine(1, 2);
@@ -603,7 +802,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_game_json_pack.void_number_readline_argument():
+        case "popcap_game_json_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 PopCapPackages.Json.CatToFile(execute_file_dir);
             }
@@ -615,7 +814,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_old_resources_conversion_to_new_resources.void_number_readline_argument():
+        case "popcap_old_resources_conversion_to_new_resources" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 let old_to_new_conversion: AdaptPvZ2InternationalResPath.res_conversion = new AdaptPvZ2InternationalResPath.res_conversion();
                 old_to_new_conversion.write_fs_js_json(execute_file_dir, 1);
@@ -629,7 +828,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_new_resources_conversion_to_old_resources.void_number_readline_argument():
+        case "popcap_new_resources_conversion_to_old_resources" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 let old_to_new_conversion: AdaptPvZ2InternationalResPath.res_conversion = new AdaptPvZ2InternationalResPath.res_conversion();
                 old_to_new_conversion.write_fs_js_json(execute_file_dir, 2);
@@ -643,7 +842,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_resources_beautify.void_number_readline_argument():
+        case "popcap_resources_beautify" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 small_res_beautify(execute_file_dir);
             }
@@ -655,7 +854,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_resources_to_atlasinfo.void_number_readline_argument():
+        case "popcap_resources_to_atlasinfo" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_res_to_atlasinfo_notify_atlas_info_method}`));
                 let method_for_res_to_atlas_info: number | string = Console.IntegerReadLine(1, 2);
@@ -673,21 +872,31 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_texture_atlas_split.void_number_readline_argument():
+        case "popcap_texture_atlas_split" as popcap_game_edit_method:
             if (js_checker.is_array(execute_file_dir)) {
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.method_split_popcap_atlas_texture}`));
-                Console.WriteLine((`${Argument.Tre.Packages.method_split_popcap_atlas_texture_with_path_extension}`));
-                Console.WriteLine((`${Argument.Tre.Packages.method_split_popcap_atlas_texture_with_id_extension}`));
-                let atlas_split_method: any = Console.IntegerReadLine(1, 2);
-                await atlas_split(parseInt(atlas_split_method), execute_file_dir);
+                const argument_checker_for_splitting_method: 0 | 1 | 2 = (arguments_default_modifier.popcap_texture_atlas_split.arguments.split != undefined && arguments_default_modifier.popcap_texture_atlas_split.arguments.split != null && arguments_default_modifier.popcap_texture_atlas_split.arguments.split != void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_split.arguments.split === "string" || Number.isInteger(arguments_default_modifier.popcap_texture_atlas_split.arguments.split)) && arguments_default_modifier.popcap_texture_atlas_split.arguments.split !== "?" && (parseInt(arguments_default_modifier.popcap_texture_atlas_split.arguments.split) === 1 || parseInt(arguments_default_modifier.popcap_texture_atlas_split.arguments.split) === 2))
+                    ? parseInt(arguments_default_modifier.popcap_texture_atlas_split.arguments.split) as 1 | 2 : 0;
+                if ((argument_checker_for_splitting_method === 0)) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.method_split_popcap_atlas_texture}`));
+                    Console.WriteLine((`${Argument.Tre.Packages.method_split_popcap_atlas_texture_with_path_extension}`));
+                    Console.WriteLine((`${Argument.Tre.Packages.method_split_popcap_atlas_texture_with_id_extension}`));;
+                }
+                else {
+                    const create_new_message_console_out: string = (argument_checker_for_splitting_method === 1) ? localization("method_split_popcap_atlas_texture_with_path_extension")
+                        : localization("method_split_popcap_atlas_texture_with_id_extension");
+                    fs_js.execution_auto(localization("popcap_texture_atlas_split") + " ~ " + create_new_message_console_out);
+                }
+                let atlas_split_method: number = (argument_checker_for_splitting_method === 0) ? Console.IntegerReadLine(1, 2) : argument_checker_for_splitting_method;
+                await atlas_split((atlas_split_method), execute_file_dir);
             }
             break;
-        case Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument():
+        case "popcap_atlas_split_experimental" as popcap_game_edit_method:
             if (js_checker.is_array(execute_file_dir)) {
                 await atlas_split_experimental(execute_file_dir);
             }
             break;
-        case Display.Tre.Function.atlas_info_split.void_number_readline_argument():
+        case "atlas_info_split" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 atlasinfo_split(execute_file_dir);
             }
@@ -699,7 +908,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.atlas_info_cat.void_number_readline_argument():
+        case "atlas_info_cat" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 atlasinfo_cat(execute_file_dir);
             }
@@ -711,7 +920,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_zlib_rsb_unpack.void_number_readline_argument():
+        case "popcap_zlib_rsb_unpack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_unpack(execute_file_dir, false, false);
             }
@@ -723,7 +932,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_rsb_unpack_simple.void_number_readline_argument():
+        case "popcap_rsb_unpack_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_unpack(execute_file_dir, true, false);
             }
@@ -733,7 +942,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_rsb_resource_unpack.void_number_readline_argument():
+        case "popcap_rsb_resource_unpack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_unpack(execute_file_dir, false, true);
             }
@@ -745,7 +954,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_zlib_rsb_pack.void_number_readline_argument():
+        case "popcap_zlib_rsb_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_pack(execute_file_dir, false, false);
             }
@@ -757,7 +966,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_rsb_resource_pack.void_number_readline_argument():
+        case "popcap_rsb_resource_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_pack(execute_file_dir, false, true);
             }
@@ -769,7 +978,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_rsb_pack_simple.void_number_readline_argument():
+        case "popcap_rsb_pack_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_pack(execute_file_dir, true, false);
             }
@@ -781,7 +990,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_zlib_smf_compress.void_number_readline_argument():
+        case "popcap_zlib_smf_compress" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.smf_compress(execute_file_dir);
             }
@@ -793,7 +1002,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_lawnstrings_convert_to_localization.void_number_readline_argument():
+        case "popcap_lawnstrings_convert_to_localization" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Lawnstrings.PopCap.WriteLocalizationJSON(execute_file_dir);
             }
@@ -805,7 +1014,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_lawnstrings_convert_from_localization.void_number_readline_argument():
+        case "popcap_lawnstrings_convert_from_localization" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Lawnstrings.PopCap.WritePopCapLawnstringsFromLocalizationLawnstrings(execute_file_dir);
             }
@@ -817,7 +1026,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.popcap_zlib_smf_decompress.void_number_readline_argument():
+        case "popcap_zlib_smf_decompress" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.smf_decompress(execute_file_dir);
             }
@@ -829,7 +1038,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 })
             }
             break;
-        case Display.Tre.Function.json_patch.void_number_readline_argument():
+        case "json_patch" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_ask_drag_file}`));
                 let json_apply_path: string = readline_for_json(execute_file_dir);
@@ -844,7 +1053,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 }
             }
             break;
-        case Display.Tre.Function.json_patch_generator.void_number_readline_argument():
+        case "json_patch_generator" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_execution_received}`));
                 Console.WriteLine(execute_file_dir);
@@ -855,7 +1064,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.json_patch_finish_write_patch}`));
             }
             break;
-        case Display.Tre.Function.popcap_lawnstrings_diff.void_number_readline_argument():
+        case "popcap_lawnstrings_diff" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_lawnstring_old_obtained}`));
                 Console.WriteLine(execute_file_dir);
@@ -864,7 +1073,7 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 Lawnstrings.PopCap.WriteDiffJSON(execute_file_dir, new_compare_json_diff);
             }
             break;
-        case Display.Tre.Function.real_esrgan_upscaler_bitmap_content.void_number_readline_argument():
+        case "real_esrgan_upscaler_bitmap_content" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir) && !check_if_the_directories_iz_folder) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.upscaler_real_esrgan_upscale_model}`));
                 Console.WriteLine("     1.realesr-animevideov3");
@@ -908,7 +1117,29 @@ async function execute_function_from_core(execute_file_dir: string | string[], o
                 await ImagesUtilities.real_esrgan(execute_file_dir, upscale_model, upscale_data, new_folder_contain_upscale_images, true);
             }
             break;
+        default:
+            break;
     }
     return;
 }
 export default execute_function_from_core;
+
+
+
+export {
+    writefile,
+    writejson,
+    basename,
+    delete_file,
+    read_single_folder,
+    read_dir,
+    readfilebuffer,
+    js_checker,
+    file_stats,
+    fs_js,
+    stringify,
+    parse,
+    resolveFilePath,
+    extra_system,
+    extname,
+}

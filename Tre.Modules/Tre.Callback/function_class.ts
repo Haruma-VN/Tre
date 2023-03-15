@@ -1,6 +1,6 @@
 "use strict";
 export default class Void {
-    constructor(private name: string, private void_number: number, private filter: Array<string>, private allow: bool) { }
+    constructor(private name: string, private void_number: number, private filter: Array<string>, private allow: boolean) { }
 
     //#region Class Display
     public display(): string {
@@ -38,12 +38,12 @@ export default class Void {
     }
 
     public static_filter(
-    ): Array<str> {
+    ): Array<string> {
         return this.filter;
     }
 
     public static_allowance(
-    ): bool {
+    ): boolean {
         return this.allow;
     }
     //#endregion

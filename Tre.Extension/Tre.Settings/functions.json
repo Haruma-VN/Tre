@@ -18,14 +18,42 @@
             ".res"
         ],
         "allow": true,
-        "option": 3
+        "option": 3,
+        "arguments": {
+            "#comment": [
+                "Mode available, please choose one and fill in, the mode can only be a question mark or a number",
+                "? : The tool will likely to ask this argument",
+                "1 : The tool will set the default behavior of this function to concat regular (which mean it does not repair resources)",
+                "2 : The tool will set the default behavior of this function to concat beautify (which mean it does repair resources)",
+                "Encoding available, please choose one and fill in, the mode can only be a question mark or a number",
+                "? : The tool will likely to ask this argument",
+                "0 : The tool will set the default behavior of this function to return the resources file as .json",
+                "1 : The tool will set the default behavior of this function to return the resources file as .rton"
+            ],
+            "mode": "?",
+            "encode": "?"
+        }
     },
     "popcap_resources_rewrite": {
         "filter": [
             ".json"
         ],
         "allow": true,
-        "option": 4
+        "option": 4,
+        "arguments": {
+            "#comment": [
+                "Mode available, please choose one and fill in, the mode can only be a question mark or a number",
+                "? : The tool will likely to ask this argument",
+                "1 : The tool will set the default behavior of this function to rewrite regular (which mean it does not repair resources)",
+                "2 : The tool will set the default behavior of this function to rewrite beautify (which mean it does repair resources)",
+                "Encoding available, please choose one and fill in, the mode can only be a question mark or a number",
+                "? : The tool will likely to ask this argument",
+                "0 : The tool will set the default behavior of this function to return the resources file as .json",
+                "1 : The tool will set the default behavior of this function to return the resources file as .rton"
+            ],
+            "mode": "?",
+            "encode": "?"
+        }
     },
     "popcap_old_resources_conversion_to_new_resources": {
         "filter": [
@@ -84,7 +112,9 @@
         "option": 12
     },
     "atlas_info_constructor": {
-        "filter": [],
+        "filter": [
+            "./"
+        ],
         "allow": true,
         "option": 13
     },
@@ -93,21 +123,41 @@
             "$*/"
         ],
         "allow": true,
-        "option": 14
+        "option": 14,
+        "arguments": {
+            "#comment": [
+                "Split available, please choose one and fill in, the mode can only be a question mark or a number",
+                "? : The tool will likely to ask this argument",
+                "1 : The tool will set the default behavior of this function to split by path, this could have some bugs with pvz2c but the filename will be short, useful for making PAM",
+                "2 : The tool will set the default behavior of this function to split by id, this will not appear to have any bugs but the filename will be long"
+            ],
+            "split": "?"
+        }
     },
     "popcap_texture_atlas_cat_simple": {
         "filter": [
             ".spg"
         ],
         "allow": true,
-        "option": 15
+        "option": 15,
+        "arguments": {
+            "padding": 1
+        }
     },
     "popcap_texture_atlas_cat": {
         "filter": [
             ".spg"
         ],
+        "#todo": "todo",
         "allow": true,
-        "option": 16
+        "option": 16,
+        "arguments": {
+            "smart": "?",
+            "pot": "?",
+            "square": "?",
+            "rotation": "?",
+            "padding": "?"
+        }
     },
     "popcap_texture_encode_rgba8888": {
         "filter": [
@@ -199,7 +249,12 @@
             ".png"
         ],
         "allow": true,
-        "option": 29
+        "option": 29,
+        "#todo": "todo",
+        "arguments": {
+            "model": "?",
+            "scale": "?"
+        }
     },
     "popcap_zlib_rsgp_unpack": {
         "filter": [
@@ -250,14 +305,20 @@
             ".json"
         ],
         "allow": true,
-        "option": 36
+        "option": 36,
+        "arguments": {
+            "method": "?"
+        }
     },
     "popcap_game_json_pack": {
         "filter": [
             ".pgj"
         ],
         "allow": true,
-        "option": 37
+        "option": 37,
+        "arguments": {
+            "encode": "?"
+        }
     },
     "json_patch": {
         "filter": [
@@ -278,7 +339,10 @@
             ".spg"
         ],
         "allow": true,
-        "option": 40
+        "option": 40,
+        "arguments": {
+            "padding": 1
+        }
     },
     "popcap_lawnstrings_diff": {
         "filter": [
@@ -341,14 +405,37 @@
             ".spg"
         ],
         "allow": true,
-        "option": 49
+        "option": 49,
+        "arguments": {
+            "#comment": [
+                "Subgroup available: $ & ?",
+                "$ : Instantly taking directory as subgroup name, no asking",
+                "? : The tool will likely to ask this argument",
+                "Support PvZ2 International new version",
+                "1 : will likely set the tool to 10.3 or lower",
+                "2 : will likely set the tool to 10.4 or above",
+                "? : The tool will likely to ask this argument",
+                "Trim Support PvZ2 texture format 0 such as ARGB8888 & RGBA8888",
+                "? : The tool will likely to ask this argument",
+                "0: No trim",
+                "1: Auto trim",
+                "Padding Support: ? and any Integer number"
+            ],
+            "subgroup": "?",
+            "support_pvz2_int_new_version": "?",
+            "trim": "?",
+            "padding": 1
+        }
     },
     "popcap_rsgp_unpack_simple": {
         "filter": [
             ".rsgp"
         ],
         "allow": true,
-        "option": 50
+        "option": 50,
+        "arguments": {
+            "texture_format_0_unsafe": "?"
+        }
     },
     "popcap_rsgp_pack_simple": {
         "filter": [
@@ -363,7 +450,11 @@
             ".obb"
         ],
         "allow": true,
-        "option": 52
+        "option": 52,
+        "arguments": {
+            "packages_conversion": "?",
+            "split_popcap_resources": "?"
+        }
     },
     "popcap_rsb_pack_simple": {
         "filter": [
@@ -378,7 +469,12 @@
             ".obb"
         ],
         "allow": true,
-        "option": 54
+        "option": 54,
+        "arguments": {
+            "packages_conversion": "?",
+            "decode_ptx": "?",
+            "texture_format_0_unsafe": "?"
+        }
     },
     "popcap_rsb_resource_pack": {
         "filter": [

@@ -7,3 +7,13 @@ declare type render_toolkit_expression = {
     allow: boolean,
     option: number,
 }
+
+declare type assertation_argument = string | Array<string>;
+
+declare type popcap_game_edit_method = string;
+
+declare type js_evaluate = string;
+
+declare type evaluation_method = number;
+
+declare type evaluation_error = string;

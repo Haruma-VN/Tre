@@ -25,7 +25,11 @@ export interface popcap_extra_information {
     cols?: number,
 }
 
-async function atlas_pack_experimental(directory: string, width: number, height: number, popcap_output_subgroup_name?: string, extend_for_new_pvz2_int_version: boolean = false, is_trim_mode:boolean = false) {
+async function atlas_pack_experimental(directory: string, width: number, height: number, 
+    popcap_output_subgroup_name?: string,
+    extend_for_new_pvz2_int_version: boolean = false,
+    is_trim_mode: boolean = false,
+    padding: number = 1) {
     if (popcap_output_subgroup_name === "" || popcap_output_subgroup_name === undefined || popcap_output_subgroup_name === null || popcap_output_subgroup_name === void 0) {
         popcap_output_subgroup_name = basename(directory);
     }
@@ -85,7 +89,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
         allowRotation: false,
     };
     const img_data = new Array();
-    let packer = new MaxRectsPacker(width, height, 1, options);
+    let packer = new MaxRectsPacker(width, height, padding, options);
     packer.addArray(img_list);
     packer.bins.forEach((bin: any) => {
         img_data.push(bin.rects);
@@ -101,7 +105,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     const dimension_array_value: Array<{ width: number, height: number }> = new Array();
     for (let i = 0; i < img_data.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i) : i;
-        dimension_array_value.push(is_trim_mode ? getTrim(img_data[i]) : {width: width, height: height});
+        dimension_array_value.push(is_trim_mode ? getTrim(img_data[i]) : { width: width, height: height });
         result_json.resources.push({
             slot: 0,
             id: "ATLASIMAGE_ATLAS_" + popcap_output_subgroup_name.toUpperCase() + "_" + count,
@@ -143,7 +147,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     for (let i = 0; i < append_array.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i.toString()) : i;
         await portal.cat(append_array[i], `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`, dimension_array_value[i].width, dimension_array_value[i].height);
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`)}`);
     };
     if (extend_for_new_pvz2_int_version) {
         for (let i: number = 0; i < result_json.resources.length; ++i) {
@@ -154,7 +158,7 @@ async function atlas_pack_experimental(directory: string, width: number, height:
     }
     file_system.writejson(directory + "/../" + popcap_output_subgroup_name + '.json', result_json);
     console.log(color.fggreen_string("◉ " + `${localization("execution_actual_size")}: `) + `${img_list.length}`);
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(directory + "/../" + popcap_output_subgroup_name + '.json')}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(directory + "/../" + popcap_output_subgroup_name + '.json')}`);
     return 0;
 }
 export default atlas_pack_experimental;

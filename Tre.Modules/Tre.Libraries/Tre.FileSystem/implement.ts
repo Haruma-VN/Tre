@@ -1907,12 +1907,24 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    public static readonly functions_json_location:str = this.get_full_path(process.cwd() + "/Tre.Extension/Tre.Settings/functions.json");
+    public static readonly functions_json_location: str = this.get_full_path(process.cwd() + "/Tre.Extension/Tre.Settings/functions.json");
 
 
 
     /*-------------------------------------------------------------------------------------------------*/
 
+    public static execution_auto(
+        ...message: Array<auto>
+    ): void {
+        //#region 
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_loaded") + ":")} ` + `${(text)}`);
+        //#endregion
+
+    }
 
 
 }

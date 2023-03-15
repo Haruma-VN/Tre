@@ -38,11 +38,12 @@ export default async function (dir: string, width: number, height: number, is_si
     cannot_find_groups_array_in_atlasinfo: string = "Cannot find groups array in AtlasInfo.json", cannot_find_subgroup_in_atlas_info: string = "Cannot find subgroup in AtlasInfo.json",
     cannot_find_method_in_atlas_info: string = "Cannot find method in AtlasInfo.json", cannot_get_res_data: string = "Cannot get res data",
     not_found_res_indicated_in_subgroups = "Not found res data indicated in subgroup",
-    total_sprites_process_in_thiz_function: string = "Total sprites process:", thiz_selection_max_rects_bin_iz_smart: boolean = true, thiz_selection_max_rects_bin_iz_pot: boolean = false,
-    thiz_selection_max_rects_bin_iz_square: boolean = true, thiz_selection_max_rects_bin_can_be_rotation: boolean = false, thiz_selection_max_rects_bin_padding_size: number = 1) {
-    const config_json: any = readjson(process.cwd() + "/Tre.Extension/Tre.Settings/toolkit.json", true);
-    let padding: number = config_json.atlas.max_rects_bin_pack_simple.padding;
-    thiz_selection_max_rects_bin_padding_size = (is_simple_pack) ? padding : thiz_selection_max_rects_bin_padding_size;
+    total_sprites_process_in_thiz_function: string = "Total sprites process:",
+    thiz_selection_max_rects_bin_iz_smart: boolean = true,
+    thiz_selection_max_rects_bin_iz_pot: boolean = false,
+    thiz_selection_max_rects_bin_iz_square: boolean = true,
+    thiz_selection_max_rects_bin_can_be_rotation: boolean = false,
+    thiz_selection_max_rects_bin_padding_size: number = 1) {
     const img_list = new Array();
     const atlas_info: any = readjson(dir + "/AtlasInfo.json");
     if (atlas_info.groups == undefined) {
@@ -150,7 +151,7 @@ export default async function (dir: string, width: number, height: number, is_si
     for (let i = 0; i < append_array.length; ++i) {
         const count = (i < 9 && i >= 0) ? ("0" + i.toString()) : i;
         await cat(append_array[i], `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`, dimension_array_value[i].width, dimension_array_value[i].height);
-        console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`)}`);
+        console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`)}`);
     };
     if (expand_path_for_new_version) {
         for (let i: number = 0; i < result_json.resources.length; ++i) {
@@ -161,6 +162,6 @@ export default async function (dir: string, width: number, height: number, is_si
     }
     writejson(dir + "/../" + atlas_info.subgroup + '.json', result_json);
     console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function}`) + `${img_list.length}`);
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(dir + "/../" + atlas_info.subgroup + '.json')}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(dir + "/../" + atlas_info.subgroup + '.json')}`);
     return 0;
 }

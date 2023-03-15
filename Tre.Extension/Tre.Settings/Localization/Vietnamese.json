@@ -139,8 +139,8 @@
 	"popcap_texture_atlas_resize": "Thay đổi kích thước PopCap Atlas",
 	"popcap_texture_atlas_resize_simple": "Thay đổi kích thước PopCap Atlas Đơn giản",
 	"popcap_texture_atlas_split": "Phân tách PopCap Atlas",
-	"popcap_texture_max_rects_bin_pack": "Đóng gói PopCap Atlas Max-Rects-Bin",
-	"popcap_texture_max_rects_bin_pack_simple": "Đóng gói PopCap Atlas Max-Rects-Bin Đơn gián",
+	"popcap_texture_max_rects_bin_pack": "Đóng gói PopCap Atlas",
+	"popcap_texture_max_rects_bin_pack_simple": "Đóng gói PopCap Atlas Đơn gián",
 	"popcap_zlib_rsgp_pack": "Đóng gói PopCap RSGP",
 	"popcap_zlib_rsgp_unpack": "Giải nén PopCap RSGP",
 	"pot": "Pot",
@@ -248,5 +248,11 @@
 	"not_a_rsb": "Không phải tệp RSB",
 	"is_encrypted_pvz2c_rton": "Mã Hóa RTON",
 	"unknown_ptx_format_detected": "Dạng format PTX không xác định. Chuyển hành vi mặc định về format 0",
-	"rton_file_is_not_encrypted": "Tệp RTON không hề mã hóa"
+	"rton_file_is_not_encrypted": "Tệp RTON không hề mã hóa",
+	"execution_loaded": "Thực thi đã tải",
+	"get_subgroup_name": "Lấy tên thư mục làm tên Subgroup",
+	"support_new_version": "Hỗ trợ phiên bản PvZ2 Chính thức từ 10.4 trở lên",
+	"support_old_version": "Hỗ trợ phiên bản PvZ2 Chính thức từ 10.3 trở xuống",
+	"auto_trim": "Cắt Atlas cho PopCap PTX định dạng 0",
+	"no_trim": "Không cắt Atlas cho PopCap PTX định dạng 0"
 }

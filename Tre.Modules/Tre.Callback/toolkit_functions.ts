@@ -16,220 +16,274 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("javascript_evaluate").filter,
         execution_evaluate_view("javascript_evaluate").allow
     );
-    export const popcap_resources_split = new Void(localization("popcap_resources_split"),
+    export const popcap_resources_split = new Void(
+        localization("popcap_resources_split"),
         execution_evaluate_view("popcap_resources_split").option,
         execution_evaluate_view("popcap_resources_split").filter,
         execution_evaluate_view("popcap_resources_split").allow);
-    export const popcap_resources_cat: Void = new Void(localization("popcap_resources_cat"),
+    export const popcap_resources_cat: Void = new Void(
+        localization("popcap_resources_cat"),
         execution_evaluate_view("popcap_resources_cat").option,
         execution_evaluate_view("popcap_resources_cat").filter,
         execution_evaluate_view("popcap_resources_cat").allow);
-    export const popcap_resources_rewrite: Void = new Void(localization("popcap_resources_rewrite"),
+    export const popcap_resources_rewrite: Void = new Void(
+        localization("popcap_resources_rewrite"),
         execution_evaluate_view("popcap_resources_rewrite").option,
         execution_evaluate_view("popcap_resources_rewrite").filter,
         execution_evaluate_view("popcap_resources_rewrite").allow);
-    export const popcap_old_resources_conversion_to_new_resources: Void = new Void(localization("popcap_old_resources_conversion_to_new_resources"),
+    export const popcap_old_resources_conversion_to_new_resources: Void = new Void(
+        localization("popcap_old_resources_conversion_to_new_resources"),
         execution_evaluate_view("popcap_old_resources_conversion_to_new_resources").option,
         execution_evaluate_view("popcap_old_resources_conversion_to_new_resources").filter,
         execution_evaluate_view("popcap_old_resources_conversion_to_new_resources").allow);
-    export const popcap_new_resources_conversion_to_old_resources: Void = new Void(localization("popcap_new_resources_conversion_to_old_resources"),
+    export const popcap_new_resources_conversion_to_old_resources: Void = new Void(
+        localization("popcap_new_resources_conversion_to_old_resources"),
         execution_evaluate_view("popcap_new_resources_conversion_to_old_resources").option,
         execution_evaluate_view("popcap_new_resources_conversion_to_old_resources").filter,
         execution_evaluate_view("popcap_new_resources_conversion_to_old_resources").allow);
-    export const popcap_resources_local_data_compare = new Void(localization("popcap_resources_local_compare"),
+    export const popcap_resources_local_data_compare = new Void(
+        localization("popcap_resources_local_compare"),
         execution_evaluate_view("popcap_resources_local_data_compare").option,
         execution_evaluate_view("popcap_resources_local_data_compare").filter,
         execution_evaluate_view("popcap_resources_local_data_compare").allow);
-    export const popcap_resources_to_tre_info = new Void(localization("popcap_resources_to_tre_info"),
+    export const popcap_resources_to_tre_info = new Void(
+        localization("popcap_resources_to_tre_info"),
         execution_evaluate_view("popcap_resources_to_tre_info").option,
         execution_evaluate_view("popcap_resources_to_tre_info").filter,
         execution_evaluate_view("popcap_resources_to_tre_info").allow);
-    export const popcap_resources_to_atlasinfo = new Void(localization("popcap_res_to_atlasinfo"),
+    export const popcap_resources_to_atlasinfo = new Void(
+        localization("popcap_res_to_atlasinfo"),
         execution_evaluate_view("popcap_resources_to_atlasinfo").option,
         execution_evaluate_view("popcap_resources_to_atlasinfo").filter,
         execution_evaluate_view("popcap_resources_to_atlasinfo").allow);
-    export const popcap_resources_beautify = new Void(localization("popcap_res_beautify"),
+    export const popcap_resources_beautify = new Void(
+        localization("popcap_res_beautify"),
         execution_evaluate_view("popcap_resources_beautify").option,
         execution_evaluate_view("popcap_resources_beautify").filter,
         execution_evaluate_view("popcap_resources_beautify").allow);
-    export const atlas_info_split = new Void(localization("atlasinfo_split"),
+    export const atlas_info_split = new Void(
+        localization("atlasinfo_split"),
         execution_evaluate_view("atlas_info_split").option,
         execution_evaluate_view("atlas_info_split").filter,
         execution_evaluate_view("atlas_info_split").allow);
-    export const atlas_info_cat = new Void(localization("atlasinfo_cat"),
+    export const atlas_info_cat = new Void(
+        localization("atlasinfo_cat"),
         execution_evaluate_view("atlas_info_cat").option,
         execution_evaluate_view("atlas_info_cat").filter,
         execution_evaluate_view("atlas_info_cat").allow);
     // // todo
-    export const atlas_info_constructor = new Void(localization("atlasinfo_constructor"),
+    export const atlas_info_constructor = new Void(
+        localization("atlasinfo_constructor"),
         execution_evaluate_view("atlas_info_constructor").option,
         execution_evaluate_view("atlas_info_constructor").filter,
         execution_evaluate_view("atlas_info_constructor").allow);
-    export const popcap_texture_atlas_split = new Void(localization("popcap_texture_atlas_split"),
+    export const popcap_texture_atlas_split = new Void(
+        localization("popcap_texture_atlas_split"),
         execution_evaluate_view("popcap_texture_atlas_split").option,
         execution_evaluate_view("popcap_texture_atlas_split").filter,
         execution_evaluate_view("popcap_texture_atlas_split").allow);
-    export const popcap_texture_atlas_cat_simple = new Void(localization("popcap_texture_max_rects_bin_pack_simple"),
+    export const popcap_texture_atlas_cat_simple = new Void(
+        localization("popcap_texture_max_rects_bin_pack_simple"),
         execution_evaluate_view("popcap_texture_atlas_cat_simple").option,
         execution_evaluate_view("popcap_texture_atlas_cat_simple").filter,
         execution_evaluate_view("popcap_texture_atlas_cat_simple").allow);
-    export const popcap_texture_atlas_cat = new Void(localization("popcap_texture_max_rects_bin_pack"),
+    export const popcap_texture_atlas_cat = new Void(
+        localization("popcap_texture_max_rects_bin_pack"),
         execution_evaluate_view("popcap_texture_atlas_cat").option,
         execution_evaluate_view("popcap_texture_atlas_cat").filter,
         execution_evaluate_view("popcap_texture_atlas_cat").allow);
-    export const popcap_texture_encode_rgba8888 = new Void(`PopCap PTX RGBA8888 ${localization("encode")} (0)`,
+    export const popcap_texture_encode_rgba8888 = new Void(
+        `PopCap PTX RGBA8888 ${localization("encode")} (0)`,
         execution_evaluate_view("popcap_texture_encode_rgba8888").option,
         execution_evaluate_view("popcap_texture_encode_rgba8888").filter,
         execution_evaluate_view("popcap_texture_encode_rgba8888").allow);
-    export const popcap_texture_encode_argb8888 = new Void(`PopCap PTX ARGB8888 ${localization("encode")} (0)`,
+    export const popcap_texture_encode_argb8888 = new Void(
+        `PopCap PTX ARGB8888 ${localization("encode")} (0)`,
         execution_evaluate_view("popcap_texture_encode_argb8888").option,
         execution_evaluate_view("popcap_texture_encode_argb8888").filter,
         execution_evaluate_view("popcap_texture_encode_argb8888").allow);
-    export const popcap_texture_encode_pvrtc = new Void(`PopCap PTX RGB_PVRTC4_A_8 ${localization("encode")} (30)`,
+    export const popcap_texture_encode_pvrtc = new Void(
+        `PopCap PTX RGB_PVRTC4_A_8 ${localization("encode")} (30)`,
         execution_evaluate_view("popcap_texture_encode_pvrtc").option,
         execution_evaluate_view("popcap_texture_encode_pvrtc").filter,
         execution_evaluate_view("popcap_texture_encode_pvrtc").allow);
-    export const popcap_texture_encode_etc1a = new Void(`PopCap PTX RGB_ETC1_A_8 ${localization("encode")} (147)`,
+    export const popcap_texture_encode_etc1a = new Void(
+        `PopCap PTX RGB_ETC1_A_8 ${localization("encode")} (147)`,
         execution_evaluate_view("popcap_texture_encode_etc1a").option,
         execution_evaluate_view("popcap_texture_encode_etc1a").filter,
         execution_evaluate_view("popcap_texture_encode_etc1a").allow);
-    export const popcap_texture_encode_etc1a_index = new Void(`PopCap PTX RGB_ETC1_A_8_Index ${localization("encode")} (147)`,
+    export const popcap_texture_encode_etc1a_index = new Void(
+        `PopCap PTX RGB_ETC1_A_8_Index ${localization("encode")} (147)`,
         execution_evaluate_view("popcap_texture_encode_etc1a_index").option,
         execution_evaluate_view("popcap_texture_encode_etc1a_index").filter,
         execution_evaluate_view("popcap_texture_encode_etc1a_index").allow);
-    export const popcap_texture_decode_rgba8888 = new Void(`PopCap PTX RGBA8888 ${localization("decode")} (0)`,
+    export const popcap_texture_decode_rgba8888 = new Void(
+        `PopCap PTX RGBA8888 ${localization("decode")} (0)`,
         execution_evaluate_view("popcap_texture_decode_rgba8888").option,
         execution_evaluate_view("popcap_texture_decode_rgba8888").filter,
         execution_evaluate_view("popcap_texture_decode_rgba8888").allow);
-    export const popcap_texture_decode_argb8888 = new Void(`PopCap PTX ARGB8888 ${localization("decode")} (0)`,
+    export const popcap_texture_decode_argb8888 = new Void(
+        `PopCap PTX ARGB8888 ${localization("decode")} (0)`,
         execution_evaluate_view("popcap_texture_decode_argb8888").option,
         execution_evaluate_view("popcap_texture_decode_argb8888").filter,
         execution_evaluate_view("popcap_texture_decode_argb8888").allow);
-    export const popcap_texture_decode_pvrtc = new Void(`PopCap PTX RGB_PVRTC4_A_8 ${localization("decode")} (30)`,
+    export const popcap_texture_decode_pvrtc = new Void(
+        `PopCap PTX RGB_PVRTC4_A_8 ${localization("decode")} (30)`,
         execution_evaluate_view("popcap_texture_decode_pvrtc").option,
         execution_evaluate_view("popcap_texture_decode_pvrtc").filter,
         execution_evaluate_view("popcap_texture_decode_pvrtc").allow);
-    export const popcap_texture_decode_etc1a = new Void(`PopCap PTX RGB_ETC1_A_8 ${localization("decode")} (147)`,
+    export const popcap_texture_decode_etc1a = new Void(
+        `PopCap PTX RGB_ETC1_A_8 ${localization("decode")} (147)`,
         execution_evaluate_view("popcap_texture_decode_etc1a").option,
         execution_evaluate_view("popcap_texture_decode_etc1a").filter,
         execution_evaluate_view("popcap_texture_decode_etc1a").allow);
-    export const popcap_texture_decode_etc1a_index = new Void(`PopCap PTX RGB_ETC1_A_8_Index ${localization("decode")} (147)`,
+    export const popcap_texture_decode_etc1a_index = new Void(
+        `PopCap PTX RGB_ETC1_A_8_Index ${localization("decode")} (147)`,
         execution_evaluate_view("popcap_texture_decode_etc1a_index").option,
         execution_evaluate_view("popcap_texture_decode_etc1a_index").filter,
         execution_evaluate_view("popcap_texture_decode_etc1a_index").allow);
-    export const popcap_texture_resize_atlas_simple = new Void(localization("popcap_texture_atlas_resize_simple"),
+    export const popcap_texture_resize_atlas_simple = new Void(
+        localization("popcap_texture_atlas_resize_simple"),
         execution_evaluate_view("popcap_texture_resize_atlas_simple").option,
         execution_evaluate_view("popcap_texture_resize_atlas_simple").filter,
         execution_evaluate_view("popcap_texture_resize_atlas_simple").allow);
-    export const popcap_texture_resize_atlas = new Void(localization("popcap_texture_atlas_resize"),
+    export const popcap_texture_resize_atlas = new Void(
+        localization("popcap_texture_atlas_resize"),
         execution_evaluate_view("popcap_texture_resize_atlas").option,
         execution_evaluate_view("popcap_texture_resize_atlas").filter,
         execution_evaluate_view("popcap_texture_resize_atlas").allow);
-    export const real_esrgan_upscaler_bitmap_content = new Void(localization("third_party_real_esrgan_upscaler"),
+    export const real_esrgan_upscaler_bitmap_content = new Void(
+        localization("third_party_real_esrgan_upscaler"),
         execution_evaluate_view("real_esrgan_upscaler_image").option,
         execution_evaluate_view("real_esrgan_upscaler_image").filter,
         execution_evaluate_view("real_esrgan_upscaler_image").allow);
-    export const popcap_zlib_rsgp_unpack = new Void(localization("popcap_zlib_rsgp_unpack"),
+    export const popcap_zlib_rsgp_unpack = new Void(
+        localization("popcap_zlib_rsgp_unpack"),
         execution_evaluate_view("popcap_zlib_rsgp_unpack").option,
         execution_evaluate_view("popcap_zlib_rsgp_unpack").filter,
         execution_evaluate_view("popcap_zlib_rsgp_unpack").allow);
-    export const popcap_zlib_rsgp_pack = new Void(localization("popcap_zlib_rsgp_pack"),
+    export const popcap_zlib_rsgp_pack = new Void(
+        localization("popcap_zlib_rsgp_pack"),
         execution_evaluate_view("popcap_zlib_rsgp_pack").option,
         execution_evaluate_view("popcap_zlib_rsgp_pack").filter,
         execution_evaluate_view("popcap_zlib_rsgp_pack").allow);
-    export const popcap_zlib_rsb_unpack = new Void(localization("popcap_game_data_rsb_unpack"),
+    export const popcap_zlib_rsb_unpack = new Void(
+        localization("popcap_game_data_rsb_unpack"),
         execution_evaluate_view("popcap_zlib_rsb_unpack").option,
         execution_evaluate_view("popcap_zlib_rsb_unpack").filter,
         execution_evaluate_view("popcap_zlib_rsb_unpack").allow);
-    export const popcap_zlib_rsb_pack = new Void(localization("popcap_game_data_rsb_pack"),
+    export const popcap_zlib_rsb_pack = new Void(
+        localization("popcap_game_data_rsb_pack"),
         execution_evaluate_view("popcap_zlib_rsb_pack").option,
         execution_evaluate_view("popcap_zlib_rsb_pack").filter,
         execution_evaluate_view("popcap_zlib_rsb_pack").allow);
-    export const popcap_zlib_smf_decompress = new Void(localization("popcap_smf_decompress"),
+    export const popcap_zlib_smf_decompress = new Void(
+        localization("popcap_smf_decompress"),
         execution_evaluate_view("popcap_zlib_smf_decompress").option,
         execution_evaluate_view("popcap_zlib_smf_decompress").filter,
         execution_evaluate_view("popcap_zlib_smf_decompress").allow);
-    export const popcap_zlib_smf_compress = new Void(localization("popcap_smf_compress"),
+    export const popcap_zlib_smf_compress = new Void(
+        localization("popcap_smf_compress"),
         execution_evaluate_view("popcap_zlib_smf_compress").option,
         execution_evaluate_view("popcap_zlib_smf_compress").filter,
         execution_evaluate_view("popcap_zlib_smf_compress").allow);
-    export const popcap_game_json_split = new Void(localization("popcap_game_packages_json_split"),
+    export const popcap_game_json_split = new Void(
+        localization("popcap_game_packages_json_split"),
         execution_evaluate_view("popcap_game_json_split").option,
         execution_evaluate_view("popcap_game_json_split").filter,
         execution_evaluate_view("popcap_game_json_split").allow);
-    export const popcap_game_json_pack = new Void(localization("popcap_game_packages_json_cat"),
+    export const popcap_game_json_pack = new Void(
+        localization("popcap_game_packages_json_cat"),
         execution_evaluate_view("popcap_game_json_pack").option,
         execution_evaluate_view("popcap_game_json_pack").filter,
         execution_evaluate_view("popcap_game_json_pack").allow);
-    export const json_patch = new Void(localization("json_patch"),
+    export const json_patch = new Void(
+        localization("json_patch"),
         execution_evaluate_view("json_patch").option,
         execution_evaluate_view("json_patch").filter,
         execution_evaluate_view("json_patch").allow);
-    export const json_patch_generator = new Void(localization("json_patch_generator"),
+    export const json_patch_generator = new Void(
+        localization("json_patch_generator"),
         execution_evaluate_view("json_patch_generator").option,
         execution_evaluate_view("json_patch_generator").filter,
         execution_evaluate_view("json_patch_generator").allow);
-    export const popcap_texture_atlas_pack_cross_resolution = new Void(localization("popcap_atlas_pack_cross_resolution"),
+    export const popcap_texture_atlas_pack_cross_resolution = new Void(
+        localization("popcap_atlas_pack_cross_resolution"),
         execution_evaluate_view("popcap_texture_atlas_pack_cross_resolution").option,
         execution_evaluate_view("popcap_texture_atlas_pack_cross_resolution").filter,
         execution_evaluate_view("popcap_texture_atlas_pack_cross_resolution").allow);
-    export const popcap_lawnstrings_diff = new Void(localization("popcap_lawnstrings_diff"),
+    export const popcap_lawnstrings_diff = new Void(
+        localization("popcap_lawnstrings_diff"),
         execution_evaluate_view("popcap_lawnstrings_diff").option,
         execution_evaluate_view("popcap_lawnstrings_diff").filter,
         execution_evaluate_view("popcap_lawnstrings_diff").allow);
-    export const popcap_lawnstrings_convert_to_localization = new Void(localization("popcap_lawnstrings_convert_to_localization"),
+    export const popcap_lawnstrings_convert_to_localization = new Void(
+        localization("popcap_lawnstrings_convert_to_localization"),
         execution_evaluate_view("popcap_lawnstrings_convert_to_localization").option,
         execution_evaluate_view("popcap_lawnstrings_convert_to_localization").filter,
         execution_evaluate_view("popcap_lawnstrings_convert_to_localization").allow);
-    export const popcap_lawnstrings_convert_from_localization = new Void(localization("popcap_lawnstrings_convert_from_localization"),
+    export const popcap_lawnstrings_convert_from_localization = new Void(
+        localization("popcap_lawnstrings_convert_from_localization"),
         execution_evaluate_view("popcap_lawnstrings_convert_from_localization").option,
         execution_evaluate_view("popcap_lawnstrings_convert_from_localization").filter,
         execution_evaluate_view("popcap_lawnstrings_convert_from_localization").allow);
-    export const popcap_rton_to_json = new Void(localization("rton_to_json"),
+    export const popcap_rton_to_json = new Void(
+        localization("rton_to_json"),
         execution_evaluate_view("popcap_rton_to_json").option,
         execution_evaluate_view("popcap_rton_to_json").filter,
         execution_evaluate_view("popcap_rton_to_json").allow);
-    export const popcap_json_to_rton = new Void(localization("json_to_rton"),
+    export const popcap_json_to_rton = new Void(
+        localization("json_to_rton"),
         execution_evaluate_view("popcap_json_to_rton").option,
         execution_evaluate_view("popcap_json_to_rton").filter,
         execution_evaluate_view("popcap_json_to_rton").allow);
-    export const popcap_rton_decrypt_and_decode = new Void(localization("popcap_rton_decrypt_and_decode"),
+    export const popcap_rton_decrypt_and_decode = new Void(
+        localization("popcap_rton_decrypt_and_decode"),
         execution_evaluate_view("popcap_rton_decrypt_and_decode").option,
         execution_evaluate_view("popcap_rton_decrypt_and_decode").filter,
         execution_evaluate_view("popcap_rton_decrypt_and_decode").allow);
-    export const popcap_rton_encode_and_encrypt = new Void(localization("popcap_rton_encode_and_encrypt"),
+    export const popcap_rton_encode_and_encrypt = new Void(
+        localization("popcap_rton_encode_and_encrypt"),
         execution_evaluate_view("popcap_rton_encode_and_encrypt").option,
         execution_evaluate_view("popcap_rton_encode_and_encrypt").filter,
         execution_evaluate_view("popcap_rton_encode_and_encrypt").allow);
-    export const popcap_atlas_split_experimental = new Void(localization("popcap_atlas_split_experimental"),
+    export const popcap_atlas_split_experimental = new Void(
+        localization("popcap_atlas_split_experimental"),
         execution_evaluate_view("popcap_atlas_split_advanced").option,
         execution_evaluate_view("popcap_atlas_split_advanced").filter,
         execution_evaluate_view("popcap_atlas_split_advanced").allow);
-    export const popcap_atlas_pack_experimental = new Void(localization("popcap_atlas_pack_experimental"),
+    export const popcap_atlas_pack_experimental = new Void(
+        localization("popcap_atlas_pack_experimental"),
         execution_evaluate_view("popcap_atlas_pack_advanced").option,
         execution_evaluate_view("popcap_atlas_pack_advanced").filter,
         execution_evaluate_view("popcap_atlas_pack_advanced").allow);
-    export const popcap_rsgp_unpack_simple = new Void(localization("popcap_rsgp_unpack_simple"),
+    export const popcap_rsgp_unpack_simple = new Void(
+        localization("popcap_rsgp_unpack_simple"),
         execution_evaluate_view("popcap_rsgp_unpack_simple").option,
         execution_evaluate_view("popcap_rsgp_unpack_simple").filter,
         execution_evaluate_view("popcap_rsgp_unpack_simple").allow);
-    export const popcap_rsgp_pack_simple = new Void(localization("popcap_rsgp_pack_simple"),
+    export const popcap_rsgp_pack_simple = new Void(
+        localization("popcap_rsgp_pack_simple"),
         execution_evaluate_view("popcap_rsgp_pack_simple").option,
         execution_evaluate_view("popcap_rsgp_pack_simple").filter,
         execution_evaluate_view("popcap_rsgp_pack_simple").allow);
-    export const popcap_rsb_unpack_simple = new Void(localization("popcap_rsb_unpack_simple"),
+    export const popcap_rsb_unpack_simple = new Void(
+        localization("popcap_rsb_unpack_simple"),
         execution_evaluate_view("popcap_rsb_unpack_simple").option,
         execution_evaluate_view("popcap_rsb_unpack_simple").filter,
         execution_evaluate_view("popcap_rsb_unpack_simple").allow);
-    export const popcap_rsb_pack_simple = new Void(localization("popcap_rsb_pack_simple"),
+    export const popcap_rsb_pack_simple = new Void(
+        localization("popcap_rsb_pack_simple"),
         execution_evaluate_view("popcap_rsb_pack_simple").option,
         execution_evaluate_view("popcap_rsb_pack_simple").filter,
         execution_evaluate_view("popcap_rsb_pack_simple").allow);
-    export const popcap_rsb_resource_unpack = new Void(localization("popcap_rsb_resource_unpack"),
+    export const popcap_rsb_resource_unpack = new Void(
+        localization("popcap_rsb_resource_unpack"),
         execution_evaluate_view("popcap_rsb_resource_unpack").option,
         execution_evaluate_view("popcap_rsb_resource_unpack").filter,
         execution_evaluate_view("popcap_rsb_resource_unpack").allow);
-    export const popcap_rsb_resource_pack = new Void(localization("popcap_rsb_resource_pack"),
+    export const popcap_rsb_resource_pack = new Void(
+        localization("popcap_rsb_resource_pack"),
         execution_evaluate_view("popcap_rsb_resource_pack").option,
         execution_evaluate_view("popcap_rsb_resource_pack").filter,
         execution_evaluate_view("popcap_rsb_resource_pack").allow);
