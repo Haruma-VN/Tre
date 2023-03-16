@@ -254,5 +254,22 @@
 	"support_new_version": "Hỗ trợ phiên bản PvZ2 Chính thức từ 10.4 trở lên",
 	"support_old_version": "Hỗ trợ phiên bản PvZ2 Chính thức từ 10.3 trở xuống",
 	"auto_trim": "Cắt Atlas cho PopCap PTX định dạng 0",
-	"no_trim": "Không cắt Atlas cho PopCap PTX định dạng 0"
+	"no_trim": "Không cắt Atlas cho PopCap PTX định dạng 0",
+	"set_default_behavior_to_true": "Thiết lập đối số truyền vào là đúng",
+	"set_default_behavior_to_false": "Thiết lập đối số truyền vào là sai",
+	"the_padding_should_be_in_range": "Kích thước thụt lề nên nằm trong khoảng",
+	"the_width_should_be_in_range": "Chiều rộng nên nằm trong khoảng",
+	"the_height_should_be_in_range": "Chiều cao nên nằm trong khoảng",
+	"available_texture_quality": "Chất lượng Texture khả thi",
+	"split_by_aliases": "Tách bằng PopCap JSON's Aliases",
+	"split_by_typename": "Tách bằng PopCap JSON's Typename",
+	"drag_the_json_to_apply_patch": "Thả đường dẫn tệp json để áp bản vá",
+	"drag_the_json_to_compare_and_generate_patch": "Thả đường dẫn tệp json để so sánh và tái tạo bản vá",
+	"realesr-animevideov3_preview": "realesr-animevideov3 sẽ cung cấp cho bạn tốc độ nhanh hơn và có khả năng lựa chọn",
+	"realesrgan-x4plus-anime_preview": "realesr-animevideov3 sẽ chậm hơn, nhưng sẽ cung cấp cho bạn chất lượng ảnh x4 tốt nhất",
+	"realesr-animevideov3_detail": "realesr-animevideov3 sẽ nâng ảnh gấp số lần bạn nhập",
+	"no_decode_rtons": "Không chuyển đổi RTON sang JSON",
+	"no_split_res": "Không tách PopCap Resources",
+	"split_popcap_res": "Tách PopCap Resources",
+	"no_decode_ptx": "Không Giải mã PopCap PTX"
 }

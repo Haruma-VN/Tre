@@ -1,6 +1,14 @@
 "use strict";
 export default class Void {
-    constructor(private name: string, private void_number: number, private filter: Array<string>, private allow: boolean) { }
+    
+    static count_void: number = 0;
+
+    constructor(private name: string, private void_number: number, private filter: Array<string>, private allow: boolean) {
+        Void.count_void++;
+        if(this.void_number < 0){
+            throw new Error(`${name} function number cannot be smaller than 0`);
+        }
+     }
 
     //#region Class Display
     public display(): string {

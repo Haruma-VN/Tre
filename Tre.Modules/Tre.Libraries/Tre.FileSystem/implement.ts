@@ -1921,11 +1921,72 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(`${color.fggreen_string("◉ " + localization("execution_loaded") + ":")} ` + `${(text)}`);
+        return console.log(`${color.fggreen_string("◉ " + localization("execution_loaded") + ":\n     ")} ` + `${(text)}`);
         //#endregion
 
     }
 
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static execution_boolean_view(
+    ): void {
+        //#region 
+        console.log(`      0. ${localization("set_default_behavior_to_false")}`);
+        console.log(`      1. ${localization("set_default_behavior_to_true")}`);
+        return
+        //#endregion
+
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static create_padding_argument(
+        min: number,
+        max: number,
+    ): void {
+        //#region 
+        console.log(
+            `${color.fgcyan_string("◉ " + localization("execution_information") + ": ")}` + `${localization("the_padding_should_be_in_range")} ${(min)} ~ ${max}`);
+        return
+        //#endregion
+
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static create_dimension_view(
+        view: "width" | "height",
+        min: number = 64,
+        max: number = 16384,
+    ): void {
+        //#region 
+        const create_evaluation_print_message: string = (view === "width") ? localization("the_width_should_be_in_range") : localization("the_height_should_be_in_range");
+        console.log(
+            `${color.fgcyan_string("◉ " + localization("execution_information") + ": ")}` + `${create_evaluation_print_message} ${(min)} ~ ${max}`);
+        return
+        //#endregion
+
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static create_texture_quality_argument(
+    ): void {
+        //#region 
+        console.log(
+            `${color.fgcyan_string("◉ " + localization("execution_information") + ":\n     ")}`
+            + `${localization("available_texture_quality")}: ${color.fggreen_string(`1536`)}, ${color.fggreen_string(`768`)}, ${color.fggreen_string(`384`)}, ${color.fggreen_string(`640`)}, ${color.fggreen_string(`1200`)}`);
+        return
+        //#endregion
+
+    }
 
 }
 

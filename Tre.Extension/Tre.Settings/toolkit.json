@@ -26,7 +26,7 @@
 	"debugger": {
 		"allow_tracking_bugs": true
 	},
-	"language": "Vietnamese",
+	"language": "English",
 	"popcap_rton_conversion": {
 		"rton": {
 			"rton_cipher": "65bd1b2305f46eb2806b935aab7630bb"

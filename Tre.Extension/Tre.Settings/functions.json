@@ -148,10 +148,16 @@
         "filter": [
             ".spg"
         ],
-        "#todo": "todo",
         "allow": true,
         "option": 16,
         "arguments": {
+            "#comment": [
+                "All commands here are supported with 0 & 1 except padding support more",
+                "? : The tool will likely to ask this argument",
+                "0 : The tool will set the default behavior to false (not apply for padding)",
+                "1 : The tool will set the default behavior to true (not apply for padding)",
+                "Padding Support: ? and any Integer number"
+            ],
             "smart": "?",
             "pot": "?",
             "square": "?",
@@ -249,12 +255,7 @@
             ".png"
         ],
         "allow": true,
-        "option": 29,
-        "#todo": "todo",
-        "arguments": {
-            "model": "?",
-            "scale": "?"
-        }
+        "option": 29
     },
     "popcap_zlib_rsgp_unpack": {
         "filter": [
@@ -452,8 +453,13 @@
         "allow": true,
         "option": 52,
         "arguments": {
-            "packages_conversion": "?",
-            "split_popcap_resources": "?"
+            "#comment": [
+                "? : The tool will likely to ask this argument",
+                "0 : The tool will set the default behavior to false",
+                "1 : The tool will set the default behavior to true"
+            ],
+            "packages_conversion": "1",
+            "split_popcap_resources": "1"
         }
     },
     "popcap_rsb_pack_simple": {
@@ -470,10 +476,13 @@
         ],
         "allow": true,
         "option": 54,
-        "arguments": {
+        "arguments": {"#comment": [
+            "? : The tool will likely to ask this argument",
+            "0 : The tool will set the default behavior to false",
+            "1 : The tool will set the default behavior to true"
+        ],
             "packages_conversion": "?",
-            "decode_ptx": "?",
-            "texture_format_0_unsafe": "?"
+            "decode_ptx": "?"
         }
     },
     "popcap_rsb_resource_pack": {

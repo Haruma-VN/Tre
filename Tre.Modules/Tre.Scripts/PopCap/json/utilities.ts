@@ -4,6 +4,7 @@ import { readjson, writejson, makefolder, check_is_file, read_dir } from "../../
 import { Console } from "../../../Tre.Callback/console.js";
 import localization from "../../../Tre.Callback/localization.js";
 import * as color from "../../../Tre.Libraries/Tre.Color/color.js";
+import { fs_js } from "../../../Tre.Callback/execute_from_core.js";
 
 namespace PopCapPackages.Json {
 
@@ -26,13 +27,13 @@ namespace PopCapPackages.Json {
 
     export function Split(popcap_common_json_file_location: string, popcap_split_method_selector: number): void {
         if (!check_is_file(popcap_common_json_file_location)) {
-            return Console.Notify("Asserted argument is not a valid file");
+            throw new Error(`${fs_js.get_full_path(popcap_common_json_file_location)} ${localization("is_a_directory_not_a_valid_json_file")}`);
         }
         const popcap_common_json = ReadJSONObject(popcap_common_json_file_location);
         const directory_contain_popcap_splitable_data: string = `${popcap_common_json_file_location}/../${path.parse(popcap_common_json_file_location).name}.pgj`;
         if (popcap_common_json.objects != undefined) {
             makefolder(directory_contain_popcap_splitable_data);
-            Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(directory_contain_popcap_splitable_data)}`);
+            Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(directory_contain_popcap_splitable_data)}`);
             for (let i: number = 0; i < popcap_common_json.objects.length; i++) {
                 switch (popcap_split_method_selector) {
                     case 1:
@@ -61,7 +62,7 @@ namespace PopCapPackages.Json {
 
     export function Cat(popcap_common_directory_file_location: string): PopCapCommonJSON | void {
         if (check_is_file(popcap_common_directory_file_location)) {
-            return Console.Notify("Asserted argument is not a valid directory");
+            throw new Error(`${fs_js.get_full_path(popcap_common_directory_file_location)} ${localization("not_a_directory")}`)
         }
         const popcap_in_common_jsons_list: string[] = read_dir(popcap_common_directory_file_location);
         const popcap_common_json_list: PopCapCommonJSONObject[] = new Array();
@@ -80,7 +81,7 @@ namespace PopCapPackages.Json {
 
     export function CatToFile(popcap_common_directory_file_location: string): void {
         const create_popcap_common_json_object = PopCapPackages.Json.Cat(popcap_common_directory_file_location) as PopCapCommonJSON;
-        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.json`)}`);
+        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.json`)}`);
         return writejson(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.json`, create_popcap_common_json_object)
     }
 

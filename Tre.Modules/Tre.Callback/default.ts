@@ -8,7 +8,8 @@ import { Argument } from "./toolkit_question.js";
 import version from "./Default/version.js";
 import localization from './localization.js';
 import exit_program from "./Default/exit.js";
-import {prompt} from '../../Tre.Modules/Tre.Progress/Readline/util.js';
+import { prompt } from '../../Tre.Modules/Tre.Progress/Readline/util.js';
+import fs_js from "../Tre.Libraries/Tre.FileSystem/implement.js";
 export default async function (): Promise<void> {
     Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd()} | ${version.tre_version} | ${localization("this.language")}`);
     const proc_arr: string[] = new Array();
@@ -55,6 +56,7 @@ export default async function (): Promise<void> {
     }
     if (proc_arr.length > 1) {
         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.execute_all_files_in_queue}`));
+        fs_js.execution_boolean_view();
         mode = await readline_integer(0, 1);
     }
     else {
@@ -79,7 +81,7 @@ export default async function (): Promise<void> {
                         try {
                             await functions((i + 1), proc_arr[i], proc_arr.length, mode);
                         } catch (error: any) {
-                            console.log(color.fgred_string(`◉ ${localization("execution_error")+":"} ${error.message}`));
+                            console.log(color.fgred_string(`◉ ${localization("execution_error") + ":"} ${error.message}`));
                             hasError = true;
                         }
                     }
@@ -111,7 +113,7 @@ export default async function (): Promise<void> {
         try {
             await functions(1, proc_arr, 1, mode);
         } catch (error: any) {
-            console.log(color.fgred_string(`◉ ${localization("execution_error")+":"} ${error.message}`));
+            console.log(color.fgred_string(`◉ ${localization("execution_error") + ":"} ${error.message}`));
             hasError = true;
         }
     }

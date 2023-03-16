@@ -11,25 +11,83 @@ import { readline_integer } from '../../../../Tre.Progress/Readline/util.js';
 import * as fs_util from '../../../../Tre.Libraries/Tre.FileSystem/util.js';
 import localization from '../../../../Tre.Callback/localization.js';
 import * as color from "../../../../Tre.Libraries/Tre.Color/color.js";
+import fs_js from "../../../../Tre.Libraries/Tre.FileSystem/implement.js";
 export default async function (rsb_data_will_not_be_cipher: any, simple: boolean = false, unpack_everything: boolean = false) {
     let decode_rton = false;
     let decode_ptx = false;
     let splitres = false;
     let ios_argb8888 = 0;
     const TreRSGPInfo = new Array();
+    const arguments_default_modifier: any = fs_js.read_json((fs_js.functions_json_location as string), true);
     if (simple) {
-        console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_rtons")}`));
-        decode_rton = readline_integer(0, 1) == 1 ? true : false;
+        const popcap_packages_conversion: 1 | 2 | 0 = (arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion != undefined &&
+            arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion != null &&
+            arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion != void 0
+            && (typeof (arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion) === "string" || Number.isInteger(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion))
+            && ((parseInt(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion) === 1) || (parseInt(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion) === 0))) ?
+            parseInt(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion) as 1 | 0 : 2;
+        if (popcap_packages_conversion === 2) {
+            console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_rtons")}`));
+            fs_js.execution_boolean_view();
+        }
+        else {
+            const create_new_print_message: string = (popcap_packages_conversion as 1 | 0 === 1) ? localization("decode_rtons") : localization("no_decode_rtons");
+            fs_js.execution_auto(`${localization("popcap_rsb_unpack_simple")} ~ ${create_new_print_message}`);
+        }
+        const create_new_empty_viewer = (popcap_packages_conversion === 2) ? readline_integer(0, 1) : popcap_packages_conversion;
+        decode_rton = create_new_empty_viewer === 1 ? true : false;
         if (decode_rton) {
-            console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("split_res")}`));
-            splitres = readline_integer(0, 1) == 1 ? true : false;
+            const support_popcap_resources_conversion: 1 | 2 | 0 = (arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources != undefined &&
+                arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources != null &&
+                arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources != void 0
+                && (typeof (arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources) === "string" || Number.isInteger(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources))
+                && ((parseInt(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources) === 1) || (parseInt(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources) === 0))) ?
+                parseInt(arguments_default_modifier.popcap_rsb_unpack_simple.arguments.split_popcap_resources) as 1 | 0 : 2;
+            if (support_popcap_resources_conversion === 2) {
+                console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("split_res")}`));
+                fs_js.execution_boolean_view();
+            }
+            else {
+                const create_new_print_message: string = (support_popcap_resources_conversion as 1 | 0 === 1) ? localization("split_popcap_res") : localization("no_split_res");
+                fs_js.execution_auto(`${localization("popcap_rsb_unpack_simple")} ~ ${create_new_print_message}`);
+            }
+            const split_res_boolean = (support_popcap_resources_conversion === 2) ? readline_integer(0, 1) : support_popcap_resources_conversion;
+            splitres = split_res_boolean == 1 ? true : false;
         }
     }
     else if (unpack_everything) {
-        console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_rtons")}`));
-        decode_rton = readline_integer(0, 1) == 1 ? true : false;
-        console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_ptx")}`));
-        decode_ptx = readline_integer(0, 1) == 1 ? true : false;
+        const popcap_packages_conversion: 1 | 2 | 0 = (arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion != undefined &&
+            arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion != null &&
+            arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion != void 0
+            && (typeof (arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion) === "string" || Number.isInteger(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion))
+            && ((parseInt(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion) === 1) || (parseInt(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion) === 0))) ?
+            parseInt(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.packages_conversion) as 1 | 0 : 2;
+        if (popcap_packages_conversion === 2) {
+            console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_rtons")}`));
+            fs_js.execution_boolean_view();
+        }
+        else {
+            const create_new_print_message: string = (popcap_packages_conversion as 1 | 0 === 1) ? localization("decode_rtons") : localization("no_decode_rtons");
+            fs_js.execution_auto(`${localization("popcap_rsb_resource_unpack")} ~ ${create_new_print_message}`);
+        }
+        const create_new_empty_viewer = (popcap_packages_conversion === 2) ? readline_integer(0, 1) : popcap_packages_conversion;
+        decode_rton = create_new_empty_viewer === 1 ? true : false;
+        const support_popcap_ptx_conversion: 1 | 2 | 0 = (arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx != undefined &&
+            arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx != null &&
+            arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx != void 0
+            && (typeof (arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx) === "string" || Number.isInteger(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx))
+            && ((parseInt(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx) === 1) || (parseInt(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx) === 0))) ?
+            parseInt(arguments_default_modifier.popcap_rsb_resource_unpack.arguments.decode_ptx) as 1 | 0 : 2;
+        if (support_popcap_ptx_conversion === 2) {
+            console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${localization("decode_ptx")}`));
+            fs_js.execution_boolean_view();
+        }
+        else {
+            const create_new_print_message: string = (support_popcap_ptx_conversion as 1 | 0 === 1) ? localization("decode_ptx") : localization("no_decode_ptx");
+            fs_js.execution_auto(`${localization("popcap_rsb_resource_unpack")} ~ ${create_new_print_message}`);
+        }
+        const create_new_decode_ptx_argument = (support_popcap_ptx_conversion === 2) ? readline_integer(0, 1) : support_popcap_ptx_conversion;
+        decode_ptx = create_new_decode_ptx_argument == 1 ? true : false;
         if (decode_ptx) {
             console.log(color.fgcyan_string(`◉ ${localization("execution_argument")}: ${parse(rsb_data_will_not_be_cipher).base} ${localization("ios_argb8888")}`));
             ios_argb8888 = readline_integer(0, 1) == 1 ? 1 : 0;

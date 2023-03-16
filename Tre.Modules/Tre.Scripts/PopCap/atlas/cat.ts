@@ -161,7 +161,7 @@ export default async function (dir: string, width: number, height: number, is_si
         }
     }
     writejson(dir + "/../" + atlas_info.subgroup + '.json', result_json);
-    console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function}`) + `${img_list.length}`);
     console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(dir + "/../" + atlas_info.subgroup + '.json')}`);
+    console.log(color.fggreen_string(`${total_sprites_process_in_thiz_function}`) + `${img_list.length}`);
     return 0;
 }
