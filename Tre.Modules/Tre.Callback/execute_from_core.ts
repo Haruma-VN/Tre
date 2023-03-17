@@ -26,6 +26,7 @@ import js_checker from "./Default/checker.js";
 import localization from "./localization.js";
 import fs_js from "../Tre.Libraries/Tre.FileSystem/implement.js";
 import { stringify, parse } from "../Tre.Libraries/Tre.JSONSystem/util.js";
+import { popcap_pam_decode, popcap_pam_encode } from "../Tre.Scripts/PopCap/pam/utilitity.js";
 
 async function execute_function_from_core(execute_file_dir: string | string[], method: string): Promise<void> {
     let width: number;
@@ -47,6 +48,26 @@ async function execute_function_from_core(execute_file_dir: string | string[], m
                     if (fs_js.js_check_extname(file, ".rton")) {
                         rton_decrypt_and_decode_to_json(file);
                     }
+                })
+            }
+            break;
+        case "popcap_pam_decode" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                await popcap_pam_decode(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    await popcap_pam_decode(file);
+                })
+            }
+            break;
+        case "popcap_pam_encode" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                await popcap_pam_encode(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    await popcap_pam_encode(file);
                 })
             }
             break;

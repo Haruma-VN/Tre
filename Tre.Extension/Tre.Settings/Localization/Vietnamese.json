@@ -271,5 +271,7 @@
 	"no_decode_rtons": "Không chuyển đổi RTON sang JSON",
 	"no_split_res": "Không tách PopCap Resources",
 	"split_popcap_res": "Tách PopCap Resources",
-	"no_decode_ptx": "Không Giải mã PopCap PTX"
+	"no_decode_ptx": "Không Giải mã PopCap PTX",
+	"popcap_pam_decode": "PopCap PAM sang JSON",
+	"popcap_pam_encode": "PopCap PAM JSON sang PAM"
 }

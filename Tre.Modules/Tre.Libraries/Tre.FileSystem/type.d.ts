@@ -139,3 +139,5 @@ declare type toolkit_json = {
         },
     },
 };
+
+declare type toolkit_error = NodeJS.ErrnoException;

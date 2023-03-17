@@ -161,6 +161,12 @@ async function create_evaluate_argument(
         case Display.Tre.Function.real_esrgan_upscaler_bitmap_content.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "real_esrgan_upscaler_bitmap_content" as popcap_game_edit_method);
             break;
+        case Display.Tre.Function.popcap_pam_encode.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_pam_encode" as popcap_game_edit_method);
+            break;
+        case Display.Tre.Function.popcap_pam_decode.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_pam_decode" as popcap_game_edit_method);
+            break;
         default:
             throw new Error(`Cannot find any module for this function, expected null`) as never;
     }

@@ -271,5 +271,7 @@
 	"no_decode_rtons": "No Decode RTONs",
 	"no_split_res": "No Split PopCap Resources",
 	"split_popcap_res": "Split PopCap Resources",
-	"no_decode_ptx": "No Decode PopCap PTX"
+	"no_decode_ptx": "No Decode PopCap PTX",
+	"popcap_pam_decode": "PopCap PAM to JSON",
+	"popcap_pam_encode": "PopCap PAM JSON to PAM"
 }

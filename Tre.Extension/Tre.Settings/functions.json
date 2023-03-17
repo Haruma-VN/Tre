@@ -252,7 +252,8 @@
     "real_esrgan_upscaler_image": {
         "filter": [
             "./",
-            ".png"
+            ".png",
+            ".jpg"
         ],
         "allow": true,
         "option": 29
@@ -491,5 +492,19 @@
         ],
         "allow": true,
         "option": 55
+    },
+    "popcap_pam_decode": {
+        "filter": [
+            ".pam"
+        ],
+        "allow": true,
+        "option": 56
+    },
+    "popcap_pam_encode": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 57
     }
 }

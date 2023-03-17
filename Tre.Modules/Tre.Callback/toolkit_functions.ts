@@ -287,6 +287,16 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_rsb_resource_pack").option,
         execution_evaluate_view("popcap_rsb_resource_pack").filter,
         execution_evaluate_view("popcap_rsb_resource_pack").allow);
+    export const popcap_pam_decode = new Void(
+        localization("popcap_pam_decode"),
+        execution_evaluate_view("popcap_pam_decode").option,
+        execution_evaluate_view("popcap_pam_decode").filter,
+        execution_evaluate_view("popcap_pam_decode").allow);
+    export const popcap_pam_encode = new Void(
+        localization("popcap_pam_encode"),
+        execution_evaluate_view("popcap_pam_encode").option,
+        execution_evaluate_view("popcap_pam_encode").filter,
+        execution_evaluate_view("popcap_pam_encode").allow);
 
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {
@@ -361,5 +371,7 @@ export namespace Display.Tre.Function {
             popcap_rsb_pack_simple,
             popcap_rsb_resource_unpack,
             popcap_rsb_resource_pack,
+            popcap_pam_decode,
+            popcap_pam_encode,
         ];
 }

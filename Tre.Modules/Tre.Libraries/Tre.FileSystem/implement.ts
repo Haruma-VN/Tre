@@ -207,9 +207,7 @@ class fs_js {
     ): void {
 
         //#region 
-        if (this.js_exists(file_system_directory_file_path_output)) {
             this.js_remove(file_system_directory_file_path_output);
-        }
 
         fs.mkdirSync(file_system_directory_file_path_output, {
             recursive: file_system_create_auto_recursive,
@@ -485,7 +483,7 @@ class fs_js {
         [x: string]: number;
     }> {
         //#region 
-        if (!this.js_exists(file_system_input_path)) {
+        if (this.js_exists(file_system_input_path)) {
             const create_image_nodejs_sharp_view: sharp.Sharp = sharp(file_system_input_path);
             const create_auto_view_dimension: sharp.Metadata = await create_image_nodejs_sharp_view.metadata();
 
@@ -1036,13 +1034,13 @@ class fs_js {
         }
         switch (notify) {
             case "success":
-                return console.log(`${color.fggreen_string("◉ " + localization("execution_finish") + ":")} ` + `${(text)}`);
+                return console.log(`${color.fggreen_string("◉ " + localization("execution_finish") + ":\n     ")} ` + `${(text)}`);
             case "failed":
                 return console.log(`${color.fgred_string("◉ " + localization("execution_failed") + ":")} ` + `${(text)}`);
             case "argument":
                 return console.log(`${color.fgcyan_string("◉ " + localization("execution_argument") + ":")} ` + `${(text)}`);
             case "received":
-                return console.log(`${color.fggreen_string("◉ " + localization("execution_received") + ":")} ` + `${(text)}`);
+                return console.log(`${color.fggreen_string("◉ " + localization("execution_received") + ":\n     ")} ` + `${(text)}`);
             case "void":
                 return console.log(`${color.fgwhite_string(text)}`);
             default:
@@ -1987,6 +1985,52 @@ class fs_js {
         //#endregion
 
     }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static async create_round_image(
+        file_system_input_path: str,
+        file_system_output_path?: str,
+    ): Promise<Void> {
+        //#region 
+        if (file_system_output_path === undefined || file_system_output_path === null || file_system_output_path === void 0) {
+            file_system_output_path = `${file_system_input_path}/../${this.js_basename(file_system_input_path)}.round.png`;
+        }
+        await sharp(file_system_input_path)
+            .composite([
+                {
+                    input: Buffer.from(
+                        `<svg><circle cx="250" cy="250" r="250"/></svg>`
+                    ),
+                    blend: 'dest-in',
+                },
+            ])
+            .png()
+            .toFile(file_system_output_path)
+            .then(() => {
+                this.assertation_create("success",
+                    `Successfully create round image`);
+            })
+            .catch((err: auto) => {
+                throw new Error(`${err.message as toolkit_error}`)
+            });
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static display_dimension(
+        width: number,
+        height: number,
+    ): void {
+        //#region 
+        console.log(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
+        console.log(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
+        //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
 
 }
 
