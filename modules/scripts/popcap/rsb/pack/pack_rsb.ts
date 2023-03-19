@@ -64,6 +64,5 @@ export default async function (rsb_path: string, pack_simple: boolean = false, p
     fs_util.outfile(`${parse(rsb_path).dir}/${parse(rsb_path).name}.${file_extension_output}`, rsb_file_data);
     if (pack_everything) {
         fs_js.execution_status("success", localization("finish"));
-        fs_js.execution_out(fs_js.get_full_path(`${parse(rsb_path).dir}/${parse(rsb_path).name}.rsb`));
     }
 }
