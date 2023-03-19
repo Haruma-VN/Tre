@@ -1,0 +1,70 @@
+{
+	"atlas": {
+		"cross_resolution": {
+			"allow_384": false
+		},
+		"pack": {
+			"smart": true,
+			"smart_allowance_area": 6,
+			"cut_unused_space": true
+		},
+		"split": {
+			"notify_duplicate": true,
+			"repairDuplicateFolder": false,
+			"allow_atlas_info": true
+		}
+	},
+	"display": {
+		"disable_display_full_path_execution": false
+	},
+	"extension": {
+		"use_other_voids": false
+	},
+	"json": {
+		"strict_mode": false,
+		"allow_trailing_commas": false,
+		"space": "\t"
+	},
+	"debugger": {
+		"allow_tracking_bugs": true
+	},
+	"language": "Vietnamese",
+	"popcap_rton_conversion": {
+		"rton": {
+			"rton_cipher": "65bd1b2305f46eb2806b935aab7630bb"
+		}
+	},
+	"user": {
+		"using_extension_for_rsb_pack": "rsb",
+		"progress_bar": true
+	},
+	"resources": {
+		"beautify_order": {
+			"slot": 1,
+			"id": 2,
+			"path": 3,
+			"type": 4,
+			"atlas": 5,
+			"width": 6,
+			"height": 7,
+			"parent": 8,
+			"ah": 9,
+			"aw": 10,
+			"ax": 11,
+			"ay": 12,
+			"cols": 13,
+			"x": 14,
+			"y": 15,
+			"srcpath": 16,
+			"runtime": 18,
+			"forceOriginalVectorSymbolSize": 19
+		},
+		"split": {
+			"beautify_res": true,
+			"remove_unused_info": false
+		},
+		"cat": {
+			"fix_double_shadows": true
+		}
+	}
+}

@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Tre.Settings.Pages.Settings_Page"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:uc="clr-namespace:Tre.Settings.UserControls">
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        
+        
+    <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" MaxWidth="800" Margin="50 0">
+            <StackPanel.RenderTransform>
+                <TransformGroup>
+                </TransformGroup>
+            </StackPanel.RenderTransform>
+            <StackPanel.Resources>
+                <Style TargetType="uc:Settings">
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                </Style>
+            </StackPanel.Resources>
+            <uc:Settings Title="Strict JSON" x:Name="StrictJSON" NotifyInformation="Tre will be more strict in all JSON-related functions." HasText="True" IsChecked="False" />
+            <uc:Settings Title="Display File Directory" NotifyInformation="Tre will display file directory after you assert args to the tool" x:Name="DisableDisplayFullPath" HasText="True" IsChecked="False" />
+            <uc:Settings Title="Fix duplicates" x:Name="RepairDuplicator" NotifyInformation="Tre will try to fix duplicates in res functions" HasText="True" IsChecked="False" />
+            <uc:Settings Title="Report duplicates" NotifyInformation="Tre will report duplicate after splitting images" x:Name="NotifyDuplicator" HasText="True" IsChecked="False" />
+            <uc:Settings Title="Third-Party Functions" NotifyInformation="Tre will let you use third party functions" x:Name="UseOtherJavaScriptVoids" HasText="True" IsChecked="False" />
+            <uc:UIButton Width="100" Height="40" Content="Apply!" Click="Apply_Change_For_JS_Shell" />
+        </StackPanel>
+        </ScrollViewer>
+</UserControl>

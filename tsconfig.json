@@ -6,6 +6,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "removeComments": true,
+    "preserveConstEnums": true,
   }
 }

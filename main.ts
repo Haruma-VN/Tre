@@ -1,9 +1,8 @@
 "use strict";
-import default_function from './Tre.Modules/Tre.Callback/default.js';
-import System from './Tre.Modules/Tre.Callback/Default/exception.js';
-import { fgred_string } from './Tre.Modules/Tre.Libraries/Tre.Color/color.js';
-import { prompt } from './Tre.Modules/Tre.Progress/Readline/util.js';
-import localization from './Tre.Modules/Tre.Callback/localization.js';
+import default_function from './modules/callback/default.js';
+import System from './modules/callback/default/exception.js';
+import { prompt } from './modules/readline/prompt/util.js';
+import localization from './modules/callback/localization.js';
 export namespace Tre.Public {
     export async function Main(): Promise<void> {
         const exception_error: boolean = System.Tre.Checker.execute();
