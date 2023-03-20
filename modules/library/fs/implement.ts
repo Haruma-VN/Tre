@@ -8,10 +8,18 @@ import localization from "../../callback/localization.js";
 import zlib from "zlib";
 import crypto from "crypto";
 import dataview_checker from "../../callback/default/checker.js";
+import gifFrames from 'gif-frames';
+
+
+
+interface FrameData {
+    getImage: () => NodeJS.ReadableStream;
+}
 
 class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
+
     public static get_full_path(
         file_system_path_as_string: string,
     ): string {
@@ -1036,7 +1044,7 @@ class fs_js {
             case "success":
                 return console.log(`${color.fggreen_string("◉ " + localization("execution_finish") + ":\n     ")} ` + `${(text)}`);
             case "failed":
-                return console.log(`${color.fgred_string("◉ " + localization("execution_failed") + ":")} ` + `${(text)}`);
+                return console.log(color.fgred_string(`${("◉ " + localization("execution_failed") + ": " + `${(text)}`)}`));
             case "argument":
                 return console.log(`${color.fgcyan_string("◉ " + localization("execution_argument") + ":")} ` + `${(text)}`);
             case "received":
@@ -2043,12 +2051,129 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
+    public static async generateFrames(
+        gifURL = '',
+        outputPath = '',
+        output_name: string
+    ): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            if (gifURL.trim() === '') {
+                reject(`URL is required.`);
+            } else if (outputPath.trim() === '') {
+                reject(`Path is required.`);
+            } else {
+                gifFrames({ url: gifURL, frames: 'all', outputType: 'png' })
+                    .then(async (frameData: FrameData[]) => {
+                        const paths: string[] = [];
+                        for (let i = 0; i < frameData.length; i++) {
+                            const framePath = path.join(
+                                outputPath,
+                                `${output_name}_${i + 1}.png`
+                            );
+                            const saveFrame = await frameData[i]
+                                .getImage()
+                                .pipe(await fs.createWriteStream(framePath));
+                            await saveFrame.on('error', await reject);
+                            await saveFrame.on('finish', async () => {
+                                if (i === frameData.length - 1) {
+                                    // last frame saved
+                                    await resolve(paths);
+                                }
+                            });
+                            paths.push(framePath);
+                        }
+                    })
+                    .catch(reject);
+            }
+        });
+    };
+
+
+
     public static async gif_to_pngs(
-        inputPath: string,
-        outputPath: string,
+        file_system_input_path: string,
+        file_system_output_path?: string,
     ) {
-        console.log('')
+        //#region 
+        if (file_system_output_path === undefined || file_system_output_path === null || file_system_output_path === void 0) {
+            file_system_output_path = `${file_system_input_path}/../${this.js_basename(file_system_input_path)}.tre`;
+        }
+        if (!this.js_exists(file_system_output_path)) {
+            this.create_directory(file_system_output_path, true);
+        }
+        try {
+            const urls = await this.generateFrames(file_system_input_path, file_system_output_path, path.parse(file_system_input_path).name);
+            return await urls;
+        } catch (error: any) {
+            throw new Error(error as str);
+        }
+        //#endregion
     }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+    public static readonly manifest_build_directory = `${process.cwd()}/extension/support/resource_build.json`;
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+    public static copy_manifest(
+        file_system_output_path: string,
+    ): void {
+        //#region 
+        this.execution_auto(localization("success_copy_resource_build") + " " + this.get_full_path(file_system_output_path));
+        this.execution_notify("argument", localization("edit_resource_build_argument"));
+        this.fs_copy(this.manifest_build_directory, `${file_system_output_path}/resource_build.json`);
+        return;
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    public static async gif_to_webp(
+        file_system_input_path: string,
+        file_output_as_string?: string,
+    ) {
+        //#region 
+        if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
+            file_output_as_string = `${(file_system_input_path)}/../${this.js_basename(file_system_input_path)}.webp`;
+        }
+        await sharp(file_system_input_path)
+            .webp()
+            .toFile(file_output_as_string, (err: any) => {
+                if (err as NodeJS.ErrnoException) {
+                    throw new Error(`Cannot convert this gif to webp`);
+                }
+            });
+
+        //#endregion
+    }
+
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+
 
 }
 

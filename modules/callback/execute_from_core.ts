@@ -6,7 +6,7 @@ import { readjson, readfile, writefile, writejson, check_is_file, file_stats, re
 import { Argument } from "./toolkit_question.js";
 import { extname, basename } from '../library/extension/util.js';
 import { Console } from "./console.js";
-import { atlasinfo_cat, atlasinfo_split } from "../../modules/scripts/default/atlas_info/util.js";
+import { atlasinfo_cat, atlasinfo_split, atlasinfo_conduct, } from "../../modules/scripts/default/atlas_info/util.js";
 import * as color from '../library/color/color.js';
 import extra_system from '../library/extra/outfile.js';
 import path from "node:path";
@@ -30,7 +30,9 @@ import { popcap_pam_decode, popcap_pam_encode, gif_to_pam } from "../scripts/pop
 import { evaluate_test, sort_atlas_area } from "../scripts/helper/utility.js";
 import input_set from "./public/suggestion/input.js";
 
-async function execute_function_from_core(execute_file_dir: string | string[], method: string): Promise<void> {
+async function execute_function_from_core(
+    execute_file_dir: string | string[],
+    method: string): Promise<void> {
     let width: number = 0;
     let height: number = 0;
     const check_if_the_directories_iz_folder: boolean = (!js_checker.is_array(execute_file_dir) && check_is_file(execute_file_dir)) ? false : true;
@@ -38,11 +40,11 @@ async function execute_function_from_core(execute_file_dir: string | string[], m
     switch (method) {
         case "popcap_pam_from_gif" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                gif_to_pam(execute_file_dir);
+                await gif_to_pam(execute_file_dir);
             }
             else {
-                execute_file_dir.forEach(file => {
-                    gif_to_pam(file);
+                execute_file_dir.forEach(async file => {
+                    await gif_to_pam(file);
                 })
             }
             break;
@@ -385,6 +387,16 @@ async function execute_function_from_core(execute_file_dir: string | string[], m
                     }
                 })
             }
+            break;
+        case "atlas_info_constructor" as popcap_game_edit_method:
+            if(!js_checker.is_array(execute_file_dir)){
+                atlasinfo_conduct(execute_file_dir)
+            }
+            else{
+                execute_file_dir.forEach(file => {
+                    atlasinfo_conduct(file);
+                })
+            };
             break;
         case "popcap_resources_to_tre_info" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {

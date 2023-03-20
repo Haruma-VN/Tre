@@ -23,6 +23,9 @@ async function create_evaluate_argument(
         case Display.Tre.Function.popcap_texture_encode_etc1a.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_texture_encode_etc1a" as popcap_game_edit_method);
             break;
+        case Display.Tre.Function.atlas_info_constructor.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "atlas_info_constructor" as popcap_game_edit_method);
+            break;
         case Display.Tre.Function.popcap_texture_encode_etc1a_index.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_texture_encode_etc1a_index" as popcap_game_edit_method);
             break;

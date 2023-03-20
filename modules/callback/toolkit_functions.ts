@@ -93,52 +93,52 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_texture_atlas_cat").filter,
         execution_evaluate_view("popcap_texture_atlas_cat").allow);
     export const popcap_texture_encode_rgba8888 = new Void(
-        `popcap PTX RGBA8888 ${localization("encode")} (0)`,
+        `PopCap PTX RGBA8888 ${localization("encode")} (0)`,
         execution_evaluate_view("popcap_texture_encode_rgba8888").option,
         execution_evaluate_view("popcap_texture_encode_rgba8888").filter,
         execution_evaluate_view("popcap_texture_encode_rgba8888").allow);
     export const popcap_texture_encode_argb8888 = new Void(
-        `popcap PTX ARGB8888 ${localization("encode")} (0)`,
+        `PopCap PTX ARGB8888 ${localization("encode")} (0)`,
         execution_evaluate_view("popcap_texture_encode_argb8888").option,
         execution_evaluate_view("popcap_texture_encode_argb8888").filter,
         execution_evaluate_view("popcap_texture_encode_argb8888").allow);
     export const popcap_texture_encode_pvrtc = new Void(
-        `popcap PTX RGB_PVRTC4_A_8 ${localization("encode")} (30)`,
+        `PopCap PTX RGB_PVRTC4_A_8 ${localization("encode")} (30)`,
         execution_evaluate_view("popcap_texture_encode_pvrtc").option,
         execution_evaluate_view("popcap_texture_encode_pvrtc").filter,
         execution_evaluate_view("popcap_texture_encode_pvrtc").allow);
     export const popcap_texture_encode_etc1a = new Void(
-        `popcap PTX RGB_ETC1_A_8 ${localization("encode")} (147)`,
+        `PopCap PTX RGB_ETC1_A_8 ${localization("encode")} (147)`,
         execution_evaluate_view("popcap_texture_encode_etc1a").option,
         execution_evaluate_view("popcap_texture_encode_etc1a").filter,
         execution_evaluate_view("popcap_texture_encode_etc1a").allow);
     export const popcap_texture_encode_etc1a_index = new Void(
-        `popcap PTX RGB_ETC1_A_8_Index ${localization("encode")} (147)`,
+        `PopCap PTX RGB_ETC1_A_8_Index ${localization("encode")} (147)`,
         execution_evaluate_view("popcap_texture_encode_etc1a_index").option,
         execution_evaluate_view("popcap_texture_encode_etc1a_index").filter,
         execution_evaluate_view("popcap_texture_encode_etc1a_index").allow);
     export const popcap_texture_decode_rgba8888 = new Void(
-        `popcap PTX RGBA8888 ${localization("decode")} (0)`,
+        `PopCap PTX RGBA8888 ${localization("decode")} (0)`,
         execution_evaluate_view("popcap_texture_decode_rgba8888").option,
         execution_evaluate_view("popcap_texture_decode_rgba8888").filter,
         execution_evaluate_view("popcap_texture_decode_rgba8888").allow);
     export const popcap_texture_decode_argb8888 = new Void(
-        `popcap PTX ARGB8888 ${localization("decode")} (0)`,
+        `PopCap PTX ARGB8888 ${localization("decode")} (0)`,
         execution_evaluate_view("popcap_texture_decode_argb8888").option,
         execution_evaluate_view("popcap_texture_decode_argb8888").filter,
         execution_evaluate_view("popcap_texture_decode_argb8888").allow);
     export const popcap_texture_decode_pvrtc = new Void(
-        `popcap PTX RGB_PVRTC4_A_8 ${localization("decode")} (30)`,
+        `PopCap PTX RGB_PVRTC4_A_8 ${localization("decode")} (30)`,
         execution_evaluate_view("popcap_texture_decode_pvrtc").option,
         execution_evaluate_view("popcap_texture_decode_pvrtc").filter,
         execution_evaluate_view("popcap_texture_decode_pvrtc").allow);
     export const popcap_texture_decode_etc1a = new Void(
-        `popcap PTX RGB_ETC1_A_8 ${localization("decode")} (147)`,
+        `PopCap PTX RGB_ETC1_A_8 ${localization("decode")} (147)`,
         execution_evaluate_view("popcap_texture_decode_etc1a").option,
         execution_evaluate_view("popcap_texture_decode_etc1a").filter,
         execution_evaluate_view("popcap_texture_decode_etc1a").allow);
     export const popcap_texture_decode_etc1a_index = new Void(
-        `popcap PTX RGB_ETC1_A_8_Index ${localization("decode")} (147)`,
+        `PopCap PTX RGB_ETC1_A_8_Index ${localization("decode")} (147)`,
         execution_evaluate_view("popcap_texture_decode_etc1a_index").option,
         execution_evaluate_view("popcap_texture_decode_etc1a_index").filter,
         execution_evaluate_view("popcap_texture_decode_etc1a_index").allow);

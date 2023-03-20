@@ -13,6 +13,7 @@ import * as fs_util from '../../../../library/fs/util.js';
 import localization from '../../../../callback/localization.js';
 import * as color from "../../../../library/color/color.js";
 import fs_js from "../../../../library/fs/implement.js";
+
 export default async function (rsb_data_will_not_be_cipher: any, simple: boolean = false, unpack_everything: boolean = false) {
     let decode_rton = false;
     let decode_ptx = false;
@@ -112,20 +113,20 @@ export default async function (rsb_data_will_not_be_cipher: any, simple: boolean
             return a.rsgp_item_pool_index - b.rsgp_item_pool_index;
         });
         const bar = new SingleBar({
-            format: fs_js.create_toolkit_view("progress_bar") ? color.fgcyan_string("◉ " + localization("execution_status") + ' |') + color.fggreen_string('{bar}') + color.fgcyan_string(`| {percentage}% || {value}/{total} ${localization("rsgp")}`) :
-                color.fgcyan_string("◉ " + localization("execution_actual_size") + ': ') + color.fgcyan_string(`{percentage}% || {value}/{total} ${localization("rsgp")}`),
+            format: fs_js.create_toolkit_view("progress_bar") ? color.fgcyan_string("◉ " + localization("execution_status") + ' |') + color.fggreen_string('{bar}') + color.fgcyan_string(`| {percentage}% || {value}/{total}`) :
+                color.fgcyan_string("◉ " + localization("execution_actual_size") + ': ') + color.fgcyan_string(`{percentage}% || {value}/{total}`),
             barCompleteChar: '\u2588',
             barIncompleteChar: '\u2591',
             hideCursor: true,
-        });
+        })
         const composite_folder_list = rsb_buffer_for_unpacking.slice(rsb_header_info_for_unpacking.compositeInfo_BeginOffset, rsb_header_info_for_unpacking.compositeList_BeginOffset);
         const composite_list_info = await composite_item_list(composite_folder_list);
         const rsgp_item_unpack_list = await extract_resources_data(rsgp_name_list_uppercase, rsgp_list_info, rsb_buffer_for_unpacking, simple, decode_rton, splitres, rsb_new_extract_folder);
         if (unpack_everything) {
-            bar.start(composite_list_info[0].length, 0, {
+            bar.start(rsgp_item_unpack_list[1].length, 0, {
                 speed: "N/A"
-            });
-        };
+            })
+        }
         let popcap_rsgp_count: number = 0;
         for (let composite_item of composite_list_info[0]) {
             const composite_item_list = new Array();

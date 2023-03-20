@@ -147,3 +147,9 @@ declare type toolkit_json = {
 };
 
 declare type toolkit_error = NodeJS.ErrnoException;
+
+declare type return_gif_to_pngs = {
+    width: number,
+    height: number,
+    name: string,
+}
