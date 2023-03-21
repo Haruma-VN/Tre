@@ -1,5 +1,6 @@
 "use strict";
 import execute_function_from_core from "./execute_from_core.js";
+import localization from "./localization.js";
 import { Display } from "./toolkit_functions.js";
 async function create_evaluate_argument(
     execute_file_dir: string | Array<string>,
@@ -173,8 +174,14 @@ async function create_evaluate_argument(
         case Display.Tre.Function.popcap_pam_from_gif.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_pam_from_gif" as popcap_game_edit_method);
             break;
+        case Display.Tre.Function.popcap_pam_to_flash.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_pam_to_flash" as popcap_game_edit_method);
+            break;
+        case Display.Tre.Function.popcap_flash_to_pam.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_flash_to_pam" as popcap_game_edit_method);
+            break;
         default:
-            throw new Error(`Cannot find any module for this function, expected null`) as never;
+            throw new Error(`${localization("cannot_find_module")}`) as never;
     }
     return
 }

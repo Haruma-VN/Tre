@@ -1,4 +1,7 @@
 "use strict";
+
+import localization from "./localization.js";
+
 export default class Void {
 
     static count_void: number = 0;
@@ -6,7 +9,7 @@ export default class Void {
     constructor(protected name: string, protected void_number: number, private filter?: Array<string>, private allow?: boolean) {
         Void.count_void++;
         if (this.void_number < 0) {
-            throw new Error(`${name} function number cannot be smaller than 0`);
+            throw new Error(`${name} ${localization("function_num_cannot_smaller_than_zero")}`);
         }
     }
 
@@ -52,7 +55,7 @@ export default class Void {
             return this.filter;
         }
         else {
-            throw new Error(`${this.name} does not have the property filter`)
+            throw new Error(`${this.name} ${localization("not_having_property_filter")}`)
         }
     }
 
@@ -62,7 +65,7 @@ export default class Void {
         return this.allow;
     }
     else {
-        throw new Error(`${this.name} does not have the property allow`)
+        throw new Error(`${this.name} ${localization('not_having_property_allow')}`)
     }
     }
     //#endregion

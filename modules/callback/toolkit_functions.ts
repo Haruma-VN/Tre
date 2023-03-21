@@ -302,6 +302,16 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_pam_from_gif").option,
         execution_evaluate_view("popcap_pam_from_gif").filter,
         execution_evaluate_view("popcap_pam_from_gif").allow);
+    export const popcap_pam_to_flash = new Void(
+        localization("popcap_pam_to_flash"),
+        execution_evaluate_view("popcap_pam_to_flash").option,
+        execution_evaluate_view("popcap_pam_to_flash").filter,
+        execution_evaluate_view("popcap_pam_to_flash").allow);
+    export const popcap_flash_to_pam = new Void(
+        localization("popcap_flash_to_pam"),
+        execution_evaluate_view("popcap_flash_to_pam").option,
+        execution_evaluate_view("popcap_flash_to_pam").filter,
+        execution_evaluate_view("popcap_flash_to_pam").allow);
 
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {
@@ -379,5 +389,7 @@ export namespace Display.Tre.Function {
             popcap_pam_decode,
             popcap_pam_encode,
             popcap_pam_from_gif,
+            popcap_pam_to_flash,
+            popcap_flash_to_pam,
         ];
 }

@@ -61,7 +61,7 @@ class input_set extends Void {
             case "los":
                 return;
             default:
-                throw new Error(`No void to evaluate`) as never;
+                throw new Error(`${localization("no_void_to_evaluate")}`) as never;
         }
     }
 

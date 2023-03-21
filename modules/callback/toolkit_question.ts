@@ -71,4 +71,6 @@ export namespace Argument.Tre.Packages {
     export const new_popcap_support = `      2. ${localization("new_popcap_support")}`;
     export const popcap_resource_support_argument = `◉ ${localization("execution_argument")}: ${localization("popcap_resource_support_argument")}`;
     export const popcap_support_trim = `◉ ${localization("execution_argument")}: ${localization("is_trimming_mode")}`;
+    export const popcap_flash_animation_resize = `◉ ${localization("execution_argument")}: ${localization("flash_animation_resize")}`;
+    export const popcap_flash_animation_resize_detail = `◉ ${localization("execution_information")}: ${localization("flash_animation_resize_detail")}`;
 }

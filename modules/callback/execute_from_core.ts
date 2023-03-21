@@ -26,7 +26,7 @@ import js_checker from "./default/checker.js";
 import localization from "./localization.js";
 import fs_js from "../library/fs/implement.js";
 import { stringify, parse } from "../library/json/util.js";
-import { popcap_pam_decode, popcap_pam_encode, gif_to_pam } from "../scripts/popcap/pam/utilitity.js";
+import { popcap_pam_decode, popcap_pam_encode, gif_to_pam, popcap_flash_to_pam, popcap_pam_to_flash, } from "../scripts/popcap/pam/utilitity.js";
 import { evaluate_test, sort_atlas_area } from "../scripts/helper/utility.js";
 import input_set from "./public/suggestion/input.js";
 
@@ -55,6 +55,32 @@ async function execute_function_from_core(
             else {
                 execute_file_dir.forEach(file => {
                     rton_to_json(file);
+                })
+            }
+            break;
+        case "popcap_flash_to_pam" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                await popcap_flash_to_pam(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    await rton_to_json(file);
+                })
+            }
+            break;
+        case "popcap_pam_to_flash" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
+                Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
+                const popcap_pam_resolution:number = Console.TextureQualityReadLine();
+                await popcap_pam_to_flash(execute_file_dir, popcap_pam_resolution);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
+                    Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
+                    const popcap_pam_resolution:number = Console.TextureQualityReadLine();
+                    await popcap_pam_to_flash(file, popcap_pam_resolution);
                 })
             }
             break;
@@ -389,10 +415,10 @@ async function execute_function_from_core(
             }
             break;
         case "atlas_info_constructor" as popcap_game_edit_method:
-            if(!js_checker.is_array(execute_file_dir)){
+            if (!js_checker.is_array(execute_file_dir)) {
                 atlasinfo_conduct(execute_file_dir)
             }
-            else{
+            else {
                 execute_file_dir.forEach(file => {
                     atlasinfo_conduct(file);
                 })

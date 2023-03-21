@@ -7,9 +7,16 @@ export default function (pam_sprite: any, version: number) {
         const name = pam_sprite.name;
         spritesInfo.writeInt16LE(name.length);
         spritesInfo.writeString(name);
-        if (version >= 6) {
-            const description = pam_sprite.description;
-            spritesInfo.writeInt16LE(description.length);
+        if (version >= 6 || version <= 0) {
+            let description = pam_sprite.description;
+            let description_length = 0;
+            if (description == null || description == undefined) {
+                description = '';
+            }
+            else {
+                description_length = description.length;
+            }
+            spritesInfo.writeInt16LE(description_length);
             spritesInfo.writeString(description);
         }
         spritesInfo.writeInt32LE(pam_sprite.frame_rate * 65536);

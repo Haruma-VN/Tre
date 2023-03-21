@@ -513,5 +513,19 @@
         ],
         "allow": true,
         "option": 58
+    },
+    "popcap_pam_to_flash": {
+        "filter": [
+            ".pam"
+        ],
+        "allow": true,
+        "option": 59
+    },
+    "popcap_flash_to_pam": {
+        "filter": [
+            ".xfl"
+        ],
+        "allow": true,
+        "option": 60
     }
 }
