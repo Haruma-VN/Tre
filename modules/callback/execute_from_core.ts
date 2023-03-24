@@ -6,7 +6,7 @@ import { readjson, readfile, writefile, writejson, check_is_file, file_stats, re
 import { Argument } from "./toolkit_question.js";
 import { extname, basename } from '../library/extension/util.js';
 import { Console } from "./console.js";
-import { atlasinfo_cat, atlasinfo_split, atlasinfo_conduct, } from "../../modules/scripts/default/atlas_info/util.js";
+import { atlas_info_cat, atlas_info_split, atlasinfo_conduct, } from "../../modules/scripts/default/atlas_info/util.js";
 import * as color from '../library/color/color.js';
 import extra_system from '../library/extra/outfile.js';
 import path from "node:path";
@@ -20,7 +20,7 @@ import * as popcap_game_content_edit from "../scripts/popcap/rsb/utilities.js";
 import { Lawnstrings } from "../../modules/scripts/popcap/localization/lawnstrings.js";
 import PopCapPackages from "../scripts/popcap/json/utilities.js";
 import RSBInfo from "../scripts/default/support/utilities.js";
-import { rton_to_json, json_to_rton, rton_decrypt_and_decode_to_json, json_to_rton_and_encrypt } from "../scripts/popcap/rton/util.js";
+import { popcap_rton_to_json, popcap_json_to_rton, rton_decrypt_and_decode_to_json, popcap_json_to_rton_and_encrypt } from "../scripts/popcap/rton/util.js";
 import resolveFilePath from "./public/file_path/path_result.js";
 import js_checker from "./default/checker.js";
 import localization from "./localization.js";
@@ -29,13 +29,44 @@ import { stringify, parse } from "../library/json/util.js";
 import { popcap_pam_decode, popcap_pam_encode, gif_to_pam, popcap_flash_to_pam, popcap_pam_to_flash, } from "../scripts/popcap/pam/utilitity.js";
 import { evaluate_test, sort_atlas_area } from "../scripts/helper/utility.js";
 import input_set from "./public/suggestion/input.js";
+import { popcap_bnk_decode, popcap_bnk_encode } from "../scripts/popcap/wwise/util.js";
+import { create_evaluation } from "./helper/util.js";
+
+/**
+ * 
+ * @param {*} execute_function_from_core as Promise<void> - Evaluate the function being called
+ * @param {*} execute_file_dir - Pass an argument or file path here
+ * @param method - Pass in the methods & arguments to start
+ * @returns - Evaluation success
+ */
 
 async function execute_function_from_core(
+    /**
+     * @param {*} execute_file_dir - Pass an argument or file path here
+     */
     execute_file_dir: string | string[],
+    /**
+     * @param {*} method - Pass an method to evaluate here
+     */
     method: string): Promise<void> {
+    /**
+     * @param {*} width - Reusable variable, obtains for width
+     */
     let width: number = 0;
+    /**
+     * @param {*} height - Reusable variable, obtains for height
+     */
     let height: number = 0;
+    /**
+     * @param {*} check_if_the_directories_iz_folder - Check if the argument passed is a string or an folder
+     * @param - If it's a folder, evaluate everything inside it, perhaps
+     */
     const check_if_the_directories_iz_folder: boolean = (!js_checker.is_array(execute_file_dir) && check_is_file(execute_file_dir)) ? false : true;
+    /**
+     * @param {*} arguments_default_modifier - Parse the JSON in "/extension/settings/functions.json"
+     * @error - Throw an error if the json is invalid
+     * @param - If the parsing success, loads modules
+     */
     const arguments_default_modifier: any = fs_js.read_json((fs_js.functions_json_location as string), true);
     switch (method) {
         case "popcap_pam_from_gif" as popcap_game_edit_method:
@@ -48,13 +79,23 @@ async function execute_function_from_core(
                 })
             }
             break;
-        case "popcap_rton_to_json" as popcap_game_edit_method:
+        case "evaluate_script" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                rton_to_json(execute_file_dir);
+                await create_evaluation(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    await create_evaluation(file);
+                })
+            };
+            break;
+        case "popcap_popcap_rton_to_json" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                popcap_rton_to_json(execute_file_dir);
             }
             else {
                 execute_file_dir.forEach(file => {
-                    rton_to_json(file);
+                    popcap_rton_to_json(file);
                 })
             }
             break;
@@ -64,7 +105,7 @@ async function execute_function_from_core(
             }
             else {
                 execute_file_dir.forEach(async file => {
-                    await rton_to_json(file);
+                    await popcap_rton_to_json(file);
                 })
             }
             break;
@@ -72,14 +113,14 @@ async function execute_function_from_core(
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
                 Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
-                const popcap_pam_resolution:number = Console.TextureQualityReadLine();
+                const popcap_pam_resolution: number = Console.TextureQualityReadLine();
                 await popcap_pam_to_flash(execute_file_dir, popcap_pam_resolution);
             }
             else {
                 execute_file_dir.forEach(async file => {
                     Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
                     Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
-                    const popcap_pam_resolution:number = Console.TextureQualityReadLine();
+                    const popcap_pam_resolution: number = Console.TextureQualityReadLine();
                     await popcap_pam_to_flash(file, popcap_pam_resolution);
                 })
             }
@@ -439,7 +480,7 @@ async function execute_function_from_core(
         case "popcap_texture_atlas_cat_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 if (fs_js.create_toolkit_view("smart")) {
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack_simple")} ~ ${localization("is_smart")}`)
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat_simple")} ~ ${localization("is_smart")}`)
                     fs_js.execution_information(localization("found_smart"));
                     const create_list_of_atlas = sort_atlas_area(await evaluate_test(execute_file_dir, 1));
                     const allowance_list: number[] = [];
@@ -471,7 +512,7 @@ async function execute_function_from_core(
                     fs_js.create_padding_argument(0, create_max_padding_size);
                 }
                 else {
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack_simple")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat_simple")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
                 }
                 const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                 await atlas_cat(execute_file_dir, (width), (height), true, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
@@ -484,7 +525,7 @@ async function execute_function_from_core(
                 execute_file_dir.forEach(async file => {
                     if (fs_js.is_directory(file)) {
                         if (fs_js.create_toolkit_view("smart")) {
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack_simple")} ~ ${localization("is_smart")}`)
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat_simple")} ~ ${localization("is_smart")}`)
                             fs_js.execution_information(localization("found_smart"));
                             const create_list_of_atlas = sort_atlas_area(await evaluate_test(file, 1));
                             const allowance_list: number[] = [];
@@ -516,7 +557,7 @@ async function execute_function_from_core(
                             fs_js.create_padding_argument(0, create_max_padding_size);
                         }
                         else {
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack_simple")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat_simple")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
                         }
                         const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                         await atlas_cat(file, (width), (height), true, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
@@ -528,7 +569,7 @@ async function execute_function_from_core(
                 })
             }
             break;
-        case "popcap_atlas_pack_experimental" as popcap_game_edit_method:
+        case "popcap_atlas_pack_advanced" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_atlas_width_argument}`));
                 fs_js.create_dimension_view("width");
@@ -544,7 +585,7 @@ async function execute_function_from_core(
                     Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
                 }
                 else {
-                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("get_subgroup_name")}`)
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${localization("get_subgroup_name")}`)
                 }
                 let popcap_subgroup_name: string = (!subgroup_name_argument_check) ? Console.ReadLine() : "";
                 const popcap_support_multiple_version: 1 | 2 | 0 = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != undefined &&
@@ -560,7 +601,7 @@ async function execute_function_from_core(
                 }
                 else {
                     const generate_new_console_message: string = ((popcap_support_multiple_version as 1 | 2) === 1) ? localization("support_old_version") : localization("support_new_version");
-                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${generate_new_console_message}`);
                 }
                 let popcap_support_utilities_for_new_pvz2_international: boolean | number = (popcap_support_multiple_version === 0) ? Console.IntegerReadLine(1, 2) : popcap_support_multiple_version;
                 popcap_support_utilities_for_new_pvz2_international = (popcap_support_utilities_for_new_pvz2_international === 2) ? true : false;
@@ -575,7 +616,7 @@ async function execute_function_from_core(
                 }
                 else {
                     const generate_new_console_message: string = ((popcap_support_trim_for_argb8888 as 0 | 1) === 1) ? localization("auto_trim") : localization("no_trim");
-                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${generate_new_console_message}`);
                 }
                 let popcap_support_trimming_mode_for_pvz2_texfmt_0: boolean | number = (popcap_support_trim_for_argb8888 === 2) ? Console.IntegerReadLine(0, 1) : popcap_support_trim_for_argb8888 as 1 | 0;
                 popcap_support_trimming_mode_for_pvz2_texfmt_0 = (popcap_support_trimming_mode_for_pvz2_texfmt_0 === 1) ? true : false;
@@ -586,7 +627,7 @@ async function execute_function_from_core(
                     fs_js.create_padding_argument(0, create_max_padding_size);
                 }
                 else {
-                    fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                    fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
                 }
                 const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                 await atlas_pack_experimental(execute_file_dir, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international,
@@ -609,7 +650,7 @@ async function execute_function_from_core(
                             Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.skip_this_argument_to_take_folder_name_as_file_name}`));
                         }
                         else {
-                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("get_subgroup_name")}`)
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${localization("get_subgroup_name")}`)
                         }
                         let popcap_subgroup_name: string = (!subgroup_name_argument_check) ? Console.ReadLine() : "";
                         const popcap_support_multiple_version: 1 | 2 | 0 = (arguments_default_modifier.popcap_atlas_pack_advanced.arguments.support_pvz2_int_new_version != undefined &&
@@ -625,7 +666,7 @@ async function execute_function_from_core(
                         }
                         else {
                             const generate_new_console_message: string = ((popcap_support_multiple_version as 1 | 2) === 1) ? localization("support_old_version") : localization("support_new_version");
-                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${generate_new_console_message}`);
                         }
                         let popcap_support_utilities_for_new_pvz2_international: boolean | number = (popcap_support_multiple_version === 0) ? Console.IntegerReadLine(1, 2) : popcap_support_multiple_version;
                         popcap_support_utilities_for_new_pvz2_international = (popcap_support_utilities_for_new_pvz2_international === 2) ? true : false;
@@ -640,7 +681,7 @@ async function execute_function_from_core(
                         }
                         else {
                             const generate_new_console_message: string = ((popcap_support_trim_for_argb8888 as 0 | 1) === 1) ? localization("auto_trim") : localization("no_trim");
-                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${generate_new_console_message}`);
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${generate_new_console_message}`);
                         }
                         let popcap_support_trimming_mode_for_pvz2_texfmt_0: boolean | number = (popcap_support_trim_for_argb8888 === 2) ? Console.IntegerReadLine(0, 1) : popcap_support_trim_for_argb8888 as 1 | 0;
                         popcap_support_trimming_mode_for_pvz2_texfmt_0 = (popcap_support_trimming_mode_for_pvz2_texfmt_0 === 1) ? true : false;
@@ -653,7 +694,7 @@ async function execute_function_from_core(
                             fs_js.create_padding_argument(0, create_max_padding_size);
                         }
                         else {
-                            fs_js.execution_auto(`${localization("popcap_atlas_pack_experimental")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                            fs_js.execution_auto(`${localization("popcap_atlas_pack_advanced")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
                         }
                         const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                         await atlas_pack_experimental(file, (width), (height), popcap_subgroup_name, popcap_support_utilities_for_new_pvz2_international,
@@ -665,7 +706,7 @@ async function execute_function_from_core(
         case "popcap_texture_atlas_pack_cross_resolution" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 if (fs_js.create_toolkit_view("smart")) {
-                    fs_js.execution_auto(`${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("is_smart")}`)
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization("is_smart")}`)
                     fs_js.execution_information(localization("found_smart"));
                     const create_list_of_atlas = sort_atlas_area(await evaluate_test(execute_file_dir, 1));
                     const allowance_list: number[] = [];
@@ -697,7 +738,7 @@ async function execute_function_from_core(
                     fs_js.create_padding_argument(0, create_max_padding_size);
                 }
                 else {
-                    fs_js.execution_auto(`${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
                 }
                 const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                 await cross_resolution(execute_file_dir, (width), (height), Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
@@ -710,7 +751,7 @@ async function execute_function_from_core(
                 execute_file_dir.forEach(async file => {
                     if (fs_js.is_directory(file)) {
                         if (fs_js.create_toolkit_view("smart")) {
-                            fs_js.execution_auto(`${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("is_smart")}`)
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization("is_smart")}`)
                             fs_js.execution_information(localization("found_smart"));
                             const create_list_of_atlas = sort_atlas_area(await evaluate_test(file, 1));
                             const allowance_list: number[] = [];
@@ -742,7 +783,7 @@ async function execute_function_from_core(
                             fs_js.create_padding_argument(0, create_max_padding_size);
                         }
                         else {
-                            fs_js.execution_auto(`${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`)
                         }
                         const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                         await cross_resolution(file, (width), (height), Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
@@ -777,7 +818,7 @@ async function execute_function_from_core(
         case "popcap_texture_atlas_cat" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 if (fs_js.create_toolkit_view("smart")) {
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("is_smart")}`)
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("is_smart")}`)
                     fs_js.execution_information(localization("found_smart"));
                     const create_list_of_atlas = sort_atlas_area(await evaluate_test(execute_file_dir, 1));
                     const allowance_list: number[] = [];
@@ -814,7 +855,7 @@ async function execute_function_from_core(
                 }
                 else {
                     const create_new_print_message: boolean = (support_smart_pack as 1 | 0 === 1) ? true : false;
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("smart_packing_area")} = ${create_new_print_message}`);
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("smart_packing_area")} = ${create_new_print_message}`);
                 }
                 let atlas_cat_smart_option_area: number | boolean = ((support_smart_pack === 2)) ? Console.IntegerReadLine(0, 1) : support_smart_pack;
                 atlas_cat_smart_option_area = (atlas_cat_smart_option_area === 1) ? true : false;
@@ -831,7 +872,7 @@ async function execute_function_from_core(
                 }
                 else {
                     const create_new_print_message: boolean = (support_pack_pot as 1 | 0 === 1) ? true : false;
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("pot")} = ${create_new_print_message}`);
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("pot")} = ${create_new_print_message}`);
                 }
                 let atlas_cat_pot_option_area: number | boolean = ((support_pack_pot === 2)) ? Console.IntegerReadLine(0, 1) : support_pack_pot;
                 atlas_cat_pot_option_area = (atlas_cat_pot_option_area === 1) ? true : false;
@@ -848,7 +889,7 @@ async function execute_function_from_core(
                 }
                 else {
                     const create_new_print_message: boolean = (support_pack_square as 1 | 0 === 1) ? true : false;
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("square_area")} = ${create_new_print_message}`);
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("square_area")} = ${create_new_print_message}`);
                 }
                 let atlas_cat_square_option_area_force: number | boolean = ((support_pack_square === 2)) ? Console.IntegerReadLine(0, 1) : support_pack_square;
                 atlas_cat_square_option_area_force = (atlas_cat_square_option_area_force === 1) ? true : false;
@@ -865,7 +906,7 @@ async function execute_function_from_core(
                 }
                 else {
                     const create_new_print_message: boolean = (support_pack_rotation as 1 | 0 === 1) ? true : false;
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("allow_rotation")} = ${create_new_print_message}`);
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("allow_rotation")} = ${create_new_print_message}`);
                 }
                 let atlas_cat_allow_rotation_option_area_force: number | boolean = ((support_pack_rotation === 2)) ? Console.IntegerReadLine(0, 1) : support_pack_rotation;
                 atlas_cat_allow_rotation_option_area_force = (atlas_cat_allow_rotation_option_area_force === 1) ? true : false;
@@ -877,7 +918,7 @@ async function execute_function_from_core(
                     fs_js.create_padding_argument(0, create_max_padding_size);
                 }
                 else {
-                    fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
                 }
                 const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                 await atlas_cat(execute_file_dir, (width), (height), false, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
@@ -891,7 +932,7 @@ async function execute_function_from_core(
                 execute_file_dir.forEach(async file => {
                     if (fs_js.is_directory(file)) {
                         if (fs_js.create_toolkit_view("smart")) {
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("is_smart")}`)
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("is_smart")}`)
                             fs_js.execution_information(localization("found_smart"));
                             const create_list_of_atlas = sort_atlas_area(await evaluate_test(file, 1));
                             const allowance_list: number[] = [];
@@ -928,7 +969,7 @@ async function execute_function_from_core(
                         }
                         else {
                             const create_new_print_message: boolean = (support_smart_pack as 1 | 0 === 1) ? true : false;
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("smart_packing_area")} = ${create_new_print_message}`);
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("smart_packing_area")} = ${create_new_print_message}`);
                         }
                         let atlas_cat_smart_option_area: number | boolean = ((support_smart_pack === 2)) ? Console.IntegerReadLine(0, 1) : support_smart_pack;
                         atlas_cat_smart_option_area = (atlas_cat_smart_option_area === 1) ? true : false;
@@ -945,7 +986,7 @@ async function execute_function_from_core(
                         }
                         else {
                             const create_new_print_message: boolean = (support_pack_pot as 1 | 0 === 1) ? true : false;
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("pot")} = ${create_new_print_message}`);
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("pot")} = ${create_new_print_message}`);
                         }
                         let atlas_cat_pot_option_area: number | boolean = ((support_pack_pot === 2)) ? Console.IntegerReadLine(0, 1) : support_pack_pot;
                         atlas_cat_pot_option_area = (atlas_cat_pot_option_area === 1) ? true : false;
@@ -962,7 +1003,7 @@ async function execute_function_from_core(
                         }
                         else {
                             const create_new_print_message: boolean = (support_pack_square as 1 | 0 === 1) ? true : false;
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("square_area")} = ${create_new_print_message}`);
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("square_area")} = ${create_new_print_message}`);
                         }
                         let atlas_cat_square_option_area_force: number | boolean = ((support_pack_square === 2)) ? Console.IntegerReadLine(0, 1) : support_pack_square;
                         atlas_cat_square_option_area_force = (atlas_cat_square_option_area_force === 1) ? true : false;
@@ -979,7 +1020,7 @@ async function execute_function_from_core(
                         }
                         else {
                             const create_new_print_message: boolean = (support_pack_rotation as 1 | 0 === 1) ? true : false;
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("allow_rotation")} = ${create_new_print_message}`);
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("allow_rotation")} = ${create_new_print_message}`);
                         }
                         let atlas_cat_allow_rotation_option_area_force: number | boolean = ((support_pack_rotation === 2)) ? Console.IntegerReadLine(0, 1) : support_pack_rotation;
                         atlas_cat_allow_rotation_option_area_force = (atlas_cat_allow_rotation_option_area_force === 1) ? true : false;
@@ -991,7 +1032,7 @@ async function execute_function_from_core(
                             fs_js.create_padding_argument(0, create_max_padding_size);
                         }
                         else {
-                            fs_js.execution_auto(`${localization("popcap_texture_max_rects_bin_pack")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
+                            fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("padding_size")} = ${atlas_pack_size_view}`);
                         }
                         const atlas_cat_padding_size: number = (atlas_pack_size_view === -1) ? Console.IntegerReadLine(0, create_max_padding_size) : atlas_pack_size_view;
                         await atlas_cat(file, (width), (height), false, Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
@@ -1028,24 +1069,24 @@ async function execute_function_from_core(
                 })
             }
             break;
-        case "popcap_json_to_rton" as popcap_game_edit_method:
+        case "popcap_popcap_json_to_rton" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                json_to_rton(execute_file_dir);
+                popcap_json_to_rton(execute_file_dir);
             }
             else {
                 execute_file_dir.forEach(file => {
-                    json_to_rton(file);
+                    popcap_json_to_rton(file);
                 })
             }
             break;
         case "popcap_rton_encode_and_encrypt" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                json_to_rton_and_encrypt(execute_file_dir);
+                popcap_json_to_rton_and_encrypt(execute_file_dir);
             }
             else {
                 execute_file_dir.forEach(file => {
                     if (fs_js.popcap_check_extname(file, ".json")) {
-                        json_to_rton_and_encrypt(file);
+                        popcap_json_to_rton_and_encrypt(file);
                     }
                 })
             }
@@ -1188,7 +1229,7 @@ async function execute_function_from_core(
             break;
         case "popcap_resources_to_atlasinfo" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_res_to_atlasinfo_notify_atlas_info_method}`));
+                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resources_to_atlasinfo_notify_atlas_info_method}`));
                 Console.WriteLine(Argument.Tre.Packages.method_split_popcap_atlas_texture_with_path_extension);
                 Console.WriteLine(Argument.Tre.Packages.method_split_popcap_atlas_texture_with_id_extension);
                 let method_for_res_to_atlas_info: number | string = Console.IntegerReadLine(1, 2);
@@ -1198,7 +1239,7 @@ async function execute_function_from_core(
             else {
                 execute_file_dir.forEach(file => {
                     if (fs_js.popcap_check_extname(file, ".json")) {
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_res_to_atlasinfo_notify_atlas_info_method}`));
+                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_resources_to_atlasinfo_notify_atlas_info_method}`));
                         Console.WriteLine(Argument.Tre.Packages.method_split_popcap_atlas_texture_with_path_extension);
                         Console.WriteLine(Argument.Tre.Packages.method_split_popcap_atlas_texture_with_id_extension);
                         let method_for_res_to_atlas_info: number | string = Console.IntegerReadLine(1, 2);
@@ -1227,31 +1268,31 @@ async function execute_function_from_core(
                 await atlas_split((atlas_split_method), execute_file_dir);
             }
             break;
-        case "popcap_atlas_split_experimental" as popcap_game_edit_method:
+        case "popcap_atlas_split_advanced" as popcap_game_edit_method:
             if (js_checker.is_array(execute_file_dir)) {
                 await atlas_split_experimental(execute_file_dir);
             }
             break;
         case "atlas_info_split" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                atlasinfo_split(execute_file_dir);
+                atlas_info_split(execute_file_dir);
             }
             else {
                 execute_file_dir.forEach(file => {
                     if (fs_js.popcap_check_extname(file, ".json")) {
-                        atlasinfo_split(file);
+                        atlas_info_split(file);
                     }
                 })
             }
             break;
         case "atlas_info_cat" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                atlasinfo_cat(execute_file_dir);
+                atlas_info_cat(execute_file_dir);
             }
             else {
                 execute_file_dir.forEach(file => {
                     if (fs_js.is_directory(file)) {
-                        atlasinfo_cat(file);
+                        atlas_info_cat(file);
                     }
                 })
             }
@@ -1377,29 +1418,71 @@ async function execute_function_from_core(
         case "json_patch" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_ask_drag_file}`));
-                fs_js.execution_information(localization("drag_the_json_to_apply_patch"));
+                fs_js.execution_notify("received", execute_file_dir);
                 let json_apply_path: string = readline_for_json(execute_file_dir);
                 let apply_patch: any = readjson(execute_file_dir);
                 apply_patch = (JSON.stringify(apply_patch) === "{}") ? { loop: false, patch: [] } : apply_patch;
-                if (apply_patch.loop != undefined && apply_patch.patch != undefined && apply_patch.loop != null && apply_patch.loop != void 0
-                    && apply_patch.patch != null && apply_patch.patch != void 0) {
+                const finish_apply_patch_json = await applyPatch(readjson(json_apply_path), apply_patch);
+                writejson(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`, finish_apply_patch_json);
+                Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`)}`);
+                Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.json_patch_finish_apply_patch}`));
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_ask_drag_file}`));
+                    fs_js.execution_notify("received", file);
+                    let json_apply_path: string = readline_for_json(file);
+                    let apply_patch: any = readjson(file);
+                    apply_patch = (JSON.stringify(apply_patch) === "{}") ? { loop: false, patch: [] } : apply_patch;
                     const finish_apply_patch_json = await applyPatch(readjson(json_apply_path), apply_patch);
                     writejson(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`, finish_apply_patch_json);
                     Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${json_apply_path}/../${path.parse(json_apply_path).name}.patched.json`)}`);
                     Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.json_patch_finish_apply_patch}`));
-                }
+                })
             }
             break;
         case "json_patch_generator" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_execution_received}`));
-                Console.WriteLine(execute_file_dir);
+                fs_js.execution_notify("received", execute_file_dir);
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_new_execution_generator}`));
                 fs_js.execution_information(localization("drag_the_json_to_compare_and_generate_patch"));
                 let json_new_file_compare_diff: string = readline_for_json(execute_file_dir);
                 writejson(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`, generatePatch(readjson(execute_file_dir), readjson(json_new_file_compare_diff)));
                 Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`)}`);
                 Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.json_patch_finish_write_patch}`));
+            }
+            else {
+                execute_file_dir.forEach(file => {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_execution_received}`));
+                    fs_js.execution_notify("received", file);
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_new_execution_generator}`));
+                    fs_js.execution_information(localization("drag_the_json_to_compare_and_generate_patch"));
+                    let json_new_file_compare_diff: string = readline_for_json(file);
+                    writejson(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`, generatePatch(readjson(file), readjson(json_new_file_compare_diff)));
+                    Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`)}`);
+                    Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.json_patch_finish_write_patch}`));
+                })
+            }
+            break;
+        case "wwise_media_encode" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                popcap_bnk_encode(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(file => {
+                    popcap_bnk_encode(file);
+                })
+            }
+            break;
+        case "wwise_media_decode" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                popcap_bnk_decode(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(file => {
+                    popcap_bnk_decode(file);
+                })
             }
             break;
         case "popcap_lawnstrings_diff" as popcap_game_edit_method:
@@ -1410,8 +1493,17 @@ async function execute_function_from_core(
                 let new_compare_json_diff: string = readline_for_json(execute_file_dir);
                 Lawnstrings.popcap.WriteDiffJSON(execute_file_dir, new_compare_json_diff);
             }
+            else {
+                execute_file_dir.forEach(file => {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_lawnstring_old_obtained}`));
+                    Console.WriteLine(execute_file_dir);
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_lawnstrings_new_require}`));
+                    let new_compare_json_diff: string = readline_for_json(file);
+                    Lawnstrings.popcap.WriteDiffJSON(file, new_compare_json_diff);
+                })
+            }
             break;
-        case "real_esrgan_upscaler_bitmap_content" as popcap_game_edit_method:
+        case "real_esrgan_upscaler_image" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir) && !check_if_the_directories_iz_folder) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.upscaler_real_esrgan_upscale_model}`));
                 fs_js.execution_information(localization("realesr-animevideov3_preview"));

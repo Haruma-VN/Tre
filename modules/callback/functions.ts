@@ -93,13 +93,13 @@ export default async function (execute_file_count: number, execute_file_dir: str
             await create_evaluate_argument(execute_file_dir, option);
         }
         else if (typeof execute_file_dir === "object" && (option != Display.Tre.Function.popcap_texture_atlas_split.void_number_readline_argument())
-            && option != Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument()) {
+            && option != Display.Tre.Function.popcap_atlas_split_advanced.void_number_readline_argument()) {
             execute_file_dir.forEach(async (file_in_this_directory) => {
                 await create_evaluate_argument(file_in_this_directory, option);
             })
         }
         else if (typeof execute_file_dir === "object" && ((option === Display.Tre.Function.popcap_texture_atlas_split.void_number_readline_argument())
-            || option === Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument())) {
+            || option === Display.Tre.Function.popcap_atlas_split_advanced.void_number_readline_argument())) {
             await create_evaluate_argument(execute_file_dir, option);
         }
     }

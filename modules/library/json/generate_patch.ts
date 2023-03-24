@@ -1,25 +1,23 @@
 "use strict";
-export interface JSONPatch {
-    loop: boolean;
-    patch: any[]
-}
-export default function (input1: any, input2: any): JSONPatch {
-    let patch: any[] = [];
+import { PatchOperation } from "./patch.js";
 
-    const walk = (obj1: any, obj2: any, path = []) => {
+export default function (input1: any, input2: any) {
+    let patch: PatchOperation[] = [];
+
+    const walk = (obj1: any, obj2: any, path: string[] = []) => {
         if (obj1 === null || obj1 === undefined) {
             return;
         }
 
-        Object.keys(obj1).forEach((key: any) => {
+        Object.keys(obj1).forEach((key: string) => {
             const val1 = obj1[key];
             const val2 = obj2[key];
-            const currentPath: any = path.concat(key);
+            const currentPath: string[] = path.concat(key);
 
             if (!(key in obj2)) {
                 patch.push({
                     op: 'remove',
-                    path: currentPath.join('/')
+                    path: currentPath,
                 });
                 return;
             }
@@ -27,27 +25,27 @@ export default function (input1: any, input2: any): JSONPatch {
             if (Array.isArray(val1) && Array.isArray(val2)) {
                 val1.forEach((val, i) => {
                     if (val2.length <= i) {
-                        for (let j:any = i; j < val1.length; j++) {
+                        for (let j = i; j < val1.length; j++) {
                             patch.push({
                                 op: 'remove',
-                                path: currentPath.concat([j]).join('/')
+                                path: currentPath.concat([j.toString()]),
                             });
                         }
                     } else if (Array.isArray(val) || typeof val === 'object') {
-                        walk(val, val2[i], currentPath.concat([i]));
+                        walk(val, val2[i], currentPath.concat([i.toString()]));
                     } else if (val !== val2[i]) {
                         patch.push({
                             op: 'replace',
-                            path: currentPath.concat([i]).join('/'),
-                            value: val2[i]
+                            path: currentPath.concat([i.toString()]),
+                            value: val2[i],
                         });
                     }
                 });
-                for (let i:any = val1.length; i < val2.length; i++) {
+                for (let i = val1.length; i < val2.length; i++) {
                     patch.push({
                         op: 'add',
-                        path: currentPath.concat([(i)]).join('/'),
-                        value: val2[i]
+                        path: currentPath.concat([(i).toString()]),
+                        value: val2[i],
                     });
                 }
             } else if (typeof val1 === 'object' && typeof val2 === 'object') {
@@ -55,8 +53,8 @@ export default function (input1: any, input2: any): JSONPatch {
             } else if (val1 !== val2) {
                 patch.push({
                     op: 'replace',
-                    path: currentPath.join('/'),
-                    value: val2
+                    path: currentPath,
+                    value: val2,
                 });
             }
         });
@@ -69,21 +67,13 @@ export default function (input1: any, input2: any): JSONPatch {
             if (!(key in obj1)) {
                 patch.push({
                     op: 'add',
-                    path: path.concat((key as any)).join('/'),
-                    value: obj2[key]
+                    path: path.concat(key),
+                    value: obj2[key],
                 });
             }
         });
     };
 
     walk(input1, input2);
-    for (let i = 0; i < patch.length; i++) {
-        if (!patch[i].path.startsWith("/")) {
-            patch[i].path = "/" + patch[i].path;
-        }
-        else {
-            continue;
-        }
-    }
-    return { loop: false, patch: patch };
+    return patch;
 }

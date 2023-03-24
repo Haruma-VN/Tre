@@ -9,7 +9,7 @@ import BeautifyRes from './beautify/beautify.js';
 import * as color from "../../../library/color/color.js";
 import localization from '../../../callback/localization.js';
 import AdaptPvZ2InternationalResPath from "./expands/resources.js";
-import json_to_rton from "../rton/json2rton.js";
+import popcap_json_to_rton from "../rton/json2rton.js";
 
 export function LocalResourcesCompare(vanilla_directory: string, modded_directory: string) {
     local_res_compare(vanilla_directory, modded_directory);
@@ -56,7 +56,7 @@ export function res_pack(dir: string, mode: number, encode: number, this_will_st
     const resource_return_output_data = pack(dir, mode, encode, res_groups, false, is_return_mode);
     switch (encode) {
         case 1:
-            outfile(`${path.resolve(`${dir}/../RESOURCES.rton`)}`, json_to_rton(resource_return_output_data));
+            outfile(`${path.resolve(`${dir}/../RESOURCES.rton`)}`, popcap_json_to_rton(resource_return_output_data));
             if (!this_will_stop_console) {
                 console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${dir}/../${path.parse(dir).name}.RTON`)}`);
             }

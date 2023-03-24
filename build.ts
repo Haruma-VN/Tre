@@ -8,7 +8,7 @@ const create_data_view_config = {
     pkg: ['-C', 'GZip'],
     version: '3.0.0 public beta',
     target: 'latest-win-x64',
-    icon: './Tre.Extension/Tre.AppIcon/icon.ico',
+    icon: './extension/appicon/icon.ico',
     properties: {
         FileDescription: 'Tre',
         ProductName: 'Tre',

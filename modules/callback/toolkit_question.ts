@@ -45,7 +45,7 @@ export namespace Argument.Tre.Packages {
     export const popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin = `◉ ${localization("execution_argument")}: ${localization("padding_size")}`;
     export const popcap_game_zlib_compression_rsgp_unpack_boolean_decode_ptx_for_ptx_rsgp = `◉ ${localization("execution_argument")}: ${localization("decode_ptx")}`;
     export const popcap_game_rewrite_mode = `◉ ${localization("execution_argument")}: ${localization("rewrite_mode")}`;
-    export const popcap_res_to_atlasinfo_notify_atlas_info_method = `◉ ${localization("execution_argument")}: ${localization("atlasinfo_method_split")}`;
+    export const popcap_resources_to_atlasinfo_notify_atlas_info_method = `◉ ${localization("execution_argument")}: ${localization("atlasinfo_method_split")}`;
     export const json_patch_ask_drag_file = `◉ ${localization("execution_argument")}: ${localization("json_patch_drag_json_apply_patch")}`;
     export const json_patch_finish_apply_patch = `◉ ${localization("execution_finish")}: ${localization("json_patch_applied_patch")}`;
     export const json_patch_generator_execution_received = `◉ ${localization("execution_received")}: ${localization("old_json")}`;
@@ -62,7 +62,7 @@ export namespace Argument.Tre.Packages {
     export const method_split_popcap_atlas_texture_with_path_extension = `      1. ${localization("method_split_popcap_atlas_texture_with_path_extension")}`;
     export const method_split_popcap_atlas_texture_with_id_extension = `      2. ${localization("method_split_popcap_atlas_texture_with_id_extension")}`;
     export const method_resources_local_compare_drag_input = `◉ ${localization("execution_argument")}: ${localization("local_compare_bundle_input_argument")}`;
-    export const local_compare_received = `◉ ${localization("execution_received")}: ${localization("popcap_resources_local_compare_vanilla_res")}`;
+    export const local_compare_received = `◉ ${localization("execution_received")}: ${localization("popcap_resources_local_data_compare_vanilla_res")}`;
     export const popcap_lawnstring_old_obtained = `◉ ${localization("execution_received")}: ${localization("popcap_lawnstrings_old_obtained")}`;
     export const popcap_lawnstrings_new_require = `◉ ${localization("execution_argument")}: ${localization("popcap_lawnstrings_new_require")}`;
     export const res_rewrite_mode_safe = `      1. ${localization("res_rewrite_mode_safe")}`;

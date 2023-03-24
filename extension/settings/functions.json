@@ -367,14 +367,14 @@
         "allow": true,
         "option": 43
     },
-    "popcap_rton_to_json": {
+    "popcap_popcap_rton_to_json": {
         "filter": [
             ".rton"
         ],
         "allow": true,
         "option": 44
     },
-    "popcap_json_to_rton": {
+    "popcap_popcap_json_to_rton": {
         "filter": [
             ".json"
         ],
@@ -477,11 +477,12 @@
         ],
         "allow": true,
         "option": 54,
-        "arguments": {"#comment": [
-            "? : The tool will likely to ask this argument",
-            "0 : The tool will set the default behavior to false",
-            "1 : The tool will set the default behavior to true"
-        ],
+        "arguments": {
+            "#comment": [
+                "? : The tool will likely to ask this argument",
+                "0 : The tool will set the default behavior to false",
+                "1 : The tool will set the default behavior to true"
+            ],
             "packages_conversion": "?",
             "decode_ptx": "?"
         }
@@ -527,5 +528,19 @@
         ],
         "allow": true,
         "option": 60
+    },
+    "wwise_media_decode": {
+        "filter": [
+            ".bnk"
+        ],
+        "allow": true,
+        "option": 61
+    },
+    "wwise_media_encode": {
+        "filter": [
+            ".soundbank"
+        ],
+        "allow": true,
+        "option": 62
     }
 }

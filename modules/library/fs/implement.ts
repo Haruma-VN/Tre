@@ -9,9 +9,6 @@ import zlib from "zlib";
 import crypto from "crypto";
 import dataview_checker from "../../callback/default/checker.js";
 import gifFrames from 'gif-frames';
-
-
-
 interface FrameData {
     getImage: () => NodeJS.ReadableStream;
 }
@@ -2145,10 +2142,18 @@ class fs_js {
 
 
 
+    /**
+     * 
+     * @param file_system_input_path - Gif file path
+     * @param file_output_as_string  - WEBP Output path
+     */
+
+
+
     public static async gif_to_webp(
         file_system_input_path: string,
         file_output_as_string?: string,
-    ) {
+    ): Promise<void> {
         //#region 
         if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
             file_output_as_string = `${(file_system_input_path)}/../${this.js_basename(file_system_input_path)}.webp`;
@@ -2171,6 +2176,81 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
+
+
+    public static constxpr_and_build(
+        file_input_as_string: string,
+    ): Array<Buffer> {
+        //#region 
+        const read_file_buffer = this.read_file(file_input_as_string, "buffer");
+        const create_new_empty_memory_zone: Array<Buffer> = [];
+        for (let i: number = 0; i < read_file_buffer.length; ++i) {
+            create_new_empty_memory_zone[i] = Buffer.alloc(4) + read_file_buffer[i] + Buffer.alloc(2);
+        }
+
+        return create_new_empty_memory_zone;
+        //#endregion
+    }
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+    /**
+     * 
+     * @param new_text_as_str - Assert string here
+     * @param color - Assert color here 
+     * @returns - New color string
+     */
+
+
+
+    public static create_color
+        (
+            new_text_as_str: str,
+            color: "red"
+                | "blue"
+                | "green"
+                | "white"
+                | "yellow"
+                | "magenta"
+                | "cyan"
+                | "black",
+        ): str {
+        //#region 
+        switch (color) {
+            case "red":
+                return '\x1b[31m' + new_text_as_str + '\x1b[0m';
+            case 'blue':
+                return '\x1b[34m' + new_text_as_str + '\x1b[0m';
+            case 'green':
+                return '\x1b[32m' + new_text_as_str + '\x1b[0m';
+            case 'white':
+                return '\x1b[37m' + new_text_as_str + '\x1b[0m';
+            case 'yellow':
+                return '\x1b[33m' + new_text_as_str + '\x1b[0m';
+            case 'magenta':
+                return '\x1b[35m' + new_text_as_str + '\x1b[0m';
+            case 'cyan':
+                return '\x1b[36m' + new_text_as_str + '\x1b[0m';
+            case 'black':
+                return '\x1b[30m' + new_text_as_str + '\x1b[0m';
+            default:
+                throw new Error(`Cannot find the specific color`);
+        }
+
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
 
 
 

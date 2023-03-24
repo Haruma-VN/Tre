@@ -9,7 +9,7 @@ import * as color from '../../../library/color/color.js';
 import rton_plain from './rijndael/rton_plain.js';
 import rton_cipher from './rijndael/rton_cipher.js';
 
-export function rton_to_json(filepath?: string, this_will_stop_console_log: boolean = false): void {
+export function popcap_rton_to_json(filepath?: string, this_will_stop_console_log: boolean = false): void {
     if (!filepath) {
         return;
     }
@@ -62,7 +62,7 @@ export function rton_decrypt_and_decode_to_json(filepath?: string, this_will_sto
     }
 }
 
-export function json_to_rton_and_encrypt(filepath?: string, this_will_stop_console_log: boolean = false): void {
+export function popcap_json_to_rton_and_encrypt(filepath?: string, this_will_stop_console_log: boolean = false): void {
     if (!filepath) {
         return;
     }
@@ -88,7 +88,7 @@ export function json_to_rton_and_encrypt(filepath?: string, this_will_stop_conso
     }
 }
 
-export function json_to_rton(filepath?: string, this_will_stop_console_log: boolean = false): void {
+export function popcap_json_to_rton(filepath?: string, this_will_stop_console_log: boolean = false): void {
     if (!filepath) {
         return;
     }

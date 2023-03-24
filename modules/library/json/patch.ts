@@ -1,102 +1,89 @@
 "use strict";
 import localization from "../../callback/localization.js";
 
-interface PatchX {
-    loop: boolean,
-    patch: any[],
-}
-export default function applyPatch(source: any, patch: PatchX): any {
-    try {
-        if (patch.loop) {
-            let result: any[] = [];
-            if (Array.isArray(source)) {
-                for (const member of source) {
-                    result.push(applyPatch(member, { loop: false, patch: patch.patch }));
-                }
-                return result;
-            } else {
-                throw new Error(localization("json_patch_error_apply"));
-            }
-        } else {
-            if (patch.patch) {
-                for (const op of patch.patch) {
-                    switch (op.op) {
-                        case "add": {
-                            const pathElements = op.path.split("/").slice(1);
-                            let obj = source;
-                            for (let i: number = 0; i < pathElements.length - 1; i++) {
-                                const pathElement = pathElements[i];
-                                if (!obj[pathElement]) {
-                                    obj[pathElement] = {};
-                                }
-                                obj = obj[pathElement];
-                            }
-                            obj[pathElements[pathElements.length - 1]] = op.value;
-                            break;
-                        }
-                        case "remove": {
-                            const pathElements = op.path.split("/").slice(1);
-                            let obj = source;
-                            for (let i = 0; i < pathElements.length - 1; i++) {
-                                const pathElement = pathElements[i];
-                                obj = obj[pathElement];
-                            }
-                            delete obj[pathElements[pathElements.length - 1]];
-                            break;
-                        }
-                        case "replace": {
-                            const pathElements = op.path.split("/").slice(1);
-                            let obj = source;
-                            for (let i = 0; i < pathElements.length - 1; i++) {
-                                const pathElement = pathElements[i];
-                                obj = obj[pathElement];
-                            }
-                            obj[pathElements[pathElements.length - 1]] = op.value;
-                            break;
-                        }
-                        case "move": {
-                            const fromPathElements = op.from.split("/").slice(1);
-                            let fromObj = source;
-                            for (let i = 0; i < fromPathElements.length - 1; i++) {
-                                const pathElement = fromPathElements[i];
-                                fromObj = fromObj[pathElement];
-                            }
-                            const value = fromObj[fromPathElements[fromPathElements.length - 1]];
+export type PatchOperation =
+    | { op: 'add'; path: string[]; value: any }
+    | { op: 'remove'; path: string[] }
+    | { op: 'replace'; path: string[]; value: any }
+    | { op: 'move'; from: string[]; path: string[] }
+    | { op: 'copy'; from: string[]; path: string[] }
+    | { op: 'test'; path: string[]; value: any };
 
-                            const pathElements = op.path.split("/").slice(1);
-                            let obj = source;
-                            for (let i = 0; i < pathElements.length - 1; i++) {
-                                const pathElement = pathElements[i];
-                                obj = obj[pathElement];
-                            }
-                            obj[pathElements[pathElements.length - 1]] = value;
-                            delete fromObj[fromPathElements[fromPathElements.length - 1]];
-                            break;
-                        }
-                        case "copy": {
-                            const fromPathElements = op.from.split("/").slice(1);
-                            let fromObj = source;
-                            for (let i = 0; i < fromPathElements.length - 1; i++) {
-                                const pathElement = fromPathElements[i];
-                                fromObj = fromObj[pathElement];
-                            }
-                            const value = fromObj[fromPathElements[fromPathElements.length - 1]];
+function get(obj: any, path: string[]): any {
+    let current = obj;
 
-                            const pathElements = op.path.split("/").slice(1);
-                            let obj = source;
-                            for (let i = 0; i < pathElements.length - 1; i++) {
-                                const pathElement = pathElements[i];
-                                obj = obj[pathElement];
-                            }
-                            obj[pathElements[pathElements.length - 1]] = value;
-                            break;
-                        }
-                    }
-                }
-            }
-            return source;
+    for (const token of path) {
+        if (current === null || typeof current === 'undefined') {
+            return undefined;
         }
-    } catch (error: any) {
-        throw new Error(error.message);
+        current = current[token];
     }
+
+    return current;
+}
+
+function set(obj: any, path: string[], value: any): void {
+    let current = obj;
+
+    for (let i = 0; i < path.length - 1; i++) {
+        const token = path[i];
+        if (!(token in current)) {
+            current[token] = {};
+        }
+        current = current[token];
+    }
+
+    current[path[path.length - 1]] = value;
+}
+
+function remove(obj: any, path: string[]): void {
+    let current = obj;
+
+    for (let i = 0; i < path.length - 1; i++) {
+        const token = path[i];
+        if (!(token in current)) {
+            return;
+        }
+        current = current[token];
+    }
+
+    delete current[path[path.length - 1]];
+}
+
+function applyPatch(obj: any, patch: PatchOperation): void {
+    switch (patch.op) {
+        case 'add':
+            set(obj, patch.path, patch.value);
+            break;
+        case 'remove':
+            remove(obj, patch.path);
+            break;
+        case 'replace':
+            set(obj, patch.path, patch.value);
+            break;
+        case 'move':
+            const valueToMove = get(obj, patch.from);
+            remove(obj, patch.from);
+            set(obj, patch.path, valueToMove);
+            break;
+        case 'copy':
+            const valueToCopy = get(obj, patch.from);
+            set(obj, patch.path, valueToCopy);
+            break;
+        case 'test':
+            const value = get(obj, patch.path);
+            if (JSON.stringify(value) !== JSON.stringify(patch.value)) {
+                throw new Error(localization("test_operation_failed"));
+            }
+            break;
+        default:
+            throw new Error(`${localization("invalid_patch_op")} ${(patch as any).op as never}`) as never;
+    }
+}
+
+export default function applyPatchDocument(obj: any, patches: PatchOperation[]) {
+    for (const patch of patches) {
+        applyPatch(obj, patch);
+    }
+    return obj;
 }

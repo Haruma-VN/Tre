@@ -6,8 +6,8 @@ async function create_evaluate_argument(
     execute_file_dir: string | Array<string>,
     input_argument_as_number: number): Promise<void> {
     switch (input_argument_as_number) {
-        case Display.Tre.Function.popcap_rton_to_json.void_number_readline_argument() as evaluation_method:
-            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_rton_to_json" as popcap_game_edit_method)
+        case Display.Tre.Function.popcap_popcap_rton_to_json.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_popcap_rton_to_json" as popcap_game_edit_method)
             break;
         case Display.Tre.Function.popcap_rton_decrypt_and_decode.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_rton_decrypt_and_decode" as popcap_game_edit_method);
@@ -72,8 +72,8 @@ async function create_evaluate_argument(
         case Display.Tre.Function.popcap_texture_atlas_cat_simple.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_texture_atlas_cat_simple" as popcap_game_edit_method);
             break;
-        case Display.Tre.Function.popcap_atlas_pack_experimental.void_number_readline_argument() as evaluation_method:
-            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_atlas_pack_experimental" as popcap_game_edit_method);
+        case Display.Tre.Function.popcap_atlas_pack_advanced.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_atlas_pack_advanced" as popcap_game_edit_method);
             break;
         case Display.Tre.Function.popcap_texture_atlas_pack_cross_resolution.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_texture_atlas_pack_cross_resolution" as popcap_game_edit_method);
@@ -87,8 +87,8 @@ async function create_evaluate_argument(
         case Display.Tre.Function.popcap_texture_resize_atlas_simple.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_texture_resize_atlas_simple" as popcap_game_edit_method);
             break;
-        case Display.Tre.Function.popcap_json_to_rton.void_number_readline_argument() as evaluation_method:
-            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_json_to_rton" as popcap_game_edit_method);
+        case Display.Tre.Function.popcap_popcap_json_to_rton.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_popcap_json_to_rton" as popcap_game_edit_method);
             break;
         case Display.Tre.Function.popcap_rton_encode_and_encrypt.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_rton_encode_and_encrypt" as popcap_game_edit_method);
@@ -114,8 +114,8 @@ async function create_evaluate_argument(
         case Display.Tre.Function.popcap_texture_atlas_split.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_texture_atlas_split" as popcap_game_edit_method);
             break;
-        case Display.Tre.Function.popcap_atlas_split_experimental.void_number_readline_argument() as evaluation_method:
-            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_atlas_split_experimental" as popcap_game_edit_method);
+        case Display.Tre.Function.popcap_atlas_split_advanced.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_atlas_split_advanced" as popcap_game_edit_method);
             break;
         case Display.Tre.Function.atlas_info_split.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "atlas_info_split" as popcap_game_edit_method);
@@ -162,8 +162,8 @@ async function create_evaluate_argument(
         case Display.Tre.Function.popcap_lawnstrings_diff.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_lawnstrings_diff" as popcap_game_edit_method);
             break;
-        case Display.Tre.Function.real_esrgan_upscaler_bitmap_content.void_number_readline_argument() as evaluation_method:
-            await execute_function_from_core(execute_file_dir as assertation_argument, "real_esrgan_upscaler_bitmap_content" as popcap_game_edit_method);
+        case Display.Tre.Function.real_esrgan_upscaler_image.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "real_esrgan_upscaler_image" as popcap_game_edit_method);
             break;
         case Display.Tre.Function.popcap_pam_encode.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_pam_encode" as popcap_game_edit_method);
@@ -179,6 +179,12 @@ async function create_evaluate_argument(
             break;
         case Display.Tre.Function.popcap_flash_to_pam.void_number_readline_argument() as evaluation_method:
             await execute_function_from_core(execute_file_dir as assertation_argument, "popcap_flash_to_pam" as popcap_game_edit_method);
+            break;
+        case Display.Tre.Function.wwise_media_decode.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "wwise_media_decode" as popcap_game_edit_method);
+            break;
+        case Display.Tre.Function.wwise_media_encode.void_number_readline_argument() as evaluation_method:
+            await execute_function_from_core(execute_file_dir as assertation_argument, "wwise_media_encode" as popcap_game_edit_method);
             break;
         default:
             throw new Error(`${localization("cannot_find_module")}`) as never;
