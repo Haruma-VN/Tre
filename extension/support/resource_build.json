@@ -1,0 +1,21 @@
+{
+    "extend_id": "IMAGE_PLANT_TRE_",
+    "extend_path": [
+        "images",
+        "1536",
+        "plants",
+        "tre"
+    ],
+    "position_x": 1,
+    "position_y": 1,
+    "popcap_resource_x": 0,
+    "popcap_resource_y": 0,
+    "version": 6,
+    "position": [
+		0,
+		0
+	],
+	"frame_rate": 30,
+	"popcap_resource_path_type": "array",
+	"trim": false
+}

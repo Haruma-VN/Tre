@@ -28,14 +28,14 @@ export default function (dom_document: any, main_sprite: any) {
     if (Object.keys(x_DOMLayer_list[0].frames).length != 1) {
         throw new Error(localization("DOMDocument_invalid_flow"));
     }
-    const DOMFrame_flow_list = new Array();
-    if (Array.isArray(x_DOMLayer_list[0].frames)) {
-        (DOMFrame_flow_list as any) = x_DOMLayer_list[0].frames
+    let DOMFrame_flow_list = new Array();
+    if (Array.isArray(x_DOMLayer_list[0].frames.DOMFrame)) {
+        DOMFrame_flow_list = x_DOMLayer_list[0].frames.DOMFrame;
     }
     else {
         DOMFrame_flow_list.push(x_DOMLayer_list[0].frames.DOMFrame);
     }
-    DOMFrame_flow_list.forEach(function (x_DOMFrame: any) {
+    DOMFrame_flow_list.forEach(function (x_DOMFrame) {
         const frame_index = x_DOMFrame.index;
         if (x_DOMFrame.name != undefined) {
             if (x_DOMFrame.labelType != "name") {
@@ -64,12 +64,12 @@ export default function (dom_document: any, main_sprite: any) {
     if (Object.keys(x_DOMLayer_list[1].frames).length != 1) {
         throw new Error(localization("DOMDocument_invalid_command"));
     }
-    const DOMFrame_command_list = new Array();
+    let DOMFrame_command_list = new Array();
     if (Array.isArray(x_DOMLayer_list[1].frames.DOMFrame)) {
-        (DOMFrame_command_list as any) = x_DOMLayer_list[1].frames.DOMFrame;
+        DOMFrame_command_list = x_DOMLayer_list[1].frames.DOMFrame;
     }
     else {
-        DOMFrame_command_list.push(x_DOMLayer_list[1].frames.DOMFrame)
+        DOMFrame_command_list.push(x_DOMLayer_list[1].frames.DOMFrame);
     }
     DOMFrame_command_list.forEach(function (x_DOMFrame) {
         const frame_index = x_DOMFrame.index;

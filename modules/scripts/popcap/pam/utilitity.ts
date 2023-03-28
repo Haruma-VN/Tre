@@ -6,9 +6,10 @@ import path from 'node:path';
 import popcap_pam_from_gif from './gif/encode.js';
 import { atlasinfo_conduct } from '../../default/atlas_info/util.js';
 import localization from '../../../callback/localization.js';
-import execute_function_from_core from '../../../callback/execute_from_core.js';
+import evaluation_modules_workspace_assertation from '../../../callback/evaluation_modules_workspace_assertation.js';
 import pamjson2pamflash from './json_to_flash/pamjson_to_pamflash.js';
 import pamflash_to_pamjson from './flash_to_json/pamflash_to_pamjson.js'
+import increaseFramerate from './frame/increase_framerate.js';
 
 export async function popcap_pam_encode(
     file_system_data_input_argument: string,
@@ -52,7 +53,7 @@ export async function gif_to_pam(
     fs_js.js_remove(resource_build_json_directory);
     fs_js.execution_status("success", localization("deleted_resource_build_json"));
     fs_js.execution_auto(`${localization("popcap_pam_from_gif")} ~ ${localization("popcap_texture_atlas_pack_cross_resolution")}`);
-    await execute_function_from_core(gif_output_directory, "popcap_texture_atlas_pack_cross_resolution");
+    await evaluation_modules_workspace_assertation(gif_output_directory, "popcap_texture_atlas_pack_cross_resolution");
 }
 
 export async function popcap_pam_to_flash(
@@ -69,5 +70,16 @@ export async function popcap_flash_to_pam(
     const file_system_output = `${file_system_data_input_argument}/../${path.parse(file_system_data_input_argument).name}.pam`;
     const pam_data = await writepam(pam_json);
     fs_js.write_file(file_system_output, pam_data);
+    fs_js.execution_out(fs_js.get_full_path(file_system_output));
+}
+
+export async function frame_rate_increasement(
+    file_system_data_input_argument: string,
+    ratio: 2 | 3 | 4
+) {
+    const input = file_system_data_input_argument;
+    const output = await increaseFramerate(fs_js.read_json(input), ratio);
+    const file_system_output = `${file_system_data_input_argument}/../${path.parse(path.parse(file_system_data_input_argument).name).name}.x${ratio}.pam.json`;
+    fs_js.write_json(file_system_output, output);
     fs_js.execution_out(fs_js.get_full_path(file_system_output));
 }

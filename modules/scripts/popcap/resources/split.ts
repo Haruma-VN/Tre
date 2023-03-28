@@ -16,6 +16,9 @@ export default async function (dir: string, json_data_if_no_dir_were_parsed?: an
     const config: TreSetting = readjson(process.cwd() + "/extension/settings/toolkit.json", true) as TreSetting;
     const is_beautify_mode: boolean = (config.resources.split.beautify_res) ? true : false;
     const directories = path.parse(dir).name + '.res';
+    if (!("groups" in json)) {
+        throw new Error(localization("not_valid_resources"));
+    }
     if ("groups" in json) {
         makefolder(dir + '/../' + directories);
         for (let group of json.groups) {

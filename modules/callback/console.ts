@@ -14,7 +14,7 @@ export namespace Console {
         });
         return console.log(text);
     }
-    
+
     export function ReadFile(): string {
         return FileChecker();
     }
@@ -69,6 +69,14 @@ export namespace Console {
             text += param;
         });
         return Console.WriteLine(color.fgred_string(`${text}`));
+    }
+
+    export function Error(...params: any[]): void {
+        let text: string = "";
+        params.forEach((param) => {
+            text += param;
+        });
+        return console.error(color.fgred_string(`${text}`));
     }
 }
 

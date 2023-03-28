@@ -9,6 +9,7 @@ import resolveFilePath from "./public/file_path/path_result.js";
 import js_checker from "./default/checker.js";
 import fs_js from "../library/fs/implement.js";
 import create_evaluate_argument from "./evaluate.js";
+import check_evaluate_system from './public/check/checker.js';
 
 export interface configAtlas {
     display: {
@@ -36,18 +37,18 @@ export default async function (execute_file_count: number, execute_file_dir: str
         execute_file_dir.forEach((child_file_bundle: string, index: number) => {
             if (json_config.display.disable_display_full_path_execution) {
                 if (index === (execute_file_dir.length - 1)) {
-                    Console.WriteLine(`     ${path.basename(child_file_bundle)}\n`);
+                    Console.WriteLine(`     ${path.basename(child_file_bundle)} | ${check_evaluate_system(child_file_bundle)}\n`);
                 }
                 else {
-                    Console.WriteLine(`     ${path.basename(child_file_bundle)}\n`);
+                    Console.WriteLine(`     ${path.basename(child_file_bundle)} | ${check_evaluate_system(child_file_bundle)}\n`);
                 };
             }
             else {
                 if (index === (execute_file_dir.length - 1)) {
-                    Console.WriteLine(`     ${((child_file_bundle))}\n`);
+                    Console.WriteLine(`     ${((child_file_bundle))} | ${check_evaluate_system(child_file_bundle)}\n`);
                 }
                 else {
-                    Console.WriteLine(`     ${(child_file_bundle)}`);
+                    Console.WriteLine(`     ${(child_file_bundle)} | ${check_evaluate_system(child_file_bundle)}`);
                 };
 
             }
@@ -55,10 +56,10 @@ export default async function (execute_file_count: number, execute_file_dir: str
     }
     else {
         if (json_config.display.disable_display_full_path_execution) {
-            Console.WriteLine(`     ${path.basename(execute_file_dir)}\n`);
+            Console.WriteLine(`     ${path.basename(execute_file_dir)} | ${check_evaluate_system(execute_file_dir)}\n`);
         }
         else {
-            Console.WriteLine(`     ${execute_file_dir}\n`);
+            Console.WriteLine(`     ${execute_file_dir} | ${check_evaluate_system(execute_file_dir)}\n`);
         }
     }
     const tre_selector: Array<number> = new Array();

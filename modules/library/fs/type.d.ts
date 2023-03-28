@@ -14,7 +14,7 @@ declare type assertation_arg = string;
 
 declare type evaluate_error = NodeJS.ErrnoException;
 
-declare type auto_file_system_encoding = "hex" | "utf-8";
+declare type auto_file_system_encoding = "hex" | "utf-8" | "utf16le";
 
 declare type js_encode = "ascii" | "base64" | "base64url" | "utf-8" | "binary" | "hex" | "latin1" | "ucs-2" | "ucs2" | "utf16le" | "utf8";
 
@@ -49,7 +49,7 @@ declare type file_save = file_name;
 
 declare type file_system_full_path_directory = file_name;
 
-declare type encoding_view = "hex" | "utf8" | "buffer";
+declare type encoding_view = "hex" | "utf8" | "buffer" | "utf16le";
 
 declare type popcap_extension_checker = ".ptx" | ".rsb" | ".rton" | ".json" | ".rsgp" | ".smf";
 
@@ -70,7 +70,7 @@ declare type view_option =
     "beautify_order" |
     "beautify_res" |
     "remove_unused_info" |
-    "fix_double_shadows"| 
+    "fix_double_shadows" |
     "smart_allowance_area" |
     "cut_unused_space" |
     "progress_bar";
@@ -135,7 +135,7 @@ declare type toolkit_json = {
         progress_bar: bool,
     },
     resources: {
-        beautify_order:popcap_resources_render,
+        beautify_order: popcap_resources_render,
         split: {
             beautify_res: bool,
             remove_unused_info: bool,

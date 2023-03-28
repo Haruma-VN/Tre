@@ -21,6 +21,7 @@ export default function (folder_xfl_path: string) {
     })
     const main_sprite = parseSpriteXML(XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/main_sprite.xml`, 'utf8'))), -1, 'main_sprite', frame_rate);
     parseDOMDocument(dom_document, main_sprite.frame);
+    fs_js.create_directory(`${folder_xfl_path}/LIBRARY/media`);
     return {
         version: extra_json.version,
         frame_rate: frame_rate,

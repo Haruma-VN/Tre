@@ -39,6 +39,6 @@ export default function (iz_magic_header_rsb: any): any {
         compositeList_BeginOffset, autopool_Number,
         autopoolInfo_BeginOffset, autopoolInfo_EachLength,
         ptx_Number, ptxInfo_BeginOffset, ptxInfo_EachLength,
-        Part1_BeginOffset, Part2_BeginOffset, Part3_BeginOffset
+        Part1_BeginOffset, Part2_BeginOffset, Part3_BeginOffset,
     }
 }

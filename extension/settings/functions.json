@@ -367,14 +367,14 @@
         "allow": true,
         "option": 43
     },
-    "popcap_popcap_rton_to_json": {
+    "popcap_rton_to_json": {
         "filter": [
             ".rton"
         ],
         "allow": true,
         "option": 44
     },
-    "popcap_popcap_json_to_rton": {
+    "popcap_json_to_rton": {
         "filter": [
             ".json"
         ],
@@ -542,5 +542,33 @@
         ],
         "allow": true,
         "option": 62
+    },
+    "frame_rate_increasement": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 63
+    },
+    "popcap_pam_json_to_flash": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 64
+    },
+    "popcap_flash_to_pam_json": {
+        "filter": [
+            ".xfl"
+        ],
+        "allow": true,
+        "option": 65
+    },
+    "script_evaluation": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 66
     }
 }

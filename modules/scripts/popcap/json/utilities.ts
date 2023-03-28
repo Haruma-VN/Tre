@@ -4,7 +4,7 @@ import { readjson, writejson, makefolder, check_is_file, read_dir } from "../../
 import { Console } from "../../../callback/console.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
-import { fs_js } from "../../../callback/execute_from_core.js";
+import { fs_js } from "../../../callback/evaluation_modules_workspace_assertation.js";
 
 namespace PopCapPackages.Json {
 

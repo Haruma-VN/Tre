@@ -226,16 +226,16 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_lawnstrings_convert_from_localization").option,
         execution_evaluate_view("popcap_lawnstrings_convert_from_localization").filter,
         execution_evaluate_view("popcap_lawnstrings_convert_from_localization").allow);
-    export const popcap_popcap_rton_to_json = new Void(
+    export const popcap_rton_to_json = new Void(
         localization("popcap_rton_to_json"),
-        execution_evaluate_view("popcap_popcap_rton_to_json").option,
-        execution_evaluate_view("popcap_popcap_rton_to_json").filter,
-        execution_evaluate_view("popcap_popcap_rton_to_json").allow);
-    export const popcap_popcap_json_to_rton = new Void(
+        execution_evaluate_view("popcap_rton_to_json").option,
+        execution_evaluate_view("popcap_rton_to_json").filter,
+        execution_evaluate_view("popcap_rton_to_json").allow);
+    export const popcap_json_to_rton = new Void(
         localization("popcap_json_to_rton"),
-        execution_evaluate_view("popcap_popcap_json_to_rton").option,
-        execution_evaluate_view("popcap_popcap_json_to_rton").filter,
-        execution_evaluate_view("popcap_popcap_json_to_rton").allow);
+        execution_evaluate_view("popcap_json_to_rton").option,
+        execution_evaluate_view("popcap_json_to_rton").filter,
+        execution_evaluate_view("popcap_json_to_rton").allow);
     export const popcap_rton_decrypt_and_decode = new Void(
         localization("popcap_rton_decrypt_and_decode"),
         execution_evaluate_view("popcap_rton_decrypt_and_decode").option,
@@ -321,6 +321,17 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("wwise_media_encode").option,
         execution_evaluate_view("wwise_media_encode").filter,
         execution_evaluate_view("wwise_media_encode").allow);
+    export const frame_rate_increasement = new Void(
+        localization("frame_rate_increasement"),
+        execution_evaluate_view("frame_rate_increasement").option,
+        execution_evaluate_view("frame_rate_increasement").filter,
+        execution_evaluate_view("frame_rate_increasement").allow);
+    export const script_evaluation = new Void(
+        localization("script_evaluation"),
+        execution_evaluate_view("script_evaluation").option,
+        execution_evaluate_view("script_evaluation").filter,
+        execution_evaluate_view("script_evaluation").allow);
+
 
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
         if (is_display_data) {
@@ -383,8 +394,8 @@ export namespace Display.Tre.Function {
             popcap_lawnstrings_diff,
             popcap_lawnstrings_convert_to_localization,
             popcap_lawnstrings_convert_from_localization,
-            popcap_popcap_rton_to_json,
-            popcap_popcap_json_to_rton,
+            popcap_rton_to_json,
+            popcap_json_to_rton,
             popcap_rton_decrypt_and_decode,
             popcap_rton_encode_and_encrypt,
             popcap_atlas_split_advanced,
@@ -402,5 +413,7 @@ export namespace Display.Tre.Function {
             popcap_flash_to_pam,
             wwise_media_decode,
             wwise_media_encode,
+            frame_rate_increasement,
+            script_evaluation,
         ];
 }

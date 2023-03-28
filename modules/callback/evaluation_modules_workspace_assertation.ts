@@ -1,23 +1,23 @@
 "use strict";
 import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, encode_etc1a, encode_pvrtc, decode_etc1a, decode_pvrtc, decode_etc1alpha_palette, encode_etc1alpha_palette, } from "../library/img/util.js";
-import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, } from '../../modules/scripts/popcap/resources/util.js';
-import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution, atlas_split_experimental, atlas_pack_experimental } from '../../modules/scripts/popcap/atlas/util.js';
+import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, } from '../scripts/popcap/resources/util.js';
+import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution, atlas_split_experimental, atlas_pack_experimental } from '../scripts/popcap/atlas/util.js';
 import { readjson, readfile, writefile, writejson, check_is_file, file_stats, readfilebuffer, makefolder, delete_file, read_dir, read_single_folder } from "../library/fs/util.js";
 import { Argument } from "./toolkit_question.js";
 import { extname, basename } from '../library/extension/util.js';
 import { Console } from "./console.js";
-import { atlas_info_cat, atlas_info_split, atlasinfo_conduct, } from "../../modules/scripts/default/atlas_info/util.js";
+import { atlas_info_cat, atlas_info_split, atlasinfo_conduct, } from "../scripts/default/atlas_info/util.js";
 import * as color from '../library/color/color.js';
 import extra_system from '../library/extra/outfile.js';
 import path from "node:path";
 import { unpack_rsgp, pack_rsgp } from '../scripts/popcap/rsgp/util.js';
 import readline_for_json from "./public/input/readline_for_json.js";
 import ban from "./public/js_evaluate/ban.js";
-import applyPatch from "../../modules/library/json/patch.js";
+import applyPatch from "../library/json/patch.js";
 import generatePatch from "../library/json/generate_patch.js";
 import * as ImagesUtilities from "../library/img/util.js";
 import * as popcap_game_content_edit from "../scripts/popcap/rsb/utilities.js";
-import { Lawnstrings } from "../../modules/scripts/popcap/localization/lawnstrings.js";
+import { Lawnstrings } from "../scripts/popcap/localization/lawnstrings.js";
 import PopCapPackages from "../scripts/popcap/json/utilities.js";
 import RSBInfo from "../scripts/default/support/utilities.js";
 import { popcap_rton_to_json, popcap_json_to_rton, rton_decrypt_and_decode_to_json, popcap_json_to_rton_and_encrypt } from "../scripts/popcap/rton/util.js";
@@ -26,21 +26,22 @@ import js_checker from "./default/checker.js";
 import localization from "./localization.js";
 import fs_js from "../library/fs/implement.js";
 import { stringify, parse } from "../library/json/util.js";
-import { popcap_pam_decode, popcap_pam_encode, gif_to_pam, popcap_flash_to_pam, popcap_pam_to_flash, } from "../scripts/popcap/pam/utilitity.js";
+import { popcap_pam_decode, popcap_pam_encode, gif_to_pam, popcap_flash_to_pam, popcap_pam_to_flash, frame_rate_increasement, } from "../scripts/popcap/pam/utilitity.js";
 import { evaluate_test, sort_atlas_area } from "../scripts/helper/utility.js";
 import input_set from "./public/suggestion/input.js";
 import { popcap_bnk_decode, popcap_bnk_encode } from "../scripts/popcap/wwise/util.js";
 import { create_evaluation } from "./helper/util.js";
+import popcap_rsb_disturb from "../scripts/default/scrapped/disturb.js";
 
 /**
  * 
- * @param {*} execute_function_from_core as Promise<void> - Evaluate the function being called
+ * @param {*} evaluation_modules_workspace_assertation as Promise<void> - Evaluate the function being called
  * @param {*} execute_file_dir - Pass an argument or file path here
  * @param method - Pass in the methods & arguments to start
  * @returns - Evaluation success
  */
 
-async function execute_function_from_core(
+async function evaluation_modules_workspace_assertation(
     /**
      * @param {*} execute_file_dir - Pass an argument or file path here
      */
@@ -79,17 +80,27 @@ async function execute_function_from_core(
                 })
             }
             break;
-        case "evaluate_script" as popcap_game_edit_method:
+        case "frame_rate_increasement" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                await create_evaluation(execute_file_dir);
+                fs_js.execution_information(localization("frame_rate_increasement_detail"));
+                Console.WriteLine(input_set.create_instant_void("notify", 2, localization("frame_rate_ratio_x2")));
+                Console.WriteLine(input_set.create_instant_void("notify", 3, localization("frame_rate_ratio_x3")));
+                Console.WriteLine(input_set.create_instant_void("notify", 4, localization("frame_rate_ratio_x4")));
+                const ratio = Console.IntegerReadLine(2, 4);
+                await frame_rate_increasement(execute_file_dir, ratio as 2 | 3 | 4);
             }
             else {
                 execute_file_dir.forEach(async file => {
-                    await create_evaluation(file);
+                    fs_js.execution_information(localization("frame_rate_increasement_detail"));
+                    Console.WriteLine(input_set.create_instant_void("notify", 2, localization("frame_rate_ratio_x2")));
+                    Console.WriteLine(input_set.create_instant_void("notify", 3, localization("frame_rate_ratio_x3")));
+                    Console.WriteLine(input_set.create_instant_void("notify", 4, localization("frame_rate_ratio_x4")));
+                    const ratio = Console.IntegerReadLine(2, 4);
+                    await frame_rate_increasement(file, ratio as 2 | 3 | 4);
                 })
             };
             break;
-        case "popcap_popcap_rton_to_json" as popcap_game_edit_method:
+        case "popcap_rton_to_json" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 popcap_rton_to_json(execute_file_dir);
             }
@@ -98,6 +109,42 @@ async function execute_function_from_core(
                     popcap_rton_to_json(file);
                 })
             }
+            break;
+        case "popcap_rton_to_json" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                popcap_rton_to_json(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(file => {
+                    popcap_rton_to_json(file);
+                })
+            }
+            break;
+        case "popcap_rsb_disturb" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                const popcap_rsb_disturbed_finish: Buffer = popcap_rsb_disturb(fs_js.read_file(execute_file_dir, "buffer"));
+                const output_argument_set = `${execute_file_dir}/../${path.parse(execute_file_dir).base}.disturb`;
+                fs_js.write_file(output_argument_set, popcap_rsb_disturbed_finish);
+                fs_js.execution_out(output_argument_set);
+            }
+            else {
+                execute_file_dir.forEach(file => {
+                    const popcap_rsb_disturbed_finish: Buffer = popcap_rsb_disturb(fs_js.read_file(file, "buffer"));
+                    const output_argument_set = `${file}/../${path.parse(file).base}.disturb`;
+                    fs_js.write_file(output_argument_set, popcap_rsb_disturbed_finish);
+                    fs_js.execution_out(output_argument_set);
+                })
+            }
+            break;
+        case "script_evaluation" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                await create_evaluation(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    await create_evaluation(file);
+                })
+            };
             break;
         case "popcap_flash_to_pam" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
@@ -1069,7 +1116,7 @@ async function execute_function_from_core(
                 })
             }
             break;
-        case "popcap_popcap_json_to_rton" as popcap_game_edit_method:
+        case "popcap_json_to_rton" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 popcap_json_to_rton(execute_file_dir);
             }
@@ -1269,8 +1316,11 @@ async function execute_function_from_core(
             }
             break;
         case "popcap_atlas_split_advanced" as popcap_game_edit_method:
-            if (js_checker.is_array(execute_file_dir)) {
+            if (js_checker.is_array(execute_file_dir) && execute_file_dir.length >= 2) {
                 await atlas_split_experimental(execute_file_dir);
+            }
+            else {
+                throw new Error(`Split atlas requires to have at least 1 json & 1 png`);
             }
             break;
         case "atlas_info_split" as popcap_game_edit_method:
@@ -1558,7 +1608,7 @@ async function execute_function_from_core(
     }
     return;
 }
-export default execute_function_from_core;
+export default evaluation_modules_workspace_assertation;
 
 
 

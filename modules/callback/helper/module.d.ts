@@ -5,7 +5,10 @@ declare type evaluation_script = {
 
 
 declare type tre_evaluation_object = {
-    func: string,
+    func: string | null,
     notify: null | string,
-    path: Array<string>,
+    entry: Array<string> | null,
 }
+
+
+declare type SystemError = NodeJS.ErrnoException | string;

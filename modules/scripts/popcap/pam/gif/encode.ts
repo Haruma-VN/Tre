@@ -1,5 +1,5 @@
 "use strict";
-import { js_checker } from "../../../../callback/execute_from_core.js";
+import { js_checker } from "../../../../callback/evaluation_modules_workspace_assertation.js";
 import localization from "../../../../callback/localization.js";
 import fs_js from "../../../../library/fs/implement.js";
 import { readline_normal } from "../../../../readline/util.js";
