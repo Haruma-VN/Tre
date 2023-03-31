@@ -13,15 +13,14 @@ export default function (folder_xfl_path: string) {
     const height = Number(dom_document.DOMDocument.height);
     const image = new Array();
     const sprite = new Array();
-    extra_json.image.map(function (item: any, index: number) {
+    extra_json.image.map(function (item: string, index: number) {
         image.push(parseImageXML(XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/image/image_${index + 1}.xml`, 'utf8'))), index, item));
-    })
-    extra_json.sprite.map(function (item: any, index: number) {
-        sprite.push(parseSpriteXML(XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/sprite/sprite_${index + 1}.xml`, 'utf8'))), index, item.name, frame_rate));
-    })
+    });
+    extra_json.sprite.map(function (item: string, index: number) {
+        sprite.push(parseSpriteXML(XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/sprite/sprite_${index + 1}.xml`, 'utf8'))), index, (item as any).name, frame_rate));
+    });
     const main_sprite = parseSpriteXML(XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/main_sprite.xml`, 'utf8'))), -1, 'main_sprite', frame_rate);
     parseDOMDocument(dom_document, main_sprite.frame);
-    fs_js.create_directory(`${folder_xfl_path}/LIBRARY/media`);
     return {
         version: extra_json.version,
         frame_rate: frame_rate,
@@ -29,5 +28,5 @@ export default function (folder_xfl_path: string) {
         size: [width, height],
         image, sprite,
         main_sprite,
-    }
+    };
 }

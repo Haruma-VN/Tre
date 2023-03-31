@@ -10,14 +10,14 @@ export default function (pam_data: any, version: number) {
         Moves: 4,
         FrameName: 8,
         Stop: 16,
-        Commands: 32
+        Commands: 32,
     };
     const flags = pam_data.readUInt8();
     let remove = new Array();
     if ((flags & FrameFlags.Removes) != 0) {
         let remove_count = pam_data.readUInt8();
         if (remove_count == 255) {
-            remove_count = pam_data.readInt16();
+            remove_count = pam_data.readInt16LE();
         }
         for (let i = 0; i < remove_count; i++) {
             remove.push(readRemoveInfo(pam_data));
@@ -27,7 +27,7 @@ export default function (pam_data: any, version: number) {
     if ((flags & FrameFlags.Adds) != 0) {
         let append_count = pam_data.readUInt8();
         if (append_count == 255) {
-            append_count = pam_data.readInt16();
+            append_count = pam_data.readInt16LE();
         }
         for (let i = 0; i < append_count; i++) {
             append.push(readAppendInfo(pam_data, version));
@@ -37,7 +37,7 @@ export default function (pam_data: any, version: number) {
     if ((flags & FrameFlags.Moves) != 0) {
         let change_count = pam_data.readUInt8();
         if (change_count == 255) {
-            change_count = pam_data.readInt16();
+            change_count = pam_data.readInt16LE();
         }
         for (let i = 0; i < change_count; i++) {
             change.push(readMoveInfo(pam_data, version));
@@ -55,10 +55,10 @@ export default function (pam_data: any, version: number) {
     if ((flags & FrameFlags.Commands) != 0) {
         const command_count = pam_data.readUInt8();
         for (let i = 0; i < command_count; i++) {
-            command.push(readCommand(pam_data))
+            command.push(readCommand(pam_data));
         }
     }
     return {
         label, stop, command, remove, append, change
-    }
+    };
 }

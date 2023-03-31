@@ -331,6 +331,21 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("script_evaluation").option,
         execution_evaluate_view("script_evaluation").filter,
         execution_evaluate_view("script_evaluation").allow);
+    export const flash_animation_resize = new Void(
+        localization("flash_animation_resize"),
+        execution_evaluate_view("flash_animation_resize").option,
+        execution_evaluate_view("flash_animation_resize").filter,
+        execution_evaluate_view("flash_animation_resize").allow);
+    export const popcap_pam_json_to_flash = new Void(
+        localization("popcap_pam_json_to_flash"),
+        execution_evaluate_view("popcap_pam_json_to_flash").option,
+        execution_evaluate_view("popcap_pam_json_to_flash").filter,
+        execution_evaluate_view("popcap_pam_json_to_flash").allow);
+    export const popcap_flash_to_pam_json = new Void(
+        localization("popcap_flash_to_pam_json"),
+        execution_evaluate_view("popcap_flash_to_pam_json").option,
+        execution_evaluate_view("popcap_flash_to_pam_json").filter,
+        execution_evaluate_view("popcap_flash_to_pam_json").allow);
 
 
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
@@ -415,5 +430,8 @@ export namespace Display.Tre.Function {
             wwise_media_encode,
             frame_rate_increasement,
             script_evaluation,
+            flash_animation_resize,
+            popcap_pam_json_to_flash,
+            popcap_flash_to_pam_json,
         ];
 }

@@ -26,7 +26,7 @@ import js_checker from "./default/checker.js";
 import localization from "./localization.js";
 import fs_js from "../library/fs/implement.js";
 import { stringify, parse } from "../library/json/util.js";
-import { popcap_pam_decode, popcap_pam_encode, gif_to_pam, popcap_flash_to_pam, popcap_pam_to_flash, frame_rate_increasement, } from "../scripts/popcap/pam/utilitity.js";
+import { popcap_pam_decode, popcap_pam_encode, gif_to_pam, popcap_flash_to_pam, popcap_pam_to_flash, frame_rate_increasement, popcap_flash_to_pam_json, popcap_pam_json_to_flash, flash_animation_resize, } from "../scripts/popcap/pam/utilitity.js";
 import { evaluate_test, sort_atlas_area } from "../scripts/helper/utility.js";
 import input_set from "./public/suggestion/input.js";
 import { popcap_bnk_decode, popcap_bnk_encode } from "../scripts/popcap/wwise/util.js";
@@ -69,7 +69,50 @@ async function evaluation_modules_workspace_assertation(
      * @param - If the parsing success, loads modules
      */
     const arguments_default_modifier: any = fs_js.read_json((fs_js.functions_json_location as string), true);
+    // todo -> adding configuration for popcap_pam_resolution
     switch (method) {
+        case "flash_animation_resize" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
+                Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
+                const popcap_pam_resolution: number = Console.TextureQualityReadLine();
+                await flash_animation_resize(execute_file_dir, popcap_pam_resolution);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
+                    Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
+                    const popcap_pam_resolution: number = Console.TextureQualityReadLine();
+                    await flash_animation_resize(file, popcap_pam_resolution);
+                })
+            }
+            break;
+        case "popcap_flash_to_pam_json" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                await popcap_flash_to_pam_json(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    await popcap_flash_to_pam_json(file);
+                })
+            }
+            break;
+        case "popcap_pam_json_to_flash" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
+                Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
+                const popcap_pam_resolution: number = Console.TextureQualityReadLine();
+                await popcap_pam_json_to_flash(execute_file_dir, popcap_pam_resolution);
+            }
+            else {
+                execute_file_dir.forEach(async file => {
+                    Console.WriteLine(color.fgcyan_string(Argument.Tre.Packages.popcap_flash_animation_resize));
+                    Console.WriteLine(color.fggreen_string(Argument.Tre.Packages.popcap_flash_animation_resize_detail));
+                    const popcap_pam_resolution: number = Console.TextureQualityReadLine();
+                    await popcap_pam_json_to_flash(file, popcap_pam_resolution);
+                })
+            }
+            break;
         case "popcap_pam_from_gif" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await gif_to_pam(execute_file_dir);
@@ -82,20 +125,66 @@ async function evaluation_modules_workspace_assertation(
             break;
         case "frame_rate_increasement" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                fs_js.execution_information(localization("frame_rate_increasement_detail"));
-                Console.WriteLine(input_set.create_instant_void("notify", 2, localization("frame_rate_ratio_x2")));
-                Console.WriteLine(input_set.create_instant_void("notify", 3, localization("frame_rate_ratio_x3")));
-                Console.WriteLine(input_set.create_instant_void("notify", 4, localization("frame_rate_ratio_x4")));
-                const ratio = Console.IntegerReadLine(2, 4);
+                const argument_checker_for_encoding: 0 | 4 | 2 | 3 = (arguments_default_modifier.frame_rate_increasement.arguments.ratio != undefined && arguments_default_modifier.frame_rate_increasement.arguments.ratio != null && arguments_default_modifier.frame_rate_increasement.arguments.ratio != void 0 &&
+                    (typeof arguments_default_modifier.frame_rate_increasement.arguments.ratio === "string" || Number.isInteger(arguments_default_modifier.frame_rate_increasement.arguments.ratio)) && arguments_default_modifier.frame_rate_increasement.arguments.ratio !== "?" &&
+                    (parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) === 2 || parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) === 3 || parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) === 4))
+                    ? (parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) as 2 | 3 | 4) : 0;
+                if (argument_checker_for_encoding === 0) {
+                    fs_js.execution_notify("argument", localization("frame_rate_increasement_detail"));
+                    Console.WriteLine(input_set.create_instant_void("notify", 2, localization("frame_rate_ratio_x2")));
+                    Console.WriteLine(input_set.create_instant_void("notify", 3, localization("frame_rate_ratio_x3")));
+                    Console.WriteLine(input_set.create_instant_void("notify", 4, localization("frame_rate_ratio_x4")));
+                }
+                else {
+                    let execution_message: string;
+                    switch (argument_checker_for_encoding) {
+                        case 2:
+                            execution_message = localization("frame_rate_ratio_x2");
+                            break;
+                        case 3:
+                            execution_message = localization("frame_rate_ratio_x3");
+                            break;
+                        case 4:
+                            execution_message = localization("frame_rate_ratio_x4");
+                            break;
+                        default:
+                            throw new Error(`${localization("failed_to_read_frame_rate_argument")}`) as never;
+                    }
+                    fs_js.execution_auto(`${localization("frame_rate_increasement")} ~ ${execution_message}`);
+                }
+                const ratio: number = (argument_checker_for_encoding === 0) ? Console.IntegerReadLine(2, 4) : argument_checker_for_encoding;
                 await frame_rate_increasement(execute_file_dir, ratio as 2 | 3 | 4);
             }
             else {
                 execute_file_dir.forEach(async file => {
-                    fs_js.execution_information(localization("frame_rate_increasement_detail"));
-                    Console.WriteLine(input_set.create_instant_void("notify", 2, localization("frame_rate_ratio_x2")));
-                    Console.WriteLine(input_set.create_instant_void("notify", 3, localization("frame_rate_ratio_x3")));
-                    Console.WriteLine(input_set.create_instant_void("notify", 4, localization("frame_rate_ratio_x4")));
-                    const ratio = Console.IntegerReadLine(2, 4);
+                    const argument_checker_for_encoding: 0 | 4 | 2 | 3 = (arguments_default_modifier.frame_rate_increasement.arguments.ratio != undefined && arguments_default_modifier.frame_rate_increasement.arguments.ratio != null && arguments_default_modifier.frame_rate_increasement.arguments.ratio != void 0 &&
+                        (typeof arguments_default_modifier.frame_rate_increasement.arguments.ratio === "string" || Number.isInteger(arguments_default_modifier.frame_rate_increasement.arguments.ratio)) && arguments_default_modifier.frame_rate_increasement.arguments.ratio !== "?" &&
+                        (parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) === 2 || parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) === 3 || parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) === 4))
+                        ? (parseInt(arguments_default_modifier.frame_rate_increasement.arguments.ratio) as 2 | 3 | 4) : 0;
+                    if (argument_checker_for_encoding === 0) {
+                        fs_js.execution_notify("argument", localization("frame_rate_increasement_detail"));
+                        Console.WriteLine(input_set.create_instant_void("notify", 2, localization("frame_rate_ratio_x2")));
+                        Console.WriteLine(input_set.create_instant_void("notify", 3, localization("frame_rate_ratio_x3")));
+                        Console.WriteLine(input_set.create_instant_void("notify", 4, localization("frame_rate_ratio_x4")));
+                    }
+                    else {
+                        let execution_message: string;
+                        switch (argument_checker_for_encoding) {
+                            case 2:
+                                execution_message = localization("frame_rate_ratio_x2");
+                                break;
+                            case 3:
+                                execution_message = localization("frame_rate_ratio_x3");
+                                break;
+                            case 4:
+                                execution_message = localization("frame_rate_ratio_x4");
+                                break;
+                            default:
+                                throw new Error(`${localization("failed_to_read_frame_rate_argument")}`) as never;
+                        }
+                        fs_js.execution_auto(`${localization("frame_rate_increasement")} ~ ${execution_message}`);
+                    }
+                    const ratio: number = (argument_checker_for_encoding === 0) ? Console.IntegerReadLine(2, 4) : argument_checker_for_encoding;
                     await frame_rate_increasement(file, ratio as 2 | 3 | 4);
                 })
             };
@@ -452,30 +541,28 @@ async function evaluation_modules_workspace_assertation(
                 })
             }
             break;
-        case "popcap_zlib_rsgp_unpack" as popcap_game_edit_method:
+        case "popcap_zlib_rsgp_unpack":
             if (!js_checker.is_array(execute_file_dir)) {
-                await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, false, false, false);
+                await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, false, false, false, false);
             }
             else {
-                execute_file_dir.forEach(async file => {
+                execute_file_dir.forEach(async (file) => {
                     if (fs_js.popcap_check_extname(file, ".rsgp") || fs_js.popcap_check_extname(file, ".pgsr") || fs_js.popcap_check_extname(file, ".rsg")) {
-                        await unpack_rsgp(readfilebuffer(file), `${path.parse(file).dir}/${path.parse(file).name}.rsg`, false, false, false);
+                        await unpack_rsgp(readfilebuffer(file), `${path.parse(file).dir}/${path.parse(file).name}.rsg`, false, false, false, false);
                     }
-                })
+                });
             }
             break;
-        case "popcap_rsgp_unpack_simple" as popcap_game_edit_method:
+        case "popcap_rsgp_unpack_simple":
             if (!js_checker.is_array(execute_file_dir)) {
-                await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, true, true, false);
+                await unpack_rsgp(readfilebuffer(execute_file_dir), `${path.parse(execute_file_dir).dir}/${path.parse(execute_file_dir).name}.rsg`, true, true, true, false);
             }
             else {
-                execute_file_dir.forEach(async file => {
-                    execute_file_dir.forEach(async file => {
-                        if (fs_js.popcap_check_extname(file, ".rsgp") || fs_js.popcap_check_extname(file, ".pgsr") || fs_js.popcap_check_extname(file, ".rsg")) {
-                            await unpack_rsgp(readfilebuffer(file), `${path.parse(file).dir}/${path.parse(file).name}.rsg`, true, true, false);
-                        }
-                    })
-                })
+                execute_file_dir.forEach(async (file) => {
+                    if (fs_js.popcap_check_extname(file, ".rsgp") || fs_js.popcap_check_extname(file, ".pgsr") || fs_js.popcap_check_extname(file, ".rsg")) {
+                        await unpack_rsgp(readfilebuffer(file), `${path.parse(file).dir}/${path.parse(file).name}.rsg`, true, true, true, false);
+                    }
+                });
             }
             break;
         case "popcap_zlib_rsgp_pack" as popcap_game_edit_method:
@@ -1204,19 +1291,37 @@ async function evaluation_modules_workspace_assertation(
             break;
         case "popcap_game_json_split" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_rewrite_mode}`));
-                fs_js.execution_information(`      1. ${localization("split_by_aliases")}`);
-                fs_js.execution_information(`      2. ${localization("split_by_typename")}`);
-                const popcap_json_split_mode_selector: number = Console.IntegerReadLine(1, 2);
+                const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_game_json_split.arguments.method != undefined && arguments_default_modifier.popcap_game_json_split.arguments.method != null && arguments_default_modifier.popcap_game_json_split.arguments.method != void 0 &&
+                    (typeof arguments_default_modifier.popcap_game_json_split.arguments.method === "string" || Number.isInteger(arguments_default_modifier.popcap_game_json_split.arguments.method)) && arguments_default_modifier.popcap_game_json_split.arguments.method !== "?" && (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 1 || parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 2))
+                    ? (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) as 1 | 2) : 0;
+                if (argument_checker_for_encoding === 0) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_json_split_argument}`));
+                    Console.WriteLine(`      1. ${localization("split_by_aliases")}`);
+                    Console.WriteLine(`      2. ${localization("split_by_typename")}`);
+                }
+                else {
+                    const execution_information_message: string = (argument_checker_for_encoding === 2) ? localization("split_by_typename") : localization("split_by_aliases");
+                    fs_js.execution_auto(`${localization("popcap_game_json_split")} ~ ${execution_information_message}`);
+                }
+                const popcap_json_split_mode_selector: number = (argument_checker_for_encoding === 0) ? Console.IntegerReadLine(1, 2) : argument_checker_for_encoding;
                 PopCapPackages.Json.Split(execute_file_dir, popcap_json_split_mode_selector);
             }
             else {
                 execute_file_dir.forEach(file => {
                     if (fs_js.popcap_check_extname(file, ".json")) {
-                        Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_rewrite_mode}`));
-                        fs_js.execution_information(`      1. ${localization("split_by_aliases")}`);
-                        fs_js.execution_information(`      2. ${localization("split_by_typename")}`);
-                        const popcap_json_split_mode_selector: number = Console.IntegerReadLine(1, 2);
+                        const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_game_json_split.arguments.method != undefined && arguments_default_modifier.popcap_game_json_split.arguments.method != null && arguments_default_modifier.popcap_game_json_split.arguments.method != void 0 &&
+                            (typeof arguments_default_modifier.popcap_game_json_split.arguments.method === "string" || Number.isInteger(arguments_default_modifier.popcap_game_json_split.arguments.method)) && arguments_default_modifier.popcap_game_json_split.arguments.method !== "?" && (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 1 || parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 2))
+                            ? (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) as 1 | 2) : 0;
+                        if (argument_checker_for_encoding === 0) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_json_split_argument}`));
+                            Console.WriteLine(`      1. ${localization("split_by_aliases")}`);
+                            Console.WriteLine(`      2. ${localization("split_by_typename")}`);
+                        }
+                        else {
+                            const execution_information_message: string = (argument_checker_for_encoding === 2) ? localization("split_by_typename") : localization("split_by_aliases");
+                            fs_js.execution_auto(`${localization("popcap_game_json_split")} ~ ${execution_information_message}`);
+                        }
+                        const popcap_json_split_mode_selector: number = (argument_checker_for_encoding === 0) ? Console.IntegerReadLine(1, 2) : argument_checker_for_encoding;
                         PopCapPackages.Json.Split(file, popcap_json_split_mode_selector);
                     }
                 })
@@ -1224,12 +1329,38 @@ async function evaluation_modules_workspace_assertation(
             break;
         case "popcap_game_json_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                PopCapPackages.Json.CatToFile(execute_file_dir);
+                const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_game_json_pack.arguments.encode != undefined && arguments_default_modifier.popcap_game_json_pack.arguments.encode != null && arguments_default_modifier.popcap_game_json_pack.arguments.encode != void 0 &&
+                    (typeof arguments_default_modifier.popcap_game_json_pack.arguments.encode === "string" || Number.isInteger(arguments_default_modifier.popcap_game_json_pack.arguments.encode)) && arguments_default_modifier.popcap_game_json_pack.arguments.encode !== "?" && (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 1 || parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 0))
+                    ? (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) as 0 | 1) : 2;
+                if (argument_checker_for_encoding === 2) {
+                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
+                    Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
+                }
+                if ((argument_checker_for_encoding !== 2)) {
+                    const execution_information_message: string = (argument_checker_for_encoding === 0) ? localization("res_cat_concat_no_encode_rton") : localization("res_cat_concat_encode_rton");
+                    fs_js.execution_auto(`${localization("popcap_game_json_pack")} ~ ${execution_information_message}`);
+                }
+                const encode: number = (argument_checker_for_encoding === 2) ? Console.IntegerReadLine(0, 1) : argument_checker_for_encoding;
+                PopCapPackages.Json.CatToFile(execute_file_dir, (encode === 1) ? "rton" : "json");
             }
             else {
                 execute_file_dir.forEach(file => {
                     if (fs_js.is_directory(file)) {
-                        PopCapPackages.Json.CatToFile(file);
+                        const argument_checker_for_encoding: 0 | 1 | 2 = (arguments_default_modifier.popcap_game_json_pack.arguments.encode != undefined && arguments_default_modifier.popcap_game_json_pack.arguments.encode != null && arguments_default_modifier.popcap_game_json_pack.arguments.encode != void 0 &&
+                            (typeof arguments_default_modifier.popcap_game_json_pack.arguments.encode === "string" || Number.isInteger(arguments_default_modifier.popcap_game_json_pack.arguments.encode)) && arguments_default_modifier.popcap_game_json_pack.arguments.encode !== "?" && (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 1 || parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 0))
+                            ? (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) as 0 | 1) : 2;
+                        if (argument_checker_for_encoding === 2) {
+                            Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_no_encode_rton}`);
+                            Console.WriteLine(`${Argument.Tre.Packages.res_cat_concat_encode_rton}`);
+                        }
+                        if ((argument_checker_for_encoding !== 2)) {
+                            const execution_information_message: string = (argument_checker_for_encoding === 0) ? localization("res_cat_concat_no_encode_rton") : localization("res_cat_concat_encode_rton");
+                            fs_js.execution_auto(`${localization("popcap_game_json_pack")} ~ ${execution_information_message}`);
+                        }
+                        const encode: number = (argument_checker_for_encoding === 2) ? Console.IntegerReadLine(0, 1) : argument_checker_for_encoding;
+                        PopCapPackages.Json.CatToFile(file, (encode === 1) ? "rton" : "json");
                     }
                 })
             }

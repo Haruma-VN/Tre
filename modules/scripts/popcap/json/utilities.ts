@@ -4,7 +4,10 @@ import { readjson, writejson, makefolder, check_is_file, read_dir } from "../../
 import { Console } from "../../../callback/console.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
-import { fs_js } from "../../../callback/evaluation_modules_workspace_assertation.js";
+import rton2json from "../rton/rton2json.js";
+import fs_js from "../../../library/fs/implement.js";
+import { parse } from "../../../library/json/util.js";
+import json2rton from "../rton/json2rton.js";
 
 namespace PopCapPackages.Json {
 
@@ -22,7 +25,14 @@ namespace PopCapPackages.Json {
     }
 
     export function ReadJSONObject(popcap_common_json_file_location: string): PopCapCommonJSON {
-        return readjson(popcap_common_json_file_location)
+        switch (path.parse(popcap_common_json_file_location).ext.toString().toLowerCase()) {
+            case ".json":
+                return readjson(popcap_common_json_file_location);
+            case ".rton":
+                return parse(rton2json(fs_js.read_file(popcap_common_json_file_location, "buffer")));
+            default:
+                throw new Error(`${fs_js.get_full_path(popcap_common_json_file_location)} ${localization("is_a_directory_not_a_valid_json_file")}`) as never;
+        }
     }
 
     export function Split(popcap_common_json_file_location: string, popcap_split_method_selector: number): void {
@@ -79,10 +89,15 @@ namespace PopCapPackages.Json {
         return create_popcap_common_json_object;
     }
 
-    export function CatToFile(popcap_common_directory_file_location: string): void {
+    export function CatToFile(
+        popcap_common_directory_file_location: string,
+        file_out_type: "rton" | "json"
+    ): void {
         const create_popcap_common_json_object = PopCapPackages.Json.Cat(popcap_common_directory_file_location) as PopCapCommonJSON;
-        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.json`)}`);
-        return writejson(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.json`, create_popcap_common_json_object)
+        const output = `${path.resolve(`${popcap_common_directory_file_location}/../${path.parse(popcap_common_directory_file_location).name}.${file_out_type.toString().toLowerCase()}`)}`;
+        Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ` + output);
+        file_out_type == "json" ? writejson(output, create_popcap_common_json_object) : fs_js.write_file(output, json2rton(create_popcap_common_json_object));
+        return
     }
 
 }

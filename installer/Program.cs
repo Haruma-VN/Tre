@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using static Tre.Installer.Program;
@@ -14,6 +13,132 @@ namespace Tre.Installer
 {
     internal class Program
     {
+        public class Atlas
+        {
+            public CrossResolution cross_resolution { get; set; }
+            public Pack pack { get; set; }
+            public Split split { get; set; }
+        }
+        public class BeautifyOrder
+        {
+            public int slot { get; set; }
+            public int id { get; set; }
+            public int path { get; set; }
+            public int type { get; set; }
+            public int atlas { get; set; }
+            public int width { get; set; }
+            public int height { get; set; }
+            public int parent { get; set; }
+            public int ah { get; set; }
+            public int aw { get; set; }
+            public int ax { get; set; }
+            public int ay { get; set; }
+            public int cols { get; set; }
+            public int x { get; set; }
+            public int y { get; set; }
+            public int srcpath { get; set; }
+            public int runtime { get; set; }
+            public int forceOriginalVectorSymbolSize { get; set; }
+        }
+
+        public class Cat
+        {
+            public bool fix_double_shadows { get; set; }
+        }
+
+        public class CrossResolution
+        {
+            public bool allow_384 { get; set; }
+        }
+
+        public class Debugger
+        {
+            public bool allow_tracking_bugs { get; set; }
+        }
+
+        public class Display
+        {
+            public bool disable_display_full_path_execution { get; set; }
+        }
+
+        public class Extension
+        {
+            public bool use_other_voids { get; set; }
+        }
+
+        public class Json
+        {
+            public bool strict_mode { get; set; }
+            public bool allow_trailing_commas { get; set; }
+            public string space { get; set; }
+        }
+
+        public class Pack
+        {
+            public bool smart { get; set; }
+            public int smart_allowance_area { get; set; }
+            public bool cut_unused_space { get; set; }
+        }
+
+        public class PopcapResourceStreamGroupUnpack
+        {
+            public Simple simple { get; set; }
+        }
+
+        public class PopcapRtonConversion
+        {
+            public Rton rton { get; set; }
+        }
+
+        public class Resources
+        {
+            public BeautifyOrder beautify_order { get; set; }
+            public Split split { get; set; }
+            public Cat cat { get; set; }
+        }
+
+        public class ToolkitJSON
+        {
+            public Atlas atlas { get; set; }
+            public Display display { get; set; }
+            public Extension extension { get; set; }
+            public Json json { get; set; }
+            public Debugger debugger { get; set; }
+            public string language { get; set; }
+            public PopcapRtonConversion popcap_rton_conversion { get; set; }
+            public User user { get; set; }
+            public PopcapResourceStreamGroupUnpack popcap_resource_stream_group_unpack { get; set; }
+            public Resources resources { get; set; }
+        }
+
+        public class Rton
+        {
+            public string rton_cipher { get; set; }
+        }
+
+        public class Simple
+        {
+            public int pam_resolution { get; set; }
+            public bool pam_to_xfl { get; set; }
+        }
+
+        public class Split
+        {
+            public bool notify_duplicate { get; set; }
+            public bool repairDuplicateFolder { get; set; }
+            public bool allow_atlas_info { get; set; }
+            public bool beautify_res { get; set; }
+            public bool remove_unused_info { get; set; }
+        }
+
+        public class User
+        {
+            public string using_extension_for_rsb_pack { get; set; }
+            public bool progress_bar { get; set; }
+        }
+
+
+
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         protected static extern uint SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
 
@@ -21,6 +146,8 @@ namespace Tre.Installer
         {
             public string save_directory { get; set; }
             public string version { get; set; }
+
+            public string language { get; set; }
         }
 
         public class Asset
@@ -121,7 +248,13 @@ namespace Tre.Installer
             return json_str;
         }
 
-        public static async Task DownloadFileAsync(string url, string filePath)
+        public static ToolkitJSON ParseToolKit(string json)
+        {
+            ToolkitJSON json_str = JsonSerializer.Deserialize<ToolkitJSON>(json);
+            return json_str;
+        }
+
+        public static async Task DownloadFileAsync(string url, string filePath, string language)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -133,24 +266,24 @@ namespace Tre.Installer
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            Progress<double> progress = new Progress<double>(ReportProgress);
-                            await DownloadFileWithProgressAsync(response, filePath, progress);
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.Write($"\n◉ Execution downloaded:\n     ");
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write($"{Path.GetFullPath(filePath)}\n");
+                            Program.CustomProgress progress = new Program.CustomProgress(ReportProgress, language); ;
+                            await Program.DownloadFileWithProgressAsync(response, filePath, progress);
+                            System.Console.ForegroundColor = System.ConsoleColor.Green;
+                            System.Console.Write($"\n◉ {Localization.get_json_property("execution_process", $"./localization/{language}.json")}:\n     ");
+                            System.Console.ForegroundColor = System.ConsoleColor.White;
+                            System.Console.Write($"{Path.GetFullPath(filePath)}\n");
                         }
                         else
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"◉ Execution error: {response.StatusCode}");
+                            System.Console.ForegroundColor = System.ConsoleColor.Red;
+                            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {response.StatusCode}");
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"◉ Execution error: {e.Message}");
+                    System.Console.ForegroundColor = System.ConsoleColor.Red;
+                    System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {e.Message}");
                 }
             }
         }
@@ -179,11 +312,29 @@ namespace Tre.Installer
             }
         }
 
-        private static void ReportProgress(double progressPercentage)
+        private static void ReportProgress(double progressPercentage, string language)
         {
-            Console.CursorLeft = 0;
-            Console.Write($"◉ Execution process: {progressPercentage:F1}%");
+            System.Console.CursorLeft = 0;
+            System.Console.Write($"◉ {Localization.get_json_property("execution_process", $"./localization/{language}.json")}: {progressPercentage:F1}%");
         }
+
+        public class CustomProgress : IProgress<double>
+        {
+            private readonly Action<double, string> _reportAction;
+            private readonly string _language;
+
+            public CustomProgress(Action<double, string> reportAction, string language)
+            {
+                _reportAction = reportAction;
+                _language = language;
+            }
+
+            public void Report(double value)
+            {
+                _reportAction(value, _language);
+            }
+        }
+
 
 
         private static void WriteToFile(string filePath, string content)
@@ -191,7 +342,7 @@ namespace Tre.Installer
             File.WriteAllText(filePath, content);
         }
 
-        public static async Task<string> SendGetRequestAsync(string url)
+        public static async Task<string> SendGetRequestAsync(string url, string language)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -208,26 +359,26 @@ namespace Tre.Installer
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"◉ Execution error: {response.StatusCode}");
+                        System.Console.ForegroundColor = System.ConsoleColor.Red;
+                        System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {response.StatusCode}");
                         return null;
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"◉ Execution error: {e.Message}");
+                    System.Console.ForegroundColor = System.ConsoleColor.Red;
+                    System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {e.Message}");
                     return null;
                 }
             }
         }
 
 
-        public static int input()
+        public static int input(string language)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("◉ ");
-            var user_input = Console.ReadLine();
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            System.Console.Write("◉ ");
+            var user_input = System.Console.ReadLine();
 
             while (true)
             {
@@ -236,37 +387,37 @@ namespace Tre.Installer
                 {
                     return parsedValue;
                 }
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("◉ Execution error: The input argument only accepts 0 or 1");
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("◉ ");
-                user_input = Console.ReadLine();
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {Localization.get_json_property("the_input_argument_only_accept_zero_and_one", $"./localization/{language}.json")}");
+                System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+                System.Console.Write("◉ ");
+                user_input = System.Console.ReadLine();
             }
         }
 
 
-        public static void UncompressZip(string zipPath, string extractPath)
+        public static void UncompressZip(string zipPath, string extractPath, string language)
         {
             try
             {
                 ZipFile.ExtractToDirectory(zipPath, extractPath);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"◉ Execution status: Uncompressed zip");
+                System.Console.ForegroundColor = System.ConsoleColor.Green;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{language}.json")}: {Localization.get_json_property("uncompressed_zip", $"./localization/{language}.json")}");
             }
             catch (Exception e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"◉ Execution error: {e.Message}");
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {e.Message}");
             }
         }
 
 
-        static void CreateShortcutOnDesktop(string filePath)
+        static void CreateShortcutOnDesktop(string filePath, string language)
         {
             if (!File.Exists(filePath))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"◉ Execution error: {filePath} does not exists");
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {filePath} {Localization.get_json_property("does_not_exists", $"./localization/{language}.json")}");
                 return;
             }
 
@@ -292,39 +443,38 @@ namespace Tre.Installer
         }
 
 
-        public static void DeleteZip(string filePath)
+        public static void DeleteZip(string filePath, string language)
         {
             try
             {
                 File.Delete(filePath);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"◉ Execution status: Deleted zip");
+                System.Console.ForegroundColor = System.ConsoleColor.Green;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{language}.json")}: {Localization.get_json_property("deleted_downloaded_zip", $"./localization/{language}.json")}");
             }
             catch (IOException e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"◉ Execution error: {e.Message}");
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {e.Message}");
             }
         }
 
-        public static bool verify_path(string path)
+        public static bool verify_path(string path, string language)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"◉ Execution received:");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"     {Path.GetFullPath(path)}");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"◉ Execution argument: Verify path");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"◉ Execution information: You need to verify if this is the right path");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("      0. False, choose the path again");
-            Console.WriteLine("      1. True, save this as default path");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            int result = input();
+            System.Console.ForegroundColor = System.ConsoleColor.Green;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_received", $"./localization/{language}.json")}:");
+            System.Console.ForegroundColor = System.ConsoleColor.White;
+            System.Console.WriteLine($"     {Path.GetFullPath(path)}");
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_argument", $"./localization/{language}.json")}: {Localization.get_json_property("verify_file_path", $"./localization/{language}.json")}");
+            System.Console.ForegroundColor = System.ConsoleColor.Green;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_information", $"./localization/{language}.json")}: {Localization.get_json_property("verify_if_the_file_path_is_correct", $"./localization/{language}.json")}");
+            System.Console.ForegroundColor = System.ConsoleColor.White;
+            System.Console.WriteLine($"      0. {Localization.get_json_property("false_choose_folder_path_again", $"./localization/{language}.json")}");
+            System.Console.WriteLine($"      1. {Localization.get_json_property("true_choose_this_folder_as_default_path", $"./localization/{language}.json")}");
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            int result = Program.input(language);
             return result == 1 ? true : false;
         }
-
 
         public static void create_folder(string path)
         {
@@ -337,7 +487,7 @@ namespace Tre.Installer
 
             if (!Directory.Exists(parentFolder))
             {
-                create_folder(parentFolder);
+                Program.create_folder(parentFolder);
             }
 
             if (!Directory.Exists(path))
@@ -346,15 +496,16 @@ namespace Tre.Installer
             }
         }
 
-        public static string get_save()
+
+        public static string get_save(string language)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"◉ Execution argument: Save Directory");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"◉ Execution information: Provide a directory path");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("◉ ");
-            var outputDirectory = Console.ReadLine();
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_argument", $"./localization/{language}.json")}: {Localization.get_json_property("save_dir", $"./localization/{language}.json")}");
+            System.Console.ForegroundColor = System.ConsoleColor.Green;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_information", $"./localization/{language}.json")}: {Localization.get_json_property("provide_a_directory_path", $"./localization/{language}.json")}");
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            System.Console.Write("◉ ");
+            var outputDirectory = System.Console.ReadLine();
 
             while (true)
             {
@@ -362,39 +513,38 @@ namespace Tre.Installer
                 {
                     case "":
                     case "./":
-                        bool result = verify_path("C:/Tre");
+                        bool result = Program.verify_path("C:/Tre", language);
                         if (result)
                         {
                             return "C:/Tre";
                         }
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("◉ ");
-                        outputDirectory = Console.ReadLine();
+                        System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+                        System.Console.Write("◉ ");
+                        outputDirectory = System.Console.ReadLine();
                         break;
                     default:
-                        // Moved the while loop condition to the switch case
                         if (!Directory.Exists(outputDirectory))
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"◉ Execution error: {outputDirectory} is not a valid directory");
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.Write("◉ ");
-                            outputDirectory = Console.ReadLine();
+                            System.Console.ForegroundColor = System.ConsoleColor.Red;
+                            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {outputDirectory} {Localization.get_json_property("is_not_a_valid_directory", $"./localization/{language}.json")}");
+                            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+                            System.Console.Write("◉ ");
+                            outputDirectory = System.Console.ReadLine();
                         }
                         else
                         {
-                            result = verify_path(outputDirectory);
+                            result = Program.verify_path(outputDirectory, language);
                             if (result)
                             {
                                 return outputDirectory;
                             }
                             else
                             {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine($"◉ Execution error: Cannot use {outputDirectory}");
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.Write("◉ ");
-                                outputDirectory = Console.ReadLine();
+                                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {Localization.get_json_property("cannot_use", $"./localization/{language}.json")} {outputDirectory}");
+                                System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+                                System.Console.Write("◉ ");
+                                outputDirectory = System.Console.ReadLine();
                             }
                         }
                         break;
@@ -403,12 +553,12 @@ namespace Tre.Installer
         }
 
 
-        static void DeleteEverythingInFolder(string folderPath)
+        public static void DeleteEverythingInFolder(string folderPath, string language)
         {
             if (!Directory.Exists(folderPath))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"◉ Execution error: {folderPath} is not exists");
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {folderPath} {Localization.get_json_property("is_not_exists", $"./localization/{language}.json")}");
                 return;
             }
 
@@ -430,90 +580,224 @@ namespace Tre.Installer
                 return null;
             }
             string information_json = File.ReadAllText(filepath);
-            return ParseInformation(information_json);
+            return Program.ParseInformation(information_json);
         }
 
 
+        private static ToolkitJSON ReadToolKit(string filepath)
+        {
+            if (!File.Exists(filepath))
+            {
+                return null;
+            }
+            string toolkit_json = File.ReadAllText(filepath);
+            return Program.ParseToolKit(toolkit_json);
+        }
+
+        public static string input_int(int[] valid_data, string language)
+        {
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            System.Console.Write("◉ ");
+             int min_val = valid_data.Min();
+             int max_val = valid_data.Max();
+             var user_input = System.Console.ReadLine();
+
+            while (true)
+            {
+                int parsedValue;
+                if (int.TryParse(user_input, out parsedValue) && (parsedValue >= min_val && parsedValue <= max_val))
+                {
+                    return Program.LanguageTrade(parsedValue);
+                }
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {Localization.get_json_property("input_argument_should_be_in_range", $"./localization/{language}.json")} [{min_val}, {max_val}]");
+                System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+                System.Console.Write("◉ ");
+                user_input = System.Console.ReadLine();
+            }
+        }
+
+        protected static string LanguageTrade(int lang_num)
+        {
+            switch (lang_num)
+            {
+                case 1:
+                    return "English";
+                case 2:
+                    return "Vietnamese";
+                case 3:
+                    return "Chinese";
+                default:
+                    return null;
+            }
+        }
+
+        public static readonly string[] available_languages = { "English", "Vietnamese", "Chinese" };
+
+        public static readonly int[] available_languages_options = { 1, 2, 3 };
+
+        public class language_class
+        {
+            public string language { get; set; }
+
+            public int language_number { get; set; }
+
+            public language_class(string language, int language_number)
+            {
+                this.language = language;
+                this.language_number = language_number;
+            }
+        }
+
+        public class render_function
+        {
+            private int func_number;
+            private string name_func;
+            public render_function(int func_number, string name_func)
+            {
+                this.func_number = func_number;
+                this.name_func  = name_func;
+            }
+
+            public int get_function_number()
+            {
+                return this.func_number;
+            }
+
+
+            public string get_func_name()
+            {
+                return this.name_func;
+            }
+
+            public string func_display()
+            {
+                switch (this.func_number.ToString().Length)
+                {
+                    case 1:
+                        return $"      {this.func_number}. {this.name_func}";
+                    case 2:
+                        return $"     {this.func_number}. {this.name_func}";
+                    case 3:
+                        return $"    {this.func_number}. {this.name_func}";
+                    case 4:
+                        return $"  {this.func_number}. {this.name_func}";
+                    case 5:
+                        return $" {this.func_number}. {this.name_func}";
+                    default:
+                        return $"{this.func_number}. {this.name_func}";
+                }
+            }
+
+        }
+
+        public static string language_toolkit_changer(render_function[] valid_functions, string language)
+        {
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_argument", $"./localization/{language}.json")}: {Localization.get_json_property("change_language", $"./localization/{language}.json")}");
+            foreach(render_function func in valid_functions)
+            {
+                System.Console.ForegroundColor = System.ConsoleColor.White;
+                System.Console.WriteLine(func.func_display());
+            }
+            System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+            string language_changer = Program.input_int(available_languages_options, language);
+            return language_changer;
+        }
+
         public static async Task Main()
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("◉ Execution start: Sending request to GitHub API");
+            System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Program.InformationJSON information_json = Program.ReadInformation("./information.json");
+            string installer_language = (information_json != null && information_json.language != null) ? information_json.language : "English";
+            System.Console.ForegroundColor = System.ConsoleColor.Green;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_start", $"./localization/{installer_language}.json")}: {Localization.get_json_property("sending_github_api", $"./localization/{installer_language}.json")}");
             const string url = "https://api.github.com/repos/Haruma-VN/Tre/releases/latest";
-            string json_github = await SendGetRequestAsync(url);
-            InformationJSON information_json = ReadInformation("./information.json");
+            string json_github = await Program.SendGetRequestAsync(url, installer_language);
             if (json_github != null)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("◉ Execution status: Success");
+                System.Console.ForegroundColor = System.ConsoleColor.Green;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("success", $"./localization/{installer_language}.json")}");
             }
-            Console.ForegroundColor = ConsoleColor.Green;
-            string create_new_save_path = (information_json != null && information_json.save_directory != null) ? information_json.save_directory : get_save();
+            System.Console.ForegroundColor = System.ConsoleColor.Green;
+            string create_new_save_path = (information_json != null && information_json.save_directory != null) ? information_json.save_directory : Program.get_save(installer_language);
             if((information_json != null && information_json.save_directory != null))
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"◉ Installed directory from the previous save:");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"     {Path.GetFullPath(information_json.save_directory)}");
+                System.Console.ForegroundColor = System.ConsoleColor.Green;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("installed_directory_from_the_previous_save", $"./localization/{installer_language}.json")}:");
+                System.Console.ForegroundColor = System.ConsoleColor.White;
+                System.Console.WriteLine($"     {Path.GetFullPath(information_json.save_directory)}");
             }
             if (json_github == null)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"◉ Execution error: Failed to send request to {url}");
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{installer_language}.json")}: {Localization.get_json_property("failed_to_send_request_to_github_server", $"./localization/{installer_language}.json")} {url}");
             }
             else
             {
-                GitHubReleases github_api_json = ParseJson(json_github);
+                Program.GitHubReleases github_api_json = Program.ParseJson(json_github);
                 if (github_api_json.assets != null && github_api_json.assets.Count > 0)
                 {
                     if(information_json != null && information_json.version != null)
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write($"◉ Current version: ");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write($"{information_json.version}\n");
+                        System.Console.ForegroundColor = System.ConsoleColor.Green;
+                        System.Console.Write($"◉ {Localization.get_json_property("current_version", $"./localization/{installer_language}.json")}: ");
+                        System.Console.ForegroundColor = System.ConsoleColor.White;
+                        System.Console.Write($"{information_json.version}\n");
                     }
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"◉ GitHub version: ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write($"{github_api_json.body}\n");
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"◉ Commits date: ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write($"{github_api_json.assets[0].updated_at}\n");
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("◉ Execution argument: Would you like to download the release?");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine("      0. Decline to download");
-                    Console.WriteLine("      1. Accept to download");
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    int download_checker = input();
-                    if(download_checker == 0)
+                    System.Console.ForegroundColor = System.ConsoleColor.Green;
+                    System.Console.Write($"◉ {Localization.get_json_property("github_version", $"./localization/{installer_language}.json")}: ");
+                    System.Console.ForegroundColor = System.ConsoleColor.White;
+                    System.Console.Write($"{github_api_json.body}\n");
+                    System.Console.ForegroundColor = System.ConsoleColor.Green;
+                    System.Console.Write($"◉ {Localization.get_json_property("commit_date", $"./localization/{installer_language}.json")}: ");
+                    System.Console.ForegroundColor = System.ConsoleColor.White;
+                    System.Console.Write($"{github_api_json.assets[0].updated_at}\n");
+                    System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+                    System.Console.WriteLine($"◉ {Localization.get_json_property("execution_argument", $"./localization/{installer_language}.json")}: {Localization.get_json_property("download_release", $"./localization/{installer_language}.json")}");
+                    System.Console.ForegroundColor = System.ConsoleColor.White;
+                    System.Console.WriteLine($"      0. {Localization.get_json_property("refuse_to_download", $"./localization/{installer_language}.json")}");
+                    System.Console.WriteLine($"      1. {Localization.get_json_property("agree_to_download", $"./localization/{installer_language}.json")}");
+                    System.Console.ForegroundColor = System.ConsoleColor.Cyan;
+                    int download_checker = Program.input(installer_language);
+                    if(download_checker != 0)
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("◉ Execution finish: Stopped command successfully.");
-                    }
-                    else
-                    {
-                        create_folder(create_new_save_path);
+                        Program.create_folder(create_new_save_path);
+                        Program.language_class[] languages_available_in_this_tool = new Program.language_class[available_languages.Length];
+                        for(int i = 0; i < available_languages.Length; i++)
+                        {
+                            languages_available_in_this_tool[i] = new Program.language_class(available_languages[i], available_languages_options[i]);
+                        }
+                        Program.render_function[] languages_bool = new Program.render_function[languages_available_in_this_tool.Length];
+                        for(int i = 0; i < languages_available_in_this_tool.Length; i++)
+                        {
+                            languages_bool[i] = new Program.render_function(languages_available_in_this_tool[i].language_number, languages_available_in_this_tool[i].language);
+                        }
+                        string language_changer = (information_json != null && information_json.language != null) ? information_json.language : Program.language_toolkit_changer(languages_bool, installer_language);
+                        if(information_json != null && information_json.language != null)
+                        {
+                            System.Console.ForegroundColor = System.ConsoleColor.Green;
+                            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("loaded", $"./localization/{installer_language}.json")} {language_changer}");
+                        }
                         if (Directory.Exists(create_new_save_path))
                         {
-                            DeleteEverythingInFolder(create_new_save_path);
+                            Program.DeleteEverythingInFolder(create_new_save_path, installer_language);
                         }
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"◉ Execution status: Cleaned {create_new_save_path}");
+                        System.Console.ForegroundColor = System.ConsoleColor.Green;
+                        System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("deleted_everything_in", $"./localization/{installer_language}.json")} {create_new_save_path}");
                         string filePath = $"{create_new_save_path}/Tre.zip";
-                        await DownloadFileAsync(github_api_json.assets[0].browser_download_url, filePath);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("◉ Execution status: Successfully downloaded");
-                        UncompressZip(filePath, create_new_save_path);
-                        DeleteZip(filePath);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        CreateShortcutOnDesktop($"{create_new_save_path}/Tre.exe");
-                        Console.WriteLine("◉ Execution status: Successfully created a shortcut on Desktop");
-                        InformationJSON create_new_information = new InformationJSON();
+                        await Program.DownloadFileAsync(github_api_json.assets[0].browser_download_url, filePath, installer_language);
+                        System.Console.ForegroundColor = System.ConsoleColor.Green;
+                        System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("successfully_downloaded", $"./localization/{installer_language}.json")}");
+                        Program.UncompressZip(filePath, create_new_save_path, installer_language);
+                        Program.DeleteZip(filePath, installer_language);
+                        System.Console.ForegroundColor = System.ConsoleColor.Green;
+                        Program.CreateShortcutOnDesktop($"{create_new_save_path}/Tre.exe", installer_language);
+                        System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("successfully_create_a_shortcut_on_desktop", $"./localization/{installer_language}.json")}");
+                        Program.InformationJSON create_new_information = new Program.InformationJSON();
                         create_new_information.save_directory = create_new_save_path;
                         create_new_information.version = github_api_json.body;
+                        create_new_information.language = language_changer;
                         var options = new JsonSerializerOptions
                         {
                             WriteIndented = true,
@@ -521,21 +805,31 @@ namespace Tre.Installer
                         };
                         string jsonString = JsonSerializer.Serialize(create_new_information, options);
                         jsonString = jsonString.Replace("  ", "\t");
-
-                        WriteToFile("./information.json", jsonString);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("◉ Execution status: \"Created information.json\"");
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("◉ Execution finish: Press any key to continue...");
-                        Console.ReadKey();
+                        Program.WriteToFile("./information.json", jsonString);
+                        System.Console.ForegroundColor = System.ConsoleColor.Green;
+                        System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("created", $"./localization/{installer_language}.json")} \"information.json\"");
+                        System.Console.ForegroundColor = System.ConsoleColor.Green;
+                        if (language_changer != "English" && language_changer != null)
+                        {
+                            string toolkit_json_filepath = $"{create_new_save_path}/extension/settings/toolkit.json";
+                            ToolkitJSON toolkit_json = ReadToolKit(toolkit_json_filepath);
+                            toolkit_json.language = language_changer;
+                            string toolkit_json_str = JsonSerializer.Serialize(toolkit_json, options);
+                            toolkit_json_str = toolkit_json_str.Replace("  ", "\t");
+                            Program.WriteToFile(toolkit_json_filepath, toolkit_json_str);
+                            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("changed_language_to", $"./localization/{installer_language}.json")} {language_changer}");
+                        }
                     }
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"◉ Execution error: No assets found");
+                    System.Console.ForegroundColor = System.ConsoleColor.Red;
+                    System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{installer_language}.json")}: {Localization.get_json_property("no_assets_found", $"./localization/{installer_language}.json")}");
                 }
             }
+            System.Console.ForegroundColor = System.ConsoleColor.Green;
+            System.Console.WriteLine($"◉ {Localization.get_json_property("execution_finish", $"./localization/{installer_language}.json")}: {Localization.get_json_property("press_any_key_to_exit", $"./localization/{installer_language}.json")}...");
+            System.Console.ReadKey();
         }
 
     }

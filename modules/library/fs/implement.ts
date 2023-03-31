@@ -1022,7 +1022,7 @@ class fs_js {
             case "failed":
                 return console.log(`${color.fgred_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`);
             case "argument":
-                return console.log(`${color.fgcyan_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`);
+                return console.log(color.fgcyan_string(`${color.fgcyan_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`));
             case "none":
                 return console.log(`${color.fgwhite_string("◉ " + localization("execution_status") + ":")} ` + `${(text)}`);
             default:
@@ -1872,7 +1872,9 @@ class fs_js {
             "fix_double_shadows" |
             "smart_allowance_area" |
             "cut_unused_space" |
-            "progress_bar",
+            "progress_bar"
+            | "pam_resolution"
+            | "pam_to_flash",
     ): bool | str | int | popcap_resources_render {
         //#region 
         const toolkit_json: toolkit_json = this.read_json(this.return_this_tool_toolkit_json_location() satisfies str) as toolkit_json;
@@ -1919,6 +1921,10 @@ class fs_js {
                 return toolkit_json.extension.use_other_voids as bool;
             case "using_extension_for_rsb_pack":
                 return toolkit_json.user.using_extension_for_rsb_pack as str;
+            case "pam_resolution":
+                return toolkit_json.popcap_resource_stream_group_unpack.simple.pam_resolution as number;
+            case "pam_to_flash":
+                return toolkit_json.popcap_resource_stream_group_unpack.simple.pam_to_xfl as boolean;
             default:
                 return toolkit_json as never;
         }

@@ -73,7 +73,9 @@ declare type view_option =
     "fix_double_shadows" |
     "smart_allowance_area" |
     "cut_unused_space" |
-    "progress_bar";
+    "progress_bar" |
+    "pam_resolution"
+    | "pam_to_flash";
 
 declare type popcap_resources_render = {
     slot: int,
@@ -142,6 +144,12 @@ declare type toolkit_json = {
         },
         cat: {
             fix_double_shadows: bool,
+        },
+    },
+    popcap_resource_stream_group_unpack: {
+        simple: {
+            pam_resolution: 1536 | 768 | 384 | 1200 | 640,
+            pam_to_xfl: boolean,
         },
     },
 };

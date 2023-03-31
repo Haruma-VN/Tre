@@ -16,14 +16,14 @@ interface AtlasInfo {
     groups: ResInfo[] | undefined | null,
 }
 export default function (dir: string): number {
-    const bundles: string[] = (read_dir(`${dir}/Bundles/`));
-    const info: AtlasInfo = readjson(`${dir}/Info.json`) as AtlasInfo;
-    for (let bundle of bundles) {
+    const atlas: string[] = (read_dir(`${dir}/atlas/`));
+    const info: AtlasInfo = readjson(`${dir}/info.json`) as AtlasInfo;
+    for (let bundle of atlas) {
         if (info.groups != undefined && info.groups != null) {
             info.groups.push(readjson(bundle) as ResInfo);
         }
     };
     writejson(`${dir}/../AtlasInfo.json`, info);
-    console.log(`${color.fggreen_string("◉ " + localization("execution_out")+":\n     ")} ${path.resolve(`${dir}/../AtlasInfo.json`)}`);
+    console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${dir}/../AtlasInfo.json`)}`);
     return 0;
 }

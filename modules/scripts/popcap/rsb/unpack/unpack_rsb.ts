@@ -13,12 +13,13 @@ import * as fs_util from '../../../../library/fs/util.js';
 import localization from '../../../../callback/localization.js';
 import * as color from "../../../../library/color/color.js";
 import fs_js from "../../../../library/fs/implement.js";
-export default async function (rsb_data_will_not_be_cipher: any, simple = false, unpack_everything = false) {
+export default async function (rsb_data_will_not_be_cipher: any, simple: boolean = false, unpack_everything: boolean = false) {
     let decode_rton = false;
     let decode_ptx = false;
+    let decode_data = false;
     let splitres = false;
     let ios_argb8888 = 0;
-    const TreRSGPInfo = new Array();
+    const TreRSGPInfo: any = new Array();
     const arguments_default_modifier: any = fs_js.read_json(fs_js.functions_json_location, true);
     if (simple) {
         const popcap_packages_conversion = (arguments_default_modifier.popcap_rsb_unpack_simple.arguments.packages_conversion != undefined &&
@@ -94,9 +95,12 @@ export default async function (rsb_data_will_not_be_cipher: any, simple = false,
             fs_js.execution_boolean_view();
             ios_argb8888 = readline_integer(0, 1) == 1 ? 1 : 0;
         }
+        fs_js.assertation_create("argument", localization("decode_data"));
+        decode_data = readline_integer(0, 1) == 1 ? true : false;
+        //
     }
     const rsb_buffer_for_unpacking = fs_util.readfilebuffer(rsb_data_will_not_be_cipher);
-    const rsb_new_extract_folder = `${rsb_data_will_not_be_cipher}/../${parse(rsb_data_will_not_be_cipher).name}.rsg`;
+    const rsb_new_extract_folder = `${rsb_data_will_not_be_cipher}/../${parse(rsb_data_will_not_be_cipher).name}.bundle`;
     console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(rsb_new_extract_folder)}`);
     fs_util.makefolder(`${rsb_new_extract_folder}`);
     const iz_magic_header_rsb = SmartBuffer.fromBuffer(rsb_buffer_for_unpacking.slice(0, 0x70));
@@ -138,7 +142,7 @@ export default async function (rsb_data_will_not_be_cipher: any, simple = false,
                                 let rsgp_treinfo = rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item;
                                 if (simple) {
                                     if (rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item.toUpperCase() == 'PACKAGES') {
-                                        await rsgp_unpack(rsgp_file_data, rsb_new_extract_folder, false, decode_rton, true, 2);
+                                        await rsgp_unpack(rsgp_file_data, rsb_new_extract_folder, false, decode_rton, false, true, 2, true);
                                     }
                                     else if (rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item.toUpperCase().indexOf('__MANIFESTGROUP__') != -1) { }
                                     else {
@@ -149,7 +153,7 @@ export default async function (rsb_data_will_not_be_cipher: any, simple = false,
                                     bar.increment();
                                     popcap_rsgp_count++;
                                     bar.update(popcap_rsgp_count);
-                                    const rsgp_file_info = await rsgp_unpack(rsgp_file_data, rsb_new_extract_folder, decode_ptx, decode_rton, true, ios_argb8888, true);
+                                    const rsgp_file_info = await rsgp_unpack(rsgp_file_data, rsb_new_extract_folder, decode_ptx, decode_rton, decode_data, true, ios_argb8888, true);
                                     rsgp_treinfo = Object.fromEntries([[rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item, rsgp_file_info]]);
                                 }
                                 else {

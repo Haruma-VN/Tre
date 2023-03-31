@@ -30,6 +30,12 @@ async function evaluate_script(
             script_entry_point.modules[i].notify !== void 0 && typeof (is_notify) === "boolean") {
             fs_js.execution_information(script_entry_point.modules[i].notify);
         }
+        if (is_notify && script_entry_point.modules[i].func !== undefined && script_entry_point.modules[i].func !== null &&
+            script_entry_point.modules[i].func !== void 0 && typeof (is_notify) === "boolean" && typeof (script_entry_point.modules[i].func) === "string"
+            && !(assertation_break.ban_list.includes(script_entry_point.modules[i].func as string))
+            && (assertation_break.allowance_lists.includes(script_entry_point.modules[i].func as string))) {
+            fs_js.execution_auto(localization(script_entry_point.modules[i].func as string));
+        }
         if (script_entry_point.modules[i].func !== undefined && script_entry_point.modules[i].func !== null &&
             script_entry_point.modules[i].func !== void 0 && !(assertation_break.ban_list.includes(script_entry_point.modules[i].func as string))
             && (assertation_break.allowance_lists.includes(script_entry_point.modules[i].func as string)) &&

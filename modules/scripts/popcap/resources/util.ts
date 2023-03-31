@@ -10,6 +10,9 @@ import * as color from "../../../library/color/color.js";
 import localization from '../../../callback/localization.js';
 import AdaptPvZ2InternationalResPath from "./expands/resources.js";
 import popcap_json_to_rton from "../rton/json2rton.js";
+import rton_to_json from "../rton/rton2json.js";
+import fs_js from "../../../library/fs/implement.js";
+import { parse } from '../../../library/json/util.js';
 
 export function LocalResourcesCompare(vanilla_directory: string, modded_directory: string) {
     local_res_compare(vanilla_directory, modded_directory);
@@ -17,13 +20,21 @@ export function LocalResourcesCompare(vanilla_directory: string, modded_director
 }
 
 export function res_split(dir: string, this_will_stop_console: boolean = false) {
-    const json: any = readjson(dir);
+    let json: any;
+
+    if (path.parse(dir).ext.toString().toLowerCase() === ".rton") {
+        json = parse(rton_to_json(fs_js.read_file(dir, "buffer")));
+    } else {
+        json = readjson(dir as string);
+    }
+
     if ("groups" in json) {
         split(dir, json);
     }
     else {
         throw new Error(localization("not_valid_resources"))
     }
+
     if (!this_will_stop_console) {
         console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${dir + '/../' + path.parse(dir).name + '.res'}`)}`);
     }
@@ -114,9 +125,11 @@ export function res_beautify(dir: string): void {
             }
         }
     }
+
     for (let i: number = 0; i < parentArray.length; i++) {
         parentArray[i] = sortResObjects(parentArray[i]);
     }
+
     const resources_output_result: any[] = [].concat(...parentArray);
     json.resources = resources_output_result;
     console.log(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${dir}/../${path.parse(dir).name}.fixed.json`)}`);

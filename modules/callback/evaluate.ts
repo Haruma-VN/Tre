@@ -192,6 +192,18 @@ async function create_evaluate_argument(
         case Display.Tre.Function.script_evaluation.void_number_readline_argument() as evaluation_method:
             await evaluation_modules_workspace_assertation(execute_file_dir as assertation_argument, "script_evaluation" as popcap_game_edit_method);
             break;
+        case Display.Tre.Function.popcap_new_resources_conversion_to_old_resources.void_number_readline_argument() as evaluation_method:
+            await evaluation_modules_workspace_assertation(execute_file_dir as assertation_argument, "popcap_new_resources_conversion_to_old_resources" as popcap_game_edit_method);
+            break;
+        case Display.Tre.Function.popcap_flash_to_pam_json.void_number_readline_argument() as evaluation_method:
+            await evaluation_modules_workspace_assertation(execute_file_dir as assertation_argument, "popcap_flash_to_pam_json" as popcap_game_edit_method);
+            break;
+        case Display.Tre.Function.flash_animation_resize.void_number_readline_argument() as evaluation_method:
+            await evaluation_modules_workspace_assertation(execute_file_dir as assertation_argument, "flash_animation_resize" as popcap_game_edit_method);
+            break;
+        case Display.Tre.Function.popcap_pam_json_to_flash.void_number_readline_argument() as evaluation_method:
+            await evaluation_modules_workspace_assertation(execute_file_dir as assertation_argument, "popcap_pam_json_to_flash" as popcap_game_edit_method);
+            break;
         default:
             throw new Error(`${localization("cannot_find_module")}`) as never;
     }

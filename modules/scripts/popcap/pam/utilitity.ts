@@ -10,6 +10,7 @@ import evaluation_modules_workspace_assertation from '../../../callback/evaluati
 import pamjson2pamflash from './json_to_flash/pamjson_to_pamflash.js';
 import pamflash_to_pamjson from './flash_to_json/pamflash_to_pamjson.js'
 import increaseFramerate from './frame/increase_framerate.js';
+import fs_resize from './flash/fs_resize.js';
 
 export async function popcap_pam_encode(
     file_system_data_input_argument: string,
@@ -83,3 +84,29 @@ export async function frame_rate_increasement(
     fs_js.write_json(file_system_output, output);
     fs_js.execution_out(fs_js.get_full_path(file_system_output));
 }
+
+export async function popcap_pam_json_to_flash(
+    file_system_data_input_argument: string,
+    texture_reslution: number,
+) {
+    await pamjson2pamflash(fs_js.read_json(file_system_data_input_argument), file_system_data_input_argument, texture_reslution);
+}
+
+export async function flash_animation_resize(
+    file_system_data_input_argument: string,
+    texture_reslution: number,
+) {
+    await fs_resize(file_system_data_input_argument, texture_reslution);
+    fs_js.execution_finish(localization("all_flash_resized"));
+}
+
+export async function popcap_flash_to_pam_json(
+    file_system_data_input_argument: string,
+) {
+    const pam_json = await pamflash_to_pamjson(file_system_data_input_argument);
+    const output = `${fs_js.js_dir(file_system_data_input_argument)}/${path.parse(file_system_data_input_argument).name}.json`;
+    fs_js.write_json(output, pam_json);
+    fs_js.execution_out(output);
+}
+
+
