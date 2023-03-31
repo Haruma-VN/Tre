@@ -8,12 +8,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.IO.Compression;
 using System.Diagnostics;
-
+using System.Runtime.InteropServices;
 
 namespace Tre.Installer
 {
     internal class Program
     {
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        protected static extern uint SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
+
+        public class InformationJSON
+        {
+            public string save_directory { get; set; }
+            public string version { get; set; }
+        }
 
         public class Asset
         {
@@ -106,6 +114,13 @@ namespace Tre.Installer
             return gitHubRelease;
         }
 
+
+        public static InformationJSON ParseInformation(string json)
+        {
+            InformationJSON json_str = JsonSerializer.Deserialize<InformationJSON>(json);
+            return json_str;
+        }
+
         public static async Task DownloadFileAsync(string url, string filePath)
         {
             using (HttpClient httpClient = new HttpClient())
@@ -118,14 +133,12 @@ namespace Tre.Installer
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            using (Stream contentStream = await response.Content.ReadAsStreamAsync(), fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 8192, useAsync: true))
-                            {
-                                await contentStream.CopyToAsync(fileStream);
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Write($"◉ Execution downloaded:\n     ");
-                                Console.ForegroundColor = ConsoleColor.White;
-                                Console.Write($"{Path.GetFullPath(filePath)}\n");
-                            }
+                            Progress<double> progress = new Progress<double>(ReportProgress);
+                            await DownloadFileWithProgressAsync(response, filePath, progress);
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write($"\n◉ Execution downloaded:\n     ");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write($"{Path.GetFullPath(filePath)}\n");
                         }
                         else
                         {
@@ -142,6 +155,41 @@ namespace Tre.Installer
             }
         }
 
+        private static async Task DownloadFileWithProgressAsync(HttpResponseMessage response, string filePath, IProgress<double> progress)
+        {
+            using (Stream contentStream = await response.Content.ReadAsStreamAsync(), fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 8192, useAsync: true))
+            {
+                long totalBytes = response.Content.Headers.ContentLength.HasValue ? response.Content.Headers.ContentLength.Value : -1L;
+                int bufferSize = 8192;
+                byte[] buffer = new byte[bufferSize];
+                int bytesRead;
+                long totalBytesRead = 0L;
+
+                while ((bytesRead = await contentStream.ReadAsync(buffer, 0, bufferSize)) != 0)
+                {
+                    await fileStream.WriteAsync(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+
+                    if (totalBytes > 0)
+                    {
+                        double progressPercentage = 100.0 * totalBytesRead / totalBytes;
+                        progress.Report(progressPercentage);
+                    }
+                }
+            }
+        }
+
+        private static void ReportProgress(double progressPercentage)
+        {
+            Console.CursorLeft = 0;
+            Console.Write($"◉ Execution process: {progressPercentage:F1}%");
+        }
+
+
+        private static void WriteToFile(string filePath, string content)
+        {
+            File.WriteAllText(filePath, content);
+        }
 
         public static async Task<string> SendGetRequestAsync(string url)
         {
@@ -180,17 +228,19 @@ namespace Tre.Installer
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("◉ ");
             var user_input = Console.ReadLine();
+
             while (true)
             {
-                if(Convert.ToInt32(user_input) == 1 || Convert.ToInt32(user_input) == 0)
+                int parsedValue;
+                if (int.TryParse(user_input, out parsedValue) && (parsedValue == 0 || parsedValue == 1))
                 {
-                    return Convert.ToInt32(user_input) ;
+                    return parsedValue;
                 }
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("◉ Execution error: The input argument only accept 0 or 1");
+                Console.WriteLine("◉ Execution error: The input argument only accepts 0 or 1");
                 Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("◉ ");
                 user_input = Console.ReadLine();
-                
             }
         }
 
@@ -215,6 +265,7 @@ namespace Tre.Installer
         {
             if (!File.Exists(filePath))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"◉ Execution error: {filePath} does not exists");
                 return;
             }
@@ -262,7 +313,6 @@ namespace Tre.Installer
             Console.WriteLine($"◉ Execution received:");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"     {Path.GetFullPath(path)}");
-            Console.ForegroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"◉ Execution argument: Verify path");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -305,42 +355,53 @@ namespace Tre.Installer
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("◉ ");
             var outputDirectory = Console.ReadLine();
-            bool result;
+
             while (true)
             {
                 switch (outputDirectory)
                 {
                     case "":
                     case "./":
-                        result = verify_path("./Tre");
+                        bool result = verify_path("C:/Tre");
                         if (result)
                         {
-                            return "./Tre";
+                            return "C:/Tre";
                         }
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.Write("◉ ");
                         outputDirectory = Console.ReadLine();
                         break;
                     default:
-                        while (!Directory.Exists(outputDirectory))
+                        // Moved the while loop condition to the switch case
+                        if (!Directory.Exists(outputDirectory))
                         {
-                            if (Directory.Exists(outputDirectory))
-                            {
-                                break;
-                            }
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine($"◉ Execution error: {outputDirectory} is not a valid directory");
                             Console.ForegroundColor = ConsoleColor.Cyan;
                             Console.Write("◉ ");
                             outputDirectory = Console.ReadLine();
                         }
-                        result = verify_path(outputDirectory as string);
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        outputDirectory = result ? outputDirectory : get_save();
-                        return (outputDirectory != null) ? outputDirectory : "./";
+                        else
+                        {
+                            result = verify_path(outputDirectory);
+                            if (result)
+                            {
+                                return outputDirectory;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine($"◉ Execution error: Cannot use {outputDirectory}");
+                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                Console.Write("◉ ");
+                                outputDirectory = Console.ReadLine();
+                            }
+                        }
+                        break;
                 }
             }
         }
+
 
         static void DeleteEverythingInFolder(string folderPath)
         {
@@ -362,6 +423,17 @@ namespace Tre.Installer
             }
         }
 
+        private static InformationJSON ReadInformation(string filepath)
+        {
+            if (!File.Exists(filepath))
+            {
+                return null;
+            }
+            string information_json = File.ReadAllText(filepath);
+            return ParseInformation(information_json);
+        }
+
+
         public static async Task Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -369,13 +441,21 @@ namespace Tre.Installer
             Console.WriteLine("◉ Execution start: Sending request to GitHub API");
             const string url = "https://api.github.com/repos/Haruma-VN/Tre/releases/latest";
             string json_github = await SendGetRequestAsync(url);
-            if(json_github != null)
+            InformationJSON information_json = ReadInformation("./information.json");
+            if (json_github != null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("◉ Execution status: Success");
             }
             Console.ForegroundColor = ConsoleColor.Green;
-            string create_new_save_path = get_save();
+            string create_new_save_path = (information_json != null && information_json.save_directory != null) ? information_json.save_directory : get_save();
+            if((information_json != null && information_json.save_directory != null))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"◉ Installed directory from the previous save:");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"     {Path.GetFullPath(information_json.save_directory)}");
+            }
             if (json_github == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -386,8 +466,19 @@ namespace Tre.Installer
                 GitHubReleases github_api_json = ParseJson(json_github);
                 if (github_api_json.assets != null && github_api_json.assets.Count > 0)
                 {
+                    if(information_json != null && information_json.version != null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write($"◉ Current version: ");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write($"{information_json.version}\n");
+                    }
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"◉ Execution date: ");
+                    Console.Write($"◉ GitHub version: ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"{github_api_json.body}\n");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"◉ Commits date: ");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write($"{github_api_json.assets[0].updated_at}\n");
                     Console.ForegroundColor = ConsoleColor.Cyan;
@@ -404,21 +495,39 @@ namespace Tre.Installer
                     }
                     else
                     {
-                        const string filePath = $"./tre.zip";
+                        create_folder(create_new_save_path);
+                        if (Directory.Exists(create_new_save_path))
+                        {
+                            DeleteEverythingInFolder(create_new_save_path);
+                        }
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"◉ Execution status: Cleaned {create_new_save_path}");
+                        string filePath = $"{create_new_save_path}/Tre.zip";
                         await DownloadFileAsync(github_api_json.assets[0].browser_download_url, filePath);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("◉ Execution status: Successfully downloaded");
-                        DeleteEverythingInFolder(create_new_save_path);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"◉ Execution status: Cleaned {create_new_save_path}");
-                        create_folder(create_new_save_path);
                         UncompressZip(filePath, create_new_save_path);
                         DeleteZip(filePath);
                         Console.ForegroundColor = ConsoleColor.Green;
                         CreateShortcutOnDesktop($"{create_new_save_path}/Tre.exe");
                         Console.WriteLine("◉ Execution status: Successfully created a shortcut on Desktop");
+                        InformationJSON create_new_information = new InformationJSON();
+                        create_new_information.save_directory = create_new_save_path;
+                        create_new_information.version = github_api_json.body;
+                        var options = new JsonSerializerOptions
+                        {
+                            WriteIndented = true,
+                            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        };
+                        string jsonString = JsonSerializer.Serialize(create_new_information, options);
+                        jsonString = jsonString.Replace("  ", "\t");
+
+                        WriteToFile("./information.json", jsonString);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("◉ Execution status: \"Created information.json\"");
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("◉ Execution finish: Press any key to continue...");
-                        Console.ReadLine();
+                        Console.ReadKey();
                     }
                 }
                 else
