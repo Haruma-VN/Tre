@@ -266,8 +266,8 @@ namespace Tre.Installer
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            Program.CustomProgress progress = new Program.CustomProgress(ReportProgress, language); ;
-                            await Program.DownloadFileWithProgressAsync(response, filePath, progress);
+                            Tre.Installer.Program.CustomProgress progress = new Tre.Installer.Program.CustomProgress(ReportProgress, language); ;
+                            await Tre.Installer.Program.DownloadFileWithProgressAsync(response, filePath, progress);
                             System.Console.ForegroundColor = System.ConsoleColor.Green;
                             System.Console.Write($"\n◉ {Localization.get_json_property("execution_process", $"./localization/{language}.json")}:\n     ");
                             System.Console.ForegroundColor = System.ConsoleColor.White;
@@ -472,7 +472,7 @@ namespace Tre.Installer
             System.Console.WriteLine($"      0. {Localization.get_json_property("false_choose_folder_path_again", $"./localization/{language}.json")}");
             System.Console.WriteLine($"      1. {Localization.get_json_property("true_choose_this_folder_as_default_path", $"./localization/{language}.json")}");
             System.Console.ForegroundColor = System.ConsoleColor.Cyan;
-            int result = Program.input(language);
+            int result = Tre.Installer.Program.input(language);
             return result == 1 ? true : false;
         }
 
@@ -487,7 +487,7 @@ namespace Tre.Installer
 
             if (!Directory.Exists(parentFolder))
             {
-                Program.create_folder(parentFolder);
+                Tre.Installer.Program.create_folder(parentFolder);
             }
 
             if (!Directory.Exists(path))
@@ -513,7 +513,7 @@ namespace Tre.Installer
                 {
                     case "":
                     case "./":
-                        bool result = Program.verify_path("C:/Tre", language);
+                        bool result = Tre.Installer.Program.verify_path("C:/Tre", language);
                         if (result)
                         {
                             return "C:/Tre";
@@ -533,7 +533,7 @@ namespace Tre.Installer
                         }
                         else
                         {
-                            result = Program.verify_path(outputDirectory, language);
+                            result = Tre.Installer.Program.verify_path(outputDirectory, language);
                             if (result)
                             {
                                 return outputDirectory;
@@ -580,7 +580,7 @@ namespace Tre.Installer
                 return null;
             }
             string information_json = File.ReadAllText(filepath);
-            return Program.ParseInformation(information_json);
+            return Tre.Installer.Program.ParseInformation(information_json);
         }
 
 
@@ -591,7 +591,7 @@ namespace Tre.Installer
                 return null;
             }
             string toolkit_json = File.ReadAllText(filepath);
-            return Program.ParseToolKit(toolkit_json);
+            return Tre.Installer.Program.ParseToolKit(toolkit_json);
         }
 
         public static string input_int(int[] valid_data, string language)
@@ -607,7 +607,7 @@ namespace Tre.Installer
                 int parsedValue;
                 if (int.TryParse(user_input, out parsedValue) && (parsedValue >= min_val && parsedValue <= max_val))
                 {
-                    return Program.LanguageTrade(parsedValue);
+                    return Tre.Installer.Program.LanguageTrade(parsedValue);
                 }
                 System.Console.ForegroundColor = System.ConsoleColor.Red;
                 System.Console.WriteLine($"◉ {Localization.get_json_property("execution_error", $"./localization/{language}.json")}: {Localization.get_json_property("input_argument_should_be_in_range", $"./localization/{language}.json")} [{min_val}, {max_val}]");
@@ -701,26 +701,26 @@ namespace Tre.Installer
                 System.Console.WriteLine(func.func_display());
             }
             System.Console.ForegroundColor = System.ConsoleColor.Cyan;
-            string language_changer = Program.input_int(available_languages_options, language);
+            string language_changer = Tre.Installer.Program.input_int(available_languages_options, language);
             return language_changer;
         }
 
         public static async Task Main()
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Program.InformationJSON information_json = Program.ReadInformation("./information.json");
+            Tre.Installer.Program.InformationJSON information_json = Tre.Installer.Program.ReadInformation("./information.json");
             string installer_language = (information_json != null && information_json.language != null) ? information_json.language : "English";
             System.Console.ForegroundColor = System.ConsoleColor.Green;
             System.Console.WriteLine($"◉ {Localization.get_json_property("execution_start", $"./localization/{installer_language}.json")}: {Localization.get_json_property("sending_github_api", $"./localization/{installer_language}.json")}");
             const string url = "https://api.github.com/repos/Haruma-VN/Tre/releases/latest";
-            string json_github = await Program.SendGetRequestAsync(url, installer_language);
+            string json_github = await Tre.Installer.Program.SendGetRequestAsync(url, installer_language);
             if (json_github != null)
             {
                 System.Console.ForegroundColor = System.ConsoleColor.Green;
                 System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("success", $"./localization/{installer_language}.json")}");
             }
             System.Console.ForegroundColor = System.ConsoleColor.Green;
-            string create_new_save_path = (information_json != null && information_json.save_directory != null) ? information_json.save_directory : Program.get_save(installer_language);
+            string create_new_save_path = (information_json != null && information_json.save_directory != null) ? information_json.save_directory : Tre.Installer.Program.get_save(installer_language);
             if((information_json != null && information_json.save_directory != null))
             {
                 System.Console.ForegroundColor = System.ConsoleColor.Green;
@@ -735,7 +735,7 @@ namespace Tre.Installer
             }
             else
             {
-                Program.GitHubReleases github_api_json = Program.ParseJson(json_github);
+                Tre.Installer.Program.GitHubReleases github_api_json = Tre.Installer.Program.ParseJson(json_github);
                 if (github_api_json.assets != null && github_api_json.assets.Count > 0)
                 {
                     if(information_json != null && information_json.version != null)
@@ -759,21 +759,21 @@ namespace Tre.Installer
                     System.Console.WriteLine($"      0. {Localization.get_json_property("refuse_to_download", $"./localization/{installer_language}.json")}");
                     System.Console.WriteLine($"      1. {Localization.get_json_property("agree_to_download", $"./localization/{installer_language}.json")}");
                     System.Console.ForegroundColor = System.ConsoleColor.Cyan;
-                    int download_checker = Program.input(installer_language);
+                    int download_checker = Tre.Installer.Program.input(installer_language);
                     if(download_checker != 0)
                     {
-                        Program.create_folder(create_new_save_path);
-                        Program.language_class[] languages_available_in_this_tool = new Program.language_class[available_languages.Length];
+                        Tre.Installer.Program.create_folder(create_new_save_path);
+                        Tre.Installer.Program.language_class[] languages_available_in_this_tool = new Tre.Installer.Program.language_class[available_languages.Length];
                         for(int i = 0; i < available_languages.Length; i++)
                         {
-                            languages_available_in_this_tool[i] = new Program.language_class(available_languages[i], available_languages_options[i]);
+                            languages_available_in_this_tool[i] = new Tre.Installer.Program.language_class(available_languages[i], available_languages_options[i]);
                         }
-                        Program.render_function[] languages_bool = new Program.render_function[languages_available_in_this_tool.Length];
+                        Tre.Installer.Program.render_function[] languages_bool = new Tre.Installer.Program.render_function[languages_available_in_this_tool.Length];
                         for(int i = 0; i < languages_available_in_this_tool.Length; i++)
                         {
-                            languages_bool[i] = new Program.render_function(languages_available_in_this_tool[i].language_number, languages_available_in_this_tool[i].language);
+                            languages_bool[i] = new Tre.Installer.Program.render_function(languages_available_in_this_tool[i].language_number, languages_available_in_this_tool[i].language);
                         }
-                        string language_changer = (information_json != null && information_json.language != null) ? information_json.language : Program.language_toolkit_changer(languages_bool, installer_language);
+                        string language_changer = (information_json != null && information_json.language != null) ? information_json.language : Tre.Installer.Program.language_toolkit_changer(languages_bool, installer_language);
                         if(information_json != null && information_json.language != null)
                         {
                             System.Console.ForegroundColor = System.ConsoleColor.Green;
@@ -781,20 +781,20 @@ namespace Tre.Installer
                         }
                         if (Directory.Exists(create_new_save_path))
                         {
-                            Program.DeleteEverythingInFolder(create_new_save_path, installer_language);
+                            Tre.Installer.Program.DeleteEverythingInFolder(create_new_save_path, installer_language);
                         }
                         System.Console.ForegroundColor = System.ConsoleColor.Green;
                         System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("deleted_everything_in", $"./localization/{installer_language}.json")} {create_new_save_path}");
                         string filePath = $"{create_new_save_path}/Tre.zip";
-                        await Program.DownloadFileAsync(github_api_json.assets[0].browser_download_url, filePath, installer_language);
+                        await Tre.Installer.Program.DownloadFileAsync(github_api_json.assets[0].browser_download_url, filePath, installer_language);
                         System.Console.ForegroundColor = System.ConsoleColor.Green;
                         System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("successfully_downloaded", $"./localization/{installer_language}.json")}");
-                        Program.UncompressZip(filePath, create_new_save_path, installer_language);
-                        Program.DeleteZip(filePath, installer_language);
+                        Tre.Installer.Program.UncompressZip(filePath, create_new_save_path, installer_language);
+                        Tre.Installer.Program.DeleteZip(filePath, installer_language);
                         System.Console.ForegroundColor = System.ConsoleColor.Green;
-                        Program.CreateShortcutOnDesktop($"{create_new_save_path}/Tre.exe", installer_language);
+                        Tre.Installer.Program.CreateShortcutOnDesktop($"{create_new_save_path}/Tre.exe", installer_language);
                         System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("successfully_create_a_shortcut_on_desktop", $"./localization/{installer_language}.json")}");
-                        Program.InformationJSON create_new_information = new Program.InformationJSON();
+                        Tre.Installer.Program.InformationJSON create_new_information = new Tre.Installer.Program.InformationJSON();
                         create_new_information.save_directory = create_new_save_path;
                         create_new_information.version = github_api_json.body;
                         create_new_information.language = language_changer;
@@ -805,7 +805,7 @@ namespace Tre.Installer
                         };
                         string jsonString = JsonSerializer.Serialize(create_new_information, options);
                         jsonString = jsonString.Replace("  ", "\t");
-                        Program.WriteToFile("./information.json", jsonString);
+                        Tre.Installer.Program.WriteToFile("./information.json", jsonString);
                         System.Console.ForegroundColor = System.ConsoleColor.Green;
                         System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("created", $"./localization/{installer_language}.json")} \"information.json\"");
                         System.Console.ForegroundColor = System.ConsoleColor.Green;
@@ -816,7 +816,7 @@ namespace Tre.Installer
                             toolkit_json.language = language_changer;
                             string toolkit_json_str = JsonSerializer.Serialize(toolkit_json, options);
                             toolkit_json_str = toolkit_json_str.Replace("  ", "\t");
-                            Program.WriteToFile(toolkit_json_filepath, toolkit_json_str);
+                            Tre.Installer.Program.WriteToFile(toolkit_json_filepath, toolkit_json_str);
                             System.Console.WriteLine($"◉ {Localization.get_json_property("execution_status", $"./localization/{installer_language}.json")}: {Localization.get_json_property("changed_language_to", $"./localization/{installer_language}.json")} {language_changer}");
                         }
                     }
