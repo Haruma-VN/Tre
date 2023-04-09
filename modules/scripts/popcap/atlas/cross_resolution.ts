@@ -4,10 +4,11 @@ import resize from "./resize.js";
 import { readjson } from "../../../library/fs/util.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
+import path from "node:path";
 
 export default async function (dir: string, width: number, height: number, display_not_atlas_info?: string, cannot_find_groups_array_in_atlasinfo?: string, cannot_find_subgroup_in_atlas_info?: string, cannot_find_method_in_atlas_info?: string, cannot_get_res_data?: string, not_found_res_indicated_in_subgroups?: string,
     total_sprites_process_in_thiz_function?: string, padding_size?: number): Promise<void> {
-    const config_json: any = readjson(process.cwd() + "/extension/settings/toolkit.json", true);
+    const config_json: any = readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true);
     if (padding_size === undefined || padding_size === void 0 || padding_size === null) {
         padding_size = 1;
     }

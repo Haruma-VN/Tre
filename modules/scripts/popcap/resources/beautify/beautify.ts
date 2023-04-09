@@ -43,7 +43,7 @@ namespace BeautifyRes.Tre.Resources {
     }
 
     export function PopCapSortOrderNumber(popcap_location_in_setting_display: string): number {
-        const PopCapSortOrderNumber: PopCapAnyResources = readjson(process.cwd() + "/extension/settings/toolkit.json", true) as PopCapAnyResources;
+        const PopCapSortOrderNumber: PopCapAnyResources = readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true) as PopCapAnyResources;
         return PopCapSortOrderNumber.resources.beautify_order[popcap_location_in_setting_display];
     }
 

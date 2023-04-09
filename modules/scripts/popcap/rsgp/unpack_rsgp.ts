@@ -6,7 +6,7 @@ import pam_xfl_decode from '../pam/json_to_flash/pamjson_to_pamflash.js';
 import wwise_decode from '../wwise/decode_simple.js';
 import rton_plain from '../rton/rijndael/rton_plain.js';
 import * as fs from '../../../library/fs/util.js';
-import {
+import path, {
     parse
 } from "node:path";
 import DecodePTX from "./decode_ptx.js";
@@ -36,7 +36,7 @@ export default async function (rsgp_data: any, rsgp_path: string,
         let rton_2c_encrypted = false;
         const rton_head = rton_data.slice(0, 2).toString('hex');
         if (rton_head == '1000') {
-            const rton_cipher_key = fs.readjson(process.cwd() + "/extension/settings/toolkit.json", true).popcap_rton_conversion.rton.rton_cipher;
+            const rton_cipher_key = fs.readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true).popcap_rton_conversion.rton.rton_cipher;
             rton_2c_encrypted = true;
             const rton_plain_data = await rton_plain(rton_data, rton_cipher_key);
             return [await rton2json(rton_plain_data), rton_2c_encrypted];

@@ -38,7 +38,7 @@ export function rton_decrypt_and_decode_to_json(filepath?: string, this_will_sto
     if (!filepath) {
         return;
     }
-    const rton_cipher_key: string = (readjson(process.cwd() + "/extension/settings/toolkit.json", true) as any).popcap_rton_conversion.rton.rton_cipher;
+    const rton_cipher_key: string = (readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true) as any).popcap_rton_conversion.rton.rton_cipher;
     console.log(color.fggreen_string(`◉ ${localization("execution_key")}: `) + rton_cipher_key);
     if (fs.statSync(filepath).isDirectory()) {
         const folder = read_dir(filepath);
@@ -66,7 +66,7 @@ export function popcap_json_to_rton_and_encrypt(filepath?: string, this_will_sto
     if (!filepath) {
         return;
     }
-    const rton_cipher_key: string = (readjson(process.cwd() + "/extension/settings/toolkit.json", true) as any).popcap_rton_conversion.rton.rton_cipher;
+    const rton_cipher_key: string = (readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true) as any).popcap_rton_conversion.rton.rton_cipher;
     console.log(color.fggreen_string(`◉ ${localization("execution_key")}: `) + rton_cipher_key);
     if (fs.statSync(filepath).isDirectory()) {
         const folder = read_dir(filepath);

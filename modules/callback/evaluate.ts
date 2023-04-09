@@ -204,6 +204,9 @@ async function create_evaluate_argument(
         case Display.Tre.Function.popcap_pam_json_to_flash.void_number_readline_argument() as evaluation_method:
             await evaluation_modules_workspace_assertation(execute_file_dir as assertation_argument, "popcap_pam_json_to_flash" as popcap_game_edit_method);
             break;
+        case Display.Tre.Function.popcap_repair_resources_path.void_number_readline_argument() as evaluation_method:
+            await evaluation_modules_workspace_assertation(execute_file_dir as assertation_argument, "popcap_repair_resources_path" as popcap_game_edit_method);
+            break;
         default:
             throw new Error(`${localization("cannot_find_module")}`) as never;
     }

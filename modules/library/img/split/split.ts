@@ -3,11 +3,12 @@ import { readjson } from '../../fs/util.js';
 import sharp from 'sharp';
 import localization from '../../../callback/localization.js';
 import * as color from '../../color/color.js';
+import path from "node:path";
 export default async function (dir: string, x: number, y: number, w: number, h: number, new_dir: string, name: string, extension_list: string[]) {
-    const json_config: any = readjson(process.cwd() + "/extension/settings/toolkit.json", true);
+    const json_config: any = readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true);
     if (json_config.atlas.split.notify_duplicate) {
         for (let extension of extension_list) {
-            if (name == extension) {
+            if (name === extension) {
                 console.log(color.yellow_string(`◉ ${localization("execution_warning")}: ${name} ${localization("is_duplicated")}`));
                 break;
             }

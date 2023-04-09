@@ -7,6 +7,7 @@ import DirectoryChecker from './public/input/directory.js';
 import FileChecker from './public/input/file.js';
 import { readline_argument, readline_char, readline_integer, readline_size, readline_texture, readline_expand, readline_normal } from '../../modules/readline/prompt/util.js';
 export namespace Console {
+
     export function WriteLine(...params: any[]): void {
         let text: string = "";
         params.forEach((param) => {
@@ -15,16 +16,18 @@ export namespace Console {
         return console.log(text);
     }
 
-    export function ReadFile(): string {
-        return FileChecker();
+    export async function ReadFile(extension?: string): Promise<string> {
+        return (extension !== undefined && extension !== null && extension !== void 0 && typeof (extension) === "string") ?
+            await FileChecker(extension) : await FileChecker();
     }
 
-    export function ReadDir(): string {
-        return DirectoryChecker();
+    export async function ReadDir(): Promise<string> {
+        return await DirectoryChecker();
     }
 
-    export function ReadPath(): string {
-        return TypeReadChecker();
+    export async function ReadPath(extension?: string): Promise<string> {
+        return (extension !== undefined && extension !== null && extension !== void 0 && typeof (extension) === "string") ?
+            await TypeReadChecker(extension) : await TypeReadChecker();
     }
 
     export function IntegerReadLine(min: number, max: number): number {
@@ -39,12 +42,12 @@ export namespace Console {
         return readline_texture();
     }
 
-    export function FileTypeReadLine(executor_file_need_avoid: string, file_type_but_only_extension_name: string): string {
-        return any_readline(executor_file_need_avoid, file_type_but_only_extension_name)
+    export async function FileTypeReadLine(executor_file_need_avoid: string, file_type_but_only_extension_name: string): Promise<string> {
+        return await any_readline(executor_file_need_avoid, file_type_but_only_extension_name)
     }
 
-    export function ReadJsonPath(executor_file_need_avoid: string): string {
-        return readline_for_json(executor_file_need_avoid)
+    export async function ReadJsonPath(executor_file_need_avoid: string): Promise<string> {
+        return await readline_for_json(executor_file_need_avoid)
     }
 
     export function ExpandReadLine(bundle: number[]): number {

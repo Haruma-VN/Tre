@@ -13,6 +13,7 @@ import popcap_json_to_rton from "../rton/json2rton.js";
 import rton_to_json from "../rton/rton2json.js";
 import fs_js from "../../../library/fs/implement.js";
 import { parse } from '../../../library/json/util.js';
+import repair from "./repair/pvz2c_path.js"
 
 export function LocalResourcesCompare(vanilla_directory: string, modded_directory: string) {
     local_res_compare(vanilla_directory, modded_directory);
@@ -144,5 +145,20 @@ export default class {
     }
     ResSplit() {
         res_split(this.dir);
+    }
+}
+
+export function RepairPvZ2CResourcesPath(
+    file_path: string,
+    file_output?: string,
+    is_turn_off_notify: boolean = false,
+) {
+    if (file_output === undefined || file_output === null || file_output === void 0) {
+        file_output = `${file_path}/../RESOURCES.Repair.json`;
+    }
+    const res_json: any = fs_js.read_json(file_path);
+    fs_js.write_json(file_output, repair(res_json));
+    if (!is_turn_off_notify) {
+        fs_js.execution_out(fs_js.get_full_path(file_output));
     }
 }

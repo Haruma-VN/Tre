@@ -30,11 +30,13 @@ async function evaluate_script(
             script_entry_point.modules[i].notify !== void 0 && typeof (is_notify) === "boolean") {
             fs_js.execution_information(script_entry_point.modules[i].notify);
         }
+        let entry_point: string = "";
         if (is_notify && script_entry_point.modules[i].func !== undefined && script_entry_point.modules[i].func !== null &&
             script_entry_point.modules[i].func !== void 0 && typeof (is_notify) === "boolean" && typeof (script_entry_point.modules[i].func) === "string"
             && !(assertation_break.ban_list.includes(script_entry_point.modules[i].func as string))
             && (assertation_break.allowance_lists.includes(script_entry_point.modules[i].func as string))) {
             fs_js.execution_auto(localization(script_entry_point.modules[i].func as string));
+            entry_point = script_entry_point.modules[i].func as string;
         }
         if (script_entry_point.modules[i].func !== undefined && script_entry_point.modules[i].func !== null &&
             script_entry_point.modules[i].func !== void 0 && !(assertation_break.ban_list.includes(script_entry_point.modules[i].func as string))
@@ -52,17 +54,17 @@ async function evaluate_script(
                             break evaluation_modules;
                         case "?":
                             fs_js.assertation_create("argument", localization("detect_question_mark"));
-                            (evaluation_file as string) = Console.ReadPath();
+                            (evaluation_file as string) = await Console.ReadPath();
                             await evaluation_modules_workspace_assertation((evaluation_file as string), script_entry_point.modules[i].func as string);
                             break;
                         case "?file":
                             fs_js.assertation_create("argument", localization("drag_file_question_mark"));
-                            (evaluation_file as string) = Console.ReadFile();
+                            (evaluation_file as string) = await Console.ReadFile();
                             await evaluation_modules_workspace_assertation((evaluation_file as string), script_entry_point.modules[i].func as string);
                             break;
                         case "?folder":
                             fs_js.assertation_create("argument", localization("drag_folder_question_mark"));
-                            (evaluation_file as string) = Console.ReadDir();
+                            (evaluation_file as string) = await Console.ReadDir();
                             await evaluation_modules_workspace_assertation((evaluation_file as string), script_entry_point.modules[i].func as string);
                             break;
                         case "->":

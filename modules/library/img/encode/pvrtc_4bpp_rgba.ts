@@ -11,7 +11,7 @@ import exception_encode_dimension from '../exception/encode.js';
 import fs_js from '../../fs/implement.js';
 
 export default async function (dir: string, not_notify_console_log: boolean = false): Promise<void> {
-    const tre_thirdparty: string = process.cwd() + "/extension/third/encode/";
+    const tre_thirdparty: string = path.dirname(process.argv[1]) + "/extension/third/encode/";
     const pvrtc_process: string = `PVRTexToolCLI.exe -f PVRTCI_4BPP_RGBA,UBN,sRGB -q PVRTCFAST -i "${dir}" -o "${basename(dir).toUpperCase()}.pvr"`;
     const dimension_x: { width: number; height: number } = await dimension(dir).then((result) => result);
     const width: number = dimension_x.width;

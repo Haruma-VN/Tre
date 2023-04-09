@@ -28,7 +28,7 @@ export default async function (execute_file_count: number, execute_file_dir: str
             }
         }
     }
-    const json_config: any = readjson(process.cwd() + "/extension/settings/toolkit.json", true);
+    const json_config: any = readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true);
     execute_file_count = (js_checker.is_array(execute_file_dir)) ? execute_file_dir.length : execute_file_count;
     execute_file_length = (js_checker.is_array(execute_file_dir)) ? execute_file_dir.length : execute_file_length;
     const start_timer: number = Date.now();

@@ -31,7 +31,7 @@ export interface configAtlas {
     }
 }
 export default async function (opt: number, execute_file_dir: string[]) {
-    const json_config: any = readjson(process.cwd() + "/extension/settings/toolkit.json", true);
+    const json_config: any = readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true);
     let json: any = {};
     const img_list = new Array();
     let directory_name = new String();

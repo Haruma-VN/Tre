@@ -346,6 +346,11 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_flash_to_pam_json").option,
         execution_evaluate_view("popcap_flash_to_pam_json").filter,
         execution_evaluate_view("popcap_flash_to_pam_json").allow);
+    export const popcap_repair_resources_path = new Void(
+        localization("popcap_repair_resources_path"),
+        execution_evaluate_view("popcap_repair_resources_path").option,
+        execution_evaluate_view("popcap_repair_resources_path").filter,
+        execution_evaluate_view("popcap_repair_resources_path").allow);
 
 
     export function DisplayItems(toolkit_selector_array_list: Array<number>, display_item_list: Void, is_display_data: boolean = true): void {
@@ -433,5 +438,6 @@ export namespace Display.Tre.Function {
             flash_animation_resize,
             popcap_pam_json_to_flash,
             popcap_flash_to_pam_json,
+            popcap_repair_resources_path,
         ];
 }

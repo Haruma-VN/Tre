@@ -219,13 +219,13 @@ export default async function (path_file: string, pack_simple: boolean = false,
                 throw new Error(localization('not_recognize_ptx'));
         }
     }
-    async function EncodeJson(path: string, rton_2c_encrypted: boolean) {
+    async function EncodeJson(file_path: string, rton_2c_encrypted: boolean) {
         if (rton_2c_encrypted) {
-            const rton_cipher_key = fs.readjson(process.cwd() + "/extension/settings/toolkit.json", true).popcap_rton_conversion.rton.rton_cipher;
-            const rton_data = await json2rton(path);
+            const rton_cipher_key = fs.readjson((path).dirname(process.execPath) + "/extension/settings/toolkit.json", true).popcap_rton_conversion.rton.rton_cipher;
+            const rton_data = await json2rton(file_path);
             return await rton_cipher(rton_data, rton_cipher_key);
         } else {
-            const rton_data = await json2rton(path);
+            const rton_data = await json2rton(file_path);
             return rton_data;
         }
     }

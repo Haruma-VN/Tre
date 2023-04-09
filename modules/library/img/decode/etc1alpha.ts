@@ -20,7 +20,7 @@ export default async function (dir: string, width: number, height: number, not_n
     const exception_checker = exception_encode_dimension(width, height);
     if (exception_checker && fs_js.check_etcpak()) {
         delete_file(`${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`);
-        const tre_thirdparty = process.cwd() + "/extension/third/encode/";
+        const tre_thirdparty = path.dirname(process.argv[1]) + "/extension/third/encode/";
         let cmd = `etcpak.exe --etc1 -v "${parse(dir).base}" "${parse(dir).name.toUpperCase()}.png"`;
         let pvr_header: any = Buffer.from('505652030000000006000000000000000000000000000000BBBBBBBBAAAAAAAA0100000001000000010000000100000000000000', 'hex');
         pvr_header.writeInt32LE('0x' + width.toString(16), 28);

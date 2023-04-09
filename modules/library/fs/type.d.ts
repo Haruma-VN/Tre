@@ -75,7 +75,8 @@ declare type view_option =
     "cut_unused_space" |
     "progress_bar" |
     "pam_resolution"
-    | "pam_to_flash";
+    | "pam_to_flash"
+    | "open_windows_explorer";
 
 declare type popcap_resources_render = {
     slot: int,
@@ -135,6 +136,7 @@ declare type toolkit_json = {
     user: {
         using_extension_for_rsb_pack: str,
         progress_bar: bool,
+        open_windows_explorer: bool,
     },
     resources: {
         beautify_order: popcap_resources_render,
@@ -161,3 +163,6 @@ declare type return_gif_to_pngs = {
     height: number,
     name: string,
 }
+
+
+declare type DialogType = 'file' | 'directory' | 'any';

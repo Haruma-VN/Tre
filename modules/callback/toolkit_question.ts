@@ -74,4 +74,6 @@ export namespace Argument.Tre.Packages {
     export const popcap_flash_animation_resize = `◉ ${localization("execution_argument")}: ${localization("flash_animation_resize")}`;
     export const popcap_flash_animation_resize_detail = `◉ ${localization("execution_information")}: ${localization("flash_animation_resize_detail")}`;
     export const popcap_game_json_split_argument = `◉ ${localization("execution_argument")}: ${localization("json_split_mode")}`;
+    export const windows_explorer_open_reminder = `◉ ${localization("execution_reminder")}: ${localization("windows_explorer_open_reminder")}`;
+    export const windows_explorer_found_nothing = `◉ ${localization("execution_warning")}: ${localization("windows_explorer_found_nothing")}`;
 }

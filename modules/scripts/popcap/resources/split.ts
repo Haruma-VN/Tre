@@ -13,7 +13,7 @@ export interface TreSetting {
 }
 export default async function (dir: string, json_data_if_no_dir_were_parsed?: any) {
     const json: any = (json_data_if_no_dir_were_parsed != undefined && json_data_if_no_dir_were_parsed !== null && json_data_if_no_dir_were_parsed !== void 0) ? json_data_if_no_dir_were_parsed : readjson(dir);
-    const config: TreSetting = readjson(process.cwd() + "/extension/settings/toolkit.json", true) as TreSetting;
+    const config: TreSetting = readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true) as TreSetting;
     const is_beautify_mode: boolean = (config.resources.split.beautify_res) ? true : false;
     const directories = path.parse(dir).name + '.res';
     if (!("groups" in json)) {

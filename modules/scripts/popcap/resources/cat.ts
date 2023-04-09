@@ -32,7 +32,7 @@ export interface MainData {
 }
 
 export default function (dir: string, mode: number, encode: any, res_array_for_data: any[], is_rewrite_mode: boolean = false, is_return_output_mode: boolean = false): any {
-    let config_json: any = readjson(process.cwd() + "/extension/settings/toolkit.json", true);
+    let config_json: any = readjson(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", true);
     const rsg_data: any[] = res_array_for_data;
     let slot_count: number = 0;
     const resources_output_result: any = {

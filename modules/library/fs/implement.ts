@@ -9,6 +9,7 @@ import zlib from "zlib";
 import crypto from "crypto";
 import dataview_checker from "../../callback/default/checker.js";
 import gifFrames from 'gif-frames';
+import { execSync } from 'child_process';
 
 interface FrameData {
     getImage: () => NodeJS.ReadableStream;
@@ -343,7 +344,7 @@ class fs_js {
 
     public static return_this_tool_current_location(): string {
         //#region 
-        return this.get_full_path(process.cwd());
+        return this.get_full_path(path.dirname(process.argv[1]));
         //#endregion
     }
 
@@ -353,7 +354,7 @@ class fs_js {
     ):
         string {
         //#region 
-        return this.get_full_path(process.cwd() + "/extension/settings/toolkit.json");
+        return this.get_full_path(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json");
         //#endregion
     }
 
@@ -824,7 +825,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    protected static readonly tre_thirdparty_for_encode = process.cwd() + "/extension/third/encode/";
+    protected static readonly tre_thirdparty_for_encode = path.dirname(process.argv[1]) + "/extension/third/encode/";
 
     /*-------------------------------------------------------------------------------------------------*/
 
@@ -893,7 +894,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    protected static readonly tre_thirdparty_real_esrgan_location = process.cwd() + "/extension/third/real_esrgan";
+    protected static readonly tre_thirdparty_real_esrgan_location = path.dirname(process.argv[1]) + "/extension/third/real_esrgan";
 
 
     public static check_real_esrgan(
@@ -1053,7 +1054,7 @@ class fs_js {
             case "failed":
                 return console.log(color.fgred_string(`${("◉ " + localization("execution_failed") + ": " + `${(text)}`)}`));
             case "argument":
-                return console.log(`${color.fgcyan_string("◉ " + localization("execution_argument") + ":")} ` + `${(text)}`);
+                return console.log(color.fgcyan_string(`${color.fgcyan_string("◉ " + localization("execution_argument") + ":")} ` + `${(color.fgcyan_string(text))}`));
             case "received":
                 return console.log(`${color.fggreen_string("◉ " + localization("execution_received") + ":\n     ")} ` + `${(text)}`);
             case "void":
@@ -1722,7 +1723,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    protected static readonly tre_debug_directory: string = process.cwd() + "/Tre.Debug";
+    protected static readonly tre_debug_directory: string = path.dirname(process.argv[1]) + "/Tre.Debug";
 
     /*-------------------------------------------------------------------------------------------------*/
 
@@ -1874,7 +1875,8 @@ class fs_js {
             "cut_unused_space" |
             "progress_bar"
             | "pam_resolution"
-            | "pam_to_flash",
+            | "pam_to_flash"
+            | "open_windows_explorer",
     ): bool | str | int | popcap_resources_render {
         //#region 
         const toolkit_json: toolkit_json = this.read_json(this.return_this_tool_toolkit_json_location() satisfies str) as toolkit_json;
@@ -1925,6 +1927,8 @@ class fs_js {
                 return toolkit_json.popcap_resource_stream_group_unpack.simple.pam_resolution as number;
             case "pam_to_flash":
                 return toolkit_json.popcap_resource_stream_group_unpack.simple.pam_to_xfl as boolean;
+            case "open_windows_explorer":
+                return toolkit_json.user.open_windows_explorer as bool;
             default:
                 return toolkit_json as never;
         }
@@ -1937,7 +1941,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
 
-    public static readonly functions_json_location: str = this.get_full_path(process.cwd() + "/extension/settings/functions.json");
+    public static readonly functions_json_location: str = this.get_full_path(path.dirname(process.argv[1]) + "/extension/settings/functions.json");
 
 
 
@@ -2069,35 +2073,22 @@ class fs_js {
         outputPath = '',
         output_name: string
     ): Promise<string[]> {
-        return new Promise((resolve, reject) => {
-            if (gifURL.trim() === '') {
-                reject(`URL is required.`);
-            } else if (outputPath.trim() === '') {
-                reject(`Path is required.`);
-            } else {
-                gifFrames({ url: gifURL, frames: 'all', outputType: 'png' })
-                    .then(async (frameData: FrameData[]) => {
-                        const paths: string[] = [];
-                        for (let i = 0; i < frameData.length; i++) {
-                            const framePath = path.join(
-                                outputPath,
-                                `${output_name}_${i + 1}.png`
-                            );
-                            const saveFrame = await frameData[i]
-                                .getImage()
-                                .pipe(await fs.createWriteStream(framePath));
-                            await saveFrame.on('error', await reject);
-                            await saveFrame.on('finish', async () => {
-                                if (i === frameData.length - 1) {
-                                    // last frame saved
-                                    await resolve(paths);
-                                }
-                            });
-                            paths.push(framePath);
-                        }
-                    });
+        const create_sharp_view: sharp.Sharp = await sharp(gifURL);
+        const create_append_list: Array<string> = new Array();
+        await create_sharp_view.metadata().then(async data => {
+            if (!data.pages) {
+                return;
             }
-        });
+            const create_async_javascript_void: Array<Promise<void>> = Array.from({ length: data.pages }, async (_nullify, i) => {
+                const create_new_empty_sharp = await sharp(gifURL, { page: i });
+                const output_page = `${outputPath}/${output_name}_${i}.png`;
+                await create_new_empty_sharp.toFile(output_page);
+                create_append_list.push(output_page);
+            });
+
+            await Promise.all(create_async_javascript_void);
+        })
+        return create_append_list;
     };
 
 
@@ -2129,7 +2120,7 @@ class fs_js {
 
 
 
-    public static readonly manifest_build_directory = `${process.cwd()}/extension/support/resource_build.json`;
+    public static readonly manifest_build_directory = `${path.dirname(process.argv[1])}/extension/support/resource_build.json`;
 
 
 
@@ -2283,6 +2274,112 @@ class fs_js {
 
 
     /*-------------------------------------------------------------------------------------------------*/
+
+
+
+    public static async openWindowsExplorer(dialogType: "file" | "directory", extension?: string): Promise<string> {
+        //#region 
+        let filter = '';
+        if (extension) {
+            filter = `|*${extension}`;
+        }
+
+        const openFileDialog = dialogType === 'file' ? `$ofd = [System.Windows.Forms.OpenFileDialog]::new(); $ofd.Title = 'Tre:Windows Explorer'; $ofd.Filter = 'Files (*${extension})${filter}'; $ofd.FileName` : '';
+        const folderBrowserDialog = dialogType === 'directory' ? `$ofd = [System.Windows.Forms.FolderBrowserDialog]::new(); $ofd.Description = 'Tre:Windows Explorer'; $ofd.SelectedPath` : '';
+
+        const command = `powershell -Command "& {Add-Type -AssemblyName System.windows.forms; ${openFileDialog || folderBrowserDialog}; if ($ofd.ShowDialog() -eq 'OK') { ${openFileDialog ? '$ofd.FileName' : '$ofd.SelectedPath'} } }"`;
+
+
+        try {
+            const stdout = await execSync(command).toString();
+            const file_path = stdout.trim();
+            if (file_path) {
+                return file_path;
+            } else {
+                return await this.openWindowsExplorer(dialogType, extension);
+            }
+        } catch (error) {
+            throw new Error(`${error}`);
+        }
+
+        //#endregion
+
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+    public static readonly user_platform: string = process.platform;
+
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+    public static encode_utf8(
+
+    ) {
+
+
+        //#region 
+        if (this.user_platform === 'win32') {
+            try {
+                execSync('chcp 65001', { stdio: 'ignore' });
+            } catch (error: any) {
+                this.execution_status("failed", error.message);
+            }
+        }
+        //#endregion
+    }
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+    public static tool_title(
+        title: str
+    ) {
+        //#region 
+        process.title = title;
+        //#endregion
+    }
+
+
+
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+    public static deleteNonTsFiles(directory: string): void {
+        //#region 
+        const files = fs.readdirSync(directory);
+
+        for (const file of files) {
+            const filePath = path.join(directory, file);
+
+            if (fs.lstatSync(filePath).isDirectory()) {
+                this.deleteNonTsFiles(filePath);
+            } else if (!filePath.endsWith('.ts')) {
+                fs.unlinkSync(filePath);
+            }
+        }
+
+        //#endregion
+    }
 
 
 

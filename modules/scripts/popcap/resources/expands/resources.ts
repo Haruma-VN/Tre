@@ -6,8 +6,8 @@ namespace AdaptPvZ2InternationalResPath {
 
     export abstract class adapt_pvz2_res {
         protected abstract new_to_old_conversion(): PopCapResourcesChildren;
-        protected abstract old_to_new_conversion():  PopCapResourcesChildren;
-        protected abstract evaluate(method: number):  PopCapResourcesChildren ;
+        protected abstract old_to_new_conversion(): PopCapResourcesChildren;
+        protected abstract evaluate(method: number): PopCapResourcesChildren;
     }
 
     export interface PopCapResourcesParent {
@@ -42,13 +42,18 @@ namespace AdaptPvZ2InternationalResPath {
         subgroups?: any[],
     }
 
-    export class res_path extends adapt_pvz2_res {
+
+    export interface template_path {
+        path: string[] | string,
+    }
+
+    export class res_path<T> extends adapt_pvz2_res {
 
         constructor(private res: PopCapResourcesChildren) {
             super();
         }
 
-        new_to_old_conversion(): PopCapResourcesChildren  {
+        public new_to_old_conversion(): PopCapResourcesChildren {
 
             if (!("path" in this.res)) {
                 return this.res;
@@ -60,7 +65,7 @@ namespace AdaptPvZ2InternationalResPath {
             return this.res;
         }
 
-        old_to_new_conversion(): PopCapResourcesChildren {
+        public old_to_new_conversion(): PopCapResourcesChildren {
 
             if (!("path" in this.res)) {
                 return this.res;
@@ -72,7 +77,7 @@ namespace AdaptPvZ2InternationalResPath {
             return this.res;
         }
 
-        evaluate(method: number):  PopCapResourcesChildren  {
+        public evaluate(method: number): PopCapResourcesChildren {
             switch (method) {
                 case 1:
                     this.res = this.old_to_new_conversion() as PopCapResourcesChildren;
@@ -85,6 +90,7 @@ namespace AdaptPvZ2InternationalResPath {
             }
             return this.res;
         }
+
     }
 
     export abstract class ResourcesPath {
@@ -105,11 +111,11 @@ namespace AdaptPvZ2InternationalResPath {
                 return {};
             }
             for (const resource_data of resource_json_parsed.groups) {
-                if(!("resources" in resource_data)){
+                if (!("resources" in resource_data)) {
                     continue;
                 }
-                for(let res_data of resource_data.resources){
-                    if(!("path" in res_data)){
+                for (let res_data of resource_data.resources) {
+                    if (!("path" in res_data)) {
                         continue;
                     }
                     res_data = new AdaptPvZ2InternationalResPath.res_path(res_data).evaluate(method_number);
@@ -119,6 +125,30 @@ namespace AdaptPvZ2InternationalResPath {
         }
     }
 
+    export function new_res_to_old_res<T extends template_path>(res: T): T {
+
+        if (!("path" in res)) {
+            return res;
+        }
+
+        if (typeof res.path === "string") {
+            res.path = res.path.split('\\');
+        }
+        return res;
+    }
+
+
+    export function old_res_to_new_res<T extends template_path>(res: T): T {
+
+        if (!("path" in res)) {
+            return res;
+        }
+
+        if (res.path instanceof Array) {
+            res.path = res.path.join('\\');
+        }
+        return res;
+    }
 }
 
 export default AdaptPvZ2InternationalResPath;

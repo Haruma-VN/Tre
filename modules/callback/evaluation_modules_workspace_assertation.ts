@@ -1,6 +1,6 @@
 "use strict";
 import { decode_argb8888, decode_rgba8888, encode_argb8888, encode_rgba8888, encode_etc1a, encode_pvrtc, decode_etc1a, decode_pvrtc, decode_etc1alpha_palette, encode_etc1alpha_palette, } from "../library/img/util.js";
-import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, } from '../scripts/popcap/resources/util.js';
+import { res_pack, res_split, res_rewrite, LocalResourcesCompare, small_res_beautify, AdaptPvZ2InternationalResPath, RepairPvZ2CResourcesPath } from '../scripts/popcap/resources/util.js';
 import { atlas_split, atlas_cat, resize_atlas, restoAtlasinfo, cross_resolution, atlas_split_experimental, atlas_pack_experimental } from '../scripts/popcap/atlas/util.js';
 import { readjson, readfile, writefile, writejson, check_is_file, file_stats, readfilebuffer, makefolder, delete_file, read_dir, read_single_folder } from "../library/fs/util.js";
 import { Argument } from "./toolkit_question.js";
@@ -94,6 +94,16 @@ async function evaluation_modules_workspace_assertation(
             else {
                 execute_file_dir.forEach(async file => {
                     await popcap_flash_to_pam_json(file);
+                })
+            }
+            break;
+        case "popcap_repair_resources_path" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                RepairPvZ2CResourcesPath(execute_file_dir);
+            }
+            else {
+                execute_file_dir.forEach(file => {
+                    RepairPvZ2CResourcesPath(file);
                 })
             }
             break;
@@ -934,16 +944,16 @@ async function evaluation_modules_workspace_assertation(
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.local_compare_received}`));
                 Console.WriteLine(execute_file_dir);
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.method_resources_local_compare_drag_input}`));
-                let local_new_res_to_compare: string = Console.ReadPath();
+                let local_new_res_to_compare: string = await Console.ReadPath();
                 LocalResourcesCompare(execute_file_dir, local_new_res_to_compare);
             }
             else {
-                execute_file_dir.forEach(file => {
+                execute_file_dir.forEach(async file => {
                     if (fs_js.popcap_check_extname(file, ".json")) {
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.local_compare_received}`));
                         Console.WriteLine(execute_file_dir);
                         Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.method_resources_local_compare_drag_input}`));
-                        let local_new_res_to_compare: string = Console.ReadPath();
+                        let local_new_res_to_compare: string = await Console.ReadPath();
                         LocalResourcesCompare(file, local_new_res_to_compare);
                     }
                 })
@@ -1600,7 +1610,7 @@ async function evaluation_modules_workspace_assertation(
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_ask_drag_file}`));
                 fs_js.execution_notify("received", execute_file_dir);
-                let json_apply_path: string = readline_for_json(execute_file_dir);
+                let json_apply_path: string = await readline_for_json(execute_file_dir);
                 let apply_patch: any = readjson(execute_file_dir);
                 apply_patch = (JSON.stringify(apply_patch) === "{}") ? { loop: false, patch: [] } : apply_patch;
                 const finish_apply_patch_json = await applyPatch(readjson(json_apply_path), apply_patch);
@@ -1612,7 +1622,7 @@ async function evaluation_modules_workspace_assertation(
                 execute_file_dir.forEach(async file => {
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_ask_drag_file}`));
                     fs_js.execution_notify("received", file);
-                    let json_apply_path: string = readline_for_json(file);
+                    let json_apply_path: string = await readline_for_json(file);
                     let apply_patch: any = readjson(file);
                     apply_patch = (JSON.stringify(apply_patch) === "{}") ? { loop: false, patch: [] } : apply_patch;
                     const finish_apply_patch_json = await applyPatch(readjson(json_apply_path), apply_patch);
@@ -1628,18 +1638,18 @@ async function evaluation_modules_workspace_assertation(
                 fs_js.execution_notify("received", execute_file_dir);
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_new_execution_generator}`));
                 fs_js.execution_information(localization("drag_the_json_to_compare_and_generate_patch"));
-                let json_new_file_compare_diff: string = readline_for_json(execute_file_dir);
+                let json_new_file_compare_diff: string = await readline_for_json(execute_file_dir);
                 writejson(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`, generatePatch(readjson(execute_file_dir), readjson(json_new_file_compare_diff)));
                 Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`)}`);
                 Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.json_patch_finish_write_patch}`));
             }
             else {
-                execute_file_dir.forEach(file => {
+                execute_file_dir.forEach(async file => {
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_execution_received}`));
                     fs_js.execution_notify("received", file);
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.json_patch_generator_new_execution_generator}`));
                     fs_js.execution_information(localization("drag_the_json_to_compare_and_generate_patch"));
-                    let json_new_file_compare_diff: string = readline_for_json(file);
+                    let json_new_file_compare_diff: string = await readline_for_json(file);
                     writejson(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`, generatePatch(readjson(file), readjson(json_new_file_compare_diff)));
                     Console.WriteLine(`${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${path.resolve(`${json_new_file_compare_diff}/../${path.parse(json_new_file_compare_diff).name}_patch.json`)}`);
                     Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.json_patch_finish_write_patch}`));
@@ -1671,15 +1681,15 @@ async function evaluation_modules_workspace_assertation(
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_lawnstring_old_obtained}`));
                 Console.WriteLine(execute_file_dir);
                 Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_lawnstrings_new_require}`));
-                let new_compare_json_diff: string = readline_for_json(execute_file_dir);
+                let new_compare_json_diff: string = await readline_for_json(execute_file_dir);
                 Lawnstrings.popcap.WriteDiffJSON(execute_file_dir, new_compare_json_diff);
             }
             else {
-                execute_file_dir.forEach(file => {
+                execute_file_dir.forEach(async file => {
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_lawnstring_old_obtained}`));
                     Console.WriteLine(execute_file_dir);
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_lawnstrings_new_require}`));
-                    let new_compare_json_diff: string = readline_for_json(file);
+                    let new_compare_json_diff: string = await readline_for_json(file);
                     Lawnstrings.popcap.WriteDiffJSON(file, new_compare_json_diff);
                 })
             }

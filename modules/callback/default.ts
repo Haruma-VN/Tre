@@ -10,24 +10,36 @@ import localization from './localization.js';
 import exit_program from "./default/exit.js";
 import { prompt } from '../../modules/readline/prompt/util.js';
 import fs_js from "../library/fs/implement.js";
+import path from "node:path";
+
 export default async function (): Promise<void> {
-    Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${process.cwd()} | ${version.tre_version} | ${localization("this.language")}`);
+    Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_start")}: `) + `${path.dirname(process.argv[1])
+        } | ${version.tre_version} | ${localization("this.language")}`);
+    fs_js.encode_utf8();
+    fs_js.tool_title("Tre");
     const proc_arr: string[] = new Array();
     for (let i: number = 2; i < process.argv.length; ++i) {
         proc_arr.push(process.argv[i]);
     };
     let mode: number;
-    let __check_while_loop__end: boolean = false;
+    const is_windows_explorer_open: boolean = fs_js.create_toolkit_view("open_windows_explorer") as boolean;
+    let check_while_loop_end: boolean = false;
     const start_timer: number = Date.now();
-    if (proc_arr.length == 0) {
-        __check_while_loop__end = true;
-        Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_reminder_quick_tip}`));
-        Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.execute_when_there_is_no_directory_passes_in_tre}`));
-        let dir: string = readline_normal();
-        while (dir !== '') {
+    if (proc_arr.length === 0) {
+        check_while_loop_end = true;
+        if (!is_windows_explorer_open) {
+            Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_reminder_quick_tip} `));
+            Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.execute_when_there_is_no_directory_passes_in_tre} `));
+        }
+        else {
+            Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.windows_explorer_open_reminder} `));
+            Console.WriteLine(color.yellow_string(`${Argument.Tre.Packages.windows_explorer_found_nothing} `));
+        }
+        let dir: string = (is_windows_explorer_open as boolean) ? await fs_js.openWindowsExplorer("file", "*.*") : readline_normal();
+        assert_test: while (dir !== '') {
             if (dir === "./") {
                 Console.WriteLine(`${Argument.Tre.Packages.execution_warning_log} \"./\" ${Argument.Tre.Packages.execute_error_not_valid_file_path}`);
-                dir = await readline_normal();
+                dir = (is_windows_explorer_open) ? await fs_js.openWindowsExplorer("file", "*.*") : readline_normal();
                 continue;
             }
             if (dir[0] === "\"" && dir[dir.length - 1] === "\"") {
@@ -37,19 +49,28 @@ export default async function (): Promise<void> {
                 const stats = fs.statSync(dir);
                 if (stats.isDirectory() || stats.isFile()) {
                     proc_arr.push(dir);
+                    if (is_windows_explorer_open) {
+                        fs_js.execution_notify("argument", localization("would_you_like_to_input_more_path"));
+                        fs_js.execution_boolean_view();
+                    }
+                    const thiz_stop_passing_argument: 0 | 1 | null = (is_windows_explorer_open) ? readline_integer(0, 1) as 0 | 1 : null;
+                    const is_windows_explorer_break: boolean = (is_windows_explorer_open && thiz_stop_passing_argument === 0) ? true : false;
+                    if (is_windows_explorer_break) {
+                        break assert_test;
+                    }
                     Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_file_size} ${proc_arr.length}`));
-                    dir = await readline_normal();
+                    dir = (is_windows_explorer_open) ? await fs_js.openWindowsExplorer("file", "*.*") : readline_normal();
                 } else {
                     Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.execute_error_log} ${dir} `));
-                    dir = await readline_normal();
+                    dir = await (is_windows_explorer_open) ? await fs_js.openWindowsExplorer("file", "*.*") : readline_normal();
                 }
             } catch (err) {
                 Console.WriteLine(color.fgred_string(`${Argument.Tre.Packages.execute_error_log} ${dir} ${Argument.Tre.Packages.execute_error_not_valid_directory_path}`));
-                dir = await readline_normal();
+                dir = await (is_windows_explorer_open) ? await fs_js.openWindowsExplorer("file", "*.*") : readline_normal();
             }
-        };
-    };
-    if (__check_while_loop__end) {
+        }
+    }
+    if (check_while_loop_end) {
         const end_timer: number = Date.now();
         Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.tre_execution_time_after_process} `) + `${(end_timer - start_timer) / 1000}s`);
         Console.WriteLine(color.fggreen_string(`${Argument.Tre.Packages.execute_status_finish}`));
@@ -61,7 +82,7 @@ export default async function (): Promise<void> {
     }
     else {
         mode = 0;
-    };
+    }
     if (mode === 0) {
         switch (proc_arr.length) {
             case 0:
@@ -76,7 +97,7 @@ export default async function (): Promise<void> {
                                 process.stdin.pause();
                                 process.stdin.removeAllListeners('data');
                             }
-                        });
+                        })
 
                         try {
                             await functions((i + 1), proc_arr[i], proc_arr.length, mode);
@@ -91,7 +112,7 @@ export default async function (): Promise<void> {
                         Console.WriteLine(color.fgred_string(`◉ ${localization("execution_failed")}: ${localization("cannot_find_specific_file")}`));
                         continue;
                     }
-                };
+                }
                 break
         }
     }
@@ -108,7 +129,7 @@ export default async function (): Promise<void> {
                 console.log('\x1b[32m◉ ' + localization("execution_finish") + ': ' + localization("press_any_key_to_exit") + '\x1b[0m');
                 prompt('', '');
             }
-        });
+        })
 
         try {
             await functions(1, proc_arr, 1, mode);
@@ -117,5 +138,5 @@ export default async function (): Promise<void> {
             hasError = true;
         }
     }
-    return await exit_program();
+    return await exit_program()
 }

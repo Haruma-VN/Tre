@@ -1,6 +1,7 @@
 "use strict";
 import fs from 'node:fs';
 import localization from "../../callback/localization.js";
+import path from "node:path";
 
 function parseJson(jsonStr: string, allow_trailing_commas: boolean = false): any {
   const jsonStrWithoutTrailingCommas = (allow_trailing_commas) ? jsonStr.replace(/(?<=(true|false|null|["\d}\]])\s*)\s*,(?=\s*[}\]])/g, '') : jsonStr;
@@ -53,7 +54,7 @@ export interface json_config {
 }
 
 export default function (data: any, force_trailing_commas_reader: boolean = false): {} {
-  const json_config: json_config = parseJson(fs.readFileSync(process.cwd() + "/extension/settings/toolkit.json", { encoding: "utf-8", flag: "r" }), true);
+  const json_config: json_config = parseJson(fs.readFileSync(path.dirname(process.argv[1]) + "/extension/settings/toolkit.json", { encoding: "utf-8", flag: "r" }), true);
   if (typeof data === 'object') {
     return data;
   }
