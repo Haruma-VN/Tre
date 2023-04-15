@@ -1,0 +1,15 @@
+{
+    "tre_launcher": "Tre - Trình khởi chạy",
+    "current_version": "Phiên bản hiện tại",
+    "new_version": "Phiên bản mới",
+    "tre_installer": "Tre - Trình tải xuống",
+    "language": "Ngôn ngữ",
+    "download_failed": "Tải xuống thất bại",
+    "not_specify_a_path_to_save_the_tool": "Bạn chưa chọn nơi lưu công cụ",
+    "download_complete": "Tải xuống thành công",
+    "download_has_been_completed": "Trình tải xuống và cài đặt hoàn tất",
+    "time_spent": "Toàn bộ thời gian",
+    "download": "Tải xuống",
+    "save_path": "Thư mục lưu trữ",
+    "browse": "Thêm"
+}

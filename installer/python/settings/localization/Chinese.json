@@ -1,0 +1,15 @@
+{
+    "tre_launcher": "Tre - 启动器",
+    "current_version": "当前版本",
+    "new_version": "新版本",
+    "tre_installer": "Tre - 安装程序",
+    "language": "语言",
+    "download_failed": "下载失败",
+    "not_specify_a_path_to_save_the_tool": "未指定保存工具的特定路径",
+    "download_complete": "下载完成",
+    "download_has_been_completed": "下载和安装已完成",
+    "time_spent": "花费时间",
+    "download": "下载",
+    "save_path": "保存路径",
+    "browse": "浏览"
+}

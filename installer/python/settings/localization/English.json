@@ -1,0 +1,18 @@
+{
+    "tre_launcher": "Tre - Launcher",
+    "current_version": "Current version",
+    "new_version": "New version",
+    "tre_installer": "Tre - Installer",
+    "language": "Language",
+    "download_failed": "Download failed",
+    "not_specify_a_path_to_save_the_tool": "Not specify a specific path to save the tool",
+    "download_complete": "Download completed",
+    "download_has_been_completed": "The download and installation have been completed",
+    "time_spent": "Time spent",
+    "download": "Download",
+    "save_path": "Save Path",
+    "browse": "Browse",
+    "new_update_detected": "New update detected",
+    "cannot_detect_new_update": "Cannot detect new update",
+    "src_code": "Source code"
+}
