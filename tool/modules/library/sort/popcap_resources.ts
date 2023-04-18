@@ -6,7 +6,9 @@ interface ResObjectSortingItem {
     id: string;
 }
 
-export default function sortResObjects(array: ResObjectSortingItem[]): ResObjectSortingItem[] {
+export default function sortResObjects(
+    array: ResObjectSortingItem[]
+): ResObjectSortingItem[] {
     try {
         array.sort((a, b) => {
             if (!a || !b || !a.id || !b.id) {

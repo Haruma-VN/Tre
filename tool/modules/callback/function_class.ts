@@ -3,13 +3,21 @@
 import localization from "./localization.js";
 
 export default class Void {
-
     static count_void: number = 0;
 
-    constructor(protected name: string, protected void_number: number, private filter?: Array<string>, private allow?: boolean) {
+    constructor(
+        protected name: string,
+        protected void_number: number,
+        private filter?: Array<string>,
+        private allow?: boolean
+    ) {
         Void.count_void++;
         if (this.void_number < 0) {
-            throw new Error(`${name} ${localization("function_num_cannot_smaller_than_zero")}`);
+            throw new Error(
+                `${name} ${localization(
+                    "function_num_cannot_smaller_than_zero"
+                )}`
+            );
         }
     }
 
@@ -32,7 +40,7 @@ export default class Void {
                 return `${this.void_number}. ${this.name}`;
         }
     }
-    
+
     public void_number_readline_argument(): number {
         return this.void_number;
     }
@@ -49,24 +57,32 @@ export default class Void {
         return console.log(`${error}`);
     }
 
-    public static_filter(
-    ): Array<string> {
-        if (this.filter != undefined && this.filter != null && this.filter != void 0) {
+    public static_filter(): Array<string> {
+        if (
+            this.filter !== undefined &&
+            this.filter !== null &&
+            this.filter !== void 0
+        ) {
             return this.filter;
-        }
-        else {
-            throw new Error(`${this.name} ${localization("not_having_property_filter")}`)
+        } else {
+            throw new Error(
+                `${this.name} ${localization("not_having_property_filter")}`
+            );
         }
     }
 
-    public static_allowance(
-    ): boolean {if (
-        this.allow != undefined && this.allow != null && this.allow != void 0) {
-        return this.allow;
-    }
-    else {
-        throw new Error(`${this.name} ${localization('not_having_property_allow')}`)
-    }
+    public static_allowance(): boolean {
+        if (
+            this.allow !== undefined &&
+            this.allow !== null &&
+            this.allow !== void 0
+        ) {
+            return this.allow;
+        } else {
+            throw new Error(
+                `${this.name} ${localization("not_having_property_allow")}`
+            );
+        }
     }
     //#endregion
 }

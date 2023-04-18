@@ -8,7 +8,8 @@
     },
     "popcap_resources_split": {
         "filter": [
-            ".json"
+            ".json",
+            ".rton"
         ],
         "allow": true,
         "option": 2
@@ -78,7 +79,7 @@
     },
     "popcap_resources_to_tre_info": {
         "filter": [
-            ".json"
+            ".res"
         ],
         "allow": true,
         "option": 8
@@ -106,7 +107,7 @@
     },
     "atlas_info_cat": {
         "filter": [
-            ".Bundles"
+            ".bundles"
         ],
         "allow": true,
         "option": 12
@@ -260,7 +261,8 @@
     },
     "popcap_zlib_rsgp_unpack": {
         "filter": [
-            ".rsgp"
+            ".rsgp",
+            ".pgsr"
         ],
         "allow": true,
         "option": 30
@@ -282,7 +284,7 @@
     },
     "popcap_zlib_rsb_pack": {
         "filter": [
-            ".rsg"
+            ".bundle"
         ],
         "allow": true,
         "option": 33
@@ -304,11 +306,18 @@
     },
     "popcap_game_json_split": {
         "filter": [
-            ".json"
+            ".json",
+            ".rton"
         ],
         "allow": true,
         "option": 36,
         "arguments": {
+            "#comment": [
+                "Mode available, please choose one and fill in, the mode can only be a question mark or a number",
+                "? : The tool will likely to ask this argument",
+                "1 : The tool will will set default to split by property \"aliases\"",
+                "2 : The tool will will set default to split by property \"typename\""
+            ],
             "method": "?"
         }
     },
@@ -319,6 +328,12 @@
         "allow": true,
         "option": 37,
         "arguments": {
+            "#comment": [
+                "Mode available, please choose one and fill in, the mode can only be a question mark or a number",
+                "? : The tool will likely to ask this argument",
+                "0 : The tool will set the default behavior of this function to return the file as .json",
+                "1 : The tool will set the default behavior of this function to return the file as .rton"
+            ],
             "encode": "?"
         }
     },
@@ -369,7 +384,8 @@
     },
     "popcap_rton_to_json": {
         "filter": [
-            ".rton"
+            ".rton",
+            ".dat"
         ],
         "allow": true,
         "option": 44
@@ -459,13 +475,13 @@
                 "0 : The tool will set the default behavior to false",
                 "1 : The tool will set the default behavior to true"
             ],
-            "packages_conversion": "1",
-            "split_popcap_resources": "1"
+            "packages_conversion": "?",
+            "split_popcap_resources": "?"
         }
     },
     "popcap_rsb_pack_simple": {
         "filter": [
-            ".rsg"
+            ".bundle"
         ],
         "allow": true,
         "option": 53
@@ -489,7 +505,7 @@
     },
     "popcap_rsb_resource_pack": {
         "filter": [
-            ".rsg"
+            ".bundle"
         ],
         "allow": true,
         "option": 55
@@ -548,7 +564,10 @@
             ".json"
         ],
         "allow": true,
-        "option": 63
+        "option": 63,
+        "arguments": {
+            "ratio": "?"
+        }
     },
     "popcap_pam_json_to_flash": {
         "filter": [
@@ -570,5 +589,26 @@
         ],
         "allow": true,
         "option": 66
+    },
+    "flash_animation_resize": {
+        "filter": [
+            ".xfl"
+        ],
+        "allow": true,
+        "option": 67
+    },
+    "popcap_repair_resources_path": {
+        "filter": [
+            ".json"
+        ],
+        "allow": true,
+        "option": 68
+    },
+    "popcap_animation_viewer": {
+        "filter": [
+            ".pam"
+        ],
+        "allow": true,
+        "option": 79
     }
 }

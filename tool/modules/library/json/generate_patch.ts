@@ -16,7 +16,7 @@ export default function (input1: any, input2: any) {
 
             if (!(key in obj2)) {
                 patch.push({
-                    op: 'remove',
+                    op: "remove",
                     path: currentPath,
                 });
                 return;
@@ -27,15 +27,15 @@ export default function (input1: any, input2: any) {
                     if (val2.length <= i) {
                         for (let j = i; j < val1.length; j++) {
                             patch.push({
-                                op: 'remove',
+                                op: "remove",
                                 path: currentPath.concat([j.toString()]),
                             });
                         }
-                    } else if (Array.isArray(val) || typeof val === 'object') {
+                    } else if (Array.isArray(val) || typeof val === "object") {
                         walk(val, val2[i], currentPath.concat([i.toString()]));
                     } else if (val !== val2[i]) {
                         patch.push({
-                            op: 'replace',
+                            op: "replace",
                             path: currentPath.concat([i.toString()]),
                             value: val2[i],
                         });
@@ -43,16 +43,16 @@ export default function (input1: any, input2: any) {
                 });
                 for (let i = val1.length; i < val2.length; i++) {
                     patch.push({
-                        op: 'add',
-                        path: currentPath.concat([(i).toString()]),
+                        op: "add",
+                        path: currentPath.concat([i.toString()]),
                         value: val2[i],
                     });
                 }
-            } else if (typeof val1 === 'object' && typeof val2 === 'object') {
+            } else if (typeof val1 === "object" && typeof val2 === "object") {
                 walk(val1, val2, currentPath);
             } else if (val1 !== val2) {
                 patch.push({
-                    op: 'replace',
+                    op: "replace",
                     path: currentPath,
                     value: val2,
                 });
@@ -63,10 +63,10 @@ export default function (input1: any, input2: any) {
             return;
         }
 
-        Object.keys(obj2).forEach(key => {
+        Object.keys(obj2).forEach((key) => {
             if (!(key in obj1)) {
                 patch.push({
-                    op: 'add',
+                    op: "add",
                     path: path.concat(key),
                     value: obj2[key],
                 });

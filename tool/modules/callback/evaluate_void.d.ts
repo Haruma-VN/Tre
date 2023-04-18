@@ -1,12 +1,12 @@
 declare type js_void = {
-    [x: string]: render_toolkit_expression,
-}
+    [x: string]: render_toolkit_expression;
+};
 
 declare type render_toolkit_expression = {
-    filter: Array<string>,
-    allow: boolean,
-    option: number,
-}
+    filter: Array<string>;
+    allow: boolean;
+    option: number;
+};
 
 declare type assertation_argument = string | Array<string>;
 

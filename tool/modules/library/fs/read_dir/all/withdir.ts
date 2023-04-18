@@ -1,6 +1,6 @@
 "use strict";
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "node:fs";
+import path from "node:path";
 export default function getAllFilesDir(dir = process.argv[2]): string[] {
     const all_files = new Array();
     fs.readdirSync(dir).forEach((file) => {
@@ -11,5 +11,5 @@ export default function getAllFilesDir(dir = process.argv[2]): string[] {
             all_files.push(fullPath);
         }
     });
-    return all_files.reduce((a, b) => a.concat(b), new Array())
+    return all_files.reduce((a, b) => a.concat(b), new Array());
 }

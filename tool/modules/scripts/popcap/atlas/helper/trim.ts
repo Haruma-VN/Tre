@@ -1,8 +1,8 @@
 "use strict";
 
 export interface return_value {
-    width: number,
-    height: number,
+    width: number;
+    height: number;
 }
 
 function getTrim(executor_in: any[]): return_value {
@@ -16,7 +16,7 @@ function getTrim(executor_in: any[]): return_value {
     return {
         width: maxWidth,
         height: maxHeight,
-    }
+    };
 }
 
 export default getTrim;

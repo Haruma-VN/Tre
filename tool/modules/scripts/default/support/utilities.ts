@@ -1,59 +1,59 @@
 "use strict";
-import { writejson, check_is_file, read_single_folder, readjson } from "../../../library/fs/util.js";
+import {
+    writejson,
+    check_is_file,
+    read_single_folder,
+    readjson,
+} from "../../../library/fs/util.js";
 import path from "node:path";
 
 namespace RSBInfo.Tre.Utilities {
-
     export interface PopCapCommonResourcesData {
-        version: number,
-        slot_count?: number,
-        groups: Array<PopCapCommonResourcesObjectData>,
-
+        version: number;
+        slot_count?: number;
+        groups: Array<PopCapCommonResourcesObjectData>;
     }
 
     export const popcap_manifest_group_data_for_pvz2_international = {
-        __MANIFESTGROUP__: [
-            "__MANIFESTGROUP__"
-        ]
-    }
+        __MANIFESTGROUP__: ["__MANIFESTGROUP__"],
+    };
 
     export type PopCapCommonResourcesObjectData = {
-        id?: string,
-        subgroups?: PopCapCommonSubgroupChildrenData[],
-        type?: string,
-        parent?: string,
-        res?: string,
-        resources?: PopCapCommonResourcesChildrenData[],
-
-    }
+        id?: string;
+        subgroups?: PopCapCommonSubgroupChildrenData[];
+        type?: string;
+        parent?: string;
+        res?: string;
+        resources?: PopCapCommonResourcesChildrenData[];
+    };
 
     export type PopCapCommonSubgroupChildrenData = {
-        id: string,
-        res?: string,
-    }
+        id: string;
+        res?: string;
+    };
 
     export type PopCapCommonResourcesChildrenData = {
-        slot: number,
-        id: string,
-        path: Array<string>,
-        type: string,
-        atlas?: boolean,
-        width?: number,
-        height: number,
-        parent?: string,
-        ax?: number,
-        ay?: number,
-        aw?: number,
-        x?: number,
-        y?: number,
-        cols?: number,
-        ah?: number,
-        time?: number,
-    }
+        slot: number;
+        id: string;
+        path: Array<string>;
+        type: string;
+        atlas?: boolean;
+        width?: number;
+        height: number;
+        parent?: string;
+        ax?: number;
+        ay?: number;
+        aw?: number;
+        x?: number;
+        y?: number;
+        cols?: number;
+        ah?: number;
+        time?: number;
+    };
 
     export type TreRSBInfo = {
         [key: string]: Array<string>;
-    }
+    };
 
     export abstract class RSBInfo {
         public abstract CreateRSBInfoFromRes(): TreRSBInfo;
@@ -62,14 +62,13 @@ namespace RSBInfo.Tre.Utilities {
     }
 
     export class GenerateRSBInfoFromTreInfo extends RSBInfo {
-
         constructor(private res: PopCapCommonResourcesObjectData) {
             super();
         }
 
         public CreateRSBInfoFromRes(): TreRSBInfo {
             const rsb_info: TreRSBInfo = {};
-            if (this.res.subgroups != undefined && this.res.id !== undefined) {
+            if (this.res.subgroups !== undefined && this.res.id !== undefined) {
                 rsb_info[this.res.id] = new Array();
                 for (let i: number = 0; i < this.res.subgroups.length; i++) {
                     if (this.res.subgroups[i].id !== undefined) {
@@ -77,8 +76,13 @@ namespace RSBInfo.Tre.Utilities {
                     }
                 }
             }
-            if (((this.res.parent === undefined || this.res.parent === null || this.res.parent === void 0) && this.res.type === "simple") &&
-                (this.res.id !== undefined)) {
+            if (
+                (this.res.parent === undefined ||
+                    this.res.parent === null ||
+                    this.res.parent === void 0) &&
+                this.res.type === "simple" &&
+                this.res.id !== undefined
+            ) {
                 rsb_info[this.res.id] = new Array();
                 rsb_info[this.res.id].push(this.res.id);
             }
@@ -90,41 +94,78 @@ namespace RSBInfo.Tre.Utilities {
         }
 
         public WriteRSBInfo(old_directory: string): void {
-            return writejson(`${old_directory}/../TreRSBInfo.json`, this.CreateRSBInfoFromRes());
+            return writejson(
+                `${old_directory}/../TreRSBInfo.json`,
+                this.CreateRSBInfoFromRes()
+            );
         }
-
     }
 
     export function create_tre_rsb_info(directory: string): void {
         if (!check_is_file(directory)) {
-            const popcap_resources_directory: Array<string> = read_single_folder(directory);
-            const popcap_resources_directory_filter_json: Array<string> = new Array();
+            const popcap_resources_directory: Array<string> =
+                read_single_folder(directory);
+            const popcap_resources_directory_filter_json: Array<string> =
+                new Array();
             popcap_resources_directory.forEach((file: string) => {
                 if (path.parse(file).ext.toString().toLowerCase() === ".json") {
                     popcap_resources_directory_filter_json.push(file);
                 }
-            })
+            });
             const create_tre_rsb_output_info: Array<TreRSBInfo> = new Array();
-            for (let i: number = 0; i < popcap_resources_directory_filter_json.length; i++) {
-                const popcap_resources_object_data: PopCapCommonResourcesObjectData = readjson(`${directory}/${popcap_resources_directory_filter_json[i]}`) as PopCapCommonResourcesObjectData;
-                if (popcap_resources_object_data.subgroups !== undefined || ((popcap_resources_object_data.parent === undefined || popcap_resources_object_data.parent === null || popcap_resources_object_data.parent === void 0)
-                    && popcap_resources_object_data.type === "simple")) {
-                    const create_tre_rsb_info: TreRSBInfo = new GenerateRSBInfoFromTreInfo(popcap_resources_object_data).CreateRSBInfoFromRes();
+            for (
+                let i: number = 0;
+                i < popcap_resources_directory_filter_json.length;
+                i++
+            ) {
+                const popcap_resources_object_data: PopCapCommonResourcesObjectData =
+                    readjson(
+                        `${directory}/${popcap_resources_directory_filter_json[i]}`
+                    ) as PopCapCommonResourcesObjectData;
+                if (
+                    popcap_resources_object_data.subgroups !== undefined ||
+                    ((popcap_resources_object_data.parent === undefined ||
+                        popcap_resources_object_data.parent === null ||
+                        popcap_resources_object_data.parent === void 0) &&
+                        popcap_resources_object_data.type === "simple")
+                ) {
+                    const create_tre_rsb_info: TreRSBInfo =
+                        new GenerateRSBInfoFromTreInfo(
+                            popcap_resources_object_data
+                        ).CreateRSBInfoFromRes();
                     create_tre_rsb_output_info.push(create_tre_rsb_info);
                 }
             }
-            create_tre_rsb_output_info.push(popcap_manifest_group_data_for_pvz2_international);
+            create_tre_rsb_output_info.push(
+                popcap_manifest_group_data_for_pvz2_international
+            );
             const create_new_tre_rsb_info: TreRSBInfo = {};
-            for (let i: number = 0; i < create_tre_rsb_output_info.length; i++) {
-                const create_key_from_tre_rsb_info_object_data: Array<string> = Object.keys(create_tre_rsb_output_info[i]);
-                for (let j: number = 0; j < create_key_from_tre_rsb_info_object_data.length; j++) {
-                    create_new_tre_rsb_info[create_key_from_tre_rsb_info_object_data[j]] = create_tre_rsb_output_info[i][create_key_from_tre_rsb_info_object_data[j]];
+            for (
+                let i: number = 0;
+                i < create_tre_rsb_output_info.length;
+                i++
+            ) {
+                const create_key_from_tre_rsb_info_object_data: Array<string> =
+                    Object.keys(create_tre_rsb_output_info[i]);
+                for (
+                    let j: number = 0;
+                    j < create_key_from_tre_rsb_info_object_data.length;
+                    j++
+                ) {
+                    create_new_tre_rsb_info[
+                        create_key_from_tre_rsb_info_object_data[j]
+                    ] =
+                        create_tre_rsb_output_info[i][
+                            create_key_from_tre_rsb_info_object_data[j]
+                        ];
                 }
             }
-            return writejson(`${directory}/../TreRSBInfo.json`, create_new_tre_rsb_info);
+            return writejson(
+                `${directory}/../TreRSBInfo.json`,
+                create_new_tre_rsb_info
+            );
         }
         return;
     }
-
 }
 export default RSBInfo;

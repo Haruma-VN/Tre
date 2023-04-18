@@ -1,8 +1,8 @@
 "use strict";
 
 export interface return_value {
-    width: number,
-    height: number,
+    width: number;
+    height: number;
 }
 
 function create_2n_square(num: number): number {
@@ -21,7 +21,7 @@ function squareTrim(executor_in: any[]): return_value {
     return {
         width: create_2n_square(maxWidth),
         height: create_2n_square(maxHeight),
-    }
+    };
 }
 
 export default squareTrim;

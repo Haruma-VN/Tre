@@ -10,7 +10,7 @@ export default function (buffer: Buffer) {
     const version = pamAnimInfo.version;
     const frame_rate = pamAnimInfo.frame_rate;
     pamAnimInfo.image = readImages(pam_data, version);
-    const spritesCount = pam_data.readInt16LE();
+    const spritesCount = pam_data.readUInt16LE();
     const spritesInfo = new Array();
     for (let i = 0; i < spritesCount; i++) {
         let spriteInfo = readSprites(pam_data, version);

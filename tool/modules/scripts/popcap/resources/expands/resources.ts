@@ -3,7 +3,6 @@ import { readjson, writejson } from "../../../../library/fs/util.js";
 import path from "node:path";
 
 namespace AdaptPvZ2InternationalResPath {
-
     export abstract class adapt_pvz2_res {
         protected abstract new_to_old_conversion(): PopCapResourcesChildren;
         protected abstract old_to_new_conversion(): PopCapResourcesChildren;
@@ -20,8 +19,8 @@ namespace AdaptPvZ2InternationalResPath {
     }
 
     export interface PopCapResources {
-        version: 1,
-        groups: PopCapResourcesParent[],
+        version: 1;
+        groups: PopCapResourcesParent[];
     }
 
     export interface PopCapResourcesChildren {
@@ -39,40 +38,36 @@ namespace AdaptPvZ2InternationalResPath {
         ah?: number;
         x?: number;
         y?: number;
-        subgroups?: any[],
+        subgroups?: any[];
     }
 
-
     export interface template_path {
-        path: string[] | string,
+        path: string[] | string;
     }
 
     export class res_path<T> extends adapt_pvz2_res {
-
         constructor(private res: PopCapResourcesChildren) {
             super();
         }
 
         public new_to_old_conversion(): PopCapResourcesChildren {
-
             if (!("path" in this.res)) {
                 return this.res;
             }
 
             if (typeof this.res.path === "string") {
-                this.res.path = this.res.path.split('\\');
+                this.res.path = this.res.path.split("\\");
             }
             return this.res;
         }
 
         public old_to_new_conversion(): PopCapResourcesChildren {
-
             if (!("path" in this.res)) {
                 return this.res;
             }
 
             if (this.res.path instanceof Array) {
-                this.res.path = this.res.path.join('\\');
+                this.res.path = this.res.path.join("\\");
             }
             return this.res;
         }
@@ -80,33 +75,50 @@ namespace AdaptPvZ2InternationalResPath {
         public evaluate(method: number): PopCapResourcesChildren {
             switch (method) {
                 case 1:
-                    this.res = this.old_to_new_conversion() as PopCapResourcesChildren;
+                    this.res =
+                        this.old_to_new_conversion() as PopCapResourcesChildren;
                     break;
                 case 2:
-                    this.res = this.new_to_old_conversion() as PopCapResourcesChildren;
+                    this.res =
+                        this.new_to_old_conversion() as PopCapResourcesChildren;
                     break;
                 default:
                     break;
             }
             return this.res;
         }
-
     }
 
     export abstract class ResourcesPath {
-        public abstract write_fs_js_json(directory: string, method_number: 1 | 2): void;
-        protected abstract handle_resource_data(resource_json_parsed: PopCapResources, method_number: number): PopCapResources | {};
+        public abstract write_fs_js_json(
+            directory: string,
+            method_number: 1 | 2
+        ): void;
+        protected abstract handle_resource_data(
+            resource_json_parsed: PopCapResources,
+            method_number: number
+        ): PopCapResources | {};
     }
 
     export class res_conversion extends ResourcesPath {
-
-        public write_fs_js_json(directory: string, method_number: number): void {
-            let resources_json: PopCapResources = readjson(directory) as PopCapResources;
-            const method: string = (method_number === 1) ? "new" : "old";
-            return writejson(`${directory}/../${path.parse(directory).name}.${method}.json`, this.handle_resource_data(resources_json, method_number));
+        public write_fs_js_json(
+            directory: string,
+            method_number: number
+        ): void {
+            let resources_json: PopCapResources = readjson(
+                directory
+            ) as PopCapResources;
+            const method: string = method_number === 1 ? "new" : "old";
+            return writejson(
+                `${directory}/../${path.parse(directory).name}.${method}.json`,
+                this.handle_resource_data(resources_json, method_number)
+            );
         }
 
-        protected handle_resource_data(resource_json_parsed: PopCapResources, method_number: number): PopCapResources | {} {
+        protected handle_resource_data(
+            resource_json_parsed: PopCapResources,
+            method_number: number
+        ): PopCapResources | {} {
             if (!("groups" in resource_json_parsed)) {
                 return {};
             }
@@ -118,7 +130,9 @@ namespace AdaptPvZ2InternationalResPath {
                     if (!("path" in res_data)) {
                         continue;
                     }
-                    res_data = new AdaptPvZ2InternationalResPath.res_path(res_data).evaluate(method_number);
+                    res_data = new AdaptPvZ2InternationalResPath.res_path(
+                        res_data
+                    ).evaluate(method_number);
                 }
             }
             return resource_json_parsed;
@@ -126,26 +140,23 @@ namespace AdaptPvZ2InternationalResPath {
     }
 
     export function new_res_to_old_res<T extends template_path>(res: T): T {
-
         if (!("path" in res)) {
             return res;
         }
 
         if (typeof res.path === "string") {
-            res.path = res.path.split('\\');
+            res.path = res.path.split("\\");
         }
         return res;
     }
 
-
     export function old_res_to_new_res<T extends template_path>(res: T): T {
-
         if (!("path" in res)) {
             return res;
         }
 
         if (res.path instanceof Array) {
-            res.path = res.path.join('\\');
+            res.path = res.path.join("\\");
         }
         return res;
     }

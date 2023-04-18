@@ -1,44 +1,46 @@
 "use strict";
 import { SmartBuffer } from "smart-buffer";
-import writeFrameInfo from './write_frameinfo.js';
+import writeFrameInfo from "./write_frameinfo.js";
 export default function (pam_sprite: any, version: number) {
     const spritesInfo = new SmartBuffer();
     if (version >= 4) {
         const name = pam_sprite.name;
-        spritesInfo.writeInt16LE(name.length);
+        spritesInfo.writeUInt16LE(name.length);
         spritesInfo.writeString(name);
         if (version >= 6 || version <= 0) {
             let description = pam_sprite.description;
             let description_length = 0;
-            if (description == null || description == undefined) {
-                description = '';
-            }
-            else {
+            if (
+                description === null ||
+                description === undefined ||
+                description === void 0
+            ) {
+                description = "";
+            } else {
                 description_length = description.length;
             }
-            spritesInfo.writeInt16LE(description_length);
+            spritesInfo.writeUInt16LE(description_length);
             spritesInfo.writeString(description);
         }
         spritesInfo.writeInt32LE(pam_sprite.frame_rate * 65536);
     }
     if (version >= 5) {
-        if (pam_sprite.work_area == null || pam_sprite.work_area.Length < 2) {
-            spritesInfo.writeInt16LE(1);
-            spritesInfo.writeInt16LE(0);
-            spritesInfo.writeInt16LE(0);
+        if (pam_sprite.work_area === null || pam_sprite.work_area.Length < 2) {
+            spritesInfo.writeUInt16LE(1);
+            spritesInfo.writeUInt16LE(0);
+            spritesInfo.writeUInt16LE(0);
+        } else {
+            spritesInfo.writeUInt16LE(pam_sprite.work_area[1]);
+            spritesInfo.writeUInt16LE(pam_sprite.work_area[0]);
+            spritesInfo.writeUInt16LE(
+                pam_sprite.work_area[0] + pam_sprite.work_area[1] - 1
+            );
         }
-        else {
-            spritesInfo.writeInt16LE(pam_sprite.work_area[1]);
-            spritesInfo.writeInt16LE(pam_sprite.work_area[0]);
-            spritesInfo.writeInt16LE(pam_sprite.work_area[0] + pam_sprite.work_area[1] - 1);
-        }
-    }
-    else {
-        if (pam_sprite.work_area == null || pam_sprite.work_area.Length < 2) {
-            spritesInfo.writeInt16LE(1);
-        }
-        else {
-            spritesInfo.writeInt16LE(pam_sprite.work_area[1]);
+    } else {
+        if (pam_sprite.work_area === null || pam_sprite.work_area.Length < 2) {
+            spritesInfo.writeUInt16LE(1);
+        } else {
+            spritesInfo.writeUInt16LE(pam_sprite.work_area[1]);
         }
     }
     const frames = pam_sprite.frame;

@@ -11,7 +11,10 @@ export default function (pam_json: any, ratio: number) {
         pam_json.sprite[i].frame_rate = new_frame_rate;
     }
     pam_json.main_sprite.frame_rate = new_frame_rate;
-    pam_json.main_sprite.work_area = [pam_json.main_sprite.work_area[0], pam_json.main_sprite.work_area[1] * ratio];
+    pam_json.main_sprite.work_area = [
+        pam_json.main_sprite.work_area[0],
+        pam_json.main_sprite.work_area[1] * ratio,
+    ];
     const frame = pam_json.main_sprite.frame;
     const new_frame = new Array();
     for (let i = 0; i < frame.length; i++) {
@@ -23,15 +26,15 @@ export default function (pam_json: any, ratio: number) {
         }
         new_frame.push(frame[i]);
         for (let k = 0; k < ratio - 1; k++) {
-            if (stop && k == ratio - 2) {
+            if (stop && k === ratio - 2) {
                 new_frame.push({
                     label: null,
                     stop: true,
                     command: [],
                     remove: [],
                     append: [],
-                    change: []
-                })
+                    change: [],
+                });
             } else {
                 new_frame.push({
                     label: null,
@@ -39,8 +42,8 @@ export default function (pam_json: any, ratio: number) {
                     command: [],
                     remove: [],
                     append: [],
-                    change: []
-                })
+                    change: [],
+                });
             }
         }
     }

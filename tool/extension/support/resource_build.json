@@ -6,6 +6,7 @@
         "plants",
         "tre"
     ],
+    "scale_ratio": 1,
     "position_x": 1,
     "position_y": 1,
     "popcap_resource_x": 0,

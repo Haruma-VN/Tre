@@ -1,7 +1,7 @@
 {
 	"atlas": {
 		"cross_resolution": {
-			"allow_384": false
+			"allow_384": true
 		},
 		"pack": {
 			"smart": true,
@@ -36,7 +36,14 @@
 	},
 	"user": {
 		"using_extension_for_rsb_pack": "rsb",
-		"progress_bar": true
+		"progress_bar": true,
+		"open_windows_explorer": false
+	},
+	"popcap_resource_stream_group_unpack": {
+		"simple": {
+			"pam_resolution": 1536,
+			"pam_to_xfl": false
+		}
 	},
 	"resources": {
 		"beautify_order": {
@@ -66,5 +73,23 @@
 		"cat": {
 			"fix_double_shadows": true
 		}
+	},
+	"gif": {
+		"texture_reslution": -1,
+		"image_name_by_id": false,
+		"turn_on_sprite": false,
+		"width_append": 0,
+		"height_append": 0,
+		"x_position_append": 0,
+		"y_position_append": 0,
+		"background_color": "#00000000",
+		"frame_rate": -1,
+		"gif_quality": 10,
+		"gif_loop": 0,
+		"algorithm": "neuquant",
+		"create_gif": true,
+		"split_label": true,
+		"generate_image_frames": true,
+		"frame_default_name": "frame_"
 	}
 }

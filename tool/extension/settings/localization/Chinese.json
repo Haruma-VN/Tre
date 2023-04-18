@@ -268,7 +268,7 @@
 	"drag_the_json_to_apply_patch": "拖动 json 的路径来应用补丁 (patch)",
 	"drag_the_json_to_compare_and_generate_patch": "拖动json的路径来比较和生成补丁 (patch)",
 	"realesr-animevideov3_preview": "realesr-animevideov3 将提供给你更快捷、可选的尺寸放大",
-	"realesrgan-x4plus-anime_preview": "realesr-animevideov3 不会给你快速放大尺寸, 但输出图像的质量是最好的",
+	"realesrgan-x4plus-anime_preview": "realesr-animex4plus 不会给你快速放大尺寸, 但输出图像的质量是最好的",
 	"realesr-animevideov3_detail": "realesr-animevideov3 将会根据你输入的尺寸来放大图像",
 	"no_decode_rtons": "无解码的 RTONs",
 	"no_split_res": "无分解的 PopCap Resources",

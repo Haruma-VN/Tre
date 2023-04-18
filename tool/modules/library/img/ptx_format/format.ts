@@ -29,7 +29,6 @@ export enum TexFmt {
     ETC1_RGB_A8 = 147,
     ETC1_RGB_A_Index = 147,
 
-
     // Unknown
     PVRTC_4BPP_RGB_A8,
     XRGB8888_A8,

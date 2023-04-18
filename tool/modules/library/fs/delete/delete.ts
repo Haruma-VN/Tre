@@ -1,8 +1,8 @@
 "use strict";
-import fs from 'node:fs';
+import fs from "node:fs";
 export default function (dir: string): void {
-    if(fs.existsSync(dir)){
-        fs.unlinkSync(dir);    
-    };
+    if (fs.existsSync(dir)) {
+        fs.unlinkSync(dir);
+    }
     return;
 }
