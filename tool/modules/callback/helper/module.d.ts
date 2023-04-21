@@ -1,9 +1,9 @@
-declare type evaluation_script = {
+declare type evaluate_script = {
     notify: boolean;
-    modules: Array<tre_evaluation_object>;
+    modules: Array<tre_evaluate_object>;
 };
 
-declare type tre_evaluation_object = {
+declare type tre_evaluate_object = {
     func: string | null;
     notify: null | string;
     entry: Array<string> | null;

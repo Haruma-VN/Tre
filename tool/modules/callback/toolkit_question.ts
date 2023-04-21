@@ -4,7 +4,6 @@ export namespace Argument.Tre.Packages {
     export const tre_all_module_have_been_loaded: str = `◉ ${localization(
         "module_loaded"
     )}`;
-    //4343434343434444444444444444444444444444444444444444444444444
     export const command_execute_in_progress: str = `◉ ${localization(
         "module_start_execution"
     )}`;

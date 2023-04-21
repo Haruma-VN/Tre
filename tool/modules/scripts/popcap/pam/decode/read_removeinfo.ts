@@ -1,8 +1,8 @@
 "use strict";
-export default function (pam_data: any) {
-    let index = pam_data.readUInt16LE();
+export default function (animation_data: any) {
+    let index = animation_data.readUInt16LE();
     if (index >= 2047) {
-        index = pam_data.readUInt32LE();
+        index = animation_data.readUInt32LE();
     }
     return { index };
 }

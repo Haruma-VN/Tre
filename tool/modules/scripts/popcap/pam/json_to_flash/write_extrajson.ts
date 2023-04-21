@@ -1,6 +1,6 @@
 "use strict";
-export default function (pam_json: any) {
-    let extrajson = pam_json;
+export default function (animation_json: any) {
+    let extrajson = animation_json;
     delete extrajson.frame_rate;
     delete extrajson.size;
     for (let i = 0; i < extrajson.image.length; i++) {

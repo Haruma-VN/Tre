@@ -1,16 +1,19 @@
 "use strict";
-import writepam from "./encode/write_pam.js";
+import writepam from "./encode/encode.js";
 import fs_js from "../../../library/fs/implement.js";
-import read_pam from "./decode/read_pam.js";
+import read_pam from "./decode/decode.js";
 import path from "node:path";
 import popcap_pam_from_gif from "./gif/encode.js";
 import { atlasinfo_conduct } from "../../default/atlas_info/util.js";
 import localization from "../../../callback/localization.js";
 import evaluate_modules_workspace_assertation from "../../../callback/evaluate_modules_workspace_assertation.js";
-import pamjson2pamflash from "./json_to_flash/pamjson_to_pamflash.js";
-import pamflash_to_pamjson from "./flash_to_json/pamflash_to_pamjson.js";
-import increaseFramerate from "./frame/increase_framerate.js";
-import fs_resize from "./flash/fs_resize.js";
+import pamjson2pamflash from "./json_to_flash/json_to_flash.js";
+import pamflash_to_pamjson from "./json_from_flash/json_from_flash.js";
+import increaseFramerate from "./frame_rate/increase_framerate.js";
+import fs_resize from "./flash_resize/fs_resize.js";
+import add_content from "./batch/add_content.js";
+
+export { add_content };
 
 export async function popcap_pam_encode(
     file_system_data_input_argument: string,

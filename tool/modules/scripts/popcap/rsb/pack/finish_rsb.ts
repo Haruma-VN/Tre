@@ -1,7 +1,15 @@
 "use strict";
 import { SmartBuffer } from "smart-buffer";
-import BeautifyOffset from "../../rsgp/beautify_offset.js";
-export default function (headrsb_info: any, rsgpfile_info: any, file_list: any, rsgp_list: any, composite_info: any, composite_list: any, ptx_info: any) {
+import BeautifyOffset from "../../rsg/beautify_offset.js";
+export default function (
+    headrsb_info: any,
+    rsgpfile_info: any,
+    file_list: any,
+    rsgp_list: any,
+    composite_info: any,
+    composite_list: any,
+    ptx_info: any
+) {
     const rsb_file_data = new SmartBuffer();
     rsb_file_data.writeBuffer(headrsb_info[0]);
     rsb_file_data.writeBuffer(file_list);

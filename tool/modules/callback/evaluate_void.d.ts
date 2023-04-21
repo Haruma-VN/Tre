@@ -14,6 +14,6 @@ declare type popcap_game_edit_method = string;
 
 declare type js_evaluate = string;
 
-declare type evaluation_method = number;
+declare type evaluate_method = number;
 
-declare type evaluation_error = string;
+declare type evaluate_error = string;

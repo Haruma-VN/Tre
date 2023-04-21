@@ -5,6 +5,11 @@ import localization from "./localization.js";
 import path from "node:path";
 import fs_js from "../library/fs/implement.js";
 export namespace Display.Tre.Function {
+    /**
+     *
+     * @param evaluate_function_name - Function name
+     * @returns render_toolkit_expression
+     */
     const execution_evaluate_view = (
         evaluate_function_name: string
     ): render_toolkit_expression => {
@@ -407,17 +412,17 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_flash_to_pam").filter,
         execution_evaluate_view("popcap_flash_to_pam").allow
     );
-    export const wwise_media_decode = new Void(
-        localization("wwise_media_decode"),
-        execution_evaluate_view("wwise_media_decode").option,
-        execution_evaluate_view("wwise_media_decode").filter,
-        execution_evaluate_view("wwise_media_decode").allow
+    export const wwise_soundbank_decode = new Void(
+        localization("wwise_soundbank_decode"),
+        execution_evaluate_view("wwise_soundbank_decode").option,
+        execution_evaluate_view("wwise_soundbank_decode").filter,
+        execution_evaluate_view("wwise_soundbank_decode").allow
     );
-    export const wwise_media_encode = new Void(
-        localization("wwise_media_encode"),
-        execution_evaluate_view("wwise_media_encode").option,
-        execution_evaluate_view("wwise_media_encode").filter,
-        execution_evaluate_view("wwise_media_encode").allow
+    export const wwise_soundbank_encode = new Void(
+        localization("wwise_soundbank_encode"),
+        execution_evaluate_view("wwise_soundbank_encode").option,
+        execution_evaluate_view("wwise_soundbank_encode").filter,
+        execution_evaluate_view("wwise_soundbank_encode").allow
     );
     export const frame_rate_increasement = new Void(
         localization("frame_rate_increasement"),
@@ -425,11 +430,11 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("frame_rate_increasement").filter,
         execution_evaluate_view("frame_rate_increasement").allow
     );
-    export const script_evaluation = new Void(
-        localization("script_evaluation"),
-        execution_evaluate_view("script_evaluation").option,
-        execution_evaluate_view("script_evaluation").filter,
-        execution_evaluate_view("script_evaluation").allow
+    export const script_evaluate = new Void(
+        localization("script_evaluate"),
+        execution_evaluate_view("script_evaluate").option,
+        execution_evaluate_view("script_evaluate").filter,
+        execution_evaluate_view("script_evaluate").allow
     );
     export const flash_animation_resize = new Void(
         localization("flash_animation_resize"),
@@ -460,6 +465,24 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_animation_viewer").option,
         execution_evaluate_view("popcap_animation_viewer").filter,
         execution_evaluate_view("popcap_animation_viewer").allow
+    );
+    export const batch_popcap_animation_add_media_content = new Void(
+        localization("batch_popcap_animation_add_media_content"),
+        execution_evaluate_view(
+            "batch_popcap_animation_add_media_content"
+        ).option,
+        execution_evaluate_view(
+            "batch_popcap_animation_add_media_content"
+        ).filter,
+        execution_evaluate_view(
+            "batch_popcap_animation_add_media_content"
+        ).allow
+    );
+    export const popcap_rsb_disturb = new Void(
+        localization("popcap_rsb_disturb"),
+        execution_evaluate_view("popcap_rsb_disturb").option,
+        execution_evaluate_view("popcap_rsb_disturb").filter,
+        execution_evaluate_view("popcap_rsb_disturb").allow
     );
 
     export function DisplayItems(
@@ -557,14 +580,16 @@ export namespace Display.Tre.Function {
         popcap_pam_from_gif,
         popcap_pam_to_flash,
         popcap_flash_to_pam,
-        wwise_media_decode,
-        wwise_media_encode,
+        wwise_soundbank_decode,
+        wwise_soundbank_encode,
         frame_rate_increasement,
-        script_evaluation,
+        script_evaluate,
         flash_animation_resize,
         popcap_pam_json_to_flash,
         popcap_flash_to_pam_json,
         popcap_repair_resources_path,
         popcap_animation_viewer,
+        batch_popcap_animation_add_media_content,
+        popcap_rsb_disturb,
     ];
 }

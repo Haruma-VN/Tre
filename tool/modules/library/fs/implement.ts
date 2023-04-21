@@ -398,7 +398,7 @@ class fs_js {
                 file_system_static_path
             );
             create_read_stream_view.on("error", (err: evaluate_error) => {
-                if ((err.code as string) === "ENOENT") {
+                if ((err as any).code === "ENOENT") {
                     reject(
                         new Error(
                             `${localization(
@@ -2260,14 +2260,14 @@ class fs_js {
         max: number = 16384
     ): void {
         //#region
-        const create_evaluation_print_message: string =
+        const create_evaluate_print_message: string =
             view === "width"
                 ? localization("the_width_should_be_in_range")
                 : localization("the_height_should_be_in_range");
         console.log(
             `${color.fgcyan_string(
                 "◉ " + localization("execution_information") + ": "
-            )}` + `${create_evaluation_print_message} ${min} ~ ${max}`
+            )}` + `${create_evaluate_print_message} ${min} ~ ${max}`
         );
         return;
         //#endregion
@@ -2627,11 +2627,41 @@ class fs_js {
 
             if (fs.lstatSync(filePath).isDirectory()) {
                 this.deleteNonExtensionFiles(filePath, extension);
-            } else if (!filePath.endsWith(".ts")) {
+            } else if (!filePath.endsWith(extension)) {
                 fs.unlinkSync(filePath);
             }
         }
 
+        //#endregion
+    }
+
+    /*--------------------------------------------------------*/
+
+    public static create_empty_media(dir_path: str): void {
+        //#region
+        if (this.is_directory(dir_path)) {
+            this.create_directory(`${dir_path}/LIBRARY/media`, true);
+        }
+
+        //#endregion
+    }
+
+    /*--------------------------------------------------------*/
+
+    public static delete_resource_build(folder_path: string): void {
+        if (this.js_exists(`${folder_path}/resource_build.json`)) {
+            this.js_remove(`${folder_path}/resource_build.json`);
+        }
+    }
+
+    public static flash_anim_resize_notify(): void {
+        //#region
+        console.log(`      1536. `);
+        console.log(`      768. `);
+        console.log(`      384. `);
+        console.log(`      1200. `);
+        console.log(`      640. `);
+        return;
         //#endregion
     }
 }

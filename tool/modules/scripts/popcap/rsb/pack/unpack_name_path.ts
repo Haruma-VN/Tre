@@ -1,7 +1,7 @@
 "use strict";
 import * as fs_util from "../../../../library/fs/util.js";
 import { res_pack } from "../../../../scripts/popcap/resources/util.js";
-import rsgp_pack from "../../rsgp/rsgp_pack.js";
+import rsgp_pack from "../../rsg/rsgp_pack.js";
 import * as color from "../../../../library/color/color.js";
 import localization from "../../../../callback/localization.js";
 export default async function (

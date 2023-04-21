@@ -7,7 +7,7 @@ import { atlasinfo_conduct } from "../../../default/atlas_info/util.js";
 import check_resources_build from "../gif/check_manifest_build.js";
 import localization from "../../../../callback/localization.js";
 import evaluate_modules_workspace_assertation from "../../../../callback/evaluate_modules_workspace_assertation.js";
-import pam_xfl_decode from "../json_to_flash/pamjson_to_pamflash.js";
+import pam_xfl_decode from "../json_to_flash/json_to_flash.js";
 export default async function (
     path: string,
     number_sprites: number

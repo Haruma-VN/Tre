@@ -5,8 +5,9 @@ export default function (index: number) {
     if (index >= 2047) {
         removeInfo.writeUInt16LE(2047);
         removeInfo.writeUInt32LE(index);
-    } else {
-        removeInfo.writeInt16LE(index);
+    }
+    else {
+        removeInfo.writeUInt16LE(index);
     }
     return removeInfo.toBuffer();
 }

@@ -22,15 +22,8 @@ export default async function (
     execution_information = pack_simple
         ? localization("popcap_rsb_simple_pack_information")
         : execution_information;
-    const file_extension_output: string = fs_js.create_toolkit_view(
-        "using_extension_for_rsb_pack"
-    ) as string;
     fs_js.execution_information(execution_information);
-    fs_js.execution_out(
-        `${parse(rsb_path).dir}/${
-            parse(rsb_path).name
-        }.${file_extension_output}`
-    );
+    fs_js.execution_out(`${parse(rsb_path).dir}/${parse(rsb_path).name}`);
     try {
         TreRSBInfo = Object.entries(
             fs_util.readjson(`${rsb_path}/TreRSBInfo.json`)
@@ -88,9 +81,7 @@ export default async function (
         RSGP_file_data_list
     );
     fs_util.outfile(
-        `${parse(rsb_path).dir}/${
-            parse(rsb_path).name
-        }.${file_extension_output}`,
+        `${parse(rsb_path).dir}/${parse(rsb_path).name}`,
         rsb_file_data
     );
     if (pack_everything) {

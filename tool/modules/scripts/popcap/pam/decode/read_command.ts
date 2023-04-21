@@ -1,10 +1,7 @@
 "use strict";
-export default function (pam_data: any): {
-    command: string,
-    parameter: string,
-} {
-    return {
-        command: pam_data.readString(pam_data.readUInt16LE()),
-        parameter: pam_data.readString(pam_data.readUInt16LE())
-    };
+export default function(animation_data: any) {
+    return [
+        animation_data.readString(animation_data.readUInt16LE()),
+        animation_data.readString(animation_data.readUInt16LE())
+    ]
 }

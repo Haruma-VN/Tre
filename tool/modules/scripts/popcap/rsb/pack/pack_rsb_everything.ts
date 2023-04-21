@@ -1,5 +1,5 @@
 "use strict";
-import rsgp_pack from "../../rsgp/rsgp_pack.js";
+import rsgp_pack from "../../rsg/rsgp_pack.js";
 import fs_js from "../../../../library/fs/implement.js";
 import { SingleBar } from "cli-progress";
 import * as color from "../../../../library/color/color.js";

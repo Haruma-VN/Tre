@@ -83,7 +83,6 @@ function check_manifest_build(
     if (!("scale_ratio" in read_resource_build)) {
         throw new Error(localization("not_found_scale_ratio"));
     }
-
     return read_resource_build;
 }
 

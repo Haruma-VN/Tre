@@ -53,7 +53,7 @@ import {
 import * as color from "../library/color/color.js";
 import extra_system from "../library/extra/outfile.js";
 import path from "node:path";
-import { unpack_rsgp, pack_rsgp } from "../scripts/popcap/rsgp/util.js";
+import { unpack_rsgp, pack_rsgp } from "../scripts/popcap/rsg/util.js";
 import readline_for_json from "./public/input/readline_for_json.js";
 import ban from "./public/js_evaluate/ban.js";
 import applyPatch from "../library/json/patch.js";
@@ -84,6 +84,7 @@ import {
     popcap_flash_to_pam_json,
     popcap_pam_json_to_flash,
     flash_animation_resize,
+    add_content,
 } from "../scripts/popcap/pam/utilitity.js";
 import { evaluate_test, sort_atlas_area } from "../scripts/helper/utility.js";
 import input_set from "./public/suggestion/input.js";
@@ -91,8 +92,9 @@ import {
     popcap_bnk_decode,
     popcap_bnk_encode,
 } from "../scripts/popcap/wwise/util.js";
-import { create_evaluation } from "./helper/util.js";
+import { create_evaluate } from "./helper/util.js";
 import popcap_rsb_disturb from "../scripts/default/scrapped/disturb.js";
+import input_img from "./public/img/input_img.js";
 
 /**
  *
@@ -101,7 +103,7 @@ import popcap_rsb_disturb from "../scripts/default/scrapped/disturb.js";
  * @param {*} execute_file_dir -
  *  Pass an argument or file path here
  * @param method - Pass in the methods & arguments to start
- * @returns - Evaluation success
+ * @returns - evaluate success
  */
 
 async function evaluate_js_modules_workspace_assertation(
@@ -145,7 +147,54 @@ async function evaluate_js_modules_workspace_assertation(
         true
     );
     // todo -> adding configuration for popcap_pam_resolution
-    switch (method) {
+    switch (method as str) {
+        case "batch_popcap_animation_add_media_content" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                const images_add: Array<string> = await input_img();
+                Console.WriteLine(
+                    color.fgcyan_string(
+                        Argument.Tre.Packages.popcap_flash_animation_resize
+                    )
+                );
+                Console.WriteLine(
+                    color.fggreen_string(
+                        Argument.Tre.Packages
+                            .popcap_flash_animation_resize_detail
+                    )
+                );
+                fs_js.flash_anim_resize_notify();
+                const popcap_pam_resolution: number =
+                    Console.TextureQualityReadLine();
+                await add_content(
+                    images_add,
+                    execute_file_dir,
+                    popcap_pam_resolution as 1536 | 768 | 384 | 640 | 1200
+                );
+            } else {
+                execute_file_dir.forEach(async (file) => {
+                    const images_add: Array<string> = await input_img();
+                    Console.WriteLine(
+                        color.fgcyan_string(
+                            Argument.Tre.Packages.popcap_flash_animation_resize
+                        )
+                    );
+                    Console.WriteLine(
+                        color.fggreen_string(
+                            Argument.Tre.Packages
+                                .popcap_flash_animation_resize_detail
+                        )
+                    );
+                    fs_js.flash_anim_resize_notify();
+                    const popcap_pam_resolution: number =
+                        Console.TextureQualityReadLine();
+                    await add_content(
+                        images_add,
+                        file,
+                        popcap_pam_resolution as 1536 | 768 | 384 | 640 | 1200
+                    );
+                });
+            }
+            break;
         case "flash_animation_resize" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(
@@ -159,6 +208,7 @@ async function evaluate_js_modules_workspace_assertation(
                             .popcap_flash_animation_resize_detail
                     )
                 );
+                fs_js.flash_anim_resize_notify();
                 const popcap_pam_resolution: number =
                     Console.TextureQualityReadLine();
                 await flash_animation_resize(
@@ -178,6 +228,7 @@ async function evaluate_js_modules_workspace_assertation(
                                 .popcap_flash_animation_resize_detail
                         )
                     );
+                    fs_js.flash_anim_resize_notify();
                     const popcap_pam_resolution: number =
                         Console.TextureQualityReadLine();
                     await flash_animation_resize(file, popcap_pam_resolution);
@@ -215,6 +266,7 @@ async function evaluate_js_modules_workspace_assertation(
                             .popcap_flash_animation_resize_detail
                     )
                 );
+                fs_js.flash_anim_resize_notify();
                 const popcap_pam_resolution: number =
                     Console.TextureQualityReadLine();
                 await popcap_pam_json_to_flash(
@@ -234,6 +286,7 @@ async function evaluate_js_modules_workspace_assertation(
                                 .popcap_flash_animation_resize_detail
                         )
                     );
+                    fs_js.flash_anim_resize_notify();
                     const popcap_pam_resolution: number =
                         Console.TextureQualityReadLine();
                     await popcap_pam_json_to_flash(file, popcap_pam_resolution);
@@ -494,12 +547,12 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "script_evaluation" as popcap_game_edit_method:
+        case "script_evaluate" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                await create_evaluation(execute_file_dir);
+                await create_evaluate(execute_file_dir);
             } else {
                 execute_file_dir.forEach(async (file) => {
-                    await create_evaluation(file);
+                    await create_evaluate(file);
                 });
             }
             break;
@@ -525,6 +578,7 @@ async function evaluate_js_modules_workspace_assertation(
                             .popcap_flash_animation_resize_detail
                     )
                 );
+                fs_js.flash_anim_resize_notify();
                 const popcap_pam_resolution: number =
                     Console.TextureQualityReadLine();
                 await popcap_pam_to_flash(
@@ -544,6 +598,7 @@ async function evaluate_js_modules_workspace_assertation(
                                 .popcap_flash_animation_resize_detail
                         )
                     );
+                    fs_js.flash_anim_resize_notify();
                     const popcap_pam_resolution: number =
                         Console.TextureQualityReadLine();
                     await popcap_pam_to_flash(file, popcap_pam_resolution);
@@ -615,7 +670,7 @@ async function evaluate_js_modules_workspace_assertation(
                     }
                 }
             } catch (error: any) {
-                throw new Error(error.message as evaluation_error);
+                throw new Error(error.message as evaluate_error);
             }
             break;
         case "popcap_texture_encode_rgba8888" as popcap_game_edit_method:
@@ -1105,7 +1160,7 @@ async function evaluate_js_modules_workspace_assertation(
                     readfilebuffer(execute_file_dir),
                     `${path.parse(execute_file_dir).dir}/${
                         path.parse(execute_file_dir).name
-                    }.rsg`,
+                    }.packet`,
                     false,
                     false,
                     false,
@@ -1122,7 +1177,7 @@ async function evaluate_js_modules_workspace_assertation(
                             readfilebuffer(file),
                             `${path.parse(file).dir}/${
                                 path.parse(file).name
-                            }.rsg`,
+                            }.packet`,
                             false,
                             false,
                             false,
@@ -1138,7 +1193,7 @@ async function evaluate_js_modules_workspace_assertation(
                     readfilebuffer(execute_file_dir),
                     `${path.parse(execute_file_dir).dir}/${
                         path.parse(execute_file_dir).name
-                    }.rsg`,
+                    }.packet`,
                     true,
                     true,
                     true,
@@ -1155,7 +1210,7 @@ async function evaluate_js_modules_workspace_assertation(
                             readfilebuffer(file),
                             `${path.parse(file).dir}/${
                                 path.parse(file).name
-                            }.rsg`,
+                            }.packet`,
                             true,
                             true,
                             true,
@@ -4168,7 +4223,7 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "wwise_media_encode" as popcap_game_edit_method:
+        case "wwise_soundbank_encode" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 popcap_bnk_encode(execute_file_dir);
             } else {
@@ -4177,7 +4232,7 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "wwise_media_decode" as popcap_game_edit_method:
+        case "wwise_soundbank_decode" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 popcap_bnk_decode(execute_file_dir);
             } else {

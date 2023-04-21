@@ -6,7 +6,7 @@ import rsb_read_header_info from "./rsb_read_header_info.js";
 import extract_rsgp_name_path from "./extract_rsgp_name_path.js";
 import extract_resources_data from "./extract_resources_data.js";
 import rsgp_file_info from "./rsgp_file_info.js";
-import rsgp_unpack from "../../rsgp/unpack_rsgp.js";
+import rsgp_unpack from "../../rsg/unpack_rsgp.js";
 import composite_item_list from "./composite_item_list.js";
 import { readline_integer } from "../../../../readline/prompt/util.js";
 import * as fs_util from "../../../../library/fs/util.js";

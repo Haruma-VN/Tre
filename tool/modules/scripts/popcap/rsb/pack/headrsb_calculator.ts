@@ -1,6 +1,6 @@
 "use strict";
 import { SmartBuffer } from "smart-buffer";
-import BeautifyOffset from "../../rsgp/beautify_offset.js";
+import BeautifyOffset from "../../rsg/beautify_offset.js";
 export default function (
     rsgpfile_info_number: number,
     file_list_length: number,

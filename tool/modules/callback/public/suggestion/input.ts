@@ -13,26 +13,26 @@ class input_set extends Void {
         height: number,
         atlas_count: number
     ): string {
-        const evaluation_display = `${localization(
+        const evaluate_display = `${localization(
             "width"
         )}: ${width} ~ ${localization("height")}: ${height} ~ ${localization(
             "atlas_count"
         )}: ${atlas_count}`;
         switch (this.void_number.toString().length) {
             case 1:
-                return `      ${this.void_number}. ${evaluation_display}`;
+                return `      ${this.void_number}. ${evaluate_display}`;
             case 2:
-                return `     ${this.void_number}. ${evaluation_display}`;
+                return `     ${this.void_number}. ${evaluate_display}`;
             case 3:
-                return `    ${this.void_number}. ${evaluation_display}`;
+                return `    ${this.void_number}. ${evaluate_display}`;
             case 4:
-                return `   ${this.void_number}. ${evaluation_display}`;
+                return `   ${this.void_number}. ${evaluate_display}`;
             case 5:
-                return `  ${this.void_number}. ${evaluation_display}`;
+                return `  ${this.void_number}. ${evaluate_display}`;
             case 6:
-                return ` ${this.void_number}. ${evaluation_display}`;
+                return ` ${this.void_number}. ${evaluate_display}`;
             default:
-                return `${this.void_number}. ${evaluation_display}`;
+                return `${this.void_number}. ${evaluate_display}`;
         }
     }
 

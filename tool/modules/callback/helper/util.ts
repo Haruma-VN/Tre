@@ -3,10 +3,10 @@ import evaluate_script from "./script.js";
 import fs_js from "../../library/fs/implement.js";
 import localization from "../localization.js";
 
-export async function create_evaluation(file_system_input_as_str: string) {
+export async function create_evaluate(file_system_input_as_str: string) {
     const json_script = fs_js.read_json(
         file_system_input_as_str
-    ) as evaluation_script;
+    ) as evaluate_script;
     if (
         json_script.notify === null ||
         json_script.notify === void 0 ||
