@@ -1,23 +1,16 @@
 {
     "javascript_evaluate": {
-        "filter": [
-            ".js"
-        ],
+        "filter": [".js"],
         "allow": true,
         "option": 1
     },
     "popcap_resources_split": {
-        "filter": [
-            ".json",
-            ".rton"
-        ],
+        "filter": [".json", ".rton"],
         "allow": true,
         "option": 2
     },
     "popcap_resources_cat": {
-        "filter": [
-            ".res"
-        ],
+        "filter": [".res"],
         "allow": true,
         "option": 3,
         "arguments": {
@@ -36,9 +29,7 @@
         }
     },
     "popcap_resources_rewrite": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 4,
         "arguments": {
@@ -57,72 +48,52 @@
         }
     },
     "popcap_old_resources_conversion_to_new_resources": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 5
     },
     "popcap_new_resources_conversion_to_old_resources": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 6
     },
     "popcap_resources_local_data_compare": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 7
     },
     "popcap_resources_to_tre_info": {
-        "filter": [
-            ".res"
-        ],
+        "filter": [".res"],
         "allow": true,
         "option": 8
     },
     "popcap_resources_to_atlasinfo": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 9
     },
     "popcap_resources_beautify": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 10
     },
     "atlas_info_split": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 11
     },
     "atlas_info_cat": {
-        "filter": [
-            ".bundles"
-        ],
+        "filter": [".bundles"],
         "allow": true,
         "option": 12
     },
     "atlas_info_constructor": {
-        "filter": [
-            "./"
-        ],
+        "filter": ["./"],
         "allow": true,
         "option": 13
     },
     "popcap_texture_atlas_split": {
-        "filter": [
-            "$*/"
-        ],
+        "filter": ["$*/"],
         "allow": true,
         "option": 14,
         "arguments": {
@@ -136,9 +107,7 @@
         }
     },
     "popcap_texture_atlas_cat_simple": {
-        "filter": [
-            ".spg"
-        ],
+        "filter": [".spg"],
         "allow": true,
         "option": 15,
         "arguments": {
@@ -146,9 +115,7 @@
         }
     },
     "popcap_texture_atlas_cat": {
-        "filter": [
-            ".spg"
-        ],
+        "filter": [".spg"],
         "allow": true,
         "option": 16,
         "arguments": {
@@ -167,148 +134,102 @@
         }
     },
     "popcap_texture_encode_rgba8888": {
-        "filter": [
-            ".png"
-        ],
+        "filter": [".png"],
         "allow": true,
         "option": 17
     },
     "popcap_texture_encode_argb8888": {
-        "filter": [
-            ".png"
-        ],
+        "filter": [".png"],
         "allow": true,
         "option": 18
     },
     "popcap_texture_encode_pvrtc": {
-        "filter": [
-            ".png"
-        ],
+        "filter": [".png"],
         "allow": true,
         "option": 19
     },
     "popcap_texture_encode_etc1a": {
-        "filter": [
-            ".png"
-        ],
+        "filter": [".png"],
         "allow": true,
         "option": 20
     },
     "popcap_texture_encode_etc1a_index": {
-        "filter": [
-            ".png"
-        ],
+        "filter": [".png"],
         "allow": true,
         "option": 21
     },
     "popcap_texture_decode_rgba8888": {
-        "filter": [
-            ".ptx"
-        ],
+        "filter": [".ptx"],
         "allow": true,
         "option": 22
     },
     "popcap_texture_decode_argb8888": {
-        "filter": [
-            ".ptx"
-        ],
+        "filter": [".ptx"],
         "allow": true,
         "option": 23
     },
     "popcap_texture_decode_pvrtc": {
-        "filter": [
-            ".ptx"
-        ],
+        "filter": [".ptx"],
         "allow": true,
         "option": 24
     },
     "popcap_texture_decode_etc1a": {
-        "filter": [
-            ".ptx"
-        ],
+        "filter": [".ptx"],
         "allow": true,
         "option": 25
     },
     "popcap_texture_decode_etc1a_index": {
-        "filter": [
-            ".ptx"
-        ],
+        "filter": [".ptx"],
         "allow": true,
         "option": 26
     },
     "popcap_texture_resize_atlas_simple": {
-        "filter": [
-            ".spg"
-        ],
+        "filter": [".spg"],
         "allow": true,
         "option": 27
     },
     "popcap_texture_resize_atlas": {
-        "filter": [
-            ".spg"
-        ],
+        "filter": [".spg"],
         "allow": true,
         "option": 28
     },
     "real_esrgan_upscaler_image": {
-        "filter": [
-            "./",
-            ".png",
-            ".jpg"
-        ],
+        "filter": ["./", ".png", ".jpg"],
         "allow": true,
         "option": 29
     },
     "popcap_zlib_rsgp_unpack": {
-        "filter": [
-            ".rsgp",
-            ".pgsr"
-        ],
+        "filter": [".rsg"],
         "allow": true,
         "option": 30
     },
     "popcap_zlib_rsgp_pack": {
-        "filter": [
-            ".rsg"
-        ],
+        "filter": [".packet"],
         "allow": true,
         "option": 31
     },
     "popcap_zlib_rsb_unpack": {
-        "filter": [
-            ".rsb",
-            ".obb"
-        ],
+        "filter": [".rsb", ".obb"],
         "allow": true,
         "option": 32
     },
     "popcap_zlib_rsb_pack": {
-        "filter": [
-            ".bundle"
-        ],
+        "filter": [".bundle"],
         "allow": true,
         "option": 33
     },
     "popcap_zlib_smf_decompress": {
-        "filter": [
-            ".smf"
-        ],
+        "filter": [".smf"],
         "allow": true,
         "option": 34
     },
     "popcap_zlib_smf_compress": {
-        "filter": [
-            ".rsb",
-            ".obb"
-        ],
+        "filter": [".rsb", ".obb"],
         "allow": true,
         "option": 35
     },
     "popcap_game_json_split": {
-        "filter": [
-            ".json",
-            ".rton"
-        ],
+        "filter": [".json", ".rton"],
         "allow": true,
         "option": 36,
         "arguments": {
@@ -322,9 +243,7 @@
         }
     },
     "popcap_game_json_pack": {
-        "filter": [
-            ".pgj"
-        ],
+        "filter": [".pgj"],
         "allow": true,
         "option": 37,
         "arguments": {
@@ -338,23 +257,17 @@
         }
     },
     "json_patch": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 38
     },
     "json_patch_generator": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 39
     },
     "popcap_texture_atlas_pack_cross_resolution": {
-        "filter": [
-            ".spg"
-        ],
+        "filter": [".spg"],
         "allow": true,
         "option": 40,
         "arguments": {
@@ -362,66 +275,47 @@
         }
     },
     "popcap_lawnstrings_diff": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 41
     },
     "popcap_lawnstrings_convert_to_localization": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 42
     },
     "popcap_lawnstrings_convert_from_localization": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 43
     },
     "popcap_rton_to_json": {
-        "filter": [
-            ".rton",
-            ".dat"
-        ],
+        "filter": [".rton", ".dat"],
         "allow": true,
         "option": 44
     },
     "popcap_json_to_rton": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 45
     },
     "popcap_rton_decrypt_and_decode": {
-        "filter": [
-            ".rton"
-        ],
+        "filter": [".rton"],
         "allow": true,
         "option": 46
     },
     "popcap_rton_encode_and_encrypt": {
-        "filter": [
-            ".rton"
-        ],
+        "filter": [".rton"],
         "allow": true,
         "option": 47
     },
     "popcap_atlas_split_advanced": {
-        "filter": [
-            "$*/"
-        ],
+        "filter": ["$*/"],
         "allow": true,
         "option": 48
     },
     "popcap_atlas_pack_advanced": {
-        "filter": [
-            ".spg"
-        ],
+        "filter": [".spg"],
         "allow": true,
         "option": 49,
         "arguments": {
@@ -446,9 +340,7 @@
         }
     },
     "popcap_rsgp_unpack_simple": {
-        "filter": [
-            ".rsgp"
-        ],
+        "filter": [".rsg"],
         "allow": true,
         "option": 50,
         "arguments": {
@@ -456,17 +348,12 @@
         }
     },
     "popcap_rsgp_pack_simple": {
-        "filter": [
-            ".rsg"
-        ],
+        "filter": [".packet"],
         "allow": true,
         "option": 51
     },
     "popcap_rsb_unpack_simple": {
-        "filter": [
-            ".rsb",
-            ".obb"
-        ],
+        "filter": [".rsb", ".obb"],
         "allow": true,
         "option": 52,
         "arguments": {
@@ -480,17 +367,12 @@
         }
     },
     "popcap_rsb_pack_simple": {
-        "filter": [
-            ".bundle"
-        ],
+        "filter": [".bundle"],
         "allow": true,
         "option": 53
     },
     "popcap_rsb_resource_unpack": {
-        "filter": [
-            ".rsb",
-            ".obb"
-        ],
+        "filter": [".rsb", ".obb"],
         "allow": true,
         "option": 54,
         "arguments": {
@@ -504,65 +386,47 @@
         }
     },
     "popcap_rsb_resource_pack": {
-        "filter": [
-            ".bundle"
-        ],
+        "filter": [".bundle"],
         "allow": true,
         "option": 55
     },
     "popcap_pam_decode": {
-        "filter": [
-            ".pam"
-        ],
+        "filter": [".pam"],
         "allow": true,
         "option": 56
     },
     "popcap_pam_encode": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 57
     },
     "popcap_pam_from_gif": {
-        "filter": [
-            ".gif"
-        ],
+        "filter": [".gif"],
         "allow": true,
         "option": 58
     },
     "popcap_pam_to_flash": {
-        "filter": [
-            ".pam"
-        ],
+        "filter": [".pam"],
         "allow": true,
         "option": 59
     },
     "popcap_flash_to_pam": {
-        "filter": [
-            ".xfl"
-        ],
+        "filter": [".xfl"],
         "allow": true,
         "option": 60
     },
-    "wwise_media_decode": {
-        "filter": [
-            ".bnk"
-        ],
+    "wwise_soundbank_decode": {
+        "filter": [".bnk"],
         "allow": true,
         "option": 61
     },
-    "wwise_media_encode": {
-        "filter": [
-            ".soundbank"
-        ],
+    "wwise_soundbank_encode": {
+        "filter": [".soundbank"],
         "allow": true,
         "option": 62
     },
     "frame_rate_increasement": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 63,
         "arguments": {
@@ -570,45 +434,43 @@
         }
     },
     "popcap_pam_json_to_flash": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 64
     },
     "popcap_flash_to_pam_json": {
-        "filter": [
-            ".xfl"
-        ],
+        "filter": [".xfl"],
         "allow": true,
         "option": 65
     },
-    "script_evaluation": {
-        "filter": [
-            ".json"
-        ],
+    "script_evaluate": {
+        "filter": [".json"],
         "allow": true,
         "option": 66
     },
     "flash_animation_resize": {
-        "filter": [
-            ".xfl"
-        ],
+        "filter": [".xfl"],
         "allow": true,
         "option": 67
     },
     "popcap_repair_resources_path": {
-        "filter": [
-            ".json"
-        ],
+        "filter": [".json"],
         "allow": true,
         "option": 68
     },
     "popcap_animation_viewer": {
-        "filter": [
-            ".pam"
-        ],
+        "filter": [".pam"],
         "allow": true,
-        "option": 79
+        "option": 69
+    },
+    "batch_popcap_animation_add_media_content": {
+        "filter": [".xfl"],
+        "allow": true,
+        "option": 70
+    },
+    "popcap_rsb_disturb": {
+        "filter": [".rsb", ".obb"],
+        "allow": true,
+        "option": 71
     }
 }

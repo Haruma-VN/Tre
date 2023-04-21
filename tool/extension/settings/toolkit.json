@@ -4,7 +4,7 @@
 			"allow_384": true
 		},
 		"pack": {
-			"smart": true,
+			"smart": false,
 			"smart_allowance_area": 6,
 			"cut_unused_space": true
 		},
