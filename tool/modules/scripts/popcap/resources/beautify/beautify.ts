@@ -1,5 +1,4 @@
 "use strict";
-import path from "path";
 import fs_js from "../../../../library/fs/implement.js";
 
 namespace BeautifyRes.Tre.Resources {
@@ -48,7 +47,7 @@ namespace BeautifyRes.Tre.Resources {
         popcap_location_in_setting_display: string
     ): number {
         const PopCapSortOrderNumber: PopCapAnyResources = fs_js.read_json(
-            path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+            fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
             true
         ) as PopCapAnyResources;
         return PopCapSortOrderNumber.resources.beautify_order[
@@ -253,7 +252,7 @@ namespace BeautifyRes.Tre.Resources {
     export function execute(dir: string): void {
         const json = fs_js.read_json(dir);
         fs_js.write_json(
-            `${dir}/../${path.parse(dir).name}.fixed.json`,
+            `${dir}/../${fs_js.parse_fs(dir).name}.fixed.json`,
             beautify_res(json)
         );
         return;

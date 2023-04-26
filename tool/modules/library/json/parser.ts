@@ -1,7 +1,6 @@
 "use strict";
-import fs from "node:fs";
 import localization from "../../callback/localization.js";
-import path from "node:path";
+import fs_js from "../fs/implement.js";
 
 function parseJson(
     jsonStr: string,
@@ -73,11 +72,10 @@ export default function (
     force_trailing_commas_reader: boolean = false
 ): {} {
     const json_config: json_config = parseJson(
-        fs.readFileSync(
-            path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
-            { encoding: "utf-8", flag: "r" }
-        ),
-        true
+        fs_js.read_file(
+            fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+            "utf8"
+        )
     );
     if (typeof data === "object") {
         return data;

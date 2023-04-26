@@ -1,6 +1,5 @@
 "use trict";
 import fs_js from "../../../../library/fs/implement.js";
-import { parse } from "node:path";
 import { dimension } from "../../../../library/img/util.js";
 import createSprite from "./create_sprite.js";
 import { atlasinfo_conduct } from "../../../default/atlas_info/util.js";
@@ -8,23 +7,24 @@ import check_resources_build from "../gif/check_manifest_build.js";
 import localization from "../../../../callback/localization.js";
 import evaluate_modules_workspace_assertation from "../../../../callback/evaluate_modules_workspace_assertation.js";
 import pam_xfl_decode from "../json_to_flash/json_to_flash.js";
+
 export default async function (
     path: string,
     number_sprites: number
 ): Promise<void> {
-    const subgroup = `${parse(path).name}`;
-    const pam_path = `${parse(path).dir}/${subgroup}.xfl`;
+    const subgroup = `${fs_js.parse_fs(path).name}`;
+    const pam_path = `${fs_js.parse_fs(path).dir}/${subgroup}.xfl`;
     const resource_build = await check_resources_build(path);
     const source_folder = fs_js.one_reader(path);
     const filter_source_folder = source_folder.filter(
-        (image) => parse(image).ext.toUpperCase() === ".PNG"
+        (image) => fs_js.parse_fs(image).ext.toUpperCase() === ".PNG"
     );
     const image = new Array();
     for (let i = 0; i < filter_source_folder.length; i++) {
         const source_dimension = await dimension(
             `${path}/${filter_source_folder[i]}`
         );
-        const image_name = parse(filter_source_folder[i]).name;
+        const image_name = fs_js.parse_fs(filter_source_folder[i]).name;
         image.push({
             name: `${image_name}|${resource_build.extend_id.toUpperCase()}${image_name.toUpperCase()}`,
             size: [source_dimension.width, source_dimension.height],

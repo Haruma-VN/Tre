@@ -1,7 +1,6 @@
 "use strict";
 import fs_js from "../../../../library/fs/implement.js";
 import { dimension } from "../../../../library/img/util.js";
-import { parse } from "node:path";
 import XMLMapping from "xml-mapping";
 import xmlButPrettier from "xml-but-prettier";
 import writeSourceXfl from "../json_to_flash/write_sourcexfl.js";
@@ -17,11 +16,11 @@ import { Console } from "../../../../callback/console.js";
 export default async function (path: string, number_sprites: number) {
     const extra_json: any = fs_js.read_json(`${path}/extra.json`);
     const source_folder = fs_js.one_reader(`${path}/LIBRARY/media`);
-    const subgroup = `${parse(path).name}`;
+    const subgroup = `${fs_js.parse_fs(path).name}`;
     const image_list = new Array();
     const filter_source_folder = source_folder
-        .filter((image) => parse(image).ext.toUpperCase() === ".PNG")
-        .map((image) => parse(image).name);
+        .filter((image) => fs_js.parse_fs(image).ext.toUpperCase() === ".PNG")
+        .map((image) => fs_js.parse_fs(image).name);
     for (let i = 0; i < extra_json.image.length; i++) {
         const image_name = extra_json.image[i].name.split("|")[0];
         image_list.push(image_name);

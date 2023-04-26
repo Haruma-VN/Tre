@@ -1,11 +1,7 @@
 "use strict";
-import fs from "node:fs";
-import { execSync } from "node:child_process";
-import { parse } from "node:path";
 import sharp from "sharp";
 import * as color from "../../color/color.js";
 import localization from "../../../callback/localization.js";
-import path from "node:path";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
@@ -40,30 +36,42 @@ export default async function (
     const exception_checker = exception_encode_dimension(width, height);
     if (exception_checker && fs_js.check_etcpak()) {
         fs_js.js_remove(
-            `${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`
+            `${fs_js.parse_fs(dir).dir}/${fs_js
+                .parse_fs(dir)
+                .name.toUpperCase()}.png`
         );
         const tre_thirdparty =
-            path.dirname(process.argv[1]) + "/extension/third/encode/";
-        let cmd = `etcpak.exe --etc1 -v "${parse(dir).base}" "${parse(
-            dir
-        ).name.toUpperCase()}.png"`;
+            fs_js.dirname(process.argv[1]) + "/extension/third/encode/";
+        let cmd = `etcpak.exe --etc1 -v "${fs_js.parse_fs(dir).base}" "${fs_js
+            .parse_fs(dir)
+            .name.toUpperCase()}.png"`;
         let pvr_header: any = Buffer.from(
             "505652030000000006000000000000000000000000000000BBBBBBBBAAAAAAAA0100000001000000010000000100000000000000",
             "hex"
         );
         pvr_header.writeInt32LE("0x" + width.toString(16), 28);
         pvr_header.writeInt32LE("0x" + height.toString(16), 24);
-        const originalImage = Buffer.concat([pvr_header, fs.readFileSync(dir)]);
-        fs.writeFileSync(`${tre_thirdparty}${parse(dir).base}`, originalImage);
-        execSync(cmd, { cwd: tre_thirdparty, stdio: "ignore" });
-        await sharp(`${tre_thirdparty}${parse(dir).name.toUpperCase()}.png`)
+        const originalImage = Buffer.concat([
+            pvr_header,
+            fs_js.read_file(dir, "buffer"),
+        ]);
+        fs_js.write_file(
+            `${tre_thirdparty}${fs_js.parse_fs(dir).base}`,
+            originalImage
+        );
+        fs_js.evaluate_powershell(cmd, tre_thirdparty, "ignore");
+        await sharp(
+            `${tre_thirdparty}${fs_js.parse_fs(dir).name.toUpperCase()}.png`
+        )
             .removeAlpha()
             .toBuffer()
-            .then(async (slice_alpha) => {
-                await sharp(fs.readFileSync(dir).slice((width * height) / 2), {
-                    raw: { width: width, height: height, channels: 1 },
-                })
-                    .png()
+            .then(async (slice_alpha: any) => {
+                await sharp(
+                    fs_js.read_file(dir, "buffer").slice((width * height) / 2),
+                    {
+                        raw: { width: width, height: height, channels: 1 },
+                    }
+                )
                     .toBuffer()
                     .then(async (alpha) => {
                         await sharp(slice_alpha)
@@ -77,23 +85,25 @@ export default async function (
                                                 "execution_out"
                                             )}:\n     `
                                         ) +
-                                            `${path.resolve(
-                                                `${parse(dir).dir}/${parse(
-                                                    dir
-                                                ).name.toUpperCase()}.png`
+                                            `${fs_js.resolve(
+                                                `${
+                                                    fs_js.parse_fs(dir).dir
+                                                }/${fs_js
+                                                    .parse_fs(dir)
+                                                    .name.toUpperCase()}.png`
                                             )}`
                                     );
                                 }
-                                fs.writeFileSync(
-                                    `${parse(dir).dir}/${parse(
-                                        dir
-                                    ).name.toUpperCase()}.png`,
+                                fs_js.write_file(
+                                    `${fs_js.parse_fs(dir).dir}/${fs_js
+                                        .parse_fs(dir)
+                                        .name.toUpperCase()}.png`,
                                     buffer
                                 );
                             });
-                        for (let item of fs.readdirSync(tre_thirdparty)) {
-                            parse(item).ext.toUpperCase() !== ".EXE"
-                                ? fs.unlinkSync(`${tre_thirdparty}${item}`)
+                        for (let item of fs_js.full_reader(tre_thirdparty)) {
+                            fs_js.parse_fs(item).ext.toUpperCase() !== ".EXE"
+                                ? fs_js.js_remove(`${tre_thirdparty}${item}`)
                                 : {};
                         }
                     })

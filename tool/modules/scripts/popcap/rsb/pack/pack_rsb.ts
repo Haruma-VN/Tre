@@ -3,7 +3,6 @@ import pack_rsb_everything from "./pack_rsb_everything.js";
 import crossPathSort from "cross-path-sort";
 import PackRSB from "./pack_rsb_data.js";
 import Unpack_NamePath from "./unpack_name_path.js";
-import { parse } from "node:path";
 import localization from "../../../../callback/localization.js";
 import fs_js from "../../../../library/fs/implement.js";
 
@@ -22,7 +21,9 @@ export default async function (
         ? localization("popcap_rsb_simple_pack_information")
         : execution_information;
     fs_js.execution_information(execution_information);
-    fs_js.execution_out(`${parse(rsb_path).dir}/${parse(rsb_path).name}`);
+    fs_js.execution_out(
+        `${fs_js.parse_fs(rsb_path).dir}/${fs_js.parse_fs(rsb_path).name}`
+    );
     try {
         TreRSBInfo = Object.entries(
             fs_js.read_json(`${rsb_path}/TreRSBInfo.json`)
@@ -80,7 +81,7 @@ export default async function (
         RSG_file_data_list
     );
     fs_js.outfile_fs(
-        `${parse(rsb_path).dir}/${parse(rsb_path).name}`,
+        `${fs_js.parse_fs(rsb_path).dir}/${fs_js.parse_fs(rsb_path).name}`,
         rsb_file_data
     );
     if (pack_everything) {

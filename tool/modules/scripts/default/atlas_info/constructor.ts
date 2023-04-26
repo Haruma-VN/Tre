@@ -2,7 +2,6 @@
 import fs_js from "../../../library/fs/implement.js";
 import localization from "../../../callback/localization.js";
 import js_checker from "../../../callback/default/checker.js";
-import path from "path";
 import { readline_normal } from "../../../readline/util.js";
 
 function conduct_atlas_info(
@@ -61,8 +60,8 @@ function conduct_atlas_info(
     }
     const atlas_storage: string[] = new Array();
     fs_js.one_reader(folder_system_as_string).forEach((image) => {
-        if (path.parse(image).ext.toString().toLowerCase() === ".png") {
-            atlas_storage.push(path.parse(image).name);
+        if (fs_js.parse_fs(image).ext.toString().toLowerCase() === ".png") {
+            atlas_storage.push(fs_js.parse_fs(image).name);
         }
     });
     if (

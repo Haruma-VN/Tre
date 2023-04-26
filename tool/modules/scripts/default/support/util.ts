@@ -1,6 +1,5 @@
 "use strict";
 import fs_js from "../../../library/fs/implement.js";
-import path from "node:path";
 
 namespace RSBInfo.Tre.Utilities {
     export interface PopCapCommonResourcesData {
@@ -103,7 +102,10 @@ namespace RSBInfo.Tre.Utilities {
             const popcap_resources_directory_filter_json: Array<string> =
                 new Array();
             popcap_resources_directory.forEach((file: string) => {
-                if (path.parse(file).ext.toString().toLowerCase() === ".json") {
+                if (
+                    fs_js.parse_fs(file).ext.toString().toLowerCase() ===
+                    ".json"
+                ) {
                     popcap_resources_directory_filter_json.push(file);
                 }
             });

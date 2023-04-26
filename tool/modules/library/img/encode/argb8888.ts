@@ -1,11 +1,8 @@
 "use strict";
 import sharp from "sharp";
-import { basename, extname } from "../../extension/util.js";
-import fs from "node:fs";
 import { dimension } from "../util.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../color/color.js";
-import path from "node:path";
 import max_sharp from "../exception/evaluate.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
@@ -41,7 +38,7 @@ export default async function (
         );
     }
     max_sharp(img_data.width, img_data.height);
-    fs_js.js_remove(path.resolve(dir + "/../" + basename(dir) + ".ptx"));
+    fs_js.js_remove(fs_js.resolve(dir + "/../" + fs_js.basename(dir) + ".ptx"));
     const blue = await sharp(dir)
         .extractChannel("blue")
         .toBuffer()
@@ -84,12 +81,15 @@ export default async function (
             .catch((error: any) => {
                 throw new Error(localization("cannot_read_image_data"));
             });
-        fs.writeFileSync(dir + "/../" + basename(dir) + ".ptx", data);
+        fs_js.write_file(dir + "/../" + fs_js.basename(dir) + ".ptx", data);
         if (!not_notify_console_log) {
             Console.WriteLine(
                 color.fggreen_string(
                     `◉ ${localization("execution_out")}:\n     `
-                ) + `${path.resolve(dir + "/../" + basename(dir) + ".ptx")}`
+                ) +
+                    `${fs_js.resolve(
+                        dir + "/../" + fs_js.basename(dir) + ".ptx"
+                    )}`
             );
         }
     }

@@ -5,9 +5,9 @@ import pam_json_decode from "../pam/decode/decode.js";
 import pam_xfl_decode from "../pam/json_to_flash/json_to_flash.js";
 import wwise_decode from "../wwise/decode_simple.js";
 import rton_plain from "../rton/rijndael/rton_plain.js";
-import path, { parse } from "node:path";
 import DecodePTX from "./decode_ptx.js";
 import fs_js from "../../../library/fs/implement.js";
+
 export default async function (
     rsg_data: any,
     rsg_path: string,
@@ -46,7 +46,7 @@ export default async function (
         if (rton_head === "1000") {
             const rton_cipher_key = (
                 fs_js.read_json(
-                    path.dirname(process.argv[1]) +
+                    fs_js.dirname(process.argv[1]) +
                         "/extension/settings/toolkit.json",
                     true
                 ) as any
@@ -100,8 +100,8 @@ export default async function (
                     ios_argb8888,
                     no_notify_message
                 );
-                const png_name_path = `${parse(name_path).dir}\\${
-                    parse(name_path).name
+                const png_name_path = `${fs_js.parse_fs(name_path).dir}\\${
+                    fs_js.parse_fs(name_path).name
                 }.PNG`.split("\\");
                 const image_info = {
                     Id: id,
@@ -131,8 +131,8 @@ export default async function (
                 )
             );
             let json_info = new Object();
-            const json_name_path = `${parse(name_path).dir}\\${
-                parse(name_path).name
+            const json_name_path = `${fs_js.parse_fs(name_path).dir}\\${
+                fs_js.parse_fs(name_path).name
             }.JSON`.split("\\");
             if (json_data[1]) {
                 json_info = {
@@ -146,8 +146,8 @@ export default async function (
             }
             treRSGinfo.Res.push(json_info);
             fs_js.outfile_fs(
-                `${rsg_path}/Res/${parse(name_path).dir}/${
-                    parse(name_path).name
+                `${rsg_path}/Res/${fs_js.parse_fs(name_path).dir}/${
+                    fs_js.parse_fs(name_path).name
                 }.json`,
                 json_data[0]
             );

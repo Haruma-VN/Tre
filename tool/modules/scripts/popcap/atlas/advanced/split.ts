@@ -1,8 +1,6 @@
 "use strict";
-import { extname, basename } from "../../../../library/extension/util.js";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
-import path from "node:path";
 import sharp from "sharp";
 import fs_js from "../../../../library/fs/implement.js";
 import { Console } from "../../../../callback/console.js";
@@ -33,21 +31,19 @@ export interface configAtlas {
     };
 }
 
-async function atlas_split_experimental(
-    execute_file_dir: string[]
-): Promise<void> {
+async function atlas_split_advanced(execute_file_dir: string[]): Promise<void> {
     let json: any = {};
     const img_list: Array<string> = new Array();
     let directory_name: string = "";
     let dir_sys: string = "";
     for (let i: number = 0; i < execute_file_dir.length; i++) {
-        switch (extname(execute_file_dir[i]).toLowerCase()) {
+        switch (fs_js.extname(execute_file_dir[i]).toLowerCase()) {
             case ".json":
                 json = fs_js.read_json(execute_file_dir[i]);
                 if (json.resources === undefined) {
                     throw new Error(localization("not_popcap_res"));
                 }
-                directory_name = basename(execute_file_dir[i]) + ".spg";
+                directory_name = fs_js.basename(execute_file_dir[i]) + ".spg";
                 dir_sys = execute_file_dir[i] + "/../" + directory_name;
                 fs_js.create_directory(dir_sys.toString());
                 break;
@@ -70,7 +66,7 @@ async function atlas_split_experimental(
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(`${dir_sys}`)}`
+            )} ${fs_js.resolve(`${dir_sys}`)}`
         );
         const promises: Array<Promise<any>> = new Array();
         for (let i: number = 0; i < json.resources.length; ++i) {
@@ -81,15 +77,15 @@ async function atlas_split_experimental(
                 json.resources[i].path = json.resources[i].path.split("\\");
             }
             const popcap_atlas_output_atlas_directory: string =
-                dir_sys + "/" + path.join(...json.resources[i].path);
+                dir_sys + "/" + fs_js.join_fs(...json.resources[i].path);
             fs_js.create_directory(popcap_atlas_output_atlas_directory, true);
             for (const img of img_list) {
                 if (
                     json.resources[i].parent.toUpperCase() ===
-                    "ATLASIMAGE_ATLAS_" + basename(img).toUpperCase()
+                    "ATLASIMAGE_ATLAS_" + fs_js.basename(img).toUpperCase()
                 ) {
                     count_images_split++;
-                    const filePath = path.join(
+                    const filePath = fs_js.join_fs(
                         popcap_atlas_output_atlas_directory,
                         `${json.resources[i].id}.png`
                     );
@@ -108,7 +104,7 @@ async function atlas_split_experimental(
                                 );
                             })
                     );
-                    const jsonPath = path.join(
+                    const jsonPath = fs_js.join_fs(
                         popcap_atlas_output_atlas_directory,
                         `${json.resources[i].id}.json`
                     );
@@ -140,4 +136,4 @@ async function atlas_split_experimental(
         ) + count_images_split
     );
 }
-export default atlas_split_experimental;
+export default atlas_split_advanced;

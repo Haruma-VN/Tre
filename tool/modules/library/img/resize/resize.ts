@@ -1,6 +1,7 @@
 "use strict";
 import sharp from "sharp";
-import fs from "fs";
+import fs_js from "../../fs/implement.js";
+
 export default async function (
     dir: string,
     width: number | string,
@@ -13,6 +14,6 @@ export default async function (
     await images
         .resize(width, height)
         .toBuffer()
-        .then((buffer) => fs.writeFileSync(new_dir, buffer));
+        .then((buffer) => fs_js.write_file(new_dir, buffer));
     return;
 }

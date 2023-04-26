@@ -1,5 +1,4 @@
 "use strict";
-import path from "node:path";
 import fs_js from "../../../../library/fs/implement.js";
 
 function filter_json(list_of_items: Array<string>): Array<string> {
@@ -7,7 +6,7 @@ function filter_json(list_of_items: Array<string>): Array<string> {
         .map((file) => {
             if (
                 fs_js.js_exists(file) &&
-                path.parse(file).ext.toString().toLowerCase() === ".json"
+                fs_js.parse_fs(file).ext.toString().toLowerCase() === ".json"
             ) {
                 return file;
             }

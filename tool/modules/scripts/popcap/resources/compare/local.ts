@@ -1,7 +1,6 @@
 "use strict";
 import fs_js from "../../../../library/fs/implement.js";
 import LocalCompareItemsInDirectory from "./third.js";
-import path from "node:path";
 
 export default function LocalResourcesCompare(
     vanilla_directory: string,
@@ -50,7 +49,7 @@ export default function LocalResourcesCompare(
         }
     }
     const folder_output_copy_packet = `${modded_directory}/../${
-        path.parse(modded_directory).name
+        fs_js.parse_fs(modded_directory).name
     }_cmp.res`;
     fs_js.create_directory(folder_output_copy_packet, true);
     for (let copy of output_copy_packet_resource) {

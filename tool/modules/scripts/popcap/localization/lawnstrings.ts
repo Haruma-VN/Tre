@@ -1,5 +1,4 @@
 "use strict";
-import path from "path";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
 import fs_js from "../../../library/fs/implement.js";
@@ -143,15 +142,15 @@ export namespace Lawnstrings.popcap {
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(
+            )} ${fs_js.resolve(
                 `${modified_directory}/../${
-                    path.parse(modified_directory).name
+                    fs_js.parse_fs(modified_directory).name
                 }.diff.json`
             )}`
         );
         return fs_js.write_json(
             `${modified_directory}/../${
-                path.parse(modified_directory).name
+                fs_js.parse_fs(modified_directory).name
             }.diff.json`,
             LawnstringDiff(original_directory, modified_directory)
         );
@@ -161,12 +160,14 @@ export namespace Lawnstrings.popcap {
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(
-                `${directory}/../${path.parse(directory).name}.structure.json`
+            )} ${fs_js.resolve(
+                `${directory}/../${
+                    fs_js.parse_fs(directory).name
+                }.structure.json`
             )}`
         );
         return fs_js.write_json(
-            `${directory}/../${path.parse(directory).name}.structure.json`,
+            `${directory}/../${fs_js.parse_fs(directory).name}.structure.json`,
             GetLawnstringsProperty(directory)
         );
     }
@@ -205,12 +206,12 @@ export namespace Lawnstrings.popcap {
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(
-                `${directory}/../${path.parse(directory).name}.default.json`
+            )} ${fs_js.resolve(
+                `${directory}/../${fs_js.parse_fs(directory).name}.default.json`
             )}`
         );
         return fs_js.write_json(
-            `${directory}/../${path.parse(directory).name}.default.json`,
+            `${directory}/../${fs_js.parse_fs(directory).name}.default.json`,
             ConvertLocalizationJSONtoPopCapJSON(directory)
         );
     }

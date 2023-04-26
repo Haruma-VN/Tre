@@ -1,7 +1,6 @@
 "use strict";
 import { SingleBar } from "cli-progress";
 import { SmartBuffer } from "smart-buffer";
-import path, { parse } from "node:path";
 import rsb_read_header_info from "./rsb_read_header_info.js";
 import extract_rsg_name_path from "./extract_rsg_name_path.js";
 import extract_resources_data from "./extract_resources_data.js";
@@ -241,7 +240,7 @@ export default async function (
             Console.WriteLine(
                 color.fgcyan_string(
                     `◉ ${localization("execution_argument")}: ${
-                        parse(rsb_data_will_not_be_cipher).base
+                        fs_js.parse_fs(rsb_data_will_not_be_cipher).base
                     } ${localization("ios_argb8888")}`
                 )
             );
@@ -257,12 +256,12 @@ export default async function (
         "buffer"
     );
     const rsb_new_extract_folder = `${rsb_data_will_not_be_cipher}/../${
-        parse(rsb_data_will_not_be_cipher).name
+        fs_js.parse_fs(rsb_data_will_not_be_cipher).name
     }.bundle`;
     Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
-        )} ${path.resolve(rsb_new_extract_folder)}`
+        )} ${fs_js.resolve(rsb_new_extract_folder)}`
     );
     fs_js.create_directory(`${rsb_new_extract_folder}`);
     const iz_magic_header_rsb = SmartBuffer.fromBuffer(

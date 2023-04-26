@@ -1,10 +1,8 @@
 "use strict";
 import { split } from "../../../../library/img/util.js";
-import { extname, basename } from "../../../../library/extension/util.js";
 import fix_duplicate_res from "../../../default/repair/duplicate_res.js";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
-import path from "node:path";
 import fs_js from "../../../../library/fs/implement.js";
 import { Console } from "../../../../callback/console.js";
 
@@ -50,7 +48,7 @@ export default async function (
     is_notify: boolean = true
 ) {
     const json_config: any = fs_js.read_json(
-        path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     );
     let json: any = {};
@@ -58,13 +56,13 @@ export default async function (
     let directory_name = "";
     let dir_sys = "";
     for (let i = 0; i < execute_file_dir.length; i++) {
-        switch (extname(execute_file_dir[i]).toLowerCase()) {
+        switch (fs_js.extname(execute_file_dir[i]).toLowerCase()) {
             case ".json":
                 json = fs_js.read_json(execute_file_dir[i]);
                 if (json.resources === undefined) {
                     throw new Error(localization("not_popcap_res"));
                 }
-                directory_name = basename(execute_file_dir[i]) + ".spg";
+                directory_name = fs_js.basename(execute_file_dir[i]) + ".spg";
                 dir_sys =
                     output_dir !== undefined &&
                     output_dir !== null &&
@@ -85,7 +83,7 @@ export default async function (
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(`${dir_sys}`)}`
+            )} ${fs_js.resolve(`${dir_sys}`)}`
         );
         if (json_config.atlas.split.repairDuplicateFolder === true) {
             json.resources = fix_duplicate_res(json.resources);
@@ -140,7 +138,7 @@ export default async function (
             for (const img of img_list) {
                 if (
                     extend_info[i].parent.toUpperCase() ===
-                    basename(img).toUpperCase()
+                    fs_js.basename(img).toUpperCase()
                 ) {
                     parent_list.push(extend_info[i].parent);
                     const process = await split(

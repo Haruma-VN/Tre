@@ -1,5 +1,4 @@
 "use strict";
-import path from "path";
 import fs_js from "../../../library/fs/implement.js";
 import localization from "../../localization.js";
 function check_evaluate_system(file_system_input_as_str: string): string {
@@ -12,12 +11,15 @@ function check_evaluate_system(file_system_input_as_str: string): string {
     }
     if (fs_js.is_file(file_system_input_as_str)) {
         switch (
-            path.parse(file_system_input_as_str).ext.toString().toLowerCase()
+            fs_js
+                .parse_fs(file_system_input_as_str)
+                .ext.toString()
+                .toLowerCase()
         ) {
             case ".json":
                 switch (
-                    path
-                        .parse(file_system_input_as_str)
+                    fs_js
+                        .parse_fs(file_system_input_as_str)
                         .name.toString()
                         .toLowerCase()
                 ) {
@@ -105,7 +107,10 @@ function check_evaluate_system(file_system_input_as_str: string): string {
         }
     } else if (fs_js.is_directory(file_system_input_as_str)) {
         switch (
-            path.parse(file_system_input_as_str).ext.toString().toLowerCase()
+            fs_js
+                .parse_fs(file_system_input_as_str)
+                .ext.toString()
+                .toLowerCase()
         ) {
             case ".res":
                 return localization("res_folder") as string;

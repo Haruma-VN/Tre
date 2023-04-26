@@ -1,5 +1,4 @@
 "use strict";
-import path from "node:path";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
 import fs_js from "../../../library/fs/implement.js";
@@ -29,7 +28,7 @@ export default function (dir: string): number {
     Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
-        )} ${path.resolve(info_folder)}`
+        )} ${fs_js.resolve(info_folder)}`
     );
     fs_js.create_directory(`${info_folder}`);
     fs_js.create_directory(`${resources_atlas_folder}`);

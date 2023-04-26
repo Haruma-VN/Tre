@@ -1,7 +1,6 @@
 "use strict";
 import dimension from "../../../../library/img/dimension/dimension.js";
 import fs_js from "../../../../library/fs/implement.js";
-import path from "node:path";
 import template_source from "../template/source.js";
 import template_image from "../template/image.js";
 import XMLMapping from "xml-mapping";
@@ -78,7 +77,7 @@ async function add_content(
             return a.href.includes(`main_sprite`);
         });
     for (let i = 0; i < append_media.length; ++i) {
-        const append_media_name: string = path.parse(
+        const append_media_name: string = fs_js.parse_fs(
             append_media[i].img_path
         ).name;
         const index_of_sprite: number = original_size_of_image + i + 1;
@@ -117,7 +116,7 @@ async function add_content(
         fs_js.fs_copy(
             append_media[i].img_path,
             `${xfl_path}/LIBRARY/media/${
-                path.parse(append_media[i].img_path).base
+                fs_js.parse_fs(append_media[i].img_path).base
             }`
         );
     }

@@ -1,9 +1,7 @@
 "use strict";
 import sharp from "sharp";
-import { basename } from "../../extension/util.js";
 import * as color from "../../color/color.js";
 import localization from "../../../callback/localization.js";
-import path from "node:path";
 import max_sharp from "../exception/evaluate.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
@@ -36,25 +34,24 @@ export default async function (
         );
     }
     max_sharp(width, height);
-    fs_js.js_remove(dir + "/../" + basename(dir) + ".png");
+    fs_js.js_remove(dir + "/../" + fs_js.basename(dir) + ".png");
     await sharp(fs_js.read_file(dir, "buffer"), {
         raw: { width: width, height: height, channels: 4 },
     })
-        .png()
         .toBuffer()
-        .then(async (argb32) => {
+        .then(async (argb32: Buffer) => {
             await sharp(argb32)
                 .extractChannel("blue")
                 .toBuffer()
-                .then(async (blue) => {
+                .then(async (blue: Buffer) => {
                     await sharp(argb32)
                         .extractChannel("green")
                         .toBuffer()
-                        .then(async (green) => {
+                        .then(async (green: Buffer) => {
                             await sharp(argb32)
                                 .extractChannel("red")
                                 .toBuffer()
-                                .then(async (red) => {
+                                .then(async (red: Buffer) => {
                                     await sharp(argb32)
                                         .extractChannel("alpha")
                                         .toBuffer()
@@ -64,7 +61,7 @@ export default async function (
                                                 .joinChannel(red)
                                                 .joinChannel(alpha)
                                                 .toBuffer()
-                                                .then(async (image) => {
+                                                .then(async (image: Buffer) => {
                                                     if (
                                                         !not_notify_console_log
                                                     ) {
@@ -74,10 +71,10 @@ export default async function (
                                                                     "execution_out"
                                                                 )}:\n     `
                                                             ) +
-                                                                `${path.resolve(
+                                                                `${fs_js.resolve(
                                                                     dir +
                                                                         "/../" +
-                                                                        basename(
+                                                                        fs_js.basename(
                                                                             dir
                                                                         ) +
                                                                         ".png"
@@ -87,7 +84,9 @@ export default async function (
                                                     return await fs_js.write_file(
                                                         dir +
                                                             "/../" +
-                                                            basename(dir) +
+                                                            fs_js.basename(
+                                                                dir
+                                                            ) +
                                                             ".png",
                                                         image
                                                     );

@@ -1,8 +1,6 @@
 "use strict";
-import { extname, basename } from "../../../../library/extension/util.js";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
-import path from "node:path";
 import getTrim from "../helper/trim.js";
 import { MaxRectsPacker } from "maxrects-packer";
 import * as portal from "../../../../library/img/util.js";
@@ -27,7 +25,7 @@ export interface popcap_extra_information {
     cols?: number;
 }
 
-async function atlas_pack_experimental(
+async function atlas_pack_advanced(
     directory: string,
     width: number,
     height: number,
@@ -42,7 +40,7 @@ async function atlas_pack_experimental(
         popcap_output_subgroup_name === null ||
         popcap_output_subgroup_name === void 0
     ) {
-        popcap_output_subgroup_name = basename(directory);
+        popcap_output_subgroup_name = fs_js.basename(directory);
     }
     const is_square_trim: boolean =
         (fs_js.create_toolkit_view("cut_unused_space") as boolean) &&
@@ -50,16 +48,19 @@ async function atlas_pack_experimental(
     const containable_files: Array<string> = fs_js.full_reader(directory);
     const containable_pngs: Array<string> = new Array();
     for (let file of containable_files) {
-        if (extname(file).toString().toLowerCase() === ".png") {
+        if (fs_js.extname(file).toString().toLowerCase() === ".png") {
             containable_pngs.push(file);
         }
     }
     let total_sprites_process_in_thiz_function: number = 0;
     const containable_jsons: Array<any> = containable_pngs
         .map((filepath: string) => {
-            const parts: path.ParsedPath = path.parse(filepath);
+            const parts = fs_js.parse_fs(filepath);
             parts.base = `${parts.name}.json`;
-            const new_json_file_path: string = path.join(parts.dir, parts.base);
+            const new_json_file_path: string = fs_js.join_fs(
+                parts.dir,
+                parts.base
+            );
             if (fs_js.js_exists(new_json_file_path)) {
                 return new_json_file_path;
             }
@@ -91,16 +92,15 @@ async function atlas_pack_experimental(
             });
         for (let popcap_sprite_extra_json_name_base of containable_jsons) {
             if (
-                basename(containable_pngs[i]) ===
-                basename(popcap_sprite_extra_json_name_base)
+                fs_js.basename(containable_pngs[i]) ===
+                fs_js.basename(popcap_sprite_extra_json_name_base)
             ) {
-                const popcap_sprite_file_directory_as_parsed: path.ParsedPath =
-                    path.parse(
-                        path.relative(
-                            directory.toString(),
-                            popcap_sprite_extra_json_name_base
-                        )
-                    );
+                const popcap_sprite_file_directory_as_parsed = fs_js.parse_fs(
+                    fs_js.relative(
+                        directory.toString(),
+                        popcap_sprite_extra_json_name_base
+                    )
+                );
                 const popcap_sprite_json_information_for_extra_coordinate: popcap_extra_information =
                     fs_js.read_json(popcap_sprite_extra_json_name_base);
                 total_sprites_process_in_thiz_function++;
@@ -109,10 +109,10 @@ async function atlas_pack_experimental(
                     height: sprite_dimension.height,
                     path: [
                         ...popcap_sprite_file_directory_as_parsed.dir.split(
-                            path.sep
+                            fs_js.sep()
                         ),
                     ],
-                    id: basename(containable_pngs[i]),
+                    id: fs_js.basename(containable_pngs[i]),
                     infoX:
                         popcap_sprite_json_information_for_extra_coordinate.x !==
                             undefined &&
@@ -256,7 +256,7 @@ async function atlas_pack_experimental(
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(
+            )} ${fs_js.resolve(
                 `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`
             )}`
         );
@@ -279,7 +279,7 @@ async function atlas_pack_experimental(
     Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
-        )} ${path.resolve(
+        )} ${fs_js.resolve(
             directory + "/../" + popcap_output_subgroup_name + ".json"
         )}`
     );
@@ -290,4 +290,4 @@ async function atlas_pack_experimental(
     );
     return 0;
 }
-export default atlas_pack_experimental;
+export default atlas_pack_advanced;

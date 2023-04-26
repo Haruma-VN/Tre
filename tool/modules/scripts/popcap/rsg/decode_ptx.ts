@@ -2,7 +2,6 @@
 import * as image_util from "../../../library/img/util.js";
 import * as color from "../../../library/color/color.js";
 import localization from "../../../callback/localization.js";
-import { parse } from "node:path";
 import { readline_integer } from "../../../readline/prompt/util.js";
 import fs_js from "../../../library/fs/implement.js";
 import { Console } from "../../../callback/console.js";
@@ -25,7 +24,7 @@ export default async function DecodePTX(
                 Console.WriteLine(
                     color.fgcyan_string(
                         `◉ ${localization("execution_argument")}: ${
-                            parse(ptx_path).base
+                            fs_js.parse_fs(ptx_path).base
                         } ${localization("ios_argb8888")}`
                     )
                 );

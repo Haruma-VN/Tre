@@ -1,7 +1,7 @@
 "use strict";
-import fs from "fs";
+import fs from "node:fs";
 import * as js_json from "../json/util.js";
-import path from "path";
+import path from "node:path";
 import sharp from "sharp";
 import * as color from "../color/color.js";
 import localization from "../../callback/localization.js";
@@ -2321,7 +2321,6 @@ class fs_js {
                     blend: "dest-in",
                 },
             ])
-            .png()
             .toFile(file_system_output_path)
             .then(() => {
                 this.assertation_create(
@@ -2600,7 +2599,7 @@ class fs_js {
         //#region
         if (this.user_platform === "win32") {
             try {
-                execSync("chcp 65001", { stdio: "ignore" });
+                this.evaluate_powershell("chcp 65001");
             } catch (error: any) {
                 this.execution_status("failed", error.message as string);
             }
@@ -2684,7 +2683,10 @@ class fs_js {
         //#endregion
     }
 
+    //-------------------------------------------
+
     public static generateText(length: number): string {
+        //#region
         const characters =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let result = "";
@@ -2697,6 +2699,125 @@ class fs_js {
         }
 
         return result;
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static evaluate_powershell(
+        command: str,
+        cwd?: str,
+        stdio: "ignore" | "inherit" | "overlapped" | "pipe" = "ignore"
+    ): void {
+        //#region
+        try {
+            execSync(command, {
+                cwd:
+                    cwd !== undefined && cwd !== null && cwd !== void 0
+                        ? cwd
+                        : undefined,
+                stdio:
+                    stdio !== undefined && stdio !== null && stdio !== void 0
+                        ? stdio
+                        : undefined,
+            });
+        } catch (error: any) {
+            throw new Error(error.message as str);
+        }
+        return;
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static using(
+        msg: str,
+        msg_type: "ignore" | "error" | "log" = "ignore"
+    ): void {
+        switch (msg_type) {
+            case "log": {
+                Console.WriteLine(msg);
+                break;
+            }
+            case "error": {
+                throw new Error(msg);
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    //-------------------------------------------
+
+    public static parse_fs(file_system_input_path: str): path.ParsedPath {
+        //#region
+        return path.parse(file_system_input_path);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static dirname(file_system_input_path: str): str {
+        //#region
+        return path.dirname(file_system_input_path);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static resolve(...file_system_input_path: Array<str>): str {
+        //#region
+        return path.resolve(...file_system_input_path);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static basename(file_system_input_path: str): str {
+        //#region
+        return path.basename(file_system_input_path);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static is_absolute(file_system_input_path: str): bool {
+        //#region
+        return path.isAbsolute(file_system_input_path);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static extname(file_system_input_path: str): str {
+        //#region
+        return path.extname(file_system_input_path);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static join_fs(...files: Array<string>): str {
+        //#region
+        return path.join(...files);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static relative(file: string, to: str): str {
+        //#region
+        return path.relative(file, to);
+        //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static sep(): str {
+        //#region
+        return path.sep;
+        //#endregion
     }
 }
 

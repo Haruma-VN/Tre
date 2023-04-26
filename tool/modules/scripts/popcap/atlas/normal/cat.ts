@@ -4,7 +4,6 @@ import { dimension, cat } from "../../../../library/img/util.js";
 import best_sorting from "../../../../library/sort/popcap_resources.js";
 import * as color from "../../../../library/color/color.js";
 import localization from "../../../../callback/localization.js";
-import path from "node:path";
 import getTrim from "../helper/trim.js";
 import fs_js from "../../../../library/fs/implement.js";
 import squareTrim from "../helper/square_trim.js";
@@ -239,7 +238,7 @@ export default async function popcap_atlas_pack(
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(
+            )} ${fs_js.resolve(
                 `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`
             )}`
         );
@@ -259,7 +258,7 @@ export default async function popcap_atlas_pack(
     Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
-        )} ${path.resolve(dir + "/../" + atlas_info.subgroup + ".json")}`
+        )} ${fs_js.resolve(dir + "/../" + atlas_info.subgroup + ".json")}`
     );
     Console.WriteLine(
         color.fggreen_string(`${total_sprites_process_in_thiz_function}`) +

@@ -1,6 +1,5 @@
 "use strict";
 import { SmartBuffer } from "smart-buffer";
-import { parse } from "node:path";
 import fs_js from "../../../../library/fs/implement.js";
 export default async function (
     RSG_items_packet_list: any[],
@@ -22,21 +21,21 @@ export default async function (
         const part1_Size = file_data.slice(48, 52).readInt32LE();
         if (rsg_info.ptx_number !== 0) {
             autopool_item_info.writeString(
-                `${parse(rsg_info.rsg_name).name}${"_AutoPool"}`
+                `${fs_js.parse_fs(rsg_info.rsg_name).name}${"_AutoPool"}`
             );
             autopool_item_info.writeInt32LE(part0_Offset, 128);
             autopool_item_info.writeInt32LE(part1_Size);
             autopool_item_info.writeInt32LE(1);
         } else {
             autopool_item_info.writeString(
-                `${parse(rsg_info.rsg_name).name}${"_AutoPool"}`
+                `${fs_js.parse_fs(rsg_info.rsg_name).name}${"_AutoPool"}`
             );
             autopool_item_info.writeInt32LE(part0_Size + part0_Offset, 128);
             autopool_item_info.writeInt32LE(0);
             autopool_item_info.writeInt32LE(1);
         }
         const rsg_head_data = file_data.slice(16, 64);
-        rsg_item_info.writeString(parse(rsg_info.rsg_name).name);
+        rsg_item_info.writeString(fs_js.parse_fs(rsg_info.rsg_name).name);
         rsg_item_info.writeInt32LE(headlength, 128);
         rsg_item_info.writeInt32LE(file_data.length, 132);
         rsg_item_info.writeInt32LE(rsg_info.composite_index);

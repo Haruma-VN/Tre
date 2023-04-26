@@ -1,5 +1,4 @@
 "use strict";
-import path from "node:path";
 import fs_js from "../../../../library/fs/implement.js";
 
 namespace AdaptPvZ2InternationalResPath {
@@ -110,7 +109,9 @@ namespace AdaptPvZ2InternationalResPath {
             ) as PopCapResources;
             const method: string = method_number === 1 ? "new" : "old";
             return fs_js.write_json(
-                `${directory}/../${path.parse(directory).name}.${method}.json`,
+                `${directory}/../${
+                    fs_js.parse_fs(directory).name
+                }.${method}.json`,
                 this.handle_resource_data(resources_json, method_number)
             );
         }

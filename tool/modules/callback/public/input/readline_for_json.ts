@@ -1,6 +1,4 @@
 "use strict";
-import fs from "fs";
-import { Console } from "../../console.js";
 import localization from "../../localization.js";
 import fs_js from "../../../library/fs/implement.js";
 import { readline_normal } from "../../../readline/prompt/util.js";
@@ -38,7 +36,7 @@ export default async function processFilePaths(
             filePath = filePath.slice(1, -1);
         }
         try {
-            const stats = fs.statSync(filePath);
+            const stats = fs_js.view_io_stream(filePath);
             if (stats.isDirectory()) {
                 console.error(
                     `${filePath} ${localization("is_a_directory_not_a_file")}`

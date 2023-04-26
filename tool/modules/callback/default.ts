@@ -12,7 +12,6 @@ import { Argument } from "./toolkit_question.js";
 import version from "./default/version.js";
 import exit_program from "./default/exit.js";
 import { prompt } from "../../modules/readline/prompt/util.js";
-import path from "node:path";
 
 export default async function (): Promise<void> {
     Console.WriteLine(

@@ -4,7 +4,6 @@ import fs_js from "../../../../library/fs/implement.js";
 import position_calculator from "./position_calculator.js";
 import read_sprite from "./read_sprite.js";
 import load_sprite from "./load_sprite.js";
-import { parse } from "node:path";
 import localization from "../../../../../modules/callback/localization.js";
 import { Console } from "../../../../callback/console.js";
 /**
@@ -43,8 +42,8 @@ export default async function (
         Console.WriteLine(localization("no_mode_to_process"));
         return;
     }
-    const apng_folder_path: string = `${parse(animation_path).dir}/${
-        parse(animation_path).name
+    const apng_folder_path: string = `${fs_js.parse_fs(animation_path).dir}/${
+        fs_js.parse_fs(animation_path).name
     }.apng`;
     const image_list: any = await read_image(
         animation_json.image,

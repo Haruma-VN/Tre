@@ -26,11 +26,10 @@ import {
     resize_atlas,
     restoAtlasinfo,
     cross_resolution,
-    atlas_split_experimental,
-    atlas_pack_experimental,
+    atlas_split_advanced,
+    atlas_pack_advanced,
 } from "../scripts/popcap/atlas/util.js";
 import { Argument } from "./toolkit_question.js";
-import { extname, basename } from "../library/extension/util.js";
 import { Console } from "./console.js";
 import {
     atlas_info_cat,
@@ -38,8 +37,6 @@ import {
     atlasinfo_conduct,
 } from "../scripts/default/atlas_info/util.js";
 import * as color from "../library/color/color.js";
-import extra_system from "../library/extra/outfile.js";
-import path from "node:path";
 import { unpack_rsg, pack_rsg } from "../scripts/popcap/rsg/util.js";
 import readline_for_json from "./public/input/readline_for_json.js";
 import ban from "./public/js_evaluate/ban.js";
@@ -554,7 +551,7 @@ async function evaluate_js_modules_workspace_assertation(
                     fs_js.read_file(execute_file_dir, "buffer")
                 );
                 const output_argument_set = `${execute_file_dir}/../${
-                    path.parse(execute_file_dir).base
+                    fs_js.parse_fs(execute_file_dir).base
                 }.disturb`;
                 fs_js.write_file(
                     output_argument_set,
@@ -566,7 +563,7 @@ async function evaluate_js_modules_workspace_assertation(
                     const popcap_rsb_disturbed_finish: Buffer =
                         popcap_rsb_disturb(fs_js.read_file(file, "buffer"));
                     const output_argument_set = `${file}/../${
-                        path.parse(file).base
+                        fs_js.parse_fs(file).base
                     }.disturb`;
                     fs_js.write_file(
                         output_argument_set,
@@ -679,7 +676,7 @@ async function evaluate_js_modules_workspace_assertation(
                             "require",
                             "import",
                             "export",
-                            "fs",
+                            "node:fs",
                             "window",
                             "interface",
                             "abstract",
@@ -708,11 +705,11 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file: string) => {
                     if (
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".png" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpg" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpeg"
                     ) {
                         await encode_rgba8888(file);
@@ -726,11 +723,11 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file: string) => {
                     if (
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".png" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpg" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpeg"
                     ) {
                         await encode_argb8888(file);
@@ -744,11 +741,11 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file: string) => {
                     if (
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".png" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpg" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpeg"
                     ) {
                         await encode_etc1a(file);
@@ -762,11 +759,11 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file: string) => {
                     if (
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".png" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpg" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpeg"
                     ) {
                         await encode_etc1alpha_palette(file);
@@ -780,11 +777,11 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file: string) => {
                     if (
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".png" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpg" ||
-                        path.parse(file).ext.toString().toLowerCase() ===
+                        fs_js.parse_fs(file).ext.toString().toLowerCase() ===
                             ".jpeg"
                     ) {
                         await encode_pvrtc(file);
@@ -1187,8 +1184,8 @@ async function evaluate_js_modules_workspace_assertation(
             if (!js_checker.is_array(execute_file_dir)) {
                 await unpack_rsg(
                     fs_js.read_file(execute_file_dir, "buffer"),
-                    `${path.parse(execute_file_dir).dir}/${
-                        path.parse(execute_file_dir).name
+                    `${fs_js.parse_fs(execute_file_dir).dir}/${
+                        fs_js.parse_fs(execute_file_dir).name
                     }.packet`,
                     false,
                     false,
@@ -1204,8 +1201,8 @@ async function evaluate_js_modules_workspace_assertation(
                     ) {
                         await unpack_rsg(
                             fs_js.read_file(file, "buffer"),
-                            `${path.parse(file).dir}/${
-                                path.parse(file).name
+                            `${fs_js.parse_fs(file).dir}/${
+                                fs_js.parse_fs(file).name
                             }.packet`,
                             false,
                             false,
@@ -1220,8 +1217,8 @@ async function evaluate_js_modules_workspace_assertation(
             if (!js_checker.is_array(execute_file_dir)) {
                 await unpack_rsg(
                     fs_js.read_file(execute_file_dir, "buffer"),
-                    `${path.parse(execute_file_dir).dir}/${
-                        path.parse(execute_file_dir).name
+                    `${fs_js.parse_fs(execute_file_dir).dir}/${
+                        fs_js.parse_fs(execute_file_dir).name
                     }.packet`,
                     true,
                     true,
@@ -1237,8 +1234,8 @@ async function evaluate_js_modules_workspace_assertation(
                     ) {
                         await unpack_rsg(
                             fs_js.read_file(file, "buffer"),
-                            `${path.parse(file).dir}/${
-                                path.parse(file).name
+                            `${fs_js.parse_fs(file).dir}/${
+                                fs_js.parse_fs(file).name
                             }.packet`,
                             true,
                             true,
@@ -1799,7 +1796,7 @@ async function evaluate_js_modules_workspace_assertation(
                     atlas_pack_size_view === -1
                         ? Console.IntegerReadLine(0, create_max_padding_size)
                         : atlas_pack_size_view;
-                await atlas_pack_experimental(
+                await atlas_pack_advanced(
                     execute_file_dir,
                     width,
                     height,
@@ -2061,7 +2058,7 @@ async function evaluate_js_modules_workspace_assertation(
                                       create_max_padding_size
                                   )
                                 : atlas_pack_size_view;
-                        await atlas_pack_experimental(
+                        await atlas_pack_advanced(
                             file,
                             width,
                             height,
@@ -3887,7 +3884,7 @@ async function evaluate_js_modules_workspace_assertation(
                 js_checker.is_array(execute_file_dir) &&
                 execute_file_dir.length >= 2
             ) {
-                await atlas_split_experimental(execute_file_dir);
+                await atlas_split_advanced(execute_file_dir);
             } else {
                 throw new Error(
                     `Split atlas requires to have at least 1 json & 1 png`
@@ -4106,16 +4103,16 @@ async function evaluate_js_modules_workspace_assertation(
                 );
                 fs_js.write_json(
                     `${json_apply_path}/../${
-                        path.parse(json_apply_path).name
+                        fs_js.parse_fs(json_apply_path).name
                     }.patched.json`,
                     finish_apply_patch_json
                 );
                 Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
-                    )} ${path.resolve(
+                    )} ${fs_js.resolve(
                         `${json_apply_path}/../${
-                            path.parse(json_apply_path).name
+                            fs_js.parse_fs(json_apply_path).name
                         }.patched.json`
                     )}`
                 );
@@ -4144,16 +4141,16 @@ async function evaluate_js_modules_workspace_assertation(
                     );
                     fs_js.write_json(
                         `${json_apply_path}/../${
-                            path.parse(json_apply_path).name
+                            fs_js.parse_fs(json_apply_path).name
                         }.patched.json`,
                         finish_apply_patch_json
                     );
                     Console.WriteLine(
                         `${color.fggreen_string(
                             "◉ " + localization("execution_out") + ":\n     "
-                        )} ${path.resolve(
+                        )} ${fs_js.resolve(
                             `${json_apply_path}/../${
-                                path.parse(json_apply_path).name
+                                fs_js.parse_fs(json_apply_path).name
                             }.patched.json`
                         )}`
                     );
@@ -4185,7 +4182,7 @@ async function evaluate_js_modules_workspace_assertation(
                     await readline_for_json(execute_file_dir);
                 fs_js.write_json(
                     `${json_new_file_compare_diff}/../${
-                        path.parse(json_new_file_compare_diff).name
+                        fs_js.parse_fs(json_new_file_compare_diff).name
                     }_patch.json`,
                     generatePatch(
                         fs_js.read_json(execute_file_dir),
@@ -4195,9 +4192,9 @@ async function evaluate_js_modules_workspace_assertation(
                 Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
-                    )} ${path.resolve(
+                    )} ${fs_js.resolve(
                         `${json_new_file_compare_diff}/../${
-                            path.parse(json_new_file_compare_diff).name
+                            fs_js.parse_fs(json_new_file_compare_diff).name
                         }_patch.json`
                     )}`
                 );
@@ -4228,7 +4225,7 @@ async function evaluate_js_modules_workspace_assertation(
                         await readline_for_json(file);
                     fs_js.write_json(
                         `${json_new_file_compare_diff}/../${
-                            path.parse(json_new_file_compare_diff).name
+                            fs_js.parse_fs(json_new_file_compare_diff).name
                         }_patch.json`,
                         generatePatch(
                             fs_js.read_json(file),
@@ -4238,9 +4235,9 @@ async function evaluate_js_modules_workspace_assertation(
                     Console.WriteLine(
                         `${color.fggreen_string(
                             "◉ " + localization("execution_out") + ":\n     "
-                        )} ${path.resolve(
+                        )} ${fs_js.resolve(
                             `${json_new_file_compare_diff}/../${
-                                path.parse(json_new_file_compare_diff).name
+                                fs_js.parse_fs(json_new_file_compare_diff).name
                             }_patch.json`
                         )}`
                     );
@@ -4404,15 +4401,15 @@ async function evaluate_js_modules_workspace_assertation(
                     upscale_model,
                     upscale_data,
                     `${execute_file_dir}/../${
-                        path.parse(execute_file_dir).name
+                        fs_js.parse_fs(execute_file_dir).name
                     }_x${upscale_data}.png`
                 );
                 Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
-                    )} ${path.resolve(
+                    )} ${fs_js.resolve(
                         `${execute_file_dir}/../${
-                            path.parse(execute_file_dir).name
+                            fs_js.parse_fs(execute_file_dir).name
                         }_x${upscale_data}.png`
                     )}`
                 );
@@ -4493,7 +4490,7 @@ async function evaluate_js_modules_workspace_assertation(
                 Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
-                    )} ${path.resolve(`${new_folder_contain_upscale_images}`)}`
+                    )} ${fs_js.resolve(`${new_folder_contain_upscale_images}`)}`
                 );
                 await ImagesUtilities.real_esrgan(
                     execute_file_dir,

@@ -3,7 +3,6 @@ import pack from "./cat.js";
 import split from "./split.js";
 import sortResObjects from "../../../library/sort/popcap_resources.js";
 import local_res_compare from "./compare/local.js";
-import path from "path";
 import BeautifyRes from "./beautify/beautify.js";
 import * as color from "../../../library/color/color.js";
 import localization from "../../../callback/localization.js";
@@ -23,9 +22,9 @@ export function LocalResourcesCompare(
     Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
-        )} ${path.resolve(
+        )} ${fs_js.resolve(
             `${modded_directory}/../${
-                path.parse(modded_directory).name
+                fs_js.parse_fs(modded_directory).name
             }_cmp.res`
         )}`
     );
@@ -37,7 +36,7 @@ export function res_split(
 ) {
     let json: any;
 
-    if (path.parse(dir).ext.toString().toLowerCase() === ".rton") {
+    if (fs_js.parse_fs(dir).ext.toString().toLowerCase() === ".rton") {
         json = parse(rton_to_json(fs_js.read_file(dir, "buffer")));
     } else {
         json = fs_js.read_json(dir as string);
@@ -53,8 +52,8 @@ export function res_split(
         Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
-            )} ${path.resolve(
-                `${dir + "/../" + path.parse(dir).name + ".res"}`
+            )} ${fs_js.resolve(
+                `${dir + "/../" + fs_js.parse_fs(dir).name + ".res"}`
             )}`
         );
     }
@@ -79,7 +78,7 @@ export function res_pack(
     const res_data_in_subgroups_folder = fs_js.one_reader(dir);
     const res_groups: any[] = res_data_in_subgroups_folder
         .map((file: string) => {
-            if (path.parse(file).ext.toString().toLowerCase() === ".json") {
+            if (fs_js.parse_fs(file).ext.toString().toLowerCase() === ".json") {
                 const json: any = fs_js.read_json(`${dir}/${file}`);
                 if (
                     json.id !== undefined &&
@@ -104,15 +103,15 @@ export function res_pack(
     switch (encode) {
         case 1:
             fs_js.outfile_fs(
-                `${path.resolve(`${dir}/../RESOURCES.rton`)}`,
+                `${fs_js.resolve(`${dir}/../RESOURCES.rton`)}`,
                 popcap_json_to_rton(resource_return_output_data)
             );
             if (!this_will_stop_console) {
                 Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
-                    )} ${path.resolve(
-                        `${dir}/../${path.parse(dir).name}.RTON`
+                    )} ${fs_js.resolve(
+                        `${dir}/../${fs_js.parse_fs(dir).name}.RTON`
                     )}`
                 );
             }
@@ -122,7 +121,7 @@ export function res_pack(
                 Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
-                    )} ${path.resolve(`${dir}/../RESOURCES.json`)}`
+                    )} ${fs_js.resolve(`${dir}/../RESOURCES.json`)}`
                 );
             }
             break;
@@ -135,8 +134,8 @@ export function small_res_beautify(directory: string): void {
     Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
-        )} ${path.resolve(
-            `${directory}/../${path.parse(directory).name}.fixed.json`
+        )} ${fs_js.resolve(
+            `${directory}/../${fs_js.parse_fs(directory).name}.fixed.json`
         )}`
     );
 }
@@ -151,8 +150,8 @@ export function res_rewrite(dir: string, mode: number, encode: number): void {
             Console.WriteLine(
                 `${color.fggreen_string(
                     "◉ " + localization("execution_out") + ":\n     "
-                )} ${path.resolve(
-                    `${dir}/../${path.parse(dir).name}.rewrite.rton`
+                )} ${fs_js.resolve(
+                    `${dir}/../${fs_js.parse_fs(dir).name}.rewrite.rton`
                 )}`
             );
             break;
@@ -160,8 +159,8 @@ export function res_rewrite(dir: string, mode: number, encode: number): void {
             Console.WriteLine(
                 `${color.fggreen_string(
                     "◉ " + localization("execution_out") + ":\n     "
-                )} ${path.resolve(
-                    `${dir}/../${path.parse(dir).name}.rewrite.json`
+                )} ${fs_js.resolve(
+                    `${dir}/../${fs_js.parse_fs(dir).name}.rewrite.json`
                 )}`
             );
             break;
@@ -205,10 +204,10 @@ export function res_beautify(dir: string): void {
     Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
-        )} ${path.resolve(`${dir}/../${path.parse(dir).name}.fixed.json`)}`
+        )} ${fs_js.resolve(`${dir}/../${fs_js.parse_fs(dir).name}.fixed.json`)}`
     );
     return fs_js.write_json(
-        `${dir}/../${path.parse(dir).name}.fixed.json`,
+        `${dir}/../${fs_js.parse_fs(dir).name}.fixed.json`,
         json
     );
 }

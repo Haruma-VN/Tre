@@ -1,11 +1,8 @@
 "use strict";
-import { execSync } from "node:child_process";
-import { basename, extname, dirname } from "../../extension/util.js";
 import { dimension } from "../util.js";
 import sharp from "sharp";
 import * as color from "../../color/color.js";
 import localization from "../../../callback/localization.js";
-import path from "node:path";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
@@ -15,10 +12,10 @@ export default async function (
     not_notify_console_log: boolean = false
 ): Promise<void> {
     const tre_thirdparty: string =
-        path.dirname(process.argv[1]) + "/extension/third/encode/";
-    const etc_process: string = `etcpak.exe --etc1 "${dir}" "${dirname(
+        fs_js.dirname(process.argv[1]) + "/extension/third/encode/";
+    const etc_process: string = `etcpak.exe --etc1 "${dir}" "${fs_js.dirname(
         dir
-    )}/${basename(dir).toUpperCase()}.ptx"`;
+    )}/${fs_js.basename(dir).toUpperCase()}.ptx"`;
     const dimension_x: { width: number; height: number } = await dimension(
         dir
     ).then((result) => result);
@@ -48,8 +45,10 @@ export default async function (
     }
     const exception_try: boolean = exception_encode_dimension(width, height);
     if (exception_try && fs_js.check_etcpak()) {
-        fs_js.js_remove(path.resolve(dir + "/../" + basename(dir) + ".ptx"));
-        execSync(etc_process, { cwd: tre_thirdparty, stdio: "ignore" });
+        fs_js.js_remove(
+            fs_js.resolve(dir + "/../" + fs_js.basename(dir) + ".ptx")
+        );
+        fs_js.evaluate_powershell(etc_process, tre_thirdparty, "ignore");
         await sharp(dir)
             .extractChannel("alpha")
             .raw()
@@ -68,7 +67,9 @@ export default async function (
                     );
                 const etc_image = Buffer.concat([originalImage, alpha]);
                 fs_js.write_file(
-                    `${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`,
+                    `${fs_js.dirname(dir)}/${fs_js
+                        .basename(dir)
+                        .toUpperCase()}.ptx`,
                     etc_image
                 );
                 if (!not_notify_console_log) {
@@ -76,13 +77,13 @@ export default async function (
                         color.fggreen_string(
                             `◉ ${localization("execution_out")}:\n     `
                         ) +
-                            `${path.resolve(
-                                dir + "/../" + basename(dir) + ".ptx"
+                            `${fs_js.resolve(
+                                dir + "/../" + fs_js.basename(dir) + ".ptx"
                             )}`
                     );
                 }
                 for (let item of fs_js.full_reader(tre_thirdparty)) {
-                    extname(item).toUpperCase() !== ".EXE"
+                    fs_js.extname(item).toUpperCase() !== ".EXE"
                         ? fs_js.js_remove(`${tre_thirdparty}${item}`)
                         : {};
                 }

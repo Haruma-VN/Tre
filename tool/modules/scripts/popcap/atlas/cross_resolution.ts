@@ -3,7 +3,6 @@ import cat from "./normal/cat.js";
 import resize from "./normal/resize.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
-import path from "node:path";
 import fs_js from "../../../library/fs/implement.js";
 import { Console } from "../../../callback/console.js";
 
@@ -21,7 +20,7 @@ export default async function (
     padding_size?: number
 ): Promise<void> {
     const config_json: any = fs_js.write_json(
-        path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     );
     if (

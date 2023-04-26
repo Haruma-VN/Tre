@@ -1,5 +1,4 @@
 "use strict";
-import path from "path";
 import { Console } from "../../../callback/console.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
@@ -26,8 +25,8 @@ namespace PopCapPackages.Json {
         popcap_common_json_file_location: string
     ): PopCapCommonJSON {
         switch (
-            path
-                .parse(popcap_common_json_file_location)
+            fs_js
+                .parse_fs(popcap_common_json_file_location)
                 .ext.toString()
                 .toLowerCase()
         ) {
@@ -66,7 +65,7 @@ namespace PopCapPackages.Json {
             popcap_common_json_file_location
         );
         const directory_contain_popcap_splitable_data: string = `${popcap_common_json_file_location}/../${
-            path.parse(popcap_common_json_file_location).name
+            fs_js.parse_fs(popcap_common_json_file_location).name
         }.pgj`;
         if (popcap_common_json.objects !== undefined) {
             fs_js.create_directory(
@@ -76,7 +75,7 @@ namespace PopCapPackages.Json {
             Console.WriteLine(
                 `${color.fggreen_string(
                     "◉ " + localization("execution_out") + ":\n     "
-                )} ${path.resolve(directory_contain_popcap_splitable_data)}`
+                )} ${fs_js.resolve(directory_contain_popcap_splitable_data)}`
             );
             for (
                 let i: number = 0;
@@ -165,9 +164,9 @@ namespace PopCapPackages.Json {
         const create_popcap_common_json_object = PopCapPackages.Json.Cat(
             popcap_common_directory_file_location
         ) as PopCapCommonJSON;
-        const output = `${path.resolve(
+        const output = `${fs_js.resolve(
             `${popcap_common_directory_file_location}/../${
-                path.parse(popcap_common_directory_file_location).name
+                fs_js.parse_fs(popcap_common_directory_file_location).name
             }.${file_out_type.toString().toLowerCase()}`
         )}`;
         Console.WriteLine(

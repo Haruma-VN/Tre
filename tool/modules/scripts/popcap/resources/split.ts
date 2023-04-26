@@ -2,7 +2,7 @@
 import localization from "../../../callback/localization.js";
 import fs_js from "../../../library/fs/implement.js";
 import BeautifyRes from "./beautify/beautify.js";
-import path from "node:path";
+
 export interface TreSetting {
     resources: {
         split: {
@@ -22,13 +22,13 @@ export default async function (
             ? json_data_if_no_dir_were_parsed
             : fs_js.read_json(dir);
     const config: TreSetting = fs_js.read_json(
-        path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     ) as TreSetting;
     const is_beautify_mode: boolean = config.resources.split.beautify_res
         ? true
         : false;
-    const directories = path.parse(dir).name + ".res";
+    const directories = fs_js.parse_fs(dir).name + ".res";
     if (!("groups" in json)) {
         throw new Error(localization("not_valid_resources"));
     }

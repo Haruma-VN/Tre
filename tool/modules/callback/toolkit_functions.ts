@@ -2,9 +2,8 @@
 import Void from "./function_class.js";
 import { Console } from "./console.js";
 import localization from "./localization.js";
-import path from "node:path";
 import fs_js from "../library/fs/implement.js";
-export namespace Display.Tre.Function {
+export namespace Display.ToolKit.Function {
     /**
      *
      * @param evaluate_function_name - Function name
@@ -508,8 +507,8 @@ export namespace Display.Tre.Function {
                 ? find_case_in_lower_case.toString()
                 : find_case_in_lower_case;
         if (
-            path
-                .parse(execute_file_dir)
+            fs_js
+                .parse_fs(execute_file_dir)
                 .name.toString()
                 .toLowerCase()
                 .indexOf(find_case_in_lower_case) !== -1

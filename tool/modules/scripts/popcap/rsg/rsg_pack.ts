@@ -1,6 +1,5 @@
 "use strict";
 import zlib from "zlib";
-import path, { parse } from "node:path";
 import { SmartBuffer } from "smart-buffer";
 import { readline_integer } from "../../../readline/prompt/util.js";
 import rton_cipher from "../rton/rijndael/rton_cipher.js";
@@ -50,7 +49,7 @@ export default async function (
     function Read_Dir(dir: string) {
         const all_files = new Array();
         fs_js.full_reader(dir).forEach((file: string) => {
-            let fullPath = path.join(dir, file).toUpperCase();
+            let fullPath = fs_js.join_fs(dir, file).toUpperCase();
             if (fs_js.view_io_stream(fullPath).isDirectory()) {
                 if (fullPath.endsWith(".SOUNDBANK")) {
                     all_files.push(fullPath);
@@ -76,9 +75,9 @@ export default async function (
             if (rsb_pack && resources_pack !== true) {
                 all_files = Read_Dir(`${path_file}`);
                 for (let item in all_files) {
-                    if (parse(all_files[item]).ext.toUpperCase())
+                    if (fs_js.parse_fs(all_files[item]).ext.toUpperCase())
                         all_files[item] = all_files[item]
-                            .slice(`${parse(path_file).dir}/`.length)
+                            .slice(`${fs_js.parse_fs(path_file).dir}/`.length)
                             .toUpperCase();
                 }
             } else if (rsb_pack && resources_pack) {
@@ -86,7 +85,7 @@ export default async function (
             } else {
                 all_files = Read_Dir(`${path_file}/RES`);
                 for (let item in all_files) {
-                    if (parse(all_files[item]).ext.toUpperCase())
+                    if (fs_js.parse_fs(all_files[item]).ext.toUpperCase())
                         all_files[item] = all_files[item]
                             .slice(`${path_file}/RES/`.length)
                             .toUpperCase();
@@ -112,40 +111,40 @@ export default async function (
                     fileName.endsWith(".SOUNDBANK")
                 );
                 for (let pngFile of pngFiles) {
-                    const ptxFile = `${parse(pngFile).dir}\\${
-                        parse(pngFile).name
+                    const ptxFile = `${fs_js.parse_fs(pngFile).dir}\\${
+                        fs_js.parse_fs(pngFile).name
                     }.PTX`;
                     if (all_files.includes(ptxFile)) {
                         all_files.splice(all_files.indexOf(ptxFile), 1);
                     }
                 }
                 for (let jsonFile of jsonFiles) {
-                    const rtonFile = `${parse(jsonFile).dir}\\${
-                        parse(jsonFile).name
+                    const rtonFile = `${fs_js.parse_fs(jsonFile).dir}\\${
+                        fs_js.parse_fs(jsonFile).name
                     }.RTON`;
                     if (all_files.includes(rtonFile)) {
                         all_files.splice(all_files.indexOf(rtonFile), 1);
                     }
                 }
                 for (let pamjsonFile of pamjsonFiles) {
-                    const pamFile = `${parse(pamjsonFile).dir}\\${
-                        parse(pamjsonFile).name
+                    const pamFile = `${fs_js.parse_fs(pamjsonFile).dir}\\${
+                        fs_js.parse_fs(pamjsonFile).name
                     }`;
                     if (all_files.includes(pamFile)) {
                         all_files.splice(all_files.indexOf(pamFile), 1);
                     }
                 }
                 for (let pamxflFile of pamxflFiles) {
-                    const pamjsonItem = `${parse(pamxflFile).dir}\\${
-                        parse(pamxflFile).name
+                    const pamjsonItem = `${fs_js.parse_fs(pamxflFile).dir}\\${
+                        fs_js.parse_fs(pamxflFile).name
                     }.JSON`;
                     if (all_files.includes(pamjsonItem)) {
                         all_files.splice(all_files.indexOf(pamjsonItem), 1);
                     }
                 }
                 for (let wwiseFile of bnkFiles) {
-                    const bnkFile = `${parse(wwiseFile).dir}\\${
-                        parse(wwiseFile).name
+                    const bnkFile = `${fs_js.parse_fs(wwiseFile).dir}\\${
+                        fs_js.parse_fs(wwiseFile).name
                     }`;
                     if (all_files.includes(bnkFile)) {
                         all_files.splice(all_files.indexOf(bnkFile), 1);
@@ -236,11 +235,11 @@ export default async function (
     ) {
         if (
             fs_js.is_file(
-                `${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`
+                `${path_file}/Res/ATLASES/${fs_js.parse_fs(file_path).name}.PTX`
             )
         ) {
             fs_js.js_remove(
-                `${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`
+                `${path_file}/Res/ATLASES/${fs_js.parse_fs(file_path).name}.PTX`
             );
         }
         switch (format) {
@@ -284,7 +283,7 @@ export default async function (
         if (rton_2c_encrypted) {
             const rton_cipher_key = (
                 fs_js.read_json(
-                    path.dirname(process.execPath) +
+                    fs_js.dirname(process.execPath) +
                         "/extension/settings/toolkit.json",
                     true
                 ) as any
@@ -309,7 +308,7 @@ export default async function (
             let rton_2c_encrypted = false;
             for (let json_key in TreRSGInfo) {
                 if (
-                    parse(file_path).base.toUpperCase() ===
+                    fs_js.parse_fs(file_path).base.toUpperCase() ===
                     TreRSGInfo[json_key].Path[
                         TreRSGInfo[json_key].Path.length - 1
                     ]
@@ -330,7 +329,7 @@ export default async function (
                 } else {
                     const rton_data = await EncodeJson(
                         fs_js.read_json(
-                            `${parse(path_file).dir}/${file_path}`
+                            `${fs_js.parse_fs(path_file).dir}/${file_path}`
                         ) as any,
                         rton_2c_encrypted
                     );
@@ -348,7 +347,7 @@ export default async function (
                 let PTX_Info: any = new Object();
                 for (let key in TreRSGInfo) {
                     if (
-                        parse(file_path).base.toUpperCase() ===
+                        fs_js.parse_fs(file_path).base.toUpperCase() ===
                         TreRSGInfo[key].Path[TreRSGInfo[key].Path.length - 1]
                     ) {
                         PTX_Info = TreRSGInfo[key];
@@ -364,7 +363,7 @@ export default async function (
                         );
                         const image_data = await fs_js.read_file(
                             `${path_file}/Res/ATLASES/${
-                                parse(file_path).name
+                                fs_js.parse_fs(file_path).name
                             }.PTX`,
                             "buffer"
                         );
@@ -394,7 +393,9 @@ export default async function (
                     }
                 } else {
                     const image_data = await fs_js.read_file(
-                        `${path_file}/Res/ATLASES/${parse(file_path).name}.PTX`,
+                        `${path_file}/Res/ATLASES/${
+                            fs_js.parse_fs(file_path).name
+                        }.PTX`,
                         "buffer"
                     );
                     return {
@@ -432,7 +433,7 @@ export default async function (
                             Console.WriteLine(
                                 color.fggreen_string(
                                     `◉ ${localization("execution_in")}:\n     `
-                                ) + `${path.parse(file_path).base}`
+                                ) + `${fs_js.parse_fs(file_path).base}`
                             );
                             Console.WriteLine(
                                 color.fggreen_string(
@@ -502,7 +503,7 @@ export default async function (
                         await EncodePTX(file_path, format_choose, format_type);
                         const image_data = await fs_js.read_file(
                             `${path_file}/Res/ATLASES/${
-                                parse(file_path).name
+                                fs_js.parse_fs(file_path).name
                             }.PTX`,
                             "buffer"
                         );
@@ -531,7 +532,7 @@ export default async function (
                     if (pack_simple) {
                         const image_data = await fs_js.read_file(
                             `${path_file}/Res/ATLASES/${
-                                parse(file_path).name
+                                fs_js.parse_fs(file_path).name
                             }.PTX`,
                             "buffer"
                         );
@@ -545,7 +546,7 @@ export default async function (
                         Console.WriteLine(
                             color.fggreen_string(
                                 `◉ ${localization("execution_in")}:\n     ${
-                                    path.parse(file_path).base
+                                    fs_js.parse_fs(file_path).base
                                 }`
                             )
                         );
@@ -597,7 +598,7 @@ export default async function (
                     return file_data;
                 } else {
                     const file_data = fs_js.read_file(
-                        `${parse(path_file).dir}/${file_path}`,
+                        `${fs_js.parse_fs(path_file).dir}/${file_path}`,
                         "buffer"
                     );
                     return file_data;

@@ -3,7 +3,6 @@ import { readline_normal } from "../../../readline/prompt/util.js";
 import { Argument } from "../../toolkit_question.js";
 import { Console } from "../../console.js";
 import * as color from "../../../library/color/color.js";
-import fs from "node:fs";
 import fs_js from "../../../library/fs/implement.js";
 
 export default async function DirectoryChecker(): Promise<string> {
@@ -29,7 +28,7 @@ export default async function DirectoryChecker(): Promise<string> {
             dir = dir.slice(1, -1);
         }
         try {
-            const stats = fs.statSync(dir);
+            const stats = fs_js.view_io_stream(dir);
             if (stats.isDirectory()) {
                 return dir;
             } else {

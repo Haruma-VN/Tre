@@ -1,11 +1,7 @@
 "use strict";
-import fs from "node:fs";
-import { execSync } from "node:child_process";
-import { basename, extname, dirname } from "../../extension/util.js";
 import { dimension } from "../util.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../color/color.js";
-import path from "node:path";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
@@ -15,10 +11,10 @@ export default async function (
     not_notify_console_log: boolean = false
 ): Promise<void> {
     const tre_thirdparty: string =
-        path.dirname(process.argv[1]) + "/extension/third/encode/";
-    const pvrtc_process: string = `PVRTexToolCLI.exe -f PVRTCI_4BPP_RGBA,UBN,sRGB -q PVRTCFAST -i "${dir}" -o "${basename(
-        dir
-    ).toUpperCase()}.pvr"`;
+        fs_js.dirname(process.argv[1]) + "/extension/third/encode/";
+    const pvrtc_process: string = `PVRTexToolCLI.exe -f PVRTCI_4BPP_RGBA,UBN,sRGB -q PVRTCFAST -i "${dir}" -o "${fs_js
+        .basename(dir)
+        .toUpperCase()}.pvr"`;
     const dimension_x: { width: number; height: number } = await dimension(
         dir
     ).then((result) => result);
@@ -49,27 +45,34 @@ export default async function (
     const get_exception: boolean = exception_encode_dimension(width, height);
     if (get_exception && fs_js.check_pvrtc()) {
         fs_js.js_remove(
-            path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`)
+            fs_js.resolve(
+                `${fs_js.dirname(dir)}/${fs_js.basename(dir).toUpperCase()}.ptx`
+            )
         );
         try {
-            await execSync(pvrtc_process, {
-                cwd: tre_thirdparty,
-                stdio: "ignore",
-            });
+            await fs_js.evaluate_powershell(
+                pvrtc_process,
+                tre_thirdparty,
+                "ignore"
+            );
         } catch (error: any) {
             throw new Error(`${localization("cannot_encode_ptx")} ${dir}`);
         }
-        const originalImage = await fs
-            .readFileSync(
-                `${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`
+        const originalImage = await fs_js
+            .read_file(
+                `${tre_thirdparty}/${fs_js.basename(dir).toUpperCase()}.pvr`,
+                "buffer"
             )
             .slice(
-                fs.readFileSync(
-                    `${tre_thirdparty}/${basename(dir).toUpperCase()}.pvr`
+                fs_js.read_file(
+                    `${tre_thirdparty}/${fs_js
+                        .basename(dir)
+                        .toUpperCase()}.pvr`,
+                    "buffer"
                 ).length - offset
             );
-        await fs.writeFileSync(
-            `${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`,
+        fs_js.write_file(
+            `${fs_js.dirname(dir)}/${fs_js.basename(dir).toUpperCase()}.ptx`,
             originalImage
         );
         if (!not_notify_console_log) {
@@ -77,14 +80,16 @@ export default async function (
                 color.fggreen_string(
                     `◉ ${localization("execution_out")}:\n     `
                 ) +
-                    `${path.resolve(
-                        `${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`
+                    `${fs_js.resolve(
+                        `${fs_js.dirname(dir)}/${fs_js
+                            .basename(dir)
+                            .toUpperCase()}.ptx`
                     )}`
             );
         }
-        for (let item of fs.readdirSync(tre_thirdparty)) {
-            extname(item).toUpperCase() !== ".EXE"
-                ? await fs.unlinkSync(`${tre_thirdparty}${item}`)
+        for (let item of fs_js.full_reader(tre_thirdparty)) {
+            fs_js.extname(item).toUpperCase() !== ".EXE"
+                ? await fs_js.js_remove(`${tre_thirdparty}${item}`)
                 : {};
         }
     }

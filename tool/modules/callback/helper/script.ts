@@ -5,16 +5,28 @@ import localization from "../localization.js";
 import assertation_break from "./exception.js";
 import { Console } from "../console.js";
 import js_checker from "../default/checker.js";
+/**
+ *
+ * @param script_entry_point - Provide script
+ * @returns - All commands parsed
+ */
 async function evaluate_script(script_entry_point: evaluate_script) {
+    fs_js.using("Script Evaluate");
     const is_notify: boolean = script_entry_point.notify;
     let evaluate_start: number = -1;
     let evaluate_end: number = -1;
-    for (let i: number = 0; i < script_entry_point.modules.length; ++i) {
-        if (script_entry_point.modules[i].func === "start") {
-            evaluate_start = i;
+    for (
+        let index: number = 0;
+        index < script_entry_point.modules.length;
+        ++index
+    ) {
+        fs_js.using("Start Evaluate");
+        if (script_entry_point.modules[index].func === "start") {
+            evaluate_start = index;
         }
-        if (script_entry_point.modules[i].func === "end") {
-            evaluate_end = i;
+        fs_js.using("End Evaluate");
+        if (script_entry_point.modules[index].func === "end") {
+            evaluate_end = index;
         }
     }
     if (evaluate_end === -1) {
@@ -23,58 +35,62 @@ async function evaluate_script(script_entry_point: evaluate_script) {
     if (evaluate_start === -1) {
         throw new Error(`${localization("no_start_point")}`);
     }
-    for (let i: number = evaluate_start; i <= evaluate_end; ++i) {
+    for (let index: number = evaluate_start; index <= evaluate_end; ++index) {
+        fs_js.using("All commands under parsed", "ignore");
         if (
             is_notify &&
-            script_entry_point.modules[i].notify !== undefined &&
-            script_entry_point.modules[i].notify !== null &&
-            script_entry_point.modules[i].notify !== void 0 &&
+            script_entry_point.modules[index].notify !== undefined &&
+            script_entry_point.modules[index].notify !== null &&
+            script_entry_point.modules[index].notify !== void 0 &&
             typeof is_notify === "boolean"
         ) {
-            fs_js.execution_information(script_entry_point.modules[i].notify);
+            fs_js.using("Print message");
+            fs_js.execution_information(
+                script_entry_point.modules[index].notify
+            );
         }
         let entry_point: string = "";
         if (
             is_notify &&
-            script_entry_point.modules[i].func !== undefined &&
-            script_entry_point.modules[i].func !== null &&
-            script_entry_point.modules[i].func !== void 0 &&
+            script_entry_point.modules[index].func !== undefined &&
+            script_entry_point.modules[index].func !== null &&
+            script_entry_point.modules[index].func !== void 0 &&
             typeof is_notify === "boolean" &&
-            typeof script_entry_point.modules[i].func === "string" &&
+            typeof script_entry_point.modules[index].func === "string" &&
             !assertation_break.ban_list.includes(
-                script_entry_point.modules[i].func as string
+                script_entry_point.modules[index].func as string
             ) &&
             assertation_break.allowance_lists.includes(
-                script_entry_point.modules[i].func as string
+                script_entry_point.modules[index].func as string
             )
         ) {
             fs_js.execution_auto(
-                localization(script_entry_point.modules[i].func as string)
+                localization(script_entry_point.modules[index].func as string)
             );
-            entry_point = script_entry_point.modules[i].func as string;
+            entry_point = script_entry_point.modules[index].func as string;
         }
         if (
-            script_entry_point.modules[i].func !== undefined &&
-            script_entry_point.modules[i].func !== null &&
-            script_entry_point.modules[i].func !== void 0 &&
+            script_entry_point.modules[index].func !== undefined &&
+            script_entry_point.modules[index].func !== null &&
+            script_entry_point.modules[index].func !== void 0 &&
             !assertation_break.ban_list.includes(
-                script_entry_point.modules[i].func as string
+                script_entry_point.modules[index].func as string
             ) &&
             assertation_break.allowance_lists.includes(
-                script_entry_point.modules[i].func as string
+                script_entry_point.modules[index].func as string
             ) &&
-            typeof script_entry_point.modules[i].func === "string"
+            typeof script_entry_point.modules[index].func === "string"
         ) {
             if (
-                script_entry_point.modules[i].entry === null ||
-                script_entry_point.modules[i].entry === undefined ||
-                script_entry_point.modules[i].entry === void 0 ||
-                !js_checker.is_array(script_entry_point.modules[i].entry)
+                script_entry_point.modules[index].entry === null ||
+                script_entry_point.modules[index].entry === undefined ||
+                script_entry_point.modules[index].entry === void 0 ||
+                !js_checker.is_array(script_entry_point.modules[index].entry)
             ) {
                 continue;
             }
             evaluate_modules: for (let evaluate_file of script_entry_point
-                .modules[i].entry as Array<string>) {
+                .modules[index].entry as Array<string>) {
                 try {
                     switch (evaluate_file as string) {
                         case "notify":
@@ -89,7 +105,7 @@ async function evaluate_script(script_entry_point: evaluate_script) {
                                 await Console.ReadPath();
                             await evaluate_modules_workspace_assertation(
                                 evaluate_file as string,
-                                script_entry_point.modules[i].func as string
+                                script_entry_point.modules[index].func as string
                             );
                             break;
                         case "?file":
@@ -101,7 +117,7 @@ async function evaluate_script(script_entry_point: evaluate_script) {
                                 await Console.ReadFile();
                             await evaluate_modules_workspace_assertation(
                                 evaluate_file as string,
-                                script_entry_point.modules[i].func as string
+                                script_entry_point.modules[index].func as string
                             );
                             break;
                         case "?folder":
@@ -112,7 +128,7 @@ async function evaluate_script(script_entry_point: evaluate_script) {
                             (evaluate_file as string) = await Console.ReadDir();
                             await evaluate_modules_workspace_assertation(
                                 evaluate_file as string,
-                                script_entry_point.modules[i].func as string
+                                script_entry_point.modules[index].func as string
                             );
                             break;
                         case "->":
@@ -128,7 +144,7 @@ async function evaluate_script(script_entry_point: evaluate_script) {
                             fs_js.execution_in(evaluate_file);
                             await evaluate_modules_workspace_assertation(
                                 evaluate_file,
-                                script_entry_point.modules[i].func as string
+                                script_entry_point.modules[index].func as string
                             );
                             break;
                     }

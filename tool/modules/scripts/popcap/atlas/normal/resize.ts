@@ -1,7 +1,6 @@
 "use strict";
 import { calculate, resize } from "../../../../library/img/resize/util.js";
 import fs_js from "../../../../library/fs/implement.js";
-import path from "node:path";
 
 export default async function (
     dir: string,
@@ -10,7 +9,7 @@ export default async function (
     new_dir?: string
 ) {
     if (new_dir === null || new_dir === undefined || new_dir === void 0) {
-        new_dir = `${dir}/${path.parse(dir).name}_${mod}.spg`;
+        new_dir = `${dir}/${fs_js.parse_fs(dir).name}_${mod}.spg`;
     }
     if (typeof orig === "string") {
         orig = parseInt(orig);

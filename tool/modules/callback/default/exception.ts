@@ -1,16 +1,15 @@
 "use strict";
-import fs from "node:fs";
 import * as color from "../../library/color/color.js";
-import path from "node:path";
 import { Console } from "../console.js";
+import fs_js from "../../library/fs/implement.js";
 
 namespace System.Tre.Checker {
     export function check_tre_extension(): boolean {
         const extension_folder: string =
-            path.dirname(process.argv[1]) + "/extension";
+            fs_js.dirname(process.argv[1]) + "/extension";
         if (
-            !fs.existsSync(extension_folder) ||
-            !fs.statSync(extension_folder).isDirectory()
+            !fs_js.js_exists(extension_folder) ||
+            !fs_js.view_io_stream(extension_folder).isDirectory()
         ) {
             Console.WriteLine(
                 color.fgred_string(
@@ -24,10 +23,10 @@ namespace System.Tre.Checker {
 
     export function check_tre_toolkit_json(): boolean {
         const toolkit_json_file_path: string =
-            path.dirname(process.argv[1]) + "/extension/settings/toolkit.json";
+            fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json";
         if (
-            !fs.existsSync(toolkit_json_file_path) ||
-            !fs.statSync(toolkit_json_file_path).isFile()
+            !fs_js.js_exists(toolkit_json_file_path) ||
+            !fs_js.view_io_stream(toolkit_json_file_path).isFile()
         ) {
             Console.WriteLine(
                 color.fgred_string(
@@ -41,10 +40,10 @@ namespace System.Tre.Checker {
 
     export function check_tre_third_party(): boolean {
         const tre_third_party_for_raw_images: string =
-            path.dirname(process.argv[1]) + "/extension/third/encode/";
+            fs_js.dirname(process.argv[1]) + "/extension/third/encode/";
         if (
-            !fs.existsSync(tre_third_party_for_raw_images) ||
-            !fs.statSync(tre_third_party_for_raw_images).isDirectory()
+            !fs_js.js_exists(tre_third_party_for_raw_images) ||
+            !fs_js.view_io_stream(tre_third_party_for_raw_images).isDirectory()
         ) {
             Console.WriteLine(
                 color.fgred_string(
@@ -54,11 +53,11 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_etc_pak: string =
-            path.dirname(process.argv[1]) +
+            fs_js.dirname(process.argv[1]) +
             "/extension/third/encode/etcpak.exe";
         if (
-            !fs.existsSync(tre_third_party_for_etc_pak) ||
-            !fs.statSync(tre_third_party_for_etc_pak).isFile()
+            !fs_js.js_exists(tre_third_party_for_etc_pak) ||
+            !fs_js.view_io_stream(tre_third_party_for_etc_pak).isFile()
         ) {
             Console.WriteLine(
                 color.fgred_string(
@@ -68,11 +67,11 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_pvrtc: string =
-            path.dirname(process.argv[1]) +
+            fs_js.dirname(process.argv[1]) +
             "/extension/third/encode/PVRTexToolCLI.exe";
         if (
-            !fs.existsSync(tre_third_party_for_pvrtc) ||
-            !fs.statSync(tre_third_party_for_pvrtc).isFile()
+            !fs_js.js_exists(tre_third_party_for_pvrtc) ||
+            !fs_js.view_io_stream(tre_third_party_for_pvrtc).isFile()
         ) {
             Console.WriteLine(
                 color.fgred_string(
@@ -82,10 +81,10 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_upscaler: string =
-            path.dirname(process.argv[1]) + "/extension/third/real_esrgan/";
+            fs_js.dirname(process.argv[1]) + "/extension/third/real_esrgan/";
         if (
-            !fs.existsSync(tre_third_party_for_upscaler) ||
-            !fs.statSync(tre_third_party_for_upscaler).isDirectory()
+            !fs_js.js_exists(tre_third_party_for_upscaler) ||
+            !fs_js.view_io_stream(tre_third_party_for_upscaler).isDirectory()
         ) {
             Console.WriteLine(
                 color.fgred_string(
@@ -95,11 +94,13 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_upscaler_real_esrgan: string =
-            path.dirname(process.argv[1]) +
+            fs_js.dirname(process.argv[1]) +
             "/extension/third/real_esrgan/realesrgan-ncnn-vulkan.exe";
         if (
-            !fs.existsSync(tre_third_party_for_upscaler_real_esrgan) ||
-            !fs.statSync(tre_third_party_for_upscaler_real_esrgan).isFile()
+            !fs_js.js_exists(tre_third_party_for_upscaler_real_esrgan) ||
+            !fs_js
+                .view_io_stream(tre_third_party_for_upscaler_real_esrgan)
+                .isFile()
         ) {
             Console.WriteLine(
                 color.fgred_string(
@@ -113,10 +114,10 @@ namespace System.Tre.Checker {
 
     export function check_node_modules(): boolean {
         const node_modules_folder: string =
-            path.dirname(process.argv[1]) + "/node_modules";
+            fs_js.dirname(process.argv[1]) + "/node_modules";
         if (
-            !fs.existsSync(node_modules_folder) ||
-            !fs.statSync(node_modules_folder).isDirectory()
+            !fs_js.js_exists(node_modules_folder) ||
+            !fs_js.view_io_stream(node_modules_folder).isDirectory()
         ) {
             Console.WriteLine(
                 color.fgred_string(

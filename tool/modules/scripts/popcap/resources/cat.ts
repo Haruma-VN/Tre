@@ -1,6 +1,5 @@
 "use strict";
 import BeautifyRes from "./beautify/beautify.js";
-import path from "node:path";
 import json2rton from "../rton/json2rton.js";
 import fs_js from "../../../library/fs/implement.js";
 
@@ -40,7 +39,7 @@ export default function (
     is_return_output_mode: boolean = false
 ): any {
     let config_json: any = fs_js.read_json(
-        path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     );
     const rsg_data: any[] = res_array_for_data;
@@ -105,18 +104,18 @@ export default function (
     }
     if (!is_rewrite_mode) {
         fs_js.write_json(
-            `${dir}/../${path.parse(dir).name}.json`,
+            `${dir}/../${fs_js.parse_fs(dir).name}.json`,
             resources_output_result
         );
     } else {
         if (encode) {
             fs_js.outfile_fs(
-                `${dir}/../${path.parse(dir).name}.rewrite.rton`,
+                `${dir}/../${fs_js.parse_fs(dir).name}.rewrite.rton`,
                 json2rton(resources_output_result)
             );
         } else {
             fs_js.write_json(
-                `${dir}/../${path.parse(dir).name}.rewrite.json`,
+                `${dir}/../${fs_js.parse_fs(dir).name}.rewrite.json`,
                 resources_output_result
             );
         }
