@@ -354,7 +354,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
             case "FXPR":
                 throw new Error(localization("unsupported_fxpr"));
             default:
-                throw new Error(localization("invalid_bnk"));
+                throw new Error(`${localization("invalid_bnk")}`);
         }
     }
     for (let item of wwise_items) {

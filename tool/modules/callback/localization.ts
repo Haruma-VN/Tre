@@ -1,16 +1,17 @@
 "use strict";
 import fs from "node:fs";
-import path from "node:path";
+import { args } from "../implement/arguments.js";
+import path from "../implement/path.js";
 
 function localization(locate_data: string): string {
     try {
         const filepath =
-            path.dirname(process.argv[1]) +
+            path.dirname(args.main_js as any) +
             "/extension/settings/localization/" +
             (
                 JSON.parse(
                     fs.readFileSync(
-                        path.dirname(process.argv[1]) +
+                        path.dirname(args.main_js as any) +
                             "/extension/settings/toolkit.json",
                         {
                             encoding: "utf-8",

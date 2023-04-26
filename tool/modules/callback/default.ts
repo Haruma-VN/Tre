@@ -12,19 +12,21 @@ import { Argument } from "./toolkit_question.js";
 import version from "./default/version.js";
 import exit_program from "./default/exit.js";
 import { prompt } from "../../modules/readline/prompt/util.js";
+import { args, arguments_list } from "../implement/arguments.js";
+import get_script from "./public/exception/script.js";
 
 export default async function (): Promise<void> {
     Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_loaded")}: `) +
-            `${fs_js.dirname(process.argv[1])} | ${
+            `${fs_js.resolve(`${args.main_js as any}/../`)} | ${
                 version.tre_version
             } | ${localization("this.language")}`
     );
     fs_js.encode_utf8();
     fs_js.tool_title("Tre");
     const proc_arr: string[] = new Array();
-    for (let i: number = 2; i < process.argv.length; ++i) {
-        proc_arr.push(process.argv[i]);
+    for (let i: number = 2; i < arguments_list.length; ++i) {
+        proc_arr.push(arguments_list[i]);
     }
     let mode: number;
     const is_windows_explorer_open: boolean = fs_js.create_toolkit_view(
@@ -182,9 +184,18 @@ export default async function (): Promise<void> {
                         } catch (error: any) {
                             Console.WriteLine(
                                 color.fgred_string(
-                                    `◉ ${
-                                        localization("execution_error") + ":"
-                                    } ${error.message}`
+                                    !fs_js.is_host()
+                                        ? `◉ ${
+                                              localization("execution_error") +
+                                              ":"
+                                          } ${error.message}`
+                                        : `◉ ${
+                                              localization("execution_error") +
+                                              ":"
+                                          } ${error.message}\n◉ ${
+                                              localization("execution_thrown") +
+                                              ":"
+                                          } ${get_script(error)}`
                                 )
                             );
                             hasError = true;
@@ -245,9 +256,15 @@ export default async function (): Promise<void> {
         } catch (error: any) {
             Console.WriteLine(
                 color.fgred_string(
-                    `◉ ${localization("execution_error") + ":"} ${
-                        error.message
-                    }`
+                    !fs_js.is_host()
+                        ? `◉ ${localization("execution_error") + ":"} ${
+                              error.message
+                          }`
+                        : `◉ ${localization("execution_error") + ":"} ${
+                              error.message
+                          }\n◉ ${
+                              localization("execution_thrown") + ":"
+                          } ${get_script(error)}`
                 )
             );
             hasError = true;

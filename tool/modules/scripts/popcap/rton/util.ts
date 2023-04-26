@@ -7,6 +7,7 @@ import rton_plain from "./rijndael/rton_plain.js";
 import rton_cipher from "./rijndael/rton_cipher.js";
 import fs_js from "../../../library/fs/implement.js";
 import { Console } from "../../../callback/console.js";
+import { args } from "../../../implement/arguments.js";
 
 export function popcap_rton_to_json(
     filepath?: string,
@@ -67,7 +68,8 @@ export function rton_decrypt_and_decode_to_json(
     }
     const rton_cipher_key: string = (
         fs_js.read_json(
-            fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+            fs_js.dirname(args.main_js as any) +
+                "/extension/settings/toolkit.json",
             true
         ) as any
     ).popcap_rton_conversion.rton.rton_cipher;
@@ -129,7 +131,8 @@ export function popcap_json_to_rton_and_encrypt(
     }
     const rton_cipher_key: string = (
         fs_js.read_json(
-            fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+            fs_js.dirname(args.main_js as any) +
+                "/extension/settings/toolkit.json",
             true
         ) as any
     ).popcap_rton_conversion.rton.rton_cipher;

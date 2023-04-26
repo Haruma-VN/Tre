@@ -1,9 +1,10 @@
 "use strict";
 import localization from "../../../callback/localization.js";
+import { args } from "../../../implement/arguments.js";
 import fs_js from "../../fs/implement.js";
 
 export default async function (
-    dir: string = process.argv[2],
+    dir: string,
     modelname: string = "realesrgan-x4plus-anime",
     ratio: number | string,
     new_dir?: string,
@@ -23,7 +24,8 @@ export default async function (
                     " -s " +
                     ratio +
                     " -f png",
-                fs_js.dirname(process.argv[1]) + "/extension/third/real_esrgan",
+                fs_js.dirname(args.main_js as any) +
+                    "/extension/third/real_esrgan",
                 "ignore"
             );
         } catch (error: any) {

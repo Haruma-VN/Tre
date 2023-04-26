@@ -2,11 +2,12 @@
 import * as color from "../../library/color/color.js";
 import { Console } from "../console.js";
 import fs_js from "../../library/fs/implement.js";
+import { args } from "../../implement/arguments.js";
 
 namespace System.Tre.Checker {
     export function check_tre_extension(): boolean {
         const extension_folder: string =
-            fs_js.dirname(process.argv[1]) + "/extension";
+            fs_js.dirname(args.main_js as any) + "/extension";
         if (
             !fs_js.js_exists(extension_folder) ||
             !fs_js.view_io_stream(extension_folder).isDirectory()
@@ -23,7 +24,8 @@ namespace System.Tre.Checker {
 
     export function check_tre_toolkit_json(): boolean {
         const toolkit_json_file_path: string =
-            fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json";
+            fs_js.dirname(args.main_js as any) +
+            "/extension/settings/toolkit.json";
         if (
             !fs_js.js_exists(toolkit_json_file_path) ||
             !fs_js.view_io_stream(toolkit_json_file_path).isFile()
@@ -40,7 +42,7 @@ namespace System.Tre.Checker {
 
     export function check_tre_third_party(): boolean {
         const tre_third_party_for_raw_images: string =
-            fs_js.dirname(process.argv[1]) + "/extension/third/encode/";
+            fs_js.dirname(args.main_js as any) + "/extension/third/encode/";
         if (
             !fs_js.js_exists(tre_third_party_for_raw_images) ||
             !fs_js.view_io_stream(tre_third_party_for_raw_images).isDirectory()
@@ -53,7 +55,7 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_etc_pak: string =
-            fs_js.dirname(process.argv[1]) +
+            fs_js.dirname(args.main_js as any) +
             "/extension/third/encode/etcpak.exe";
         if (
             !fs_js.js_exists(tre_third_party_for_etc_pak) ||
@@ -67,7 +69,7 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_pvrtc: string =
-            fs_js.dirname(process.argv[1]) +
+            fs_js.dirname(args.main_js as any) +
             "/extension/third/encode/PVRTexToolCLI.exe";
         if (
             !fs_js.js_exists(tre_third_party_for_pvrtc) ||
@@ -81,7 +83,8 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_upscaler: string =
-            fs_js.dirname(process.argv[1]) + "/extension/third/real_esrgan/";
+            fs_js.dirname(args.main_js as any) +
+            "/extension/third/real_esrgan/";
         if (
             !fs_js.js_exists(tre_third_party_for_upscaler) ||
             !fs_js.view_io_stream(tre_third_party_for_upscaler).isDirectory()
@@ -94,7 +97,7 @@ namespace System.Tre.Checker {
             return false;
         }
         const tre_third_party_for_upscaler_real_esrgan: string =
-            fs_js.dirname(process.argv[1]) +
+            fs_js.dirname(args.main_js as any) +
             "/extension/third/real_esrgan/realesrgan-ncnn-vulkan.exe";
         if (
             !fs_js.js_exists(tre_third_party_for_upscaler_real_esrgan) ||
@@ -114,7 +117,7 @@ namespace System.Tre.Checker {
 
     export function check_node_modules(): boolean {
         const node_modules_folder: string =
-            fs_js.dirname(process.argv[1]) + "/node_modules";
+            fs_js.dirname(args.main_js as any) + "/node_modules";
         if (
             !fs_js.js_exists(node_modules_folder) ||
             !fs_js.view_io_stream(node_modules_folder).isDirectory()

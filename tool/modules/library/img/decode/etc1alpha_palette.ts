@@ -6,6 +6,7 @@ import bitstream from "bit-buffer";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
+import { args } from "../../../implement/arguments.js";
 
 export default async function (
     dir: string,
@@ -42,7 +43,7 @@ export default async function (
                 .name.toUpperCase()}.png`
         );
         const tre_thirdparty =
-            fs_js.dirname(process.argv[1]) + "/extension/third/encode/";
+            fs_js.dirname(args.main_js as any) + "/extension/third/encode/";
         let cmd = `etcpak.exe --etc1 -v "${fs_js.parse_fs(dir).base}" "${fs_js
             .parse_fs(dir)
             .name.toUpperCase()}.png"`;

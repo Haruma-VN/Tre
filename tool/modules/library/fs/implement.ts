@@ -1,7 +1,7 @@
 "use strict";
 import fs from "node:fs";
 import * as js_json from "../json/util.js";
-import path from "node:path";
+import path from "../../implement/path.js";
 import sharp from "sharp";
 import * as color from "../color/color.js";
 import localization from "../../callback/localization.js";
@@ -10,6 +10,7 @@ import crypto from "crypto";
 import dataview_checker from "../../callback/default/checker.js";
 import { execSync } from "child_process";
 import { Console } from "../../callback/console.js";
+import { args, arguments_list } from "../../implement/arguments.js";
 
 interface FrameData {
     getImage: () => NodeJS.ReadableStream;
@@ -426,7 +427,7 @@ class fs_js {
 
     public static return_this_tool_current_location(): string {
         //#region
-        return this.get_full_path(path.dirname(process.argv[1]));
+        return this.get_full_path(path.dirname(args.main_js as any));
         //#endregion
     }
 
@@ -435,7 +436,8 @@ class fs_js {
     public static return_this_tool_toolkit_json_location(): string {
         //#region
         return this.get_full_path(
-            path.dirname(process.argv[1]) + "/extension/settings/toolkit.json"
+            path.dirname(args.main_js as any) +
+                "/extension/settings/toolkit.json"
         );
         //#endregion
     }
@@ -990,7 +992,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
     protected static readonly tre_thirdparty_for_encode =
-        path.dirname(process.argv[1]) + "/extension/third/encode/";
+        path.dirname(args.main_js as any) + "/extension/third/encode/";
 
     /*-------------------------------------------------------------------------------------------------*/
 
@@ -1057,7 +1059,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
     protected static readonly tre_thirdparty_real_esrgan_location =
-        path.dirname(process.argv[1]) + "/extension/third/real_esrgan";
+        path.dirname(args.main_js as any) + "/extension/third/real_esrgan";
 
     public static check_real_esrgan(
         file_system_real_esrgan_third_default_path?: string
@@ -1885,13 +1887,13 @@ class fs_js {
 
     public static view_assertation(): arguments_asserations {
         //#region
-        if (process.argv.length >= 2) {
-            return this.create_assertation(process.argv);
+        if (arguments_list.length >= 2) {
+            return this.create_assertation(arguments_list);
         } else {
             throw new Error(
                 `${localization(
                     "assertation_failed"
-                )}: process.argv.length >= 2`
+                )}: arguments_list.length >= 2`
             );
         }
 
@@ -1919,7 +1921,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
     protected static readonly tre_debug_directory: string =
-        path.dirname(process.argv[1]) + "/Tre.Debug";
+        path.dirname(args.main_js as any) + "/Tre.Debug";
 
     /*-------------------------------------------------------------------------------------------------*/
 
@@ -2032,41 +2034,6 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async progress_bar(
-        Callback_function: auto,
-        create_new_total_progress_bar?: number
-    ): Promise<Void> {
-        //#region
-        const total: number =
-            create_new_total_progress_bar !== undefined &&
-            create_new_total_progress_bar !== null &&
-            create_new_total_progress_bar !== void 0
-                ? (create_new_total_progress_bar satisfies number)
-                : 10;
-        let create_new_progress_process: number = 0;
-        for (let i: number = 0; i < total; i++) {
-            (await Callback_function) as void;
-            create_new_progress_process++;
-            const create_new_percentages_view: number = Math.round(
-                (((create_new_progress_process satisfies number) /
-                    total) as number) * 100
-            );
-            const create_new_progress_bar: string = Array(
-                Math.round((create_new_percentages_view as number) / 10) + 1
-            ).join("#");
-            const create_new_empty_progress: string = Array(
-                11 - Math.round((create_new_percentages_view as number) / 10)
-            ).join("-");
-            process.stdout.write(
-                `[${create_new_progress_bar}${create_new_empty_progress}] ${create_new_percentages_view}%\r`
-            );
-        }
-        process.stdout.write("\n");
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
     public static popcap_check_extname(
         file_system_path: string,
         input_the_system_extname_checker_as_string:
@@ -2137,7 +2104,8 @@ class fs_js {
             | "pam_to_flash"
             | "open_windows_explorer"
             | "gif"
-    ): bool | str | int | popcap_resources_render {
+            | "host"
+    ): bool | str | int | popcap_resources_render | any {
         //#region
         const toolkit_json: toolkit_json = this.read_json(
             this.return_this_tool_toolkit_json_location() satisfies str
@@ -2197,8 +2165,9 @@ class fs_js {
                 return toolkit_json.user.open_windows_explorer as bool;
             case "gif":
                 return toolkit_json.gif as any;
+            case "host":
+                return toolkit_json.user.host as string;
             default:
-                return toolkit_json as never;
         }
         //#endregion
     }
@@ -2206,7 +2175,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
     public static readonly functions_json_location: str = this.get_full_path(
-        path.dirname(process.argv[1]) + "/extension/settings/functions.json"
+        path.dirname(args.main_js as any) + "/extension/settings/functions.json"
     );
 
     /*-------------------------------------------------------------------------------------------------*/
@@ -2412,7 +2381,7 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
 
     public static readonly manifest_build_directory = `${path.dirname(
-        process.argv[1]
+        args.main_js as any
     )}/extension/support/resource_build.json`;
 
     /*-------------------------------------------------------------------------------------------------*/
@@ -2750,7 +2719,13 @@ class fs_js {
 
     //-------------------------------------------
 
-    public static parse_fs(file_system_input_path: str): path.ParsedPath {
+    public static parse_fs(file_system_input_path: str): {
+        root: string;
+        dir: string;
+        base: string;
+        ext: string;
+        name: string;
+    } {
         //#region
         return path.parse(file_system_input_path);
         //#endregion
@@ -2818,6 +2793,12 @@ class fs_js {
         //#region
         return path.sep;
         //#endregion
+    }
+
+    //-------------------------------------------
+
+    public static is_host(): boolean {
+        return this.create_toolkit_view("host") === "admin";
     }
 }
 

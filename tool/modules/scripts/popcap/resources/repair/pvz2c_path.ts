@@ -1,4 +1,5 @@
 "use strict";
+import localization from "../../../../callback/localization.js";
 import AdaptPvZ2InternationalResPath from "../expands/resources.js";
 export interface res_json {
     groups: res_small[];
@@ -14,6 +15,9 @@ export interface res_res {
 }
 
 function repair_duplicated_path<T extends res_json>(res_json_full: T): T {
+    if (!("groups" in res_json_full)) {
+        throw new Error(localization("not_valid_resources"));
+    }
     for (let i: number = 0; i < res_json_full.groups.length; ++i) {
         if (
             "resources" in res_json_full.groups[i] &&

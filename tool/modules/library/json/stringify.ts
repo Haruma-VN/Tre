@@ -1,6 +1,7 @@
 "use strict";
 import addTrailingCommas from "./support/trailing_commas.js";
 import fs_js from "../fs/implement.js";
+import { args } from "../../implement/arguments.js";
 
 export interface stringify_data {
     json: {
@@ -10,7 +11,7 @@ export interface stringify_data {
 }
 export default function (data: {}): string {
     const config_json: stringify_data = fs_js.read_json(
-        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
         true
     ) as stringify_data;
     let space: string = "\t";

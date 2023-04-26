@@ -15,6 +15,7 @@ import { Console } from "../../../callback/console.js";
 import { Argument } from "../../../callback/toolkit_question.js";
 import display_argument from "./arguments_set.js";
 import fs_js from "../../../library/fs/implement.js";
+import { args } from "../../../implement/arguments.js";
 export default async function (
     path_file: string,
     pack_simple: boolean = false,
@@ -283,7 +284,7 @@ export default async function (
         if (rton_2c_encrypted) {
             const rton_cipher_key = (
                 fs_js.read_json(
-                    fs_js.dirname(process.execPath) +
+                    fs_js.dirname(args.main_js as any) +
                         "/extension/settings/toolkit.json",
                     true
                 ) as any

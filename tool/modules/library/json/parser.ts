@@ -1,5 +1,6 @@
 "use strict";
 import localization from "../../callback/localization.js";
+import { args } from "../../implement/arguments.js";
 import fs_js from "../fs/implement.js";
 
 function parseJson(
@@ -73,7 +74,8 @@ export default function (
 ): {} {
     const json_config: json_config = parseJson(
         fs_js.read_file(
-            fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+            fs_js.dirname(args.main_js as any) +
+                "/extension/settings/toolkit.json",
             "utf8"
         )
     );

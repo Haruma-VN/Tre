@@ -18,6 +18,7 @@ import decode_etc1alpha_palette from "./decode/etc1alpha_palette.js";
 import encode_etc1alpha_palette from "./encode/etc1alpha_palette.js";
 import max_sharp from "./exception/evaluate.js";
 import exception_encode_dimension from "./exception/encode.js";
+
 export {
     split,
     dimension,

@@ -5,6 +5,7 @@ import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
 import fs_js from "../../../library/fs/implement.js";
 import { Console } from "../../../callback/console.js";
+import { args } from "../../../implement/arguments.js";
 
 export default async function (
     dir: string,
@@ -20,7 +21,7 @@ export default async function (
     padding_size?: number
 ): Promise<void> {
     const config_json: any = fs_js.write_json(
-        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
         true
     );
     if (

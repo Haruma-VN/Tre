@@ -7,6 +7,7 @@ import wwise_decode from "../wwise/decode_simple.js";
 import rton_plain from "../rton/rijndael/rton_plain.js";
 import DecodePTX from "./decode_ptx.js";
 import fs_js from "../../../library/fs/implement.js";
+import { args } from "../../../implement/arguments.js";
 
 export default async function (
     rsg_data: any,
@@ -46,7 +47,7 @@ export default async function (
         if (rton_head === "1000") {
             const rton_cipher_key = (
                 fs_js.read_json(
-                    fs_js.dirname(process.argv[1]) +
+                    fs_js.dirname(args.main_js as any) +
                         "/extension/settings/toolkit.json",
                     true
                 ) as any

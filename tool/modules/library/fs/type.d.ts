@@ -106,7 +106,8 @@ declare type view_option =
     | "pam_resolution"
     | "pam_to_flash"
     | "open_windows_explorer"
-    | "gif";
+    | "gif"
+    | "host";
 
 declare type popcap_resources_render = {
     slot: int;
@@ -167,6 +168,7 @@ declare type toolkit_json = {
         using_extension_for_rsb_pack: str;
         progress_bar: bool;
         open_windows_explorer: bool;
+        host: "user" | "admin";
     };
     resources: {
         beautify_order: popcap_resources_render;

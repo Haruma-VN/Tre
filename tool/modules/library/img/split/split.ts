@@ -4,6 +4,7 @@ import localization from "../../../callback/localization.js";
 import * as color from "../../color/color.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
+import { args } from "../../../implement/arguments.js";
 
 export default async function (
     dir: string,
@@ -16,7 +17,7 @@ export default async function (
     extension_list: string[]
 ) {
     const json_config: any = fs_js.read_json(
-        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
         true
     );
     if (json_config.atlas.split.notify_duplicate) {

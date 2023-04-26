@@ -5,13 +5,14 @@ import * as color from "../../color/color.js";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
 import { Console } from "../../../callback/console.js";
+import { args } from "../../../implement/arguments.js";
 
 export default async function (
     dir: string,
     not_notify_console_log: boolean = false
 ): Promise<void> {
     const tre_thirdparty: string =
-        fs_js.dirname(process.argv[1]) + "/extension/third/encode/";
+        fs_js.dirname(args.main_js as any) + "/extension/third/encode/";
     const pvrtc_process: string = `PVRTexToolCLI.exe -f PVRTCI_4BPP_RGBA,UBN,sRGB -q PVRTCFAST -i "${dir}" -o "${fs_js
         .basename(dir)
         .toUpperCase()}.pvr"`;

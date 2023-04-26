@@ -8,6 +8,7 @@ import js_checker from "./default/checker.js";
 import fs_js from "../library/fs/implement.js";
 import create_evaluate_argument from "./evaluate.js";
 import check_evaluate_system from "./public/check/checker.js";
+import { args } from "../implement/arguments.js";
 
 export interface configAtlas {
     display: {
@@ -30,7 +31,7 @@ export default async function (
         }
     }
     const json_config: any = fs_js.read_json(
-        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
         true
     );
     execute_file_count = js_checker.is_array(execute_file_dir)

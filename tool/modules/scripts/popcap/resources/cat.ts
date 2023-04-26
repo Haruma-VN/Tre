@@ -2,6 +2,7 @@
 import BeautifyRes from "./beautify/beautify.js";
 import json2rton from "../rton/json2rton.js";
 import fs_js from "../../../library/fs/implement.js";
+import { args } from "../../../implement/arguments.js";
 
 export interface SimpleData {
     id: string;
@@ -39,7 +40,7 @@ export default function (
     is_return_output_mode: boolean = false
 ): any {
     let config_json: any = fs_js.read_json(
-        fs_js.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
         true
     );
     const rsg_data: any[] = res_array_for_data;
