@@ -445,5 +445,8 @@
     "windows_explorer_open_reminder": "Stop passing argument after passing a file press 0",
     "windows_explorer_found_nothing": "Expected at least one file to be asserted",
     "not_found_scale_ratio": "The property \"scale_ratio\" is not founded in the resource_build.json",
-    "batch_popcap_animation_add_media_content": "PopCap Uncompress Animation Add Media"
+    "batch_popcap_animation_add_media_content": "PopCap Uncompress Animation Add Media",
+    "popcap_animation_viewer": "PopCap Animation Viewer",
+    "no_mode_to_process": "No Mode to Process",
+    "wrong_type": "Wrong data type"
 }

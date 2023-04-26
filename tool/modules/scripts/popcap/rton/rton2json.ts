@@ -1,8 +1,8 @@
 import util from "util";
 import { signed, unsigned } from "big-varint";
-import { readjson } from "../../../library/fs/util.js";
 import localization from "../../../callback/localization.js";
 import path from "node:path";
+import fs_js from "../../../library/fs/implement.js";
 export default function (rton_data: any): any {
     let index_count = 8;
     let indent_number = 0;
@@ -14,7 +14,7 @@ export default function (rton_data: any): any {
     const Str_RTID_0 = "RTID(0)";
     const Str_RTID_2 = "RTID(%d.%d.%s@%s)";
     const Str_RTID_3 = "RTID(%s@%s)";
-    const config_json = readjson(
+    const config_json: any = fs_js.read_json(
         path.dirname(process.argv[1]) + "/extension/settings/toolkit.json"
     );
     let trailing_commas = "";

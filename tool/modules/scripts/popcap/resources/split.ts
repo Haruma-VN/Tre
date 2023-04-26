@@ -1,6 +1,6 @@
 "use strict";
-import { readjson, writejson, makefolder } from "../../../library/fs/util.js";
 import localization from "../../../callback/localization.js";
+import fs_js from "../../../library/fs/implement.js";
 import BeautifyRes from "./beautify/beautify.js";
 import path from "node:path";
 export interface TreSetting {
@@ -20,8 +20,8 @@ export default async function (
         json_data_if_no_dir_were_parsed !== null &&
         json_data_if_no_dir_were_parsed !== void 0
             ? json_data_if_no_dir_were_parsed
-            : readjson(dir);
-    const config: TreSetting = readjson(
+            : fs_js.read_json(dir);
+    const config: TreSetting = fs_js.read_json(
         path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     ) as TreSetting;
@@ -33,7 +33,7 @@ export default async function (
         throw new Error(localization("not_valid_resources"));
     }
     if ("groups" in json) {
-        makefolder(dir + "/../" + directories);
+        fs_js.create_directory(dir + "/../" + directories, true);
         for (let group of json.groups) {
             if (
                 "resources" in config &&
@@ -68,9 +68,9 @@ export default async function (
                     }
                 }
             }
-            writejson(
+            fs_js.write_json(
                 dir + "/../" + directories + "/" + group.id + ".json",
-                group
+                group as object
             );
         }
         return 0;

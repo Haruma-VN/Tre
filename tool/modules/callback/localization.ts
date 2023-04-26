@@ -1,5 +1,5 @@
 "use strict";
-import { readjson } from "../library/fs/util.js";
+import fs from "node:fs";
 import path from "node:path";
 
 function localization(locate_data: string): string {
@@ -8,14 +8,24 @@ function localization(locate_data: string): string {
             path.dirname(process.argv[1]) +
             "/extension/settings/localization/" +
             (
-                readjson(
-                    path.dirname(process.argv[1]) +
-                        "/extension/settings/toolkit.json",
-                    true
+                JSON.parse(
+                    fs.readFileSync(
+                        path.dirname(process.argv[1]) +
+                            "/extension/settings/toolkit.json",
+                        {
+                            encoding: "utf-8",
+                            flag: "r",
+                        }
+                    )
                 ) as any
             ).language +
             ".json";
-        let language_json: any = readjson(filepath, true);
+        let language_json: any = JSON.parse(
+            fs.readFileSync(filepath, {
+                encoding: "utf-8",
+                flag: "r",
+            })
+        );
         if (
             language_json[locate_data] === undefined ||
             language_json[locate_data] === "undefined" ||
@@ -29,4 +39,5 @@ function localization(locate_data: string): string {
         return locate_data as string;
     }
 }
+
 export default localization;

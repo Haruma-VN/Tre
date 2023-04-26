@@ -6,9 +6,9 @@ import sharp from "sharp";
 import * as color from "../../color/color.js";
 import localization from "../../../callback/localization.js";
 import path from "node:path";
-import { delete_file } from "../../fs/util.js";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
+import { Console } from "../../../callback/console.js";
 
 export default async function (
     dir: string,
@@ -17,21 +17,21 @@ export default async function (
     not_notify_console_log: boolean = false
 ): Promise<void> {
     if (!not_notify_console_log) {
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_information")}: `
             ) + "rgb_etc1_a_8"
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(`◉ ${localization("execution_in")}:\n     `) +
                 `${fs_js.get_full_path(dir)}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_width")}: `
             ) + `${width}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_height")}: `
             ) + `${height}`
@@ -39,7 +39,9 @@ export default async function (
     }
     const exception_checker = exception_encode_dimension(width, height);
     if (exception_checker && fs_js.check_etcpak()) {
-        delete_file(`${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`);
+        fs_js.js_remove(
+            `${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`
+        );
         const tre_thirdparty =
             path.dirname(process.argv[1]) + "/extension/third/encode/";
         let cmd = `etcpak.exe --etc1 -v "${parse(dir).base}" "${parse(
@@ -69,7 +71,7 @@ export default async function (
                             .toBuffer()
                             .then((buffer) => {
                                 if (!not_notify_console_log) {
-                                    console.log(
+                                    Console.WriteLine(
                                         color.fggreen_string(
                                             `◉ ${localization(
                                                 "execution_out"

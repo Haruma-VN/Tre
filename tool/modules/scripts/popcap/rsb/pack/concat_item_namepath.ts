@@ -44,7 +44,7 @@ export default async function (filepath: any) {
             }
         }
     }
-    const rsgp_path_info: SmartBuffer = new SmartBuffer();
+    const rsg_path_info: SmartBuffer = new SmartBuffer();
     for (let i: number = 0; i < filepath.length - 1; i++) {
         const path_orignal: string = filepath[i].name_path.toUpperCase();
         const path_compare: string = filepath[i + 1].name_path.toUpperCase();
@@ -54,13 +54,13 @@ export default async function (filepath: any) {
                 : path_compare.length;
         for (let k: number = 0; k < path_length; k++) {
             if (path_orignal[k] !== path_compare[k]) {
-                rsgp_path_info.writeBuffer(
+                rsg_path_info.writeBuffer(
                     path_temp[i].path_compare.toBuffer().slice(k * 4)
                 );
-                rsgp_path_info.writeInt32LE(filepath[i + 1].composite_index);
+                rsg_path_info.writeInt32LE(filepath[i + 1].composite_index);
                 break;
             }
         }
     }
-    return rsgp_path_info.toBuffer();
+    return rsg_path_info.toBuffer();
 }

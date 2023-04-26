@@ -6,9 +6,9 @@ import { dimension } from "../util.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../color/color.js";
 import path from "node:path";
-import { delete_file } from "../../fs/util.js";
 import max_sharp from "../exception/evaluate.js";
 import fs_js from "../../fs/implement.js";
+import { Console } from "../../../callback/console.js";
 
 export default async function (
     dir: string,
@@ -20,28 +20,28 @@ export default async function (
         return result;
     });
     if (!not_notify_console_log) {
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_information")}: `
             ) + "argb8888"
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(`◉ ${localization("execution_in")}:\n     `) +
                 `${fs_js.get_full_path(dir)}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_width")}: `
             ) + `${img_data.width}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_height")}: `
             ) + `${img_data.height}`
         );
     }
     max_sharp(img_data.width, img_data.height);
-    delete_file(path.resolve(dir + "/../" + basename(dir) + ".ptx"));
+    fs_js.js_remove(path.resolve(dir + "/../" + basename(dir) + ".ptx"));
     const blue = await sharp(dir)
         .extractChannel("blue")
         .toBuffer()
@@ -86,7 +86,7 @@ export default async function (
             });
         fs.writeFileSync(dir + "/../" + basename(dir) + ".ptx", data);
         if (!not_notify_console_log) {
-            console.log(
+            Console.WriteLine(
                 color.fggreen_string(
                     `◉ ${localization("execution_out")}:\n     `
                 ) + `${path.resolve(dir + "/../" + basename(dir) + ".ptx")}`

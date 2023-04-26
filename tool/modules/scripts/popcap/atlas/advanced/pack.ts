@@ -1,5 +1,4 @@
 "use strict";
-import * as file_system from "../../../../library/fs/util.js";
 import { extname, basename } from "../../../../library/extension/util.js";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
@@ -9,6 +8,7 @@ import { MaxRectsPacker } from "maxrects-packer";
 import * as portal from "../../../../library/img/util.js";
 import fs_js from "../../../../library/fs/implement.js";
 import squareTrim from "../helper/square_trim.js";
+import { Console } from "../../../../callback/console.js";
 
 export interface sprite_template {
     width: number;
@@ -47,7 +47,7 @@ async function atlas_pack_experimental(
     const is_square_trim: boolean =
         (fs_js.create_toolkit_view("cut_unused_space") as boolean) &&
         !is_trim_mode;
-    const containable_files: Array<string> = file_system.read_dir(directory);
+    const containable_files: Array<string> = fs_js.full_reader(directory);
     const containable_pngs: Array<string> = new Array();
     for (let file of containable_files) {
         if (extname(file).toString().toLowerCase() === ".png") {
@@ -60,7 +60,7 @@ async function atlas_pack_experimental(
             const parts: path.ParsedPath = path.parse(filepath);
             parts.base = `${parts.name}.json`;
             const new_json_file_path: string = path.join(parts.dir, parts.base);
-            if (file_system.if_file_exists(new_json_file_path)) {
+            if (fs_js.js_exists(new_json_file_path)) {
                 return new_json_file_path;
             }
             return null;
@@ -102,7 +102,7 @@ async function atlas_pack_experimental(
                         )
                     );
                 const popcap_sprite_json_information_for_extra_coordinate: popcap_extra_information =
-                    file_system.readjson(popcap_sprite_extra_json_name_base);
+                    fs_js.read_json(popcap_sprite_extra_json_name_base);
                 total_sprites_process_in_thiz_function++;
                 img_list.push({
                     width: sprite_dimension.width,
@@ -253,7 +253,7 @@ async function atlas_pack_experimental(
             dimension_array_value[i].width,
             dimension_array_value[i].height
         );
-        console.log(
+        Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )} ${path.resolve(
@@ -272,18 +272,18 @@ async function atlas_pack_experimental(
             }
         }
     }
-    file_system.writejson(
+    fs_js.write_json(
         directory + "/../" + popcap_output_subgroup_name + ".json",
         result_json
     );
-    console.log(
+    Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
         )} ${path.resolve(
             directory + "/../" + popcap_output_subgroup_name + ".json"
         )}`
     );
-    console.log(
+    Console.WriteLine(
         color.fggreen_string(
             "◉ " + `${localization("execution_actual_size")}: `
         ) + `${img_list.length}`

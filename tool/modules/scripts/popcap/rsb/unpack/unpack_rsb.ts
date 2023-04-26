@@ -3,16 +3,17 @@ import { SingleBar } from "cli-progress";
 import { SmartBuffer } from "smart-buffer";
 import path, { parse } from "node:path";
 import rsb_read_header_info from "./rsb_read_header_info.js";
-import extract_rsgp_name_path from "./extract_rsgp_name_path.js";
+import extract_rsg_name_path from "./extract_rsg_name_path.js";
 import extract_resources_data from "./extract_resources_data.js";
-import rsgp_file_info from "./rsgp_file_info.js";
-import rsgp_unpack from "../../rsg/unpack_rsgp.js";
+import rsg_file_info from "./rsg_file_info.js";
+import rsg_unpack from "../../rsg/unpack_rsg.js";
 import composite_item_list from "./composite_item_list.js";
 import { readline_integer } from "../../../../readline/prompt/util.js";
-import * as fs_util from "../../../../library/fs/util.js";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
 import fs_js from "../../../../library/fs/implement.js";
+import { Console } from "../../../../callback/console.js";
+
 export default async function (
     rsb_data_will_not_be_cipher: any,
     simple: boolean = false,
@@ -23,7 +24,7 @@ export default async function (
     let decode_data = false;
     let splitres = false;
     let ios_argb8888 = 0;
-    const TreRSGPInfo: any = new Array();
+    const TreRSGInfo: any = new Array();
     const arguments_default_modifier: any = fs_js.read_json(
         fs_js.functions_json_location,
         true
@@ -56,7 +57,7 @@ export default async function (
                   )
                 : 2;
         if (popcap_packages_conversion === 2) {
-            console.log(
+            Console.WriteLine(
                 color.fgcyan_string(
                     `◉ ${localization("execution_argument")}: ${localization(
                         "decode_rtons"
@@ -108,7 +109,7 @@ export default async function (
                       )
                     : 2;
             if (support_popcap_resources_conversion === 2) {
-                console.log(
+                Console.WriteLine(
                     color.fgcyan_string(
                         `◉ ${localization(
                             "execution_argument"
@@ -161,7 +162,7 @@ export default async function (
                   )
                 : 2;
         if (popcap_packages_conversion === 2) {
-            console.log(
+            Console.WriteLine(
                 color.fgcyan_string(
                     `◉ ${localization("execution_argument")}: ${localization(
                         "decode_rtons"
@@ -212,7 +213,7 @@ export default async function (
                   )
                 : 2;
         if (support_popcap_ptx_conversion === 2) {
-            console.log(
+            Console.WriteLine(
                 color.fgcyan_string(
                     `◉ ${localization("execution_argument")}: ${localization(
                         "decode_ptx"
@@ -237,7 +238,7 @@ export default async function (
                 : support_popcap_ptx_conversion;
         decode_ptx = create_new_decode_ptx_argument === 1 ? true : false;
         if (decode_ptx) {
-            console.log(
+            Console.WriteLine(
                 color.fgcyan_string(
                     `◉ ${localization("execution_argument")}: ${
                         parse(rsb_data_will_not_be_cipher).base
@@ -251,18 +252,19 @@ export default async function (
         decode_data = readline_integer(0, 1) === 1 ? true : false;
         //
     }
-    const rsb_buffer_for_unpacking = fs_util.readfilebuffer(
-        rsb_data_will_not_be_cipher
+    const rsb_buffer_for_unpacking = fs_js.read_file(
+        rsb_data_will_not_be_cipher,
+        "buffer"
     );
     const rsb_new_extract_folder = `${rsb_data_will_not_be_cipher}/../${
         parse(rsb_data_will_not_be_cipher).name
     }.bundle`;
-    console.log(
+    Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
         )} ${path.resolve(rsb_new_extract_folder)}`
     );
-    fs_util.makefolder(`${rsb_new_extract_folder}`);
+    fs_js.create_directory(`${rsb_new_extract_folder}`);
     const iz_magic_header_rsb = SmartBuffer.fromBuffer(
         rsb_buffer_for_unpacking.slice(0, 0x70)
     );
@@ -270,29 +272,29 @@ export default async function (
         iz_magic_header_rsb
     );
     if (rsb_header_info_for_unpacking.magic === "1bsr") {
-        const rsb_rsgp_header = rsb_buffer_for_unpacking.slice(
-            rsb_header_info_for_unpacking.rsgpList_BeginOffset,
-            rsb_header_info_for_unpacking.rsgpList_BeginOffset +
-                rsb_header_info_for_unpacking.rsgpList_Length
+        const rsb_rsg_header = rsb_buffer_for_unpacking.slice(
+            rsb_header_info_for_unpacking.rsgList_BeginOffset,
+            rsb_header_info_for_unpacking.rsgList_BeginOffset +
+                rsb_header_info_for_unpacking.rsgList_Length
         );
-        let rsgp_name_list_uppercase = await extract_rsgp_name_path(
-            rsb_rsgp_header,
+        let rsg_name_list_uppercase = await extract_rsg_name_path(
+            rsb_rsg_header,
             0,
-            rsb_header_info_for_unpacking.rsgpList_Length
+            rsb_header_info_for_unpacking.rsgList_Length
         );
-        let rsgp_list_info = await rsgp_file_info(
-            rsb_header_info_for_unpacking.rsgp_offset,
+        let rsg_list_info = await rsg_file_info(
+            rsb_header_info_for_unpacking.rsg_offset,
             rsb_buffer_for_unpacking,
             rsb_buffer_for_unpacking.slice(
-                rsb_header_info_for_unpacking.rsgpInfo_BeginOffset,
+                rsb_header_info_for_unpacking.rsgInfo_BeginOffset,
                 rsb_header_info_for_unpacking.autopoolInfo_BeginOffset
             )
         );
-        rsgp_name_list_uppercase = rsgp_name_list_uppercase.sort((a, b) => {
-            return a.rsgp_pool_index - b.rsgp_pool_index;
+        rsg_name_list_uppercase = rsg_name_list_uppercase.sort((a, b) => {
+            return a.rsg_pool_index - b.rsg_pool_index;
         });
-        rsgp_list_info = rsgp_list_info.sort((a, b) => {
-            return a.rsgp_item_pool_index - b.rsgp_item_pool_index;
+        rsg_list_info = rsg_list_info.sort((a, b) => {
+            return a.rsg_item_pool_index - b.rsg_item_pool_index;
         });
         const bar = new SingleBar({
             format: fs_js.create_toolkit_view("progress_bar")
@@ -315,9 +317,9 @@ export default async function (
         const composite_list_info = await composite_item_list(
             composite_folder_list
         );
-        const rsgp_item_unpack_list = await extract_resources_data(
-            rsgp_name_list_uppercase,
-            rsgp_list_info,
+        const rsg_item_unpack_list = await extract_resources_data(
+            rsg_name_list_uppercase,
+            rsg_list_info,
             rsb_buffer_for_unpacking,
             simple,
             decode_rton,
@@ -325,11 +327,11 @@ export default async function (
             rsb_new_extract_folder
         );
         if (unpack_everything) {
-            bar.start(rsgp_item_unpack_list[1].length, 0, {
+            bar.start(rsg_item_unpack_list[1].length, 0, {
                 speed: "N/A",
             });
         }
-        let popcap_rsgp_count = 0;
+        let popcap_rsg_count = 0;
         for (let composite_item of composite_list_info[0]) {
             const composite_item_list = new Array();
             for (let k = 0; k < composite_item.composite_length; k++) {
@@ -339,37 +341,35 @@ export default async function (
                             .composite_pool_index ===
                         composite_item.composite_pool_index
                     ) {
-                        for (let rsgp_pool_index in rsgp_item_unpack_list[1]) {
+                        for (let rsg_pool_index in rsg_item_unpack_list[1]) {
                             if (
                                 composite_list_info[1][composite_pool_index]
-                                    .rsgp_pool_index ===
-                                rsgp_item_unpack_list[1][rsgp_pool_index]
-                                    .rsgp_item_pool_index
+                                    .rsg_pool_index ===
+                                rsg_item_unpack_list[1][rsg_pool_index]
+                                    .rsg_item_pool_index
                             ) {
-                                const rsgp_file_data =
+                                const rsg_file_data =
                                     rsb_buffer_for_unpacking.slice(
-                                        rsgp_item_unpack_list[1][
-                                            rsgp_pool_index
-                                        ].rsgp_item_offset,
-                                        rsgp_item_unpack_list[1][
-                                            rsgp_pool_index
-                                        ].rsgp_item_offset +
-                                            rsgp_item_unpack_list[1][
-                                                rsgp_pool_index
-                                            ].rsgp_item_size
+                                        rsg_item_unpack_list[1][rsg_pool_index]
+                                            .rsg_item_offset,
+                                        rsg_item_unpack_list[1][rsg_pool_index]
+                                            .rsg_item_offset +
+                                            rsg_item_unpack_list[1][
+                                                rsg_pool_index
+                                            ].rsg_item_size
                                     );
-                                let rsgp_treinfo =
-                                    rsgp_item_unpack_list[1][rsgp_pool_index]
-                                        .rsgp_name_item;
+                                let rsg_treinfo =
+                                    rsg_item_unpack_list[1][rsg_pool_index]
+                                        .rsg_name_item;
                                 if (simple) {
                                     if (
-                                        rsgp_item_unpack_list[1][
-                                            rsgp_pool_index
-                                        ].rsgp_name_item.toUpperCase() ===
+                                        rsg_item_unpack_list[1][
+                                            rsg_pool_index
+                                        ].rsg_name_item.toUpperCase() ===
                                         "PACKAGES"
                                     ) {
-                                        await rsgp_unpack(
-                                            rsgp_file_data,
+                                        await rsg_unpack(
+                                            rsg_file_data,
                                             rsb_new_extract_folder,
                                             false,
                                             decode_rton,
@@ -379,24 +379,24 @@ export default async function (
                                             true
                                         );
                                     } else if (
-                                        rsgp_item_unpack_list[1][
-                                            rsgp_pool_index
-                                        ].rsgp_name_item
+                                        rsg_item_unpack_list[1][
+                                            rsg_pool_index
+                                        ].rsg_name_item
                                             .toUpperCase()
                                             .indexOf("__MANIFESTGROUP__") !== -1
                                     ) {
                                     } else {
-                                        fs_util.outfile(
-                                            `${rsb_new_extract_folder}/Packet/${rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item}.rsgp`,
-                                            rsgp_file_data
+                                        fs_js.outfile_fs(
+                                            `${rsb_new_extract_folder}/Packet/${rsg_item_unpack_list[1][rsg_pool_index].rsg_name_item}.rsg`,
+                                            rsg_file_data
                                         );
                                     }
                                 } else if (unpack_everything) {
                                     bar.increment();
-                                    popcap_rsgp_count++;
-                                    bar.update(popcap_rsgp_count);
-                                    const rsgp_file_info = await rsgp_unpack(
-                                        rsgp_file_data,
+                                    popcap_rsg_count++;
+                                    bar.update(popcap_rsg_count);
+                                    const rsg_file_info = await rsg_unpack(
+                                        rsg_file_data,
                                         rsb_new_extract_folder,
                                         decode_ptx,
                                         decode_rton,
@@ -405,27 +405,27 @@ export default async function (
                                         ios_argb8888,
                                         true
                                     );
-                                    rsgp_treinfo = Object.fromEntries([
+                                    rsg_treinfo = Object.fromEntries([
                                         [
-                                            rsgp_item_unpack_list[1][
-                                                rsgp_pool_index
-                                            ].rsgp_name_item,
-                                            rsgp_file_info,
+                                            rsg_item_unpack_list[1][
+                                                rsg_pool_index
+                                            ].rsg_name_item,
+                                            rsg_file_info,
                                         ],
                                     ]);
                                 } else {
-                                    fs_util.outfile(
-                                        `${rsb_new_extract_folder}/Packet/${rsgp_item_unpack_list[1][rsgp_pool_index].rsgp_name_item}.rsgp`,
-                                        rsgp_file_data
+                                    fs_js.outfile_fs(
+                                        `${rsb_new_extract_folder}/Packet/${rsg_item_unpack_list[1][rsg_pool_index].rsg_name_item}.rsg`,
+                                        rsg_file_data
                                     );
                                 }
-                                composite_item_list.push(rsgp_treinfo);
+                                composite_item_list.push(rsg_treinfo);
                                 composite_list_info[1].splice(
                                     composite_pool_index as any,
                                     1
                                 );
-                                rsgp_item_unpack_list[1].splice(
-                                    rsgp_pool_index,
+                                rsg_item_unpack_list[1].splice(
+                                    rsg_pool_index,
                                     1
                                 );
                                 break;
@@ -435,15 +435,15 @@ export default async function (
                     }
                 }
             }
-            TreRSGPInfo.push([
+            TreRSGInfo.push([
                 composite_item.composite_name,
                 composite_item_list,
             ]);
         }
         bar.stop();
-        fs_util.writejson(
+        fs_js.write_json(
             `${rsb_new_extract_folder}/TreRSBInfo.json`,
-            Object.fromEntries(TreRSGPInfo)
+            Object.fromEntries(TreRSGInfo)
         );
     } else {
         throw new Error(localization("not_a_rsb"));

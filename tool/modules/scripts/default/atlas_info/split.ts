@@ -1,8 +1,9 @@
 "use strict";
-import { readjson, writejson, makefolder } from "../../../library/fs/util.js";
 import path from "node:path";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
+import fs_js from "../../../library/fs/implement.js";
+import { Console } from "../../../callback/console.js";
 
 interface ResInfo {
     id: string;
@@ -16,7 +17,7 @@ interface AtlasInfo {
     groups?: ResInfo[] | undefined | null;
 }
 export default function (dir: string): number {
-    const atlasinfo: AtlasInfo = readjson(dir) as AtlasInfo;
+    const atlasinfo: AtlasInfo = fs_js.read_json(dir) as AtlasInfo;
     let method: string =
         atlasinfo.method !== undefined &&
         atlasinfo.method !== void 0 &&
@@ -25,13 +26,13 @@ export default function (dir: string): number {
             : "id";
     const info_folder = dir + "/../" + "AtlasInfo.atlas";
     const resources_atlas_folder = dir + "/../" + "AtlasInfo.atlas/atlas";
-    console.log(
+    Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
         )} ${path.resolve(info_folder)}`
     );
-    makefolder(`${info_folder}`);
-    makefolder(`${resources_atlas_folder}`);
+    fs_js.create_directory(`${info_folder}`);
+    fs_js.create_directory(`${resources_atlas_folder}`);
     if (
         atlasinfo.groups !== undefined &&
         atlasinfo.groups !== null &&
@@ -41,7 +42,7 @@ export default function (dir: string): number {
             for (let i: number = 0; i < atlasinfo?.groups.length; ++i) {
                 switch (method) {
                     case "path":
-                        writejson(
+                        fs_js.write_json(
                             resources_atlas_folder +
                                 "/" +
                                 atlasinfo.groups[i].path[
@@ -52,7 +53,7 @@ export default function (dir: string): number {
                         );
                         break;
                     default:
-                        writejson(
+                        fs_js.write_json(
                             resources_atlas_folder +
                                 "/" +
                                 atlasinfo.groups[i].id +
@@ -65,6 +66,6 @@ export default function (dir: string): number {
         }
     }
     atlasinfo.groups = new Array(0);
-    writejson(`${info_folder}/info.json`, atlasinfo);
+    fs_js.write_json(`${info_folder}/info.json`, atlasinfo);
     return 0;
 }

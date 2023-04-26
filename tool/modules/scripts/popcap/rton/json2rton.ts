@@ -3,6 +3,8 @@ import { SmartBuffer } from "smart-buffer";
 import { signed, unsigned } from "big-varint";
 import localization from "../../../callback/localization.js";
 import { fgred_string } from "../../../library/color/color.js";
+import { Console } from "../../../callback/console.js";
+
 export default function (rton_data: any): any {
     const json_data = new SmartBuffer();
     const cached_strings: any = new Object();
@@ -170,7 +172,7 @@ export default function (rton_data: any): any {
                 json_data.writeString("90\0", "hex");
                 break;
             default:
-                console.log(
+                Console.WriteLine(
                     fgred_string(
                         "◉ " + localization("excecution_exception"),
                         value

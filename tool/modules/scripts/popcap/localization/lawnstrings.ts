@@ -1,8 +1,9 @@
 "use strict";
 import path from "path";
-import { readjson, writejson } from "../../../library/fs/util.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
+import fs_js from "../../../library/fs/implement.js";
+import { Console } from "../../../callback/console.js";
 
 export namespace Lawnstrings.popcap {
     export interface PopCapLawnstring {
@@ -30,7 +31,7 @@ export namespace Lawnstrings.popcap {
     export function GetLawnstringsProperty(
         popcap_lawnstrings_file_location: string
     ): LawnstringsPropertyKeyAndValue {
-        const lawnstrings_json: PopCapLawnstring = readjson(
+        const lawnstrings_json: PopCapLawnstring = fs_js.read_json(
             popcap_lawnstrings_file_location
         ) as PopCapLawnstring;
         const key: string[] = new Array();
@@ -139,7 +140,7 @@ export namespace Lawnstrings.popcap {
         original_directory: string,
         modified_directory: string
     ): void {
-        console.log(
+        Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )} ${path.resolve(
@@ -148,7 +149,7 @@ export namespace Lawnstrings.popcap {
                 }.diff.json`
             )}`
         );
-        return writejson(
+        return fs_js.write_json(
             `${modified_directory}/../${
                 path.parse(modified_directory).name
             }.diff.json`,
@@ -157,14 +158,14 @@ export namespace Lawnstrings.popcap {
     }
 
     export function WriteLocalizationJSON(directory: string): void {
-        console.log(
+        Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )} ${path.resolve(
                 `${directory}/../${path.parse(directory).name}.structure.json`
             )}`
         );
-        return writejson(
+        return fs_js.write_json(
             `${directory}/../${path.parse(directory).name}.structure.json`,
             GetLawnstringsProperty(directory)
         );
@@ -173,8 +174,8 @@ export namespace Lawnstrings.popcap {
     export function ConvertLocalizationJSONtoPopCapJSON(
         directory: string
     ): PopCapLawnstring {
-        const key: string[] = Object.keys(readjson(directory));
-        const value: string[] = Object.values(readjson(directory));
+        const key: string[] = Object.keys(fs_js.read_json(directory));
+        const value: string[] = Object.values(fs_js.read_json(directory));
         const output_popcap_localization_lawnstrings: PopCapLawnstring = {
             objects: [
                 {
@@ -201,14 +202,14 @@ export namespace Lawnstrings.popcap {
     export function WritePopCapLawnstringsFromLocalizationLawnstrings(
         directory: string
     ): void {
-        console.log(
+        Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )} ${path.resolve(
                 `${directory}/../${path.parse(directory).name}.default.json`
             )}`
         );
-        return writejson(
+        return fs_js.write_json(
             `${directory}/../${path.parse(directory).name}.default.json`,
             ConvertLocalizationJSONtoPopCapJSON(directory)
         );

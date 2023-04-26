@@ -1,5 +1,6 @@
 "use strict";
 import localization from "./localization.js";
+
 export namespace Argument.Tre.Packages {
     export const tre_all_module_have_been_loaded: str = `◉ ${localization(
         "module_loaded"
@@ -121,7 +122,7 @@ export namespace Argument.Tre.Packages {
     export const popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin: str = `◉ ${localization(
         "execution_argument"
     )}: ${localization("padding_size")}`;
-    export const popcap_game_zlib_compression_rsgp_unpack_boolean_decode_ptx_for_ptx_rsgp: str = `◉ ${localization(
+    export const popcap_game_zlib_compression_rsg_unpack_boolean_decode_ptx_for_ptx_rsg: str = `◉ ${localization(
         "execution_argument"
     )}: ${localization("decode_ptx")}`;
     export const popcap_game_rewrite_mode: str = `◉ ${localization(

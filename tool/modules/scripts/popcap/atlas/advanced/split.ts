@@ -1,10 +1,11 @@
 "use strict";
-import * as file_system from "../../../../library/fs/util.js";
 import { extname, basename } from "../../../../library/extension/util.js";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
 import path from "node:path";
 import sharp from "sharp";
+import fs_js from "../../../../library/fs/implement.js";
+import { Console } from "../../../../callback/console.js";
 
 export interface PopCapResJsonDataBundle {
     resources?: PopCapResJsonDetailInfo[];
@@ -42,13 +43,13 @@ async function atlas_split_experimental(
     for (let i: number = 0; i < execute_file_dir.length; i++) {
         switch (extname(execute_file_dir[i]).toLowerCase()) {
             case ".json":
-                json = file_system.readjson(execute_file_dir[i]);
+                json = fs_js.read_json(execute_file_dir[i]);
                 if (json.resources === undefined) {
                     throw new Error(localization("not_popcap_res"));
                 }
                 directory_name = basename(execute_file_dir[i]) + ".spg";
                 dir_sys = execute_file_dir[i] + "/../" + directory_name;
-                file_system.makefolder(dir_sys.toString());
+                fs_js.create_directory(dir_sys.toString());
                 break;
             case ".png":
             case ".jpg":
@@ -66,7 +67,7 @@ async function atlas_split_experimental(
         json.resources !== null &&
         json.resources !== void 0
     ) {
-        console.log(
+        Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )} ${path.resolve(`${dir_sys}`)}`
@@ -81,9 +82,7 @@ async function atlas_split_experimental(
             }
             const popcap_atlas_output_atlas_directory: string =
                 dir_sys + "/" + path.join(...json.resources[i].path);
-            file_system.create_multiple_parent(
-                popcap_atlas_output_atlas_directory
-            );
+            fs_js.create_directory(popcap_atlas_output_atlas_directory, true);
             for (const img of img_list) {
                 if (
                     json.resources[i].parent.toUpperCase() ===
@@ -113,7 +112,7 @@ async function atlas_split_experimental(
                         popcap_atlas_output_atlas_directory,
                         `${json.resources[i].id}.json`
                     );
-                    file_system.writejson(jsonPath, {
+                    fs_js.write_json(jsonPath, {
                         x:
                             json.resources[i].x !== undefined &&
                             json.resources[i].x !== null &&
@@ -135,7 +134,7 @@ async function atlas_split_experimental(
             throw new Error(localization("native_atlas_splitting_error"));
         });
     }
-    return console.log(
+    return Console.WriteLine(
         color.fggreen_string(
             "◉ " + localization("execution_actual_size") + ": "
         ) + count_images_split

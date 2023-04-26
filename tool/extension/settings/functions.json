@@ -58,8 +58,8 @@
         "option": 6
     },
     "popcap_resources_local_data_compare": {
-        "filter": [".json"],
-        "allow": true,
+        "filter": [".res"],
+        "allow": false,
         "option": 7
     },
     "popcap_resources_to_tre_info": {
@@ -74,7 +74,7 @@
     },
     "popcap_resources_beautify": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 10
     },
     "atlas_info_split": {
@@ -198,12 +198,12 @@
         "allow": true,
         "option": 29
     },
-    "popcap_zlib_rsgp_unpack": {
+    "popcap_zlib_rsg_unpack": {
         "filter": [".rsg"],
         "allow": true,
         "option": 30
     },
-    "popcap_zlib_rsgp_pack": {
+    "popcap_zlib_rsg_pack": {
         "filter": [".packet"],
         "allow": true,
         "option": 31
@@ -305,7 +305,7 @@
         "option": 46
     },
     "popcap_rton_encode_and_encrypt": {
-        "filter": [".rton"],
+        "filter": [".json"],
         "allow": true,
         "option": 47
     },
@@ -339,7 +339,7 @@
             "padding": 1
         }
     },
-    "popcap_rsgp_unpack_simple": {
+    "popcap_rsg_unpack_simple": {
         "filter": [".rsg"],
         "allow": true,
         "option": 50,
@@ -347,7 +347,7 @@
             "texture_format_0_unsafe": "?"
         }
     },
-    "popcap_rsgp_pack_simple": {
+    "popcap_rsg_pack_simple": {
         "filter": [".packet"],
         "allow": true,
         "option": 51

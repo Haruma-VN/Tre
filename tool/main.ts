@@ -1,14 +1,16 @@
 "use strict";
+import localization from "./modules/callback/localization.js";
 import default_function from "./modules/callback/default.js";
 import System from "./modules/callback/default/exception.js";
 import { prompt } from "./modules/readline/prompt/util.js";
-import localization from "./modules/callback/localization.js";
+import { Console } from "./modules/callback/console.js";
+
 export namespace Tre.Public {
     export async function Main(): Promise<void> {
         const exception_error: boolean = System.Tre.Checker.execute();
 
         if (!exception_error) {
-            console.log(
+            Console.WriteLine(
                 "\x1b[32m◉ " +
                     localization("execution_finish") +
                     ": " +

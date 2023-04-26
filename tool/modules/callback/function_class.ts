@@ -1,6 +1,6 @@
 "use strict";
-
 import localization from "./localization.js";
+import { Console } from "./console.js";
 
 export default class Void {
     static count_void: number = 0;
@@ -54,7 +54,7 @@ export default class Void {
     }
 
     protected error_void_display(error: string) {
-        return console.log(`${error}`);
+        return Console.WriteLine(`${error}`);
     }
 
     public static_filter(): Array<string> {

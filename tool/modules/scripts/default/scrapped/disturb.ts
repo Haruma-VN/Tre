@@ -7,14 +7,14 @@ import localization from "../../../callback/localization.js";
 export type smart_header = {
     magic: number;
     version: number;
-    rsgp_offset: number;
+    rsg_offset: number;
     fileList_Length: number;
     fileList_BeginOffset: number;
-    rsgpList_Length: number;
-    rsgpList_BeginOffset: number;
-    rsgp_Number: number;
-    rsgpInfo_BeginOffset: number;
-    rsgpInfo_EachLength: number;
+    rsgList_Length: number;
+    rsgList_BeginOffset: number;
+    rsg_Number: number;
+    rsgInfo_BeginOffset: number;
+    rsgInfo_EachLength: number;
     composite_Number: number;
     compositeInfo_BeginOffset: number;
     compositeInfo_EachLength: number;
@@ -92,14 +92,14 @@ function popcap_rsb_disturb(
     const popcap_rsb_header_info: {
         magic: number;
         version: number;
-        rsgp_offset: number;
+        rsg_offset: number;
         fileList_Length: number;
         fileList_BeginOffset: number;
-        rsgpList_Length: number;
-        rsgpList_BeginOffset: number;
-        rsgp_Number: number;
-        rsgpInfo_BeginOffset: number;
-        rsgpInfo_EachLength: number;
+        rsgList_Length: number;
+        rsgList_BeginOffset: number;
+        rsg_Number: number;
+        rsgInfo_BeginOffset: number;
+        rsgInfo_EachLength: number;
         composite_Number: number;
         compositeInfo_BeginOffset: number;
         compositeInfo_EachLength: number;
@@ -117,14 +117,14 @@ function popcap_rsb_disturb(
     } = get_header_info(smart_popcap_rsb_buffer_for_writing) satisfies {
         magic: number;
         version: number;
-        rsgp_offset: number;
+        rsg_offset: number;
         fileList_Length: number;
         fileList_BeginOffset: number;
-        rsgpList_Length: number;
-        rsgpList_BeginOffset: number;
-        rsgp_Number: number;
-        rsgpInfo_BeginOffset: number;
-        rsgpInfo_EachLength: number;
+        rsgList_Length: number;
+        rsgList_BeginOffset: number;
+        rsg_Number: number;
+        rsgInfo_BeginOffset: number;
+        rsgInfo_EachLength: number;
         composite_Number: number;
         compositeInfo_BeginOffset: number;
         compositeInfo_EachLength: number;
@@ -143,30 +143,30 @@ function popcap_rsb_disturb(
 
     for (
         let popcap_rsb_disturb_bundles_data_write_offset: number =
-            popcap_rsb_header_info.rsgpInfo_BeginOffset;
+            popcap_rsb_header_info.rsgInfo_BeginOffset;
         (popcap_rsb_disturb_bundles_data_write_offset as number) <
-        (popcap_rsb_header_info.rsgpInfo_BeginOffset as number) +
-            (popcap_rsb_header_info.rsgpInfo_EachLength as number) *
-                (popcap_rsb_header_info.rsgp_Number as number);
+        (popcap_rsb_header_info.rsgInfo_BeginOffset as number) +
+            (popcap_rsb_header_info.rsgInfo_EachLength as number) *
+                (popcap_rsb_header_info.rsg_Number as number);
         (popcap_rsb_disturb_bundles_data_write_offset satisfies number) +=
-            popcap_rsb_header_info.rsgpInfo_EachLength satisfies number
+            popcap_rsb_header_info.rsgInfo_EachLength satisfies number
     ) {
-        const popcap_rsgp_item_random_bytes: Buffer =
+        const popcap_rsg_item_random_bytes: Buffer =
             nodejs_packages_crypto.randomBytes(128) as Buffer;
         (smart_popcap_rsb_buffer_for_writing as SmartBuffer).writeBuffer(
-            popcap_rsgp_item_random_bytes as Buffer,
+            popcap_rsg_item_random_bytes as Buffer,
             popcap_rsb_disturb_bundles_data_write_offset as number
         );
-        const popcap_rsgp_item_start_offset: number = (
+        const popcap_rsg_item_start_offset: number = (
             smart_popcap_rsb_buffer_for_writing satisfies SmartBuffer
         ).readInt32LE(
             (popcap_rsb_disturb_bundles_data_write_offset as number) + 128
         );
-        const popcap_rsgp_head_ramdom_bytes_test: Buffer =
+        const popcap_rsg_head_ramdom_bytes_test: Buffer =
             nodejs_packages_crypto.randomBytes(16 * 4) satisfies Buffer;
         (smart_popcap_rsb_buffer_for_writing as SmartBuffer).writeBuffer(
-            popcap_rsgp_head_ramdom_bytes_test as Buffer,
-            popcap_rsgp_item_start_offset satisfies number
+            popcap_rsg_head_ramdom_bytes_test as Buffer,
+            popcap_rsg_item_start_offset satisfies number
         );
     }
 

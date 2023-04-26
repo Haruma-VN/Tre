@@ -1,7 +1,8 @@
 "use strict";
-import { readjson } from "../fs/util.js";
 import addTrailingCommas from "./support/trailing_commas.js";
 import path from "node:path";
+import fs_js from "../fs/implement.js";
+
 export interface stringify_data {
     json: {
         allow_trailing_commas?: boolean;
@@ -9,8 +10,9 @@ export interface stringify_data {
     };
 }
 export default function (data: {}): string {
-    const config_json: stringify_data = readjson(
-        path.dirname(process.argv[1]) + "/extension/settings/toolkit.json"
+    const config_json: stringify_data = fs_js.read_json(
+        path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
+        true
     ) as stringify_data;
     let space: string = "\t";
     if ("space" in config_json.json) {

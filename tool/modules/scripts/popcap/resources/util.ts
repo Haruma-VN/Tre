@@ -1,12 +1,6 @@
 "use strict";
 import pack from "./cat.js";
 import split from "./split.js";
-import {
-    read_single_folder,
-    readjson,
-    writejson,
-    outfile,
-} from "../../../library/fs/util.js";
 import sortResObjects from "../../../library/sort/popcap_resources.js";
 import local_res_compare from "./compare/local.js";
 import path from "path";
@@ -19,13 +13,14 @@ import rton_to_json from "../rton/rton2json.js";
 import fs_js from "../../../library/fs/implement.js";
 import { parse } from "../../../library/json/util.js";
 import repair from "./repair/pvz2c_path.js";
+import { Console } from "../../../callback/console.js";
 
 export function LocalResourcesCompare(
     vanilla_directory: string,
     modded_directory: string
 ) {
     local_res_compare(vanilla_directory, modded_directory);
-    console.log(
+    Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
         )} ${path.resolve(
@@ -45,7 +40,7 @@ export function res_split(
     if (path.parse(dir).ext.toString().toLowerCase() === ".rton") {
         json = parse(rton_to_json(fs_js.read_file(dir, "buffer")));
     } else {
-        json = readjson(dir as string);
+        json = fs_js.read_json(dir as string);
     }
 
     if ("groups" in json) {
@@ -55,7 +50,7 @@ export function res_split(
     }
 
     if (!this_will_stop_console) {
-        console.log(
+        Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )} ${path.resolve(
@@ -81,11 +76,11 @@ export function res_pack(
     encode: number,
     this_will_stop_console: boolean = false
 ): void {
-    const res_data_in_subgroups_folder = read_single_folder(dir);
+    const res_data_in_subgroups_folder = fs_js.one_reader(dir);
     const res_groups: any[] = res_data_in_subgroups_folder
         .map((file: string) => {
             if (path.parse(file).ext.toString().toLowerCase() === ".json") {
-                const json: any = readjson(`${dir}/${file}`);
+                const json: any = fs_js.read_json(`${dir}/${file}`);
                 if (
                     json.id !== undefined &&
                     json.id !== null &&
@@ -108,12 +103,12 @@ export function res_pack(
     );
     switch (encode) {
         case 1:
-            outfile(
+            fs_js.outfile_fs(
                 `${path.resolve(`${dir}/../RESOURCES.rton`)}`,
                 popcap_json_to_rton(resource_return_output_data)
             );
             if (!this_will_stop_console) {
-                console.log(
+                Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
                     )} ${path.resolve(
@@ -124,7 +119,7 @@ export function res_pack(
             break;
         case 0:
             if (!this_will_stop_console) {
-                console.log(
+                Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
                     )} ${path.resolve(`${dir}/../RESOURCES.json`)}`
@@ -137,7 +132,7 @@ export function res_pack(
 }
 export function small_res_beautify(directory: string): void {
     BeautifyRes.Tre.Resources.execute(directory);
-    console.log(
+    Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
         )} ${path.resolve(
@@ -147,13 +142,13 @@ export function small_res_beautify(directory: string): void {
 }
 
 export function res_rewrite(dir: string, mode: number, encode: number): void {
-    const res_data: any = readjson(dir);
+    const res_data: any = fs_js.read_json(dir);
     const res_groups: any[] = res_data.groups.map((res: {}) => {
         return res;
     });
     switch (encode) {
         case 1:
-            console.log(
+            Console.WriteLine(
                 `${color.fggreen_string(
                     "◉ " + localization("execution_out") + ":\n     "
                 )} ${path.resolve(
@@ -162,7 +157,7 @@ export function res_rewrite(dir: string, mode: number, encode: number): void {
             );
             break;
         case 0:
-            console.log(
+            Console.WriteLine(
                 `${color.fggreen_string(
                     "◉ " + localization("execution_out") + ":\n     "
                 )} ${path.resolve(
@@ -176,7 +171,7 @@ export function res_rewrite(dir: string, mode: number, encode: number): void {
 }
 
 export function res_beautify(dir: string): void {
-    const json: ResDataConstructor = readjson(dir);
+    const json: ResDataConstructor = fs_js.read_json(dir);
     const parentArray: any = new Array();
     if (
         json.resources !== undefined &&
@@ -207,27 +202,15 @@ export function res_beautify(dir: string): void {
 
     const resources_output_result: any[] = [].concat(...parentArray);
     json.resources = resources_output_result;
-    console.log(
+    Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
         )} ${path.resolve(`${dir}/../${path.parse(dir).name}.fixed.json`)}`
     );
-    return writejson(`${dir}/../${path.parse(dir).name}.fixed.json`, json);
-}
-
-export default class {
-    constructor(
-        public dir: string,
-        public encode: number,
-        public mode: number,
-        public data: any[]
-    ) {}
-    ResPack() {
-        pack(this.dir, this.mode, this.encode, this.data);
-    }
-    ResSplit() {
-        res_split(this.dir);
-    }
+    return fs_js.write_json(
+        `${dir}/../${path.parse(dir).name}.fixed.json`,
+        json
+    );
 }
 
 export function RepairPvZ2CResourcesPath(

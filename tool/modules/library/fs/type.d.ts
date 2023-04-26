@@ -79,7 +79,7 @@ declare type popcap_extension_checker =
     | ".rsb"
     | ".rton"
     | ".json"
-    | ".rsgp"
+    | ".rsg"
     | ".smf";
 
 declare type view_option =

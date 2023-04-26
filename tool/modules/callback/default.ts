@@ -1,4 +1,5 @@
 "use strict";
+import fs_js from "../library/fs/implement.js";
 import {
     readline_integer,
     readline_normal,
@@ -6,18 +7,16 @@ import {
 import { Console } from "./console.js";
 import functions from "./functions.js";
 import * as color from "../library/color/color.js";
-import fs from "node:fs";
+import localization from "./localization.js";
 import { Argument } from "./toolkit_question.js";
 import version from "./default/version.js";
-import localization from "./localization.js";
 import exit_program from "./default/exit.js";
 import { prompt } from "../../modules/readline/prompt/util.js";
-import fs_js from "../library/fs/implement.js";
 import path from "node:path";
 
 export default async function (): Promise<void> {
     Console.WriteLine(
-        color.fggreen_string(`◉ ${localization("execution_start")}: `) +
+        color.fggreen_string(`◉ ${localization("execution_loaded")}: `) +
             `${path.dirname(process.argv[1])} | ${
                 version.tre_version
             } | ${localization("this.language")}`
@@ -32,6 +31,9 @@ export default async function (): Promise<void> {
     const is_windows_explorer_open: boolean = fs_js.create_toolkit_view(
         "open_windows_explorer"
     ) as boolean;
+    /**
+     * @param - Automatic input path until while loop stop
+     */
     let check_while_loop_end: boolean = false;
     const start_timer: number = Date.now();
     if (proc_arr.length === 0) {
@@ -76,7 +78,7 @@ export default async function (): Promise<void> {
                 dir = dir.slice(1, -1);
             }
             try {
-                const stats = fs.statSync(dir);
+                const stats = fs_js.view_io_stream(dir);
                 if (stats.isDirectory() || stats.isFile()) {
                     proc_arr.push(dir);
                     if (is_windows_explorer_open) {
@@ -162,7 +164,7 @@ export default async function (): Promise<void> {
                 );
             default:
                 for (let i: number = 0; i < proc_arr.length; ++i) {
-                    if (fs.existsSync(proc_arr[i])) {
+                    if (fs_js.js_exists(proc_arr[i])) {
                         let hasError: boolean = false;
                         process.on("exit", function (code) {
                             if (hasError || code !== 0) {
@@ -176,11 +178,10 @@ export default async function (): Promise<void> {
                             await functions(
                                 i + 1,
                                 proc_arr[i],
-                                proc_arr.length,
-                                mode
+                                proc_arr.length
                             );
                         } catch (error: any) {
-                            console.log(
+                            Console.WriteLine(
                                 color.fgred_string(
                                     `◉ ${
                                         localization("execution_error") + ":"
@@ -215,7 +216,7 @@ export default async function (): Promise<void> {
         }
     } else {
         for (let i: number = 0; i < proc_arr.length; ++i) {
-            if (!fs.existsSync(proc_arr[i])) {
+            if (!fs_js.js_exists(proc_arr[i])) {
                 Console.WriteLine(
                     color.fgred_string(
                         `◉ ${localization("execution_failed")}: ${localization(
@@ -229,7 +230,7 @@ export default async function (): Promise<void> {
         let hasError: boolean = false;
         process.on("exit", function (code) {
             if (hasError || code !== 0) {
-                console.log(
+                Console.WriteLine(
                     "\x1b[32m◉ " +
                         localization("execution_finish") +
                         ": " +
@@ -241,9 +242,9 @@ export default async function (): Promise<void> {
         });
 
         try {
-            await functions(1, proc_arr, 1, mode);
+            await functions(1, proc_arr, 1);
         } catch (error: any) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     `◉ ${localization("execution_error") + ":"} ${
                         error.message

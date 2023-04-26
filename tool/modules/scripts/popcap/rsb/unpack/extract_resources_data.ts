@@ -2,11 +2,11 @@
 import rton2json from "../../rton/rton2json.js";
 import zlib from "zlib";
 import { res_split } from "../../../../scripts/popcap/resources/util.js";
-import * as fs_util from "../../../../library/fs/util.js";
 import { SmartBuffer } from "smart-buffer";
+import fs_js from "../../../../library/fs/implement.js";
 export default async function (
-    rsgp_name_list_uppercase: any,
-    rsgp_list_info: any,
+    rsg_name_list_uppercase: any,
+    rsg_list_info: any,
     rsb_buffer_for_unpacking: any,
     simple_unpack_method: any,
     decode_rton: boolean,
@@ -14,24 +14,24 @@ export default async function (
     rsb_new_extract_folder: any
 ) {
     let resources_file_data: any;
-    for (let k = rsgp_name_list_uppercase.length - 1; k >= 0; k--) {
+    for (let k = rsg_name_list_uppercase.length - 1; k >= 0; k--) {
         if (
-            rsgp_name_list_uppercase[k].name_path.indexOf(
+            rsg_name_list_uppercase[k].name_path.indexOf(
                 "__MANIFESTGROUP__"
             ) !== -1
         ) {
-            for (let i = rsgp_list_info.length - 1; i >= 0; i--) {
+            for (let i = rsg_list_info.length - 1; i >= 0; i--) {
                 if (
-                    rsgp_name_list_uppercase[k].rsgp_pool_index ===
-                    rsgp_list_info[i].rsgp_item_pool_index
+                    rsg_name_list_uppercase[k].rsg_pool_index ===
+                    rsg_list_info[i].rsg_item_pool_index
                 ) {
-                    let resources_rsgp_package = rsb_buffer_for_unpacking.slice(
-                        rsgp_list_info[i].rsgp_item_offset,
-                        rsgp_list_info[i].rsgp_item_offset +
-                            rsgp_list_info[i].rsgp_item_size
+                    let resources_rsg_package = rsb_buffer_for_unpacking.slice(
+                        rsg_list_info[i].rsg_item_offset,
+                        rsg_list_info[i].rsg_item_offset +
+                            rsg_list_info[i].rsg_item_size
                     );
                     if (
-                        resources_rsgp_package.slice(0, 4).toString() !== "pgsr"
+                        resources_rsg_package.slice(0, 4).toString() !== "pgsr"
                     ) {
                         const resources_header_info_repair = new SmartBuffer();
                         resources_header_info_repair
@@ -39,104 +39,102 @@ export default async function (
                             .writeInt8(4)
                             .writeBuffer(Buffer.alloc(11));
                         resources_header_info_repair.writeBuffer(
-                            rsgp_list_info[i].rsgp_temp_info_fixing_rac_rsb
+                            rsg_list_info[i].rsg_temp_info_fixing_rac_rsb
                         );
-                        resources_rsgp_package.fill(
+                        resources_rsg_package.fill(
                             resources_header_info_repair.toBuffer(),
                             0,
                             64
                         );
                     }
                     const resources_zlib_data =
-                        resources_rsgp_package.slice(28, 32).readUInt32LE() !==
-                        resources_rsgp_package.slice(32, 36).readUInt32LE()
+                        resources_rsg_package.slice(28, 32).readUInt32LE() !==
+                        resources_rsg_package.slice(32, 36).readUInt32LE()
                             ? zlib.unzipSync(
-                                  resources_rsgp_package.slice(
-                                      resources_rsgp_package
+                                  resources_rsg_package.slice(
+                                      resources_rsg_package
                                           .slice(24, 28)
                                           .readUInt32LE(),
-                                      resources_rsgp_package
+                                      resources_rsg_package
                                           .slice(24, 28)
                                           .readUInt32LE() +
-                                          resources_rsgp_package
+                                          resources_rsg_package
                                               .slice(28, 32)
                                               .readUInt32LE()
                                   )
                               )
-                            : resources_rsgp_package.slice(
-                                  resources_rsgp_package
+                            : resources_rsg_package.slice(
+                                  resources_rsg_package
                                       .slice(24, 28)
                                       .readUInt32LE(),
-                                  resources_rsgp_package
+                                  resources_rsg_package
                                       .slice(24, 28)
                                       .readUInt32LE() +
-                                      resources_rsgp_package
+                                      resources_rsg_package
                                           .slice(28, 32)
                                           .readUInt32LE()
                               );
                     resources_file_data = await rton2json(resources_zlib_data);
                     if (
-                        rsgp_list_info[i].rsgp_name_item[126] +
-                            rsgp_list_info[i].rsgp_name_item[127] !==
+                        rsg_list_info[i].rsg_name_item[126] +
+                            rsg_list_info[i].rsg_name_item[127] !==
                             0 ||
-                        resources_rsgp_package.slice(0, 4).toString() !== "pgsr"
+                        resources_rsg_package.slice(0, 4).toString() !== "pgsr"
                     ) {
                         const resources_parse_json = JSON.parse(
                             resources_file_data.slice()
                         );
-                        const res_rsgp_list = new Array();
+                        const res_rsg_list = new Array();
                         for (let group of resources_parse_json.groups) {
                             if (group.type === "simple") {
-                                res_rsgp_list.push(group.id);
+                                res_rsg_list.push(group.id);
                             }
                         }
-                        for (let rsgp_index in rsgp_list_info) {
-                            for (let key in rsgp_name_list_uppercase) {
+                        for (let rsg_index in rsg_list_info) {
+                            for (let key in rsg_name_list_uppercase) {
                                 if (
-                                    rsgp_name_list_uppercase[key]
-                                        .rsgp_pool_index ===
-                                    rsgp_list_info[rsgp_index]
-                                        .rsgp_item_pool_index
+                                    rsg_name_list_uppercase[key]
+                                        .rsg_pool_index ===
+                                    rsg_list_info[rsg_index].rsg_item_pool_index
                                 ) {
-                                    rsgp_list_info[rsgp_index].rsgp_name_item =
-                                        rsgp_name_list_uppercase[key].name_path;
+                                    rsg_list_info[rsg_index].rsg_name_item =
+                                        rsg_name_list_uppercase[key].name_path;
                                     break;
                                 }
                             }
-                            const rsgp_header_info_repair = new SmartBuffer();
-                            rsgp_header_info_repair
+                            const rsg_header_info_repair = new SmartBuffer();
+                            rsg_header_info_repair
                                 .writeString("pgsr")
                                 .writeInt8(4)
                                 .writeBuffer(Buffer.alloc(11));
-                            rsgp_header_info_repair.writeBuffer(
-                                rsgp_list_info[rsgp_index]
-                                    .rsgp_temp_info_fixing_rac_rsb
+                            rsg_header_info_repair.writeBuffer(
+                                rsg_list_info[rsg_index]
+                                    .rsg_temp_info_fixing_rac_rsb
                             );
                             rsb_buffer_for_unpacking.fill(
-                                rsgp_header_info_repair.toBuffer(),
-                                rsgp_list_info[rsgp_index].rsgp_item_offset,
-                                rsgp_list_info[rsgp_index].rsgp_item_offset + 64
+                                rsg_header_info_repair.toBuffer(),
+                                rsg_list_info[rsg_index].rsg_item_offset,
+                                rsg_list_info[rsg_index].rsg_item_offset + 64
                             );
                             rsb_buffer_for_unpacking.fill(
                                 Buffer.alloc(4),
-                                rsgp_list_info[rsgp_index].rsgp_item_offset +
-                                    48,
-                                rsgp_list_info[rsgp_index].rsgp_item_offset + 52
+                                rsg_list_info[rsg_index].rsg_item_offset + 48,
+                                rsg_list_info[rsg_index].rsg_item_offset + 52
                             );
                         }
-                        for (let rsgp_pool_index in rsgp_list_info) {
-                            for (let rsgp_name_path in res_rsgp_list) {
+                        for (let rsg_pool_index in rsg_list_info) {
+                            for (let rsg_name_path in res_rsg_list) {
                                 if (
-                                    rsgp_list_info[rsgp_pool_index]
-                                        .rsgp_name_item ===
-                                    res_rsgp_list[rsgp_name_path].toUpperCase()
+                                    rsg_list_info[rsg_pool_index]
+                                        .rsg_name_item ===
+                                    res_rsg_list[rsg_name_path].toUpperCase()
                                 ) {
-                                    rsgp_list_info[
-                                        rsgp_pool_index
-                                    ].rsgp_name_item =
-                                        res_rsgp_list[rsgp_name_path];
-                                    res_rsgp_list.splice(
-                                        rsgp_name_path as any,
+                                    rsg_list_info[
+                                        rsg_pool_index
+                                    ].rsg_name_item =
+                                        res_rsg_list[rsg_name_path];
+                                    res_rsg_list.splice(
+                                        rsg_name_path as any,
                                         1
                                     );
                                     break;
@@ -144,21 +142,21 @@ export default async function (
                             }
                         }
                     } else {
-                        for (let rsgp_item in rsgp_list_info) {
-                            rsgp_list_info[rsgp_item].rsgp_name_item =
-                                rsgp_list_info[rsgp_item].rsgp_name_item
+                        for (let rsg_item in rsg_list_info) {
+                            rsg_list_info[rsg_item].rsg_name_item =
+                                rsg_list_info[rsg_item].rsg_name_item
                                     .slice(
                                         0,
-                                        rsgp_list_info[
-                                            rsgp_item
-                                        ].rsgp_name_item.indexOf("\x00")
+                                        rsg_list_info[
+                                            rsg_item
+                                        ].rsg_name_item.indexOf("\x00")
                                     )
                                     .toString();
                         }
                     }
                     if (simple_unpack_method) {
                         if (decode_rton) {
-                            fs_util.outfile(
+                            fs_js.outfile_fs(
                                 `${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.json`,
                                 resources_file_data
                             );
@@ -167,12 +165,12 @@ export default async function (
                                     `${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.json`,
                                     true
                                 );
-                                fs_util.delete_file(
+                                fs_js.js_remove(
                                     `${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.json`
                                 );
                             }
                         } else {
-                            fs_util.outfile(
+                            fs_js.outfile_fs(
                                 `${rsb_new_extract_folder}/Res/PROPERTIES/RESOURCES.rton`,
                                 resources_zlib_data
                             );
@@ -183,5 +181,5 @@ export default async function (
             }
         }
     }
-    return [rsb_buffer_for_unpacking, rsgp_list_info];
+    return [rsb_buffer_for_unpacking, rsg_list_info];
 }

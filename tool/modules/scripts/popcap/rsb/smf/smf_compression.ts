@@ -1,21 +1,25 @@
 "use strict";
 import zlib from "zlib";
-import fs from "fs-extra";
 import { resolve } from "node:path";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
+import { Console } from "../../../../callback/console.js";
+import fs_js from "../../../../library/fs/implement.js";
 
 export default async function (path: string): Promise<void> {
-    console.log(
+    Console.WriteLine(
         `${color.fggreen_string(
             "◉ " + localization("execution_out") + ":\n     "
         )} ${resolve(`${path}.smf`)}`
     );
-    let write = fs.createWriteStream(`${path}.smf`);
-    const smf_compression = await zlib.deflateSync(fs.readFileSync(path), {
-        level: 9,
-    });
-    await write.write(Buffer.from("D4FEADDE00204C05", "hex"));
-    await write.write(smf_compression);
-    write.close();
+    const smf_compression = await zlib.deflateSync(
+        fs_js.read_file(path, "buffer"),
+        {
+            level: 9,
+        }
+    );
+    fs_js.write_stream(
+        `${path}.smf`,
+        Buffer.concat([Buffer.from("D4FEADDE00204C05", "hex"), smf_compression])
+    );
 }

@@ -1,10 +1,11 @@
 "use strict";
-import cat from "./cat.js";
-import resize from "./resize.js";
-import { readjson } from "../../../library/fs/util.js";
+import cat from "./normal/cat.js";
+import resize from "./normal/resize.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
 import path from "node:path";
+import fs_js from "../../../library/fs/implement.js";
+import { Console } from "../../../callback/console.js";
 
 export default async function (
     dir: string,
@@ -19,7 +20,7 @@ export default async function (
     total_sprites_process_in_thiz_function?: string,
     padding_size?: number
 ): Promise<void> {
-    const config_json: any = readjson(
+    const config_json: any = fs_js.write_json(
         path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     );
@@ -52,12 +53,12 @@ export default async function (
         padding_size
     );
     // 768
-    console.log(
+    Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
             `${localization("finish_packing")} 1536`
     );
     const create_768_packet_fast_resize = await resize(dir, 1536, 768);
-    console.log(
+    Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
             `${localization("finish_resize")} 768`
     );
@@ -80,13 +81,13 @@ export default async function (
         padding_size
     );
     // 384
-    console.log(
+    Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
             `${localization("finish_packing")} 768`
     );
     if (config_json.atlas.cross_resolution.allow_384) {
         const create_384_packet_fast_resize = await resize(dir, 1536, 384);
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_status")}:\n      `
             ) + `${localization("finish_resize")} 384`
@@ -109,7 +110,7 @@ export default async function (
             false,
             padding_size
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_status")}:\n      `
             ) + `${localization("finish_packing")} 384`

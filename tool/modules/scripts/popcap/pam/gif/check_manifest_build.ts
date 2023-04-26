@@ -1,8 +1,9 @@
 import { readline_normal } from "../../../../readline/util.js";
 import fs_js from "../../../../library/fs/implement.js";
 import * as color from "../../../../library/color/color.js";
-import { js_checker } from "../../../../callback/evaluate_modules_workspace_assertation.js";
+import js_checker from "../../../../callback/default/checker.js";
 import localization from "../../../../callback/localization.js";
+import { Console } from "../../../../callback/console.js";
 
 /**
  *
@@ -19,7 +20,7 @@ function check_manifest_build(
         if (create_readline_interface === "") {
             break;
         }
-        console.log(
+        Console.WriteLine(
             color.yellow_string(
                 `◉ ${localization("execution_warning")}: ${localization(
                     "pass_an_empty_str"

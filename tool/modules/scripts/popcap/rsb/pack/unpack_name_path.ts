@@ -1,26 +1,24 @@
 "use strict";
-import * as fs_util from "../../../../library/fs/util.js";
 import { res_pack } from "../../../../scripts/popcap/resources/util.js";
-import rsgp_pack from "../../rsg/rsgp_pack.js";
+import rsg_pack from "../../rsg/rsg_pack.js";
 import * as color from "../../../../library/color/color.js";
 import localization from "../../../../callback/localization.js";
+import fs_js from "../../../../library/fs/implement.js";
+import { Console } from "../../../../callback/console.js";
+
 export default async function (
     rsb_path: string,
-    RSGP_items_list: any,
+    RSG_items_list: any,
     pack_method: any,
-    RSGP_file_data_list: any
+    RSG_file_data_list: any
 ) {
-    const rsgp_packet_info = new Array();
-    const rsgp_data_info = new Array();
-    const RSGP_file_data_list_clone = RSGP_file_data_list.slice();
-    function Unpack_Packet(
-        rsgp_data: any,
-        composite_index: any,
-        rsgp_name: any
-    ) {
-        const part1_ZSize = rsgp_data.slice(44, 48).readInt32LE();
-        const info_size = rsgp_data.slice(72, 76).readInt32LE();
-        const info_offset = rsgp_data.slice(76, 80).readInt32LE();
+    const rsg_packet_info = new Array();
+    const rsg_data_info = new Array();
+    const RSG_file_data_list_clone = RSG_file_data_list.slice();
+    function Unpack_Packet(rsg_data: any, composite_index: any, rsg_name: any) {
+        const part1_ZSize = rsg_data.slice(44, 48).readInt32LE();
+        const info_size = rsg_data.slice(72, 76).readInt32LE();
+        const info_offset = rsg_data.slice(76, 80).readInt32LE();
         const info_limit = info_size + info_offset;
         let ptx_number = 0;
         function CheckPtxFormat(square_ratio: any) {
@@ -36,7 +34,7 @@ export default async function (
                     format_ptx = 147;
                     break;
                 default:
-                    console.log(
+                    Console.WriteLine(
                         color.fgred_string(
                             localization("unknown_ptx_format_detected")
                         )
@@ -52,13 +50,13 @@ export default async function (
             ...any_any: number[]
         ) {
             if (atlas) {
-                const file_data_size = rsgp_data
+                const file_data_size = rsg_data
                     .slice(temp_offset - 4, temp_offset)
                     .readInt32LE();
-                const image_width = rsgp_data
+                const image_width = rsg_data
                     .slice(temp_offset + 12, temp_offset + 16)
                     .readInt32LE();
-                const image_height = rsgp_data
+                const image_height = rsg_data
                     .slice(temp_offset + 16, temp_offset + 20)
                     .readInt32LE();
                 const format = CheckPtxFormat(
@@ -69,7 +67,7 @@ export default async function (
                     )
                 );
                 ptx_number++;
-                rsgp_packet_info.push({
+                rsg_packet_info.push({
                     name_path,
                     composite_index,
                     image_width,
@@ -77,7 +75,7 @@ export default async function (
                     format,
                 });
             } else {
-                rsgp_packet_info.push({
+                rsg_packet_info.push({
                     name_path,
                     composite_index,
                     image_width: 0,
@@ -89,13 +87,13 @@ export default async function (
             let name_path = "";
             let name_dict = new Array();
             while (temp_offset < info_limit) {
-                const character_byte = rsgp_data.slice(
+                const character_byte = rsg_data.slice(
                     temp_offset,
                     (temp_offset += 1)
                 );
                 const temp_bytes =
                     Buffer.concat([
-                        rsgp_data.slice(temp_offset, (temp_offset += 3)),
+                        rsg_data.slice(temp_offset, (temp_offset += 3)),
                         Buffer.alloc(1),
                     ]).readInt32LE() * 4;
                 if (character_byte === "\x00") {
@@ -128,15 +126,15 @@ export default async function (
         part1_ZSize !== 0
             ? Extract_File(true, info_offset)
             : Extract_File(false, info_offset);
-        rsgp_data_info.push({ rsgp_name, composite_index, ptx_number });
+        rsg_data_info.push({ rsg_name, composite_index, ptx_number });
     }
     const pack_simple_system_data = new Array();
-    for (let rsgp_item of RSGP_items_list) {
+    for (let rsg_item of RSG_items_list) {
         if (
             pack_method === "simple" &&
-            rsgp_item.name_path.toUpperCase() === "PACKAGES"
+            rsg_item.name_path.toUpperCase() === "PACKAGES"
         ) {
-            const packages_data = await rsgp_pack(
+            const packages_data = await rsg_pack(
                 `${rsb_path}/RES/PACKAGES`,
                 true,
                 true,
@@ -145,21 +143,16 @@ export default async function (
             );
             Unpack_Packet(
                 packages_data,
-                rsgp_item.composite_index,
-                rsgp_item.name_path
+                rsg_item.composite_index,
+                rsg_item.name_path
             );
             pack_simple_system_data.push(packages_data);
         } else if (
             pack_method === "simple" &&
-            rsgp_item.name_path.toUpperCase().indexOf("__MANIFESTGROUP__") !==
-                -1
+            rsg_item.name_path.toUpperCase().indexOf("__MANIFESTGROUP__") !== -1
         ) {
             let resources_data;
-            if (
-                fs_util.if_file_exists(
-                    `${rsb_path}/Res/PROPERTIES/RESOURCES.res`
-                )
-            ) {
+            if (fs_js.is_file(`${rsb_path}/Res/PROPERTIES/RESOURCES.res`)) {
                 res_pack(
                     `${rsb_path}/Res/PROPERTIES/RESOURCES.res`,
                     0,
@@ -167,7 +160,7 @@ export default async function (
                     true
                 ),
                     true;
-                resources_data = await rsgp_pack(
+                resources_data = await rsg_pack(
                     `${rsb_path}/Res\\PROPERTIES\\RESOURCES.JSON`,
                     true,
                     true,
@@ -176,11 +169,9 @@ export default async function (
                 );
             } else {
                 if (
-                    fs_util.if_file_exists(
-                        `${rsb_path}/Res/PROPERTIES/RESOURCES.json`
-                    )
+                    fs_js.is_file(`${rsb_path}/Res/PROPERTIES/RESOURCES.json`)
                 ) {
-                    resources_data = await rsgp_pack(
+                    resources_data = await rsg_pack(
                         `${rsb_path}/Res\\PROPERTIES\\RESOURCES.JSON`,
                         true,
                         true,
@@ -188,11 +179,9 @@ export default async function (
                         true
                     );
                 } else if (
-                    fs_util.if_file_exists(
-                        `${rsb_path}/Res/PROPERTIES/RESOURCES.rton`
-                    )
+                    fs_js.is_file(`${rsb_path}/Res/PROPERTIES/RESOURCES.rton`)
                 ) {
-                    resources_data = await rsgp_pack(
+                    resources_data = await rsg_pack(
                         `${rsb_path}/Res\\PROPERTIES\\RESOURCES.RTON`,
                         true,
                         true,
@@ -205,34 +194,35 @@ export default async function (
             }
             Unpack_Packet(
                 resources_data,
-                rsgp_item.composite_index,
-                rsgp_item.name_path
+                rsg_item.composite_index,
+                rsg_item.name_path
             );
             pack_simple_system_data.push(resources_data);
         } else if (pack_method === "everything") {
-            for (let h = 0; h < RSGP_file_data_list_clone.length; h++) {
+            for (let h = 0; h < RSG_file_data_list_clone.length; h++) {
                 if (
-                    RSGP_file_data_list_clone[h].rsgp_name.toUpperCase() ===
-                    rsgp_item.name_path.toUpperCase()
+                    RSG_file_data_list_clone[h].rsg_name.toUpperCase() ===
+                    rsg_item.name_path.toUpperCase()
                 ) {
                     Unpack_Packet(
-                        RSGP_file_data_list_clone[h].rsgp_data,
-                        rsgp_item.composite_index,
-                        rsgp_item.name_path
+                        RSG_file_data_list_clone[h].rsg_data,
+                        rsg_item.composite_index,
+                        rsg_item.name_path
                     );
-                    RSGP_file_data_list_clone.splice(h, 1);
+                    RSG_file_data_list_clone.splice(h, 1);
                     break;
                 }
             }
         } else {
             Unpack_Packet(
-                fs_util.readfilebuffer(
-                    `${rsb_path}/Packet/${rsgp_item.name_path}.rsgp`
+                fs_js.read_file(
+                    `${rsb_path}/Packet/${rsg_item.name_path}.rsg`,
+                    "buffer"
                 ),
-                rsgp_item.composite_index,
-                rsgp_item.name_path
+                rsg_item.composite_index,
+                rsg_item.name_path
             );
         }
     }
-    return [rsgp_packet_info, rsgp_data_info, pack_simple_system_data];
+    return [rsg_packet_info, rsg_data_info, pack_simple_system_data];
 }

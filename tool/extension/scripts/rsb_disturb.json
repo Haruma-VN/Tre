@@ -9,13 +9,10 @@
         {
             "notify": null,
             "func": "popcap_rsb_disturb",
-            "entry": [
-                "?",
-                "->"
-            ]
+            "entry": ["?", "->"]
         },
         {
-            "notify": "End evaluation",
+            "notify": "End evaluate",
             "func": "end",
             "entry": null
         }

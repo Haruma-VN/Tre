@@ -1,5 +1,4 @@
 "use strict";
-import fs from "node:fs";
 import { execSync } from "node:child_process";
 import { parse } from "node:path";
 import sharp from "sharp";
@@ -7,9 +6,9 @@ import * as color from "../../color/color.js";
 import localization from "../../../callback/localization.js";
 import path from "node:path";
 import bitstream from "bit-buffer";
-import { delete_file } from "../../fs/util.js";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
+import { Console } from "../../../callback/console.js";
 
 export default async function (
     dir: string,
@@ -18,21 +17,21 @@ export default async function (
     not_notify_console_log: boolean = false
 ): Promise<void> {
     if (!not_notify_console_log) {
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_information")}: `
             ) + "rgb_etc1_a_palette"
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(`◉ ${localization("execution_in")}:\n     `) +
                 `${fs_js.get_full_path(dir)}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_width")}: `
             ) + `${width}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_height")}: `
             ) + `${height}`
@@ -40,7 +39,9 @@ export default async function (
     }
     const checker_dimension = exception_encode_dimension(width, height);
     if (checker_dimension && fs_js.check_etcpak()) {
-        delete_file(`${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`);
+        fs_js.js_remove(
+            `${parse(dir).dir}/${parse(dir).name.toUpperCase()}.png`
+        );
         const tre_thirdparty =
             path.dirname(process.argv[1]) + "/extension/third/encode/";
         let cmd = `etcpak.exe --etc1 -v "${parse(dir).base}" "${parse(
@@ -54,16 +55,16 @@ export default async function (
         pvr_header.writeInt32LE(("0x" + height.toString(16)) as any, 24);
         const originalImage = Buffer.concat([
             pvr_header,
-            fs.readFileSync(dir).slice(0, (width * height) / 2),
+            fs_js.read_file(dir, "buffer").slice(0, (width * height) / 2),
         ]);
-        fs.writeFileSync(`${tre_thirdparty}${parse(dir).base}`, originalImage);
+        fs_js.write_file(`${tre_thirdparty}${parse(dir).base}`, originalImage);
         execSync(cmd, { cwd: tre_thirdparty, stdio: "ignore" });
         await sharp(`${tre_thirdparty}${parse(dir).name.toUpperCase()}.png`)
             .removeAlpha()
             .toBuffer()
             .then(async (slice_alpha) => {
-                const alpha_channel_palette = fs
-                    .readFileSync(dir)
+                const alpha_channel_palette = fs_js
+                    .read_file(dir, "buffer")
                     .slice((width * height) / 2);
                 const square = width * height;
                 const indexNumber = alpha_channel_palette[0];
@@ -109,7 +110,7 @@ export default async function (
                             .toBuffer()
                             .then((buffer) => {
                                 if (!not_notify_console_log) {
-                                    console.log(
+                                    Console.WriteLine(
                                         color.fggreen_string(
                                             `◉ ${localization(
                                                 "execution_out"
@@ -122,16 +123,16 @@ export default async function (
                                             )}`
                                     );
                                 }
-                                fs.writeFileSync(
+                                fs_js.write_file(
                                     `${parse(dir).dir}/${parse(
                                         dir
                                     ).name.toUpperCase()}.png`,
                                     buffer
                                 );
                             });
-                        for (let item of fs.readdirSync(tre_thirdparty)) {
+                        for (let item of fs_js.one_reader(tre_thirdparty)) {
                             parse(item).ext.toUpperCase() !== ".EXE"
-                                ? fs.unlinkSync(`${tre_thirdparty}${item}`)
+                                ? fs_js.js_remove(`${tre_thirdparty}${item}`)
                                 : {};
                         }
                     })

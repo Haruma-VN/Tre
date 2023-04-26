@@ -10,7 +10,7 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./dist/*"]
     },
     "rootDir": "./src",
     "outDir": "./dist"

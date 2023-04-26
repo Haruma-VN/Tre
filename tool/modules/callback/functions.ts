@@ -1,5 +1,4 @@
 "use strict";
-import { readjson } from "../library/fs/util.js";
 import { Display } from "./toolkit_functions.js";
 import { Argument } from "./toolkit_question.js";
 import { Console } from "./console.js";
@@ -20,8 +19,7 @@ export interface configAtlas {
 export default async function (
     execute_file_count: number,
     execute_file_dir: string | string[],
-    execute_file_length: number,
-    mode: number
+    execute_file_length: number
 ): Promise<void> {
     if (typeof execute_file_dir === "string") {
         execute_file_dir = resolveFilePath(execute_file_dir);
@@ -32,7 +30,7 @@ export default async function (
             }
         }
     }
-    const json_config: any = readjson(
+    const json_config: any = fs_js.read_json(
         path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     );

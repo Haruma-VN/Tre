@@ -60,10 +60,10 @@ function check_evaluate_system(file_system_input_as_str: string): string {
                 return localization("jpg_file") as string;
             case ".gif":
                 return localization("gif_file") as string;
-            case ".rsgp":
+            case ".rsg":
             case ".pgsr":
             case ".rsg":
-                return localization("rsgp_file") as string;
+                return localization("rsg_file") as string;
             case ".smf":
                 return localization("smf_file") as string;
             case ".ptx":

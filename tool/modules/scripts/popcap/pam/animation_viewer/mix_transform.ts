@@ -1,8 +1,8 @@
 "use strict";
 export default function mix_transform(
-    source: number[],
-    change: number[]
-): [number, number, number, number, number, number] {
+    source: bigint[],
+    change: bigint[],
+): [bigint, bigint, bigint, bigint, bigint, bigint] {
     return [
         change[0] * source[0] + change[2] * source[1],
         change[1] * source[0] + change[3] * source[1],

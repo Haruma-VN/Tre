@@ -1,7 +1,7 @@
 {
 	"atlas": {
 		"cross_resolution": {
-			"allow_384": true
+			"allow_384": false
 		},
 		"pack": {
 			"smart": false,
@@ -28,7 +28,7 @@
 	"debugger": {
 		"allow_tracking_bugs": true
 	},
-	"language": "Spanish",
+	"language": "English",
 	"popcap_rton_conversion": {
 		"rton": {
 			"rton_cipher": "65bd1b2305f46eb2806b935aab7630bb"
@@ -37,7 +37,8 @@
 	"user": {
 		"using_extension_for_rsb_pack": "rsb",
 		"progress_bar": true,
-		"open_windows_explorer": false
+		"open_windows_explorer": false,
+		"host": "user"
 	},
 	"popcap_resource_stream_group_unpack": {
 		"simple": {
@@ -84,12 +85,9 @@
 		"y_position_append": 0,
 		"background_color": "#00000000",
 		"frame_rate": -1,
-		"gif_quality": 10,
-		"gif_loop": 0,
-		"algorithm": "neuquant",
-		"create_gif": true,
-		"split_label": true,
-		"generate_image_frames": true,
+		"create_apng": true,
+		"split_label": false,
+		"generate_image_frames": false,
 		"frame_default_name": "frame_"
 	}
 }

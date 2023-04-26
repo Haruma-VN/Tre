@@ -1,7 +1,9 @@
 "use strict";
 import localization from "../localization.js";
+import { Console } from "../console.js";
+
 function exit_program(): void {
-    console.log(
+    Console.WriteLine(
         "\x1b[32m◉ " +
             localization("execution_finish") +
             ": " +

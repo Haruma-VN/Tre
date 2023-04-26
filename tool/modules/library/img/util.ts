@@ -1,7 +1,6 @@
 "use strict";
 //#region libraries
 import split from "./split/split.js";
-import resize from "./utility/resize.js";
 import dimension from "./dimension/dimension.js";
 import cat from "./cat/cat.js";
 import decode_argb8888 from "./decode/argb8888.js";
@@ -21,7 +20,6 @@ import max_sharp from "./exception/evaluate.js";
 import exception_encode_dimension from "./exception/encode.js";
 export {
     split,
-    resize,
     dimension,
     cat,
     decode_argb8888,

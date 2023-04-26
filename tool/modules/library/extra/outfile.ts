@@ -1,11 +1,12 @@
 "use strict";
-import { readfile, writefile, read_dir } from "../fs/util.js";
 import { Extra } from "./extra_script.js";
 import path from "node:path";
 import zlib from "node:zlib";
-import fs from "node:fs";
 import localization from "../../callback/localization.js";
 import * as color from "../color/color.js";
+import fs_js from "../fs/implement.js";
+import { Console } from "../../callback/console.js";
+
 export default function (
     dir: string | string[],
     is_folder_check: boolean = false,
@@ -21,11 +22,11 @@ export default function (
         key = "";
     }
     async function ExtraCompression(dir: string): Promise<any> {
-        const message = readfile(dir);
+        const message: str = fs_js.read_file(dir, "utf8");
         const extra = new Extra.Tre.System.Encrypt(message, key);
         switch (method) {
             case "md5":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -33,7 +34,7 @@ export default function (
                 );
                 break;
             case "sha1":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -41,7 +42,7 @@ export default function (
                 );
                 break;
             case "sha3":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -49,7 +50,7 @@ export default function (
                 );
                 break;
             case "sha224":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -57,7 +58,7 @@ export default function (
                 );
                 break;
             case "sha256":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -65,7 +66,7 @@ export default function (
                 );
                 break;
             case "sha384":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -73,7 +74,7 @@ export default function (
                 );
                 break;
             case "sha512":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -81,7 +82,7 @@ export default function (
                 );
                 break;
             case "xor":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -89,7 +90,7 @@ export default function (
                 );
                 break;
             case "base64-encode":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -97,7 +98,7 @@ export default function (
                 );
                 break;
             case "base64-decode":
-                writefile(
+                fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
@@ -105,60 +106,65 @@ export default function (
                 );
                 break;
             case "gzip-compress":
-                await writefile(
+                await fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
-                    zlib.gzipSync(Buffer.from(readfile(dir)))
+                    zlib.gzipSync(Buffer.from(fs_js.read_file(dir, "buffer")))
                 );
                 break;
             case "gzip-decompress":
-                await writefile(
+                await fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
-                    zlib.gunzipSync(fs.readFileSync(dir)).toString()
+                    zlib.gunzipSync(fs_js.read_file(dir, "buffer")).toString()
                 );
                 break;
             case "deflate-compress":
-                await writefile(
+                await fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
-                    zlib.deflateSync(Buffer.from(readfile(dir)))
+                    zlib.deflateSync(
+                        Buffer.from(fs_js.read_file(dir, "buffer"))
+                    )
                 );
                 break;
             case "deflate-decompress":
-                await writefile(
+                await fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
-                    zlib.inflateSync(fs.readFileSync(dir)).toString()
+                    zlib.inflateSync(fs_js.read_file(dir, "buffer")).toString()
                 );
                 break;
             case "zlib-compress":
-                await writefile(
+                await fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
-                    zlib.deflateSync(Buffer.from(readfile(dir)), {
-                        level: zlib.constants.Z_BEST_COMPRESSION,
-                    })
+                    zlib.deflateSync(
+                        Buffer.from(fs_js.read_file(dir, "buffer")),
+                        {
+                            level: zlib.constants.Z_BEST_COMPRESSION,
+                        }
+                    )
                 );
                 break;
             case "zlib-decompress":
-                await writefile(
+                await fs_js.write_file(
                     `${dir}/../${path.parse(dir).name}${
                         path.parse(dir).ext
                     }.bin`,
-                    zlib.inflateSync(fs.readFileSync(dir)).toString()
+                    zlib.inflateSync(fs_js.read_file(dir, "buffer")).toString()
                 );
                 break;
         }
     }
     if (!is_folder_check) {
         if (typeof dir === "string") {
-            console.log(
+            Console.WriteLine(
                 `${color.fggreen_string(
                     "◉ " + localization("execution_out") + ":\n     "
                 )} ${path.resolve(
@@ -170,7 +176,7 @@ export default function (
             ExtraCompression(dir);
         } else {
             dir.forEach((file) => {
-                console.log(
+                Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
                     )} ${path.resolve(
@@ -183,13 +189,13 @@ export default function (
             });
         }
     } else {
-        console.log(
+        Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )} ${path.resolve(`${dir}`)}`
         );
         if (typeof dir === "string") {
-            read_dir(dir).forEach(async (file_directory: string) => {
+            fs_js.full_reader(dir).forEach(async (file_directory: string) => {
                 await ExtraCompression(file_directory);
             });
         }

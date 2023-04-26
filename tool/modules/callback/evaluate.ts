@@ -103,28 +103,28 @@ async function create_evaluate_argument(
                 "popcap_texture_decode_pvrtc" as popcap_game_edit_method
             );
             break;
-        case Display.Tre.Function.popcap_zlib_rsgp_unpack.void_number_readline_argument() as evaluate_method:
+        case Display.Tre.Function.popcap_zlib_rsg_unpack.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_rsgp_unpack" as popcap_game_edit_method
+                "popcap_zlib_rsg_unpack" as popcap_game_edit_method
             );
             break;
-        case Display.Tre.Function.popcap_rsgp_unpack_simple.void_number_readline_argument() as evaluate_method:
+        case Display.Tre.Function.popcap_rsg_unpack_simple.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_rsgp_unpack_simple" as popcap_game_edit_method
+                "popcap_rsg_unpack_simple" as popcap_game_edit_method
             );
             break;
-        case Display.Tre.Function.popcap_zlib_rsgp_pack.void_number_readline_argument() as evaluate_method:
+        case Display.Tre.Function.popcap_zlib_rsg_pack.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_rsgp_pack" as popcap_game_edit_method
+                "popcap_zlib_rsg_pack" as popcap_game_edit_method
             );
             break;
-        case Display.Tre.Function.popcap_rsgp_pack_simple.void_number_readline_argument() as evaluate_method:
+        case Display.Tre.Function.popcap_rsg_pack_simple.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_rsgp_pack_simple" as popcap_game_edit_method
+                "popcap_rsg_pack_simple" as popcap_game_edit_method
             );
             break;
         case Display.Tre.Function.popcap_resources_to_tre_info.void_number_readline_argument() as evaluate_method:

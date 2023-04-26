@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import * as color from "../../library/color/color.js";
 import path from "node:path";
+import { Console } from "../console.js";
 
 namespace System.Tre.Checker {
     export function check_tre_extension(): boolean {
@@ -11,7 +12,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(extension_folder) ||
             !fs.statSync(extension_folder).isDirectory()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No extension folder for the tool."
                 )
@@ -28,7 +29,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(toolkit_json_file_path) ||
             !fs.statSync(toolkit_json_file_path).isFile()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No toolkit.json, cannot finish the missing data."
                 )
@@ -45,7 +46,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(tre_third_party_for_raw_images) ||
             !fs.statSync(tre_third_party_for_raw_images).isDirectory()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No third party for encoding images."
                 )
@@ -59,7 +60,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(tre_third_party_for_etc_pak) ||
             !fs.statSync(tre_third_party_for_etc_pak).isFile()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No third party founded for etcpak."
                 )
@@ -73,7 +74,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(tre_third_party_for_pvrtc) ||
             !fs.statSync(tre_third_party_for_pvrtc).isFile()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No third party founded for PVRTexToolCLI."
                 )
@@ -86,7 +87,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(tre_third_party_for_upscaler) ||
             !fs.statSync(tre_third_party_for_upscaler).isDirectory()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No third party founded for upscaling images."
                 )
@@ -100,7 +101,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(tre_third_party_for_upscaler_real_esrgan) ||
             !fs.statSync(tre_third_party_for_upscaler_real_esrgan).isFile()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No third party founded for realesrgan-ncnn-vulkan.exe."
                 )
@@ -117,7 +118,7 @@ namespace System.Tre.Checker {
             !fs.existsSync(node_modules_folder) ||
             !fs.statSync(node_modules_folder).isDirectory()
         ) {
-            console.log(
+            Console.WriteLine(
                 color.fgred_string(
                     "◉ Exception found: No node_modules, cannot process."
                 )

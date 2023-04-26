@@ -12,6 +12,8 @@ import check_resources_build from "../gif/check_manifest_build.js";
 import localization from "../../../../callback/localization.js";
 import evaluate_modules_workspace_assertation from "../../../../callback/evaluate_modules_workspace_assertation.js";
 import createSprite from "./create_sprite.js";
+import { Console } from "../../../../callback/console.js";
+
 export default async function (path: string, number_sprites: number) {
     const extra_json: any = fs_js.read_json(`${path}/extra.json`);
     const source_folder = fs_js.one_reader(`${path}/LIBRARY/media`);
@@ -45,7 +47,7 @@ export default async function (path: string, number_sprites: number) {
     const texture_reslution = [384, 640, 768, 1200, 1536];
     for (let reslution of texture_reslution) {
         if (reslution * image_reslution === atlas_reslution) {
-            console.log(reslution);
+            Console.WriteLine(reslution);
             atlas_reslution = reslution;
             break;
         }

@@ -29,19 +29,6 @@ import {
     atlas_split_experimental,
     atlas_pack_experimental,
 } from "../scripts/popcap/atlas/util.js";
-import {
-    readjson,
-    readfile,
-    writefile,
-    writejson,
-    check_is_file,
-    file_stats,
-    readfilebuffer,
-    makefolder,
-    delete_file,
-    read_dir,
-    read_single_folder,
-} from "../library/fs/util.js";
 import { Argument } from "./toolkit_question.js";
 import { extname, basename } from "../library/extension/util.js";
 import { Console } from "./console.js";
@@ -53,7 +40,7 @@ import {
 import * as color from "../library/color/color.js";
 import extra_system from "../library/extra/outfile.js";
 import path from "node:path";
-import { unpack_rsgp, pack_rsgp } from "../scripts/popcap/rsg/util.js";
+import { unpack_rsg, pack_rsg } from "../scripts/popcap/rsg/util.js";
 import readline_for_json from "./public/input/readline_for_json.js";
 import ban from "./public/js_evaluate/ban.js";
 import applyPatch from "../library/json/patch.js";
@@ -61,8 +48,8 @@ import generatePatch from "../library/json/generate_patch.js";
 import * as ImagesUtilities from "../library/img/util.js";
 import * as popcap_game_content_edit from "../scripts/popcap/rsb/utilities.js";
 import { Lawnstrings } from "../scripts/popcap/localization/lawnstrings.js";
-import PopCapPackages from "../scripts/popcap/json/utilities.js";
-import RSBInfo from "../scripts/default/support/utilities.js";
+import PopCapPackages from "../scripts/popcap/json/util.js";
+import RSBInfo from "../scripts/default/support/util.js";
 import {
     popcap_rton_to_json,
     popcap_json_to_rton,
@@ -95,6 +82,7 @@ import {
 import { create_evaluate } from "./helper/util.js";
 import popcap_rsb_disturb from "../scripts/default/scrapped/disturb.js";
 import input_img from "./public/img/input_img.js";
+import animation_viewer from "../scripts/popcap/pam/animation_viewer/generate_animation.js";
 
 /**
  *
@@ -133,7 +121,7 @@ async function evaluate_js_modules_workspace_assertation(
      */
     const check_if_the_directories_iz_folder: boolean =
         !js_checker.is_array(execute_file_dir) &&
-        check_is_file(execute_file_dir)
+        fs_js.is_file(execute_file_dir)
             ? false
             : true;
     /**
@@ -146,6 +134,7 @@ async function evaluate_js_modules_workspace_assertation(
         fs_js.functions_json_location as string,
         true
     );
+    fs_js.execution_start(localization(method));
     // todo -> adding configuration for popcap_pam_resolution
     switch (method as str) {
         case "batch_popcap_animation_add_media_content" as popcap_game_edit_method:
@@ -192,6 +181,46 @@ async function evaluate_js_modules_workspace_assertation(
                         file,
                         popcap_pam_resolution as 1536 | 768 | 384 | 640 | 1200
                     );
+                });
+            }
+            break;
+        case "flash_animation_resize" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                Console.WriteLine(
+                    color.fgcyan_string(
+                        Argument.Tre.Packages.popcap_flash_animation_resize
+                    )
+                );
+                Console.WriteLine(
+                    color.fggreen_string(
+                        Argument.Tre.Packages
+                            .popcap_flash_animation_resize_detail
+                    )
+                );
+                fs_js.flash_anim_resize_notify();
+                const popcap_pam_resolution: number =
+                    Console.TextureQualityReadLine();
+                await flash_animation_resize(
+                    execute_file_dir,
+                    popcap_pam_resolution
+                );
+            } else {
+                execute_file_dir.forEach(async (file) => {
+                    Console.WriteLine(
+                        color.fgcyan_string(
+                            Argument.Tre.Packages.popcap_flash_animation_resize
+                        )
+                    );
+                    Console.WriteLine(
+                        color.fggreen_string(
+                            Argument.Tre.Packages
+                                .popcap_flash_animation_resize_detail
+                        )
+                    );
+                    fs_js.flash_anim_resize_notify();
+                    const popcap_pam_resolution: number =
+                        Console.TextureQualityReadLine();
+                    await flash_animation_resize(file, popcap_pam_resolution);
                 });
             }
             break;
@@ -638,7 +667,7 @@ async function evaluate_js_modules_workspace_assertation(
             try {
                 if (!js_checker.is_array(execute_file_dir)) {
                     const js_shell_string_await_for_executor: string =
-                        readfile(execute_file_dir);
+                        fs_js.read_file(execute_file_dir, "utf8");
                     let javascript_shell_allow_this_funcction: boolean = ban(
                         [
                             "eval",
@@ -1154,10 +1183,10 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_rsgp_unpack":
+        case "popcap_zlib_rsg_unpack":
             if (!js_checker.is_array(execute_file_dir)) {
-                await unpack_rsgp(
-                    readfilebuffer(execute_file_dir),
+                await unpack_rsg(
+                    fs_js.read_file(execute_file_dir, "buffer"),
                     `${path.parse(execute_file_dir).dir}/${
                         path.parse(execute_file_dir).name
                     }.packet`,
@@ -1169,12 +1198,12 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file) => {
                     if (
-                        fs_js.popcap_check_extname(file, ".rsgp") ||
+                        fs_js.popcap_check_extname(file, ".rsg") ||
                         fs_js.popcap_check_extname(file, ".pgsr") ||
                         fs_js.popcap_check_extname(file, ".rsg")
                     ) {
-                        await unpack_rsgp(
-                            readfilebuffer(file),
+                        await unpack_rsg(
+                            fs_js.read_file(file, "buffer"),
                             `${path.parse(file).dir}/${
                                 path.parse(file).name
                             }.packet`,
@@ -1187,10 +1216,10 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_rsgp_unpack_simple":
+        case "popcap_rsg_unpack_simple":
             if (!js_checker.is_array(execute_file_dir)) {
-                await unpack_rsgp(
-                    readfilebuffer(execute_file_dir),
+                await unpack_rsg(
+                    fs_js.read_file(execute_file_dir, "buffer"),
                     `${path.parse(execute_file_dir).dir}/${
                         path.parse(execute_file_dir).name
                     }.packet`,
@@ -1202,12 +1231,12 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file) => {
                     if (
-                        fs_js.popcap_check_extname(file, ".rsgp") ||
+                        fs_js.popcap_check_extname(file, ".rsg") ||
                         fs_js.popcap_check_extname(file, ".pgsr") ||
                         fs_js.popcap_check_extname(file, ".rsg")
                     ) {
-                        await unpack_rsgp(
-                            readfilebuffer(file),
+                        await unpack_rsg(
+                            fs_js.read_file(file, "buffer"),
                             `${path.parse(file).dir}/${
                                 path.parse(file).name
                             }.packet`,
@@ -1220,24 +1249,24 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_rsgp_pack" as popcap_game_edit_method:
+        case "popcap_zlib_rsg_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                await pack_rsgp(execute_file_dir);
+                await pack_rsg(execute_file_dir);
             } else {
                 execute_file_dir.forEach(async (file) => {
                     if (fs_js.is_directory(file)) {
-                        await pack_rsgp(file);
+                        await pack_rsg(file);
                     }
                 });
             }
             break;
-        case "popcap_rsgp_pack_simple" as popcap_game_edit_method:
+        case "popcap_rsg_pack_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                await pack_rsgp(execute_file_dir, true);
+                await pack_rsg(execute_file_dir, true);
             } else {
                 execute_file_dir.forEach(async (file) => {
                     if (fs_js.is_directory(file)) {
-                        await pack_rsgp(file, true);
+                        await pack_rsg(file, true);
                     }
                 });
             }
@@ -4066,16 +4095,16 @@ async function evaluate_js_modules_workspace_assertation(
                 let json_apply_path: string = await readline_for_json(
                     execute_file_dir
                 );
-                let apply_patch: any = readjson(execute_file_dir);
+                let apply_patch: any = fs_js.read_json(execute_file_dir);
                 apply_patch =
                     JSON.stringify(apply_patch) === "{}"
                         ? { loop: false, patch: [] }
                         : apply_patch;
                 const finish_apply_patch_json = await applyPatch(
-                    readjson(json_apply_path),
+                    fs_js.read_json(json_apply_path),
                     apply_patch
                 );
-                writejson(
+                fs_js.write_json(
                     `${json_apply_path}/../${
                         path.parse(json_apply_path).name
                     }.patched.json`,
@@ -4104,16 +4133,16 @@ async function evaluate_js_modules_workspace_assertation(
                     );
                     fs_js.execution_notify("received", file);
                     let json_apply_path: string = await readline_for_json(file);
-                    let apply_patch: any = readjson(file);
+                    let apply_patch: any = fs_js.read_json(file);
                     apply_patch =
                         JSON.stringify(apply_patch) === "{}"
                             ? { loop: false, patch: [] }
                             : apply_patch;
                     const finish_apply_patch_json = await applyPatch(
-                        readjson(json_apply_path),
+                        fs_js.read_json(json_apply_path),
                         apply_patch
                     );
-                    writejson(
+                    fs_js.write_json(
                         `${json_apply_path}/../${
                             path.parse(json_apply_path).name
                         }.patched.json`,
@@ -4154,13 +4183,13 @@ async function evaluate_js_modules_workspace_assertation(
                 );
                 let json_new_file_compare_diff: string =
                     await readline_for_json(execute_file_dir);
-                writejson(
+                fs_js.write_json(
                     `${json_new_file_compare_diff}/../${
                         path.parse(json_new_file_compare_diff).name
                     }_patch.json`,
                     generatePatch(
-                        readjson(execute_file_dir),
-                        readjson(json_new_file_compare_diff)
+                        fs_js.read_json(execute_file_dir),
+                        fs_js.read_json(json_new_file_compare_diff)
                     )
                 );
                 Console.WriteLine(
@@ -4197,13 +4226,13 @@ async function evaluate_js_modules_workspace_assertation(
                     );
                     let json_new_file_compare_diff: string =
                         await readline_for_json(file);
-                    writejson(
+                    fs_js.write_json(
                         `${json_new_file_compare_diff}/../${
                             path.parse(json_new_file_compare_diff).name
                         }_patch.json`,
                         generatePatch(
-                            readjson(file),
-                            readjson(json_new_file_compare_diff)
+                            fs_js.read_json(file),
+                            fs_js.read_json(json_new_file_compare_diff)
                         )
                     );
                     Console.WriteLine(
@@ -4281,6 +4310,19 @@ async function evaluate_js_modules_workspace_assertation(
                         file,
                         new_compare_json_diff
                     );
+                });
+            }
+            break;
+        case "popcap_animation_viewer" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                Console.WriteLine(execute_file_dir);
+                Console.WriteLine(
+                    color.fgcyan_string(`${localization("provide_anim")}`)
+                );
+                // await animation_viewer(await popcap_pam_decode(execute_file_dir, true), );
+            } else {
+                execute_file_dir.forEach(async (file) => {
+                    await popcap_flash_to_pam_json(file);
                 });
             }
             break;
@@ -4447,7 +4489,7 @@ async function evaluate_js_modules_workspace_assertation(
                     upscale_data = 4;
                 }
                 const new_folder_contain_upscale_images: string = `${execute_file_dir}_x${upscale_data}`;
-                makefolder(new_folder_contain_upscale_images);
+                fs_js.create_directory(new_folder_contain_upscale_images);
                 Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_out") + ":\n     "
@@ -4468,21 +4510,3 @@ async function evaluate_js_modules_workspace_assertation(
     return;
 }
 export default evaluate_js_modules_workspace_assertation;
-
-export {
-    writefile,
-    writejson,
-    basename,
-    delete_file,
-    read_single_folder,
-    read_dir,
-    readfilebuffer,
-    js_checker,
-    file_stats,
-    fs_js,
-    stringify,
-    parse,
-    resolveFilePath,
-    extra_system,
-    extname,
-};

@@ -208,17 +208,17 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("real_esrgan_upscaler_image").filter,
         execution_evaluate_view("real_esrgan_upscaler_image").allow
     );
-    export const popcap_zlib_rsgp_unpack = new Void(
-        localization("popcap_zlib_rsgp_unpack"),
-        execution_evaluate_view("popcap_zlib_rsgp_unpack").option,
-        execution_evaluate_view("popcap_zlib_rsgp_unpack").filter,
-        execution_evaluate_view("popcap_zlib_rsgp_unpack").allow
+    export const popcap_zlib_rsg_unpack = new Void(
+        localization("popcap_zlib_rsg_unpack"),
+        execution_evaluate_view("popcap_zlib_rsg_unpack").option,
+        execution_evaluate_view("popcap_zlib_rsg_unpack").filter,
+        execution_evaluate_view("popcap_zlib_rsg_unpack").allow
     );
-    export const popcap_zlib_rsgp_pack = new Void(
-        localization("popcap_zlib_rsgp_pack"),
-        execution_evaluate_view("popcap_zlib_rsgp_pack").option,
-        execution_evaluate_view("popcap_zlib_rsgp_pack").filter,
-        execution_evaluate_view("popcap_zlib_rsgp_pack").allow
+    export const popcap_zlib_rsg_pack = new Void(
+        localization("popcap_zlib_rsg_pack"),
+        execution_evaluate_view("popcap_zlib_rsg_pack").option,
+        execution_evaluate_view("popcap_zlib_rsg_pack").filter,
+        execution_evaluate_view("popcap_zlib_rsg_pack").allow
     );
     export const popcap_zlib_rsb_unpack = new Void(
         localization("popcap_zlib_rsb_unpack"),
@@ -346,17 +346,17 @@ export namespace Display.Tre.Function {
         execution_evaluate_view("popcap_atlas_pack_advanced").filter,
         execution_evaluate_view("popcap_atlas_pack_advanced").allow
     );
-    export const popcap_rsgp_unpack_simple = new Void(
-        localization("popcap_rsgp_unpack_simple"),
-        execution_evaluate_view("popcap_rsgp_unpack_simple").option,
-        execution_evaluate_view("popcap_rsgp_unpack_simple").filter,
-        execution_evaluate_view("popcap_rsgp_unpack_simple").allow
+    export const popcap_rsg_unpack_simple = new Void(
+        localization("popcap_rsg_unpack_simple"),
+        execution_evaluate_view("popcap_rsg_unpack_simple").option,
+        execution_evaluate_view("popcap_rsg_unpack_simple").filter,
+        execution_evaluate_view("popcap_rsg_unpack_simple").allow
     );
-    export const popcap_rsgp_pack_simple = new Void(
-        localization("popcap_rsgp_pack_simple"),
-        execution_evaluate_view("popcap_rsgp_pack_simple").option,
-        execution_evaluate_view("popcap_rsgp_pack_simple").filter,
-        execution_evaluate_view("popcap_rsgp_pack_simple").allow
+    export const popcap_rsg_pack_simple = new Void(
+        localization("popcap_rsg_pack_simple"),
+        execution_evaluate_view("popcap_rsg_pack_simple").option,
+        execution_evaluate_view("popcap_rsg_pack_simple").filter,
+        execution_evaluate_view("popcap_rsg_pack_simple").allow
     );
     export const popcap_rsb_unpack_simple = new Void(
         localization("popcap_rsb_unpack_simple"),
@@ -549,8 +549,8 @@ export namespace Display.Tre.Function {
         popcap_texture_resize_atlas_simple,
         popcap_texture_resize_atlas,
         real_esrgan_upscaler_image,
-        popcap_zlib_rsgp_unpack,
-        popcap_zlib_rsgp_pack,
+        popcap_zlib_rsg_unpack,
+        popcap_zlib_rsg_pack,
         popcap_zlib_rsb_unpack,
         popcap_zlib_rsb_pack,
         popcap_zlib_smf_decompress,
@@ -569,8 +569,8 @@ export namespace Display.Tre.Function {
         popcap_rton_encode_and_encrypt,
         popcap_atlas_split_advanced,
         popcap_atlas_pack_advanced,
-        popcap_rsgp_unpack_simple,
-        popcap_rsgp_pack_simple,
+        popcap_rsg_unpack_simple,
+        popcap_rsg_pack_simple,
         popcap_rsb_unpack_simple,
         popcap_rsb_pack_simple,
         popcap_rsb_resource_unpack,

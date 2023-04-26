@@ -1,19 +1,14 @@
 "use strict";
+import fs_js from "../../../../library/fs/implement.js";
 import LocalCompareItemsInDirectory from "./third.js";
-import {
-    read_single_folder,
-    readjson,
-    makefolder,
-    writefile,
-    readfile,
-} from "../../../../library/fs/util.js";
 import path from "node:path";
+
 export default function LocalResourcesCompare(
     vanilla_directory: string,
     modded_directory: string
 ) {
-    const res1 = read_single_folder(vanilla_directory);
-    const res2 = read_single_folder(modded_directory);
+    const res1 = fs_js.one_reader(vanilla_directory);
+    const res2 = fs_js.one_reader(modded_directory);
     const same_items_in_res: string[] = new Array();
     for (const res_data_in_original_packet in res1) {
         for (const res_data_in_modified_packet in res2) {
@@ -35,10 +30,10 @@ export default function LocalResourcesCompare(
                 res1[res_data_in_original_packet] ===
                 res2[res_data_in_modified_packet]
             ) {
-                const file_origin_vsdiff = readjson(
+                const file_origin_vsdiff = fs_js.read_json(
                     `${vanilla_directory}/${res1[res_data_in_original_packet]}`
                 );
-                const file_modified_vsdiff = readjson(
+                const file_modified_vsdiff = fs_js.read_json(
                     `${modded_directory}/${res2[res_data_in_original_packet]}`
                 );
                 if (
@@ -57,11 +52,11 @@ export default function LocalResourcesCompare(
     const folder_output_copy_packet = `${modded_directory}/../${
         path.parse(modded_directory).name
     }_cmp.res`;
-    makefolder(folder_output_copy_packet);
+    fs_js.create_directory(folder_output_copy_packet, true);
     for (let copy of output_copy_packet_resource) {
-        writefile(
+        fs_js.write_file(
             `${folder_output_copy_packet}/${copy}`,
-            readfile(`${modded_directory}/${copy}`)
+            fs_js.read_file(`${modded_directory}/${copy}`, "buffer")
         );
     }
 }

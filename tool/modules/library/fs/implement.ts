@@ -9,6 +9,7 @@ import zlib from "zlib";
 import crypto from "crypto";
 import dataview_checker from "../../callback/default/checker.js";
 import { execSync } from "child_process";
+import { Console } from "../../callback/console.js";
 
 interface FrameData {
     getImage: () => NodeJS.ReadableStream;
@@ -383,7 +384,7 @@ class fs_js {
             );
         });
         create_write_stream_fs_js.write(file_system_write_data_view);
-        create_write_stream_fs_js.end();
+        create_write_stream_fs_js.close();
         //#endregion
     }
 
@@ -587,7 +588,7 @@ class fs_js {
         for (let i: number = 0; i < messages.length; ++i) {
             text += messages[i];
         }
-        console.log(text);
+        Console.WriteLine(text);
         //#endregion
     }
     /*-------------------------------------------------------------------------------------------------*/
@@ -1093,7 +1094,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(
+        return Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_out") + ":\n     "
             )}${this.get_full_path(text)}`
@@ -1109,7 +1110,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(
+        return Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_in")
             )}:\n     ${this.get_full_path(text)}`
@@ -1125,7 +1126,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(
+        return Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_information") + ":"
             )} ` + `${text}`
@@ -1141,7 +1142,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(
+        return Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_finish") + ":"
             )} ` + `${text}`
@@ -1157,7 +1158,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(
+        return Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_created") + ":"
             )} ` + `${text}`
@@ -1178,19 +1179,19 @@ class fs_js {
         }
         switch (status) {
             case "success":
-                return console.log(
+                return Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_status") + ":"
                     )} ` + `${text}`
                 );
             case "failed":
-                return console.log(
+                return Console.WriteLine(
                     `${color.fgred_string(
                         "◉ " + localization("execution_status") + ":"
                     )} ` + `${text}`
                 );
             case "argument":
-                return console.log(
+                return Console.WriteLine(
                     color.fgcyan_string(
                         `${color.fgcyan_string(
                             "◉ " + localization("execution_status") + ":"
@@ -1198,7 +1199,7 @@ class fs_js {
                     )
                 );
             case "none":
-                return console.log(
+                return Console.WriteLine(
                     `${color.fgwhite_string(
                         "◉ " + localization("execution_status") + ":"
                     )} ` + `${text}`
@@ -1222,13 +1223,13 @@ class fs_js {
         }
         switch (notify) {
             case "success":
-                return console.log(
+                return Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_finish") + ":\n     "
                     )} ` + `${text}`
                 );
             case "failed":
-                return console.log(
+                return Console.WriteLine(
                     color.fgred_string(
                         `${
                             "◉ " +
@@ -1239,7 +1240,7 @@ class fs_js {
                     )
                 );
             case "argument":
-                return console.log(
+                return Console.WriteLine(
                     color.fgcyan_string(
                         `${color.fgcyan_string(
                             "◉ " + localization("execution_argument") + ":"
@@ -1247,13 +1248,13 @@ class fs_js {
                     )
                 );
             case "received":
-                return console.log(
+                return Console.WriteLine(
                     `${color.fggreen_string(
                         "◉ " + localization("execution_received") + ":\n     "
                     )} ` + `${text}`
                 );
             case "void":
-                return console.log(`${color.fgwhite_string(text)}`);
+                return Console.WriteLine(`${color.fgwhite_string(text)}`);
             default:
                 return message as never;
         }
@@ -1270,31 +1271,31 @@ class fs_js {
         assertation_array.forEach(function (assertation_arg: string) {
             switch (notify) {
                 case "success":
-                    return console.log(
+                    return Console.WriteLine(
                         `${color.fggreen_string(
                             "◉ " + localization("execution_finish") + ":"
                         )} ` + `${assertation_arg}`
                     );
                 case "failed":
-                    return console.log(
+                    return Console.WriteLine(
                         `${color.fgred_string(
                             "◉ " + localization("execution_failed") + ":"
                         )} ` + `${assertation_arg}`
                     );
                 case "argument":
-                    return console.log(
+                    return Console.WriteLine(
                         `${color.fgcyan_string(
                             "◉ " + localization("execution_argument") + ":"
                         )} ` + `${assertation_arg}`
                     );
                 case "received":
-                    return console.log(
+                    return Console.WriteLine(
                         `${color.fggreen_string(
                             "◉ " + localization("execution_received") + ":"
                         )} ` + `${assertation_arg}`
                     );
                 case "void":
-                    return console.log(
+                    return Console.WriteLine(
                         `${color.fgwhite_string(assertation_arg)}`
                     );
                 default:
@@ -2073,7 +2074,7 @@ class fs_js {
             | ".rsb"
             | ".rton"
             | ".json"
-            | ".rsgp"
+            | ".rsg"
             | ".smf"
             | ".obb"
             | ".rsb1"
@@ -2100,7 +2101,7 @@ class fs_js {
         ".rsb",
         ".rton",
         ".json",
-        ".rsgp",
+        ".rsg",
         ".smf",
         ".obb",
         ".rsb1",
@@ -2216,7 +2217,7 @@ class fs_js {
         for (let i: number = 0; i < message.length; ++i) {
             text += message;
         }
-        return console.log(
+        return Console.WriteLine(
             `${color.fggreen_string(
                 "◉ " + localization("execution_loaded") + ":\n     "
             )} ` + `${text}`
@@ -2228,10 +2229,12 @@ class fs_js {
 
     public static execution_boolean_view(): void {
         //#region
-        console.log(
+        Console.WriteLine(
             `      0. ${localization("set_default_behavior_to_false")}`
         );
-        console.log(`      1. ${localization("set_default_behavior_to_true")}`);
+        Console.WriteLine(
+            `      1. ${localization("set_default_behavior_to_true")}`
+        );
         return;
         //#endregion
     }
@@ -2240,7 +2243,7 @@ class fs_js {
 
     public static create_padding_argument(min: number, max: number): void {
         //#region
-        console.log(
+        Console.WriteLine(
             `${color.fgcyan_string(
                 "◉ " + localization("execution_information") + ": "
             )}` +
@@ -2264,7 +2267,7 @@ class fs_js {
             view === "width"
                 ? localization("the_width_should_be_in_range")
                 : localization("the_height_should_be_in_range");
-        console.log(
+        Console.WriteLine(
             `${color.fgcyan_string(
                 "◉ " + localization("execution_information") + ": "
             )}` + `${create_evaluate_print_message} ${min} ~ ${max}`
@@ -2277,7 +2280,7 @@ class fs_js {
 
     public static create_texture_quality_argument(): void {
         //#region
-        console.log(
+        Console.WriteLine(
             `${color.fgcyan_string(
                 "◉ " + localization("execution_information") + ":\n     "
             )}` +
@@ -2336,12 +2339,12 @@ class fs_js {
 
     public static display_dimension(width: number, height: number): void {
         //#region
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_width")}: `
             ) + `${width}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_height")}: `
             ) + `${height}`
@@ -2599,13 +2602,13 @@ class fs_js {
             try {
                 execSync("chcp 65001", { stdio: "ignore" });
             } catch (error: any) {
-                this.execution_status("failed", error.message);
+                this.execution_status("failed", error.message as string);
             }
         }
         //#endregion
     }
 
-    /*-------------------------------------------------------------------------------------------------*/
+    /*------------------------------------------*/
 
     public static tool_title(title: str) {
         //#region
@@ -2656,13 +2659,44 @@ class fs_js {
 
     public static flash_anim_resize_notify(): void {
         //#region
-        console.log(`      1536. `);
-        console.log(`      768. `);
-        console.log(`      384. `);
-        console.log(`      1200. `);
-        console.log(`      640. `);
+        Console.WriteLine(`      1536. `);
+        Console.WriteLine(`      768. `);
+        Console.WriteLine(`      384. `);
+        Console.WriteLine(`      1200. `);
+        Console.WriteLine(`      640. `);
         return;
         //#endregion
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    public static execution_start(...message: Array<auto>): void {
+        //#region
+        let text: string = "";
+        for (let i: number = 0; i < message.length; ++i) {
+            text += message;
+        }
+        return Console.WriteLine(
+            `${color.fggreen_string(
+                "◉ " + localization("execution_start") + ":"
+            )} ` + `${text}`
+        );
+        //#endregion
+    }
+
+    public static generateText(length: number): string {
+        const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let result = "";
+        const charactersLength = characters.length;
+
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+
+        return result;
     }
 }
 

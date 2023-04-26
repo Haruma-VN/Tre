@@ -2,6 +2,7 @@
 import promptSync from "prompt-sync";
 import localization from "../../callback/localization.js";
 import * as color from "../../library/color/color.js";
+import { Console } from "../../callback/console.js";
 
 function prompt(
     question: string = "\x1b[36m◉ ",
@@ -49,12 +50,12 @@ function prompt(
                 break;
             }
         } else {
-            console.log(exception_range_message);
+            Console.WriteLine(exception_range_message);
             answer = prompt(question);
             continue;
         }
         if (not_in_range && Array.isArray(range) && !range.includes(answer)) {
-            console.log(not_in_range);
+            Console.WriteLine(not_in_range);
             answer = prompt(question);
             continue;
         }

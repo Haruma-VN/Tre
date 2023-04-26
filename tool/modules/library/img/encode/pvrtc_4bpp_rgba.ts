@@ -6,9 +6,9 @@ import { dimension } from "../util.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../color/color.js";
 import path from "node:path";
-import { delete_file } from "../../fs/util.js";
 import exception_encode_dimension from "../exception/encode.js";
 import fs_js from "../../fs/implement.js";
+import { Console } from "../../../callback/console.js";
 
 export default async function (
     dir: string,
@@ -26,21 +26,21 @@ export default async function (
     const height: number = dimension_x.height;
     const offset: number = (width * height) / 2;
     if (!not_notify_console_log) {
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_information")}: `
             ) + "rgb_pvrtc4_a_8"
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(`◉ ${localization("execution_in")}:\n     `) +
                 `${fs_js.get_full_path(dir)}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_width")}: `
             ) + `${width}`
         );
-        console.log(
+        Console.WriteLine(
             color.fggreen_string(
                 `◉ ${localization("execution_display_height")}: `
             ) + `${height}`
@@ -48,7 +48,7 @@ export default async function (
     }
     const get_exception: boolean = exception_encode_dimension(width, height);
     if (get_exception && fs_js.check_pvrtc()) {
-        delete_file(
+        fs_js.js_remove(
             path.resolve(`${dirname(dir)}/${basename(dir).toUpperCase()}.ptx`)
         );
         try {
@@ -73,7 +73,7 @@ export default async function (
             originalImage
         );
         if (!not_notify_console_log) {
-            console.log(
+            Console.WriteLine(
                 color.fggreen_string(
                     `◉ ${localization("execution_out")}:\n     `
                 ) +

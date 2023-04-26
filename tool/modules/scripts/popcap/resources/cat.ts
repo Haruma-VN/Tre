@@ -1,13 +1,8 @@
 "use strict";
-import {
-    read_single_folder,
-    readjson,
-    writejson,
-    outfile,
-} from "../../../library/fs/util.js";
 import BeautifyRes from "./beautify/beautify.js";
 import path from "node:path";
 import json2rton from "../rton/json2rton.js";
+import fs_js from "../../../library/fs/implement.js";
 
 export interface SimpleData {
     id: string;
@@ -44,7 +39,7 @@ export default function (
     is_rewrite_mode: boolean = false,
     is_return_output_mode: boolean = false
 ): any {
-    let config_json: any = readjson(
+    let config_json: any = fs_js.read_json(
         path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     );
@@ -109,18 +104,18 @@ export default function (
         return resources_output_result;
     }
     if (!is_rewrite_mode) {
-        writejson(
+        fs_js.write_json(
             `${dir}/../${path.parse(dir).name}.json`,
             resources_output_result
         );
     } else {
         if (encode) {
-            outfile(
+            fs_js.outfile_fs(
                 `${dir}/../${path.parse(dir).name}.rewrite.rton`,
                 json2rton(resources_output_result)
             );
         } else {
-            writejson(
+            fs_js.write_json(
                 `${dir}/../${path.parse(dir).name}.rewrite.json`,
                 resources_output_result
             );

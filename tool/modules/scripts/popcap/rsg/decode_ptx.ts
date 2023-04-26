@@ -1,11 +1,12 @@
 "use strict";
 import * as image_util from "../../../library/img/util.js";
-import * as fs from "../../../library/fs/util.js";
 import * as color from "../../../library/color/color.js";
 import localization from "../../../callback/localization.js";
 import { parse } from "node:path";
 import { readline_integer } from "../../../readline/prompt/util.js";
 import fs_js from "../../../library/fs/implement.js";
+import { Console } from "../../../callback/console.js";
+
 export default async function DecodePTX(
     ptx_path: string,
     file_data_size: number,
@@ -21,7 +22,7 @@ export default async function DecodePTX(
     switch (square_ratio) {
         case 20:
             if (ios_argb8888 === 2) {
-                console.log(
+                Console.WriteLine(
                     color.fgcyan_string(
                         `◉ ${localization("execution_argument")}: ${
                             parse(ptx_path).base
@@ -84,8 +85,8 @@ export default async function DecodePTX(
             );
     }
 
-    if (fs.check_is_file(ptx_path)) {
-        await fs.delete_file(ptx_path);
+    if (fs_js.is_file(ptx_path)) {
+        await fs_js.js_remove(ptx_path);
     }
 
     return format;

@@ -1,9 +1,11 @@
 "use strict";
-import { readjson } from "../../fs/util.js";
 import sharp from "sharp";
 import localization from "../../../callback/localization.js";
 import * as color from "../../color/color.js";
 import path from "node:path";
+import fs_js from "../../fs/implement.js";
+import { Console } from "../../../callback/console.js";
+
 export default async function (
     dir: string,
     x: number,
@@ -14,14 +16,14 @@ export default async function (
     name: string,
     extension_list: string[]
 ) {
-    const json_config: any = readjson(
+    const json_config: any = fs_js.read_json(
         path.dirname(process.argv[1]) + "/extension/settings/toolkit.json",
         true
     );
     if (json_config.atlas.split.notify_duplicate) {
         for (let extension of extension_list) {
             if (name === extension) {
-                console.log(
+                Console.WriteLine(
                     color.yellow_string(
                         `◉ ${localization(
                             "execution_warning"
