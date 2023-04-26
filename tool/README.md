@@ -24,7 +24,6 @@ Tre currently uses the following third-party libraries:
 | ---------------- | ------------------------------------------------- |
 | Sharp            | https://github.com/lovell/sharp                   |
 | Crypto-JS        | https://github.com/brix/crypto-js                 |
-| hacker-shot-     | https://github.com/jprichardson/node-hacker-shot- |
 | maxrects-packer  | https://github.com/soimy/maxrects-packer          |
 | prompt-sync      | https://github.com/heapwolf/prompt-sync           |
 | smart-buffer     | https://github.com/JoshGlazebrook/smart-buffer    |
@@ -32,14 +31,12 @@ Tre currently uses the following third-party libraries:
 | PVRTexTool-Cli   | https://developer.imaginationtech.com/pvrtextool/ |
 | Real_Esrgan      | https://github.com/xinntao/Real-ESRGAN/           |
 | cross-path-sort  | https://github.com/mdjermanovic/cross-path-sort   |
-| stream-slice     | https://github.com/yorkie/stream-slice            |
 | rijndael-js      | https://github.com/Snack-X/rijndael-js            |
 | big-varint       | https://www.npmjs.com/package/big-varint          |
 | bit-buffer       | https://github.com/inolen/bit-buffer              |
 | xml-but-prettier | https://github.com/shockey/xml-but-prettier       |
 | xml-mapping      | https://github.com/Inist-CNRS/node-xml-mapping    |
 | cli-progress     | https://github.com/npkgz/cli-progress             |
-| gif-frames       | https://github.com/benwiley4000/gif-frames        |
 
 ## Installation
 
