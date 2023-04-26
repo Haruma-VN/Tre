@@ -16,7 +16,7 @@ import { prompt } from "../../modules/readline/prompt/util.js";
 export default async function (): Promise<void> {
     Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_loaded")}: `) +
-            `${path.dirname(process.argv[1])} | ${
+            `${fs_js.dirname(process.argv[1])} | ${
                 version.tre_version
             } | ${localization("this.language")}`
     );
