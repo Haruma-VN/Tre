@@ -2164,7 +2164,7 @@ class fs_js {
             case "open_windows_explorer":
                 return toolkit_json.user.open_windows_explorer as bool;
             case "gif":
-                return toolkit_json.gif as any;
+                return toolkit_json.apng as any;
             case "host":
                 return toolkit_json.user.host as string;
             default:

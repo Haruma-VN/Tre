@@ -12,6 +12,8 @@ import increaseFramerate from "./frame_rate/increase_framerate.js";
 import fs_resize from "./flash_resize/fs_resize.js";
 import add_content from "./batch/add_content.js";
 
+export { read_pam };
+
 export { add_content };
 
 export async function popcap_pam_encode(

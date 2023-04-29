@@ -186,32 +186,23 @@ declare type toolkit_json = {
             pam_to_xfl: boolean;
         };
     };
-    gif: {
-        texture_reslution: -1 | 1536 | 384 | 768 | 640 | 1200;
-        image_name_by_id: bool;
-        turn_on_sprite: bool;
+    apng: {
+        texture_reslution: number;
+        image_name_by_id: boolean;
+        turn_on_sprite: boolean;
         width_append: number;
         height_append: number;
         x_position_append: number;
         y_position_append: number;
-        background_color: "#00000000";
+        background_color: string;
         frame_rate: number;
-        gif_quality: number;
-        gif_loop: 0 | -1;
-        algorithm: "neuquant" | "octree";
-        create_gif: bool;
-        split_label: bool;
-        generate_image_frames: bool;
+        create_apng: boolean;
+        split_label: boolean;
+        generate_image_frames: boolean;
         frame_default_name: string;
     };
 };
 
 declare type toolkit_error = NodeJS.ErrnoException;
-
-declare type return_gif_to_pngs = {
-    width: number;
-    height: number;
-    name: string;
-};
 
 declare type DialogType = "file" | "directory" | "any";
