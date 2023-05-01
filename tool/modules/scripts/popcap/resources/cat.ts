@@ -38,12 +38,12 @@ export default function (
     encode: any,
     res_array_for_data: any[],
     is_rewrite_mode: boolean = false,
-    is_return_output_mode: boolean = false
+    is_return_output_mode: boolean = false,
 ): any {
     fs_js.using("PopCap Resource Group Merge", "ignore");
     let config_json: any = fs_js.read_json(
         fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
-        true
+        true,
     );
     const popcap_resource_manifest_data: any[] = res_array_for_data;
     let slot_count: number = 0;
@@ -60,40 +60,25 @@ export default function (
     };
     for (let i = 0; i < popcap_resource_manifest_data.length; i++) {
         if (Resources_Property.resources in popcap_resource_manifest_data[i]) {
-            for (
-                let j: number = 0;
-                j <
-                popcap_resource_manifest_data[i][Resources_Property.resources]
-                    .length;
-                j++
-            ) {
-                popcap_resource_manifest_data[i][Resources_Property.resources][
-                    j
-                ][Resources_Property.popcap_resource_slot] = slot_count;
+            for (let j: number = 0; j < popcap_resource_manifest_data[i][Resources_Property.resources].length; j++) {
+                popcap_resource_manifest_data[i][Resources_Property.resources][j][
+                    Resources_Property.popcap_resource_slot
+                ] = slot_count;
                 slot_count++;
-                if (
-                    config_json[Resources_Property.resources].cat
-                        .fix_double_shadows
-                ) {
+                if (config_json[Resources_Property.resources].cat.fix_double_shadows) {
                     if (
-                        popcap_resource_manifest_data[i][
-                            Resources_Property.resources
-                        ][j][Resources_Property.popcap_resource_id] ===
-                        Resources_Property.pea_shadows
+                        popcap_resource_manifest_data[i][Resources_Property.resources][j][
+                            Resources_Property.popcap_resource_id
+                        ] === Resources_Property.pea_shadows
                     ) {
-                        popcap_resource_manifest_data[i][
-                            Resources_Property.resources
-                        ][j][Resources_Property.cols] =
+                        popcap_resource_manifest_data[i][Resources_Property.resources][j][Resources_Property.cols] =
                             Resources_Property.default_pea_shadows_property_fix;
                     }
                 }
             }
         }
         if (mode === 2) {
-            popcap_resource_manifest_data[i] =
-                BeautifyRes.Tre.Resources.beautify_res(
-                    popcap_resource_manifest_data[i]
-                );
+            popcap_resource_manifest_data[i] = BeautifyRes.Tre.Resources.beautify_res(popcap_resource_manifest_data[i]);
         }
     }
     resources_output_result.groups = popcap_resource_manifest_data;
@@ -102,21 +87,15 @@ export default function (
         return resources_output_result;
     }
     if (!is_rewrite_mode) {
-        fs_js.write_json(
-            `${dir}/../${fs_js.parse_fs(dir).name}.json`,
-            resources_output_result
-        );
+        fs_js.write_json(`${dir}/../${fs_js.parse_fs(dir).name}.json`, resources_output_result);
     } else {
         if (encode) {
             fs_js.outfile_fs(
                 `${dir}/../${fs_js.parse_fs(dir).name}.rewrite.rton`,
-                json2rton(resources_output_result)
+                json2rton(resources_output_result, false),
             );
         } else {
-            fs_js.write_json(
-                `${dir}/../${fs_js.parse_fs(dir).name}.rewrite.json`,
-                resources_output_result
-            );
+            fs_js.write_json(`${dir}/../${fs_js.parse_fs(dir).name}.rewrite.json`, resources_output_result);
         }
     }
     return 0;

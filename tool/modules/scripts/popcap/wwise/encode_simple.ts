@@ -8,16 +8,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
     const wwsise_bnk = new SmartBuffer();
 
     function sortItem(a: string, b: string) {
-        const order = [
-            "BKHD",
-            "INIT",
-            "STMG",
-            "DIDX",
-            "HIRC",
-            "STID",
-            "ENVS",
-            "PLAT",
-        ];
+        const order = ["BKHD", "INIT", "STMG", "DIDX", "HIRC", "STID", "ENVS", "PLAT"];
         const indexA = order.indexOf(a);
         const indexB = order.indexOf(b);
         if (indexA === -1 && indexB === -1) {
@@ -47,31 +38,22 @@ export default function (wwise_path: string, wem_data: boolean = true) {
             wwsise_bnk.writeUInt32LE(INIT_item[i].id);
             wwsise_bnk.writeString(INIT_item[i].name + "\x00");
         }
-        wwsise_bnk.insertUInt32LE(
-            wwsise_bnk.writeOffset - INIT_length_offset,
-            INIT_length_offset
-        );
+        wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - INIT_length_offset, INIT_length_offset);
     }
 
     function EncodeSTMG() {
         const STMG_item = wwise_json.STMG;
         wwsise_bnk.writeString("STMG");
         const STMG_length_offset = wwsise_bnk.writeOffset;
-        const volume_threshold = convertHexStringtoBuffer(
-            STMG_item.volume_threshold
-        );
+        const volume_threshold = convertHexStringtoBuffer(STMG_item.volume_threshold);
         if (volume_threshold.length !== 4) {
             throw new Error(localization("invalid_volume_threshold"));
         }
-        const max_voice_instances = convertHexStringtoBuffer(
-            STMG_item.max_voice_instances
-        );
+        const max_voice_instances = convertHexStringtoBuffer(STMG_item.max_voice_instances);
         if (max_voice_instances.length !== 2) {
             throw new Error(localization("invalid_volume_threshold"));
         }
-        wwsise_bnk
-            .writeBuffer(volume_threshold)
-            .writeBuffer(max_voice_instances);
+        wwsise_bnk.writeBuffer(volume_threshold).writeBuffer(max_voice_instances);
         if (ver_140) {
             wwsise_bnk.writeUInt16LE(STMG_item.unknown_type_1);
         }
@@ -79,9 +61,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
         wwsise_bnk.writeUInt32LE(stage_group.length);
         for (let i = 0; i < stage_group.length; i++) {
             wwsise_bnk.writeUInt32LE(stage_group[i].id);
-            const default_transition_time = convertHexStringtoBuffer(
-                stage_group[i].data.default_transition_time
-            );
+            const default_transition_time = convertHexStringtoBuffer(stage_group[i].data.default_transition_time);
             if (default_transition_time.length !== 4) {
                 throw new Error(localization("invalid_volume_threshold"));
             }
@@ -89,9 +69,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
             const custom_transition = stage_group[i].data.custom_transition;
             wwsise_bnk.writeUInt32LE(custom_transition);
             for (let k = 0; k < custom_transition.length; k++) {
-                const vaule = convertHexStringtoBuffer(
-                    custom_transition[k].vaule
-                );
+                const vaule = convertHexStringtoBuffer(custom_transition[k].vaule);
                 wwsise_bnk.writeBuffer(vaule);
             }
         }
@@ -115,9 +93,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
         wwsise_bnk.writeUInt32LE(game_parameter.length);
         for (let i = 0; i < game_parameter.length; i++) {
             wwsise_bnk.writeUInt32LE(game_parameter[i].id);
-            const parameter_data = convertHexStringtoBuffer(
-                game_parameter[i].data
-            );
+            const parameter_data = convertHexStringtoBuffer(game_parameter[i].data);
             if (ver_112 || ver_140) {
                 if (parameter_data.length !== 17) {
                     throw new Error(localization("invalid_parameter_data_val"));
@@ -132,10 +108,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
         if (ver_140) {
             wwsise_bnk.writeUInt32LE(STMG_item.unknown_type_2);
         }
-        wwsise_bnk.insertUInt32LE(
-            wwsise_bnk.writeOffset - STMG_length_offset,
-            STMG_length_offset
-        );
+        wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - STMG_length_offset, STMG_length_offset);
     }
 
     function HIRCEncode() {
@@ -150,49 +123,28 @@ export default function (wwise_path: string, wem_data: boolean = true) {
             wwsise_bnk.writeUInt32LE(HIRC_item[i].id);
             wwsise_bnk.writeBuffer(data);
         }
-        wwsise_bnk.insertUInt32LE(
-            wwsise_bnk.writeOffset - HIRC_length_offset,
-            HIRC_length_offset
-        );
+        wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - HIRC_length_offset, HIRC_length_offset);
     }
 
     function EncodeENVSItem(object: any) {
-        wwsise_bnk.writeBuffer(
-            convertHexStringtoBuffer(object.volume.volume_vaule)
-        );
+        wwsise_bnk.writeBuffer(convertHexStringtoBuffer(object.volume.volume_vaule));
         const volume_point = object.volume.volume_point;
         wwsise_bnk.writeUInt16LE(volume_point.length);
         for (let i = 0; i < volume_point.length; i++) {
-            wwsise_bnk.writeBuffer(
-                convertHexStringtoBuffer(volume_point[i].vaule)
-            );
+            wwsise_bnk.writeBuffer(convertHexStringtoBuffer(volume_point[i].vaule));
         }
-        wwsise_bnk.writeBuffer(
-            convertHexStringtoBuffer(
-                object.low_pass_filter.low_pass_filter_vaule
-            )
-        );
-        const low_pass_filter_point =
-            object.low_pass_filter.low_pass_filter_point;
+        wwsise_bnk.writeBuffer(convertHexStringtoBuffer(object.low_pass_filter.low_pass_filter_vaule));
+        const low_pass_filter_point = object.low_pass_filter.low_pass_filter_point;
         wwsise_bnk.writeUInt16LE(low_pass_filter_point.length);
         for (let i = 0; i < low_pass_filter_point.length; i++) {
-            wwsise_bnk.writeBuffer(
-                convertHexStringtoBuffer(low_pass_filter_point[i].vaule)
-            );
+            wwsise_bnk.writeBuffer(convertHexStringtoBuffer(low_pass_filter_point[i].vaule));
         }
         if (ver_112 || ver_140) {
-            wwsise_bnk.writeBuffer(
-                convertHexStringtoBuffer(
-                    object.high_pass_filter.high_pass_filter_vaule
-                )
-            );
-            const high_pass_filter_point =
-                object.high_pass_filter.high_pass_filter_point;
+            wwsise_bnk.writeBuffer(convertHexStringtoBuffer(object.high_pass_filter.high_pass_filter_vaule));
+            const high_pass_filter_point = object.high_pass_filter.high_pass_filter_point;
             wwsise_bnk.writeUInt16LE(high_pass_filter_point.length);
             for (let i = 0; i < high_pass_filter_point.length; i++) {
-                wwsise_bnk.writeBuffer(
-                    convertHexStringtoBuffer(high_pass_filter_point[i].vaule)
-                );
+                wwsise_bnk.writeBuffer(convertHexStringtoBuffer(high_pass_filter_point[i].vaule));
             }
         }
     }
@@ -203,20 +155,14 @@ export default function (wwise_path: string, wem_data: boolean = true) {
         const ENVS_length_offset = wwsise_bnk.writeOffset;
         EncodeENVSItem(ENVS_item.obstruction);
         EncodeENVSItem(ENVS_item.occlusion);
-        wwsise_bnk.insertUInt32LE(
-            wwsise_bnk.writeOffset - ENVS_length_offset,
-            ENVS_length_offset
-        );
+        wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - ENVS_length_offset, ENVS_length_offset);
     }
 
     function EncodePLAT() {
         wwsise_bnk.writeString("PLAT");
         const PLAT_length_offset = wwsise_bnk.writeOffset;
         wwsise_bnk.writeString(wwise_json.PLAT.platform + "\x00");
-        wwsise_bnk.insertUInt32LE(
-            wwsise_bnk.writeOffset - PLAT_length_offset,
-            PLAT_length_offset
-        );
+        wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - PLAT_length_offset, PLAT_length_offset);
     }
 
     function EncodeRTID() {}
@@ -225,10 +171,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
         let wem_item = new Array();
         if (wem_data) {
             for (let i = 0; i < DIDX_item.length; i++) {
-                const data = fs_js.read_file(
-                    `${wwise_path}/embedded_audio/${DIDX_item[i]}.wem`,
-                    "buffer"
-                );
+                const data = fs_js.read_file(`${wwise_path}/embedded_audio/${DIDX_item[i]}.wem`, "buffer");
                 wem_item.push({
                     id: DIDX_item[i],
                     data,
@@ -254,10 +197,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
             wwsise_bnk.writeUInt8(STID_data[i].name.length);
             wwsise_bnk.writeString(STID_data[i].name);
         }
-        wwsise_bnk.insertUInt32LE(
-            wwsise_bnk.writeOffset - STID_length_offset,
-            STID_length_offset
-        );
+        wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - STID_length_offset, STID_length_offset);
     }
 
     function EncodeDIDX() {
@@ -273,9 +213,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
                     wwsise_bnk.writeUInt32LE(DATA_bnk.writeOffset);
                     wwsise_bnk.writeUInt32LE(DATA_item[k].data.length);
                     DATA_bnk.writeBuffer(DATA_item[k].data);
-                    DATA_bnk.writeBuffer(
-                        Buffer.alloc(BeautifyOffset(DATA_item[k].data.length))
-                    );
+                    DATA_bnk.writeBuffer(Buffer.alloc(BeautifyOffset(DATA_item[k].data.length)));
                     DATA_item.splice(k, 1);
                     break;
                 }
@@ -283,10 +221,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
         }
         DATA_bnk.insertInt32LE(DATA_bnk.length, 0);
         DATA_bnk.insertString("DATA", 0);
-        wwsise_bnk.insertUInt32LE(
-            wwsise_bnk.writeOffset - DIDX_length_offset,
-            DIDX_length_offset
-        );
+        wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - DIDX_length_offset, DIDX_length_offset);
         wwsise_bnk.writeBuffer(DATA_bnk.toBuffer());
     }
 
@@ -295,7 +230,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
             return 16;
         } else {
             let newOffset = offset % 16;
-            for (let i = 0; i < 8; i++) {
+            for (let i: bigint = 0n; i < 8n; i += 1n) {
                 if ((offset + newOffset) % 16 !== 0) {
                     newOffset += 1;
                 }
@@ -317,11 +252,7 @@ export default function (wwise_path: string, wem_data: boolean = true) {
             ver_112 = true;
         }
         const data = convertHexStringtoBuffer(BKHD_item.header_expand);
-        wwsise_bnk
-            .writeString("BKHD")
-            .writeUInt32LE(version)
-            .writeUInt32LE(BKHD_item.id)
-            .writeBuffer(data);
+        wwsise_bnk.writeString("BKHD").writeUInt32LE(version).writeUInt32LE(BKHD_item.id).writeBuffer(data);
         wwsise_bnk.insertUInt32LE(wwsise_bnk.writeOffset - 4, 4);
     }
 

@@ -46,11 +46,11 @@ export default async function (
     execute_file_dir: Array<string>,
     output_dir?: string,
     use_atlas_info: boolean = true,
-    is_notify: boolean = true
+    is_notify: boolean = true,
 ) {
     const json_config: any = fs_js.read_json(
         fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
-        true
+        true,
     );
     let json: any = {};
     const img_list = new Array();
@@ -63,7 +63,7 @@ export default async function (
                 if (json.resources === undefined) {
                     throw new Error(localization("not_popcap_res"));
                 }
-                directory_name = fs_js.basename(execute_file_dir[i]) + ".spg";
+                directory_name = fs_js.parse_fs(execute_file_dir[i]).name + ".spg";
                 dir_sys =
                     output_dir !== undefined &&
                     output_dir !== null &&
@@ -71,7 +71,7 @@ export default async function (
                     typeof output_dir === "string"
                         ? output_dir
                         : execute_file_dir[i] + "/../" + directory_name;
-                fs_js.one_reader(dir_sys.toString());
+                fs_js.create_directory(dir_sys.toString());
                 break;
             case ".png":
                 img_list.push(execute_file_dir[i]);
@@ -82,9 +82,7 @@ export default async function (
     }
     if (json.resources !== undefined) {
         Console.WriteLine(
-            `${color.fggreen_string(
-                "◉ " + localization("execution_out") + ":\n     "
-            )} ${fs_js.resolve(`${dir_sys}`)}`
+            `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(`${dir_sys}`)}`,
         );
         if (json_config.atlas.split.repairDuplicateFolder === true) {
             json.resources = fix_duplicate_res(json.resources);
@@ -99,9 +97,7 @@ export default async function (
         let extend_info = new Array();
         for (const info of json.resources) {
             if (
-                (info.atlas === undefined ||
-                    info.atlas === null ||
-                    info.atlas === void 0) &&
+                (info.atlas === undefined || info.atlas === null || info.atlas === void 0) &&
                 info.parent !== void 0 &&
                 info.parent !== null &&
                 info.parent !== undefined
@@ -132,15 +128,10 @@ export default async function (
         const promises = new Array();
         let extension_list = new Array();
         let option = opt === 1 ? "extension" : "id";
-        const actual_splitting_items = [
-            ...new Set(extend_info.map((a) => a[option])),
-        ];
+        const actual_splitting_items = [...new Set(extend_info.map((a) => a[option]))];
         for (const i in extend_info) {
             for (const img of img_list) {
-                if (
-                    extend_info[i].parent.toUpperCase() ===
-                    fs_js.basename(img).toUpperCase()
-                ) {
+                if (extend_info[i].parent.toUpperCase() === fs_js.parse_fs(img).name.toString().toUpperCase()) {
                     parent_list.push(extend_info[i].parent);
                     const process = await split(
                         img,
@@ -148,9 +139,9 @@ export default async function (
                         extend_info[i].ay,
                         extend_info[i].aw,
                         extend_info[i].ah,
-                        dir_sys + "/" + extend_info[i][option] + ".png",
+                        fs_js.resolve(dir_sys + "/" + extend_info[i][option] + ".png"),
                         extend_info[i][option],
-                        extension_list
+                        extension_list,
                     );
                     extension_list = process[0];
                     promises.push(process[1]);
@@ -160,9 +151,7 @@ export default async function (
             }
         }
         await Promise.all(promises).catch((err: any) => {
-            throw new Error(
-                `${localization("native_atlas_splitting_error")} ${err.message}`
-            );
+            throw new Error(`${localization("native_atlas_splitting_error")} ${err.message}`);
         });
         parent_list = [...new Set(parent_list)];
         for (let info of extend_info) {
@@ -184,12 +173,10 @@ export default async function (
         }
         if (is_notify) {
             Console.WriteLine(
-                color.fggreen_string(
-                    "◉ " + localization("execution_actual_size") + ": "
-                ) +
+                color.fggreen_string("◉ " + localization("execution_actual_size") + ": ") +
                     actual_splitting_items.length +
                     "/" +
-                    atlas_info.groups.length
+                    atlas_info.groups.length,
             );
         }
     } else {

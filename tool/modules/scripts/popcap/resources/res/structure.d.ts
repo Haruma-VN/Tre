@@ -179,3 +179,20 @@ declare type Resource_File_Bundle = {
 declare type blank_slot = {
     slot: number;
 };
+
+declare type Output_Value = {
+    information: {
+        expand_path: "string" | "array";
+    };
+    groups: Array<string>;
+};
+
+declare type res_json_children = {
+    is_composite: boolean;
+    subgroup: subgroup_children;
+};
+
+declare type small_bundle_info_json = {
+    is_composite: boolean;
+    subgroups: Array<string>;
+};

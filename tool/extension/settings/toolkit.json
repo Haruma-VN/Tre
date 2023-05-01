@@ -4,7 +4,7 @@
 			"allow_384": false
 		},
 		"pack": {
-			"smart": false,
+			"smart": true,
 			"smart_allowance_area": 6,
 			"cut_unused_space": true
 		},
@@ -38,7 +38,7 @@
 		"using_extension_for_rsb_pack": "rsb",
 		"progress_bar": true,
 		"open_windows_explorer": false,
-		"host": "user"
+		"host": "admin"
 	},
 	"popcap_resource_stream_group_unpack": {
 		"simple": {
@@ -75,7 +75,7 @@
 			"fix_double_shadows": true
 		}
 	},
-	"gif": {
+	"apng": {
 		"texture_reslution": -1,
 		"image_name_by_id": false,
 		"turn_on_sprite": false,
@@ -87,7 +87,7 @@
 		"frame_rate": -1,
 		"create_apng": true,
 		"split_label": false,
-		"generate_image_frames": false,
+		"generate_image_frames": true,
 		"frame_default_name": "frame_"
 	}
 }

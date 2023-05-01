@@ -103,10 +103,10 @@ async function create_evaluate_argument(
                 "popcap_texture_decode_pvrtc" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_zlib_rsg_unpack.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_rsg_unpack.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_rsg_unpack" as popcap_game_edit_method,
+                "popcap_rsg_unpack" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_rsg_unpack_simple.void_number_readline_argument() as evaluate_method:
@@ -115,10 +115,10 @@ async function create_evaluate_argument(
                 "popcap_rsg_unpack_simple" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_zlib_rsg_pack.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_rsg_pack.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_rsg_pack" as popcap_game_edit_method,
+                "popcap_rsg_pack" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_rsg_pack_simple.void_number_readline_argument() as evaluate_method:
@@ -133,10 +133,10 @@ async function create_evaluate_argument(
                 "popcap_resources_to_tre_info" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_texture_atlas_cat_simple.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_atlas_merge_simple.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_texture_atlas_cat_simple" as popcap_game_edit_method,
+                "popcap_atlas_merge_simple" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_atlas_pack_advanced.void_number_readline_argument() as evaluate_method:
@@ -145,10 +145,10 @@ async function create_evaluate_argument(
                 "popcap_atlas_pack_advanced" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_texture_atlas_pack_cross_resolution.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_atlas_pack_cross_resolution.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_texture_atlas_pack_cross_resolution" as popcap_game_edit_method,
+                "popcap_atlas_pack_cross_resolution" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_resources_local_data_compare.void_number_readline_argument() as evaluate_method:
@@ -157,16 +157,16 @@ async function create_evaluate_argument(
                 "popcap_resources_local_data_compare" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_texture_atlas_cat.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_texture_atlas_merge.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_texture_atlas_cat" as popcap_game_edit_method,
+                "popcap_texture_atlas_merge" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_texture_resize_atlas_simple.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_resize_sprites_simple.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_texture_resize_atlas_simple" as popcap_game_edit_method,
+                "popcap_resize_sprites_simple" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_json_to_rton.void_number_readline_argument() as evaluate_method:
@@ -187,16 +187,16 @@ async function create_evaluate_argument(
                 "popcap_resources_rewrite" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_game_json_split.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_packages_json_split.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_game_json_split" as popcap_game_edit_method,
+                "popcap_packages_json_split" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_game_json_pack.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_packages_json_merge.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_game_json_pack" as popcap_game_edit_method,
+                "popcap_packages_json_merge" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_old_resources_conversion_to_new_resources.void_number_readline_argument() as evaluate_method:
@@ -217,10 +217,10 @@ async function create_evaluate_argument(
                 "popcap_resources_to_atlasinfo" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_texture_atlas_split.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_atlas_split.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_texture_atlas_split" as popcap_game_edit_method,
+                "popcap_atlas_split" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_atlas_split_advanced.void_number_readline_argument() as evaluate_method:
@@ -241,10 +241,10 @@ async function create_evaluate_argument(
                 "atlas_info_cat" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_zlib_rsb_unpack.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_rsb_unpack.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_rsb_unpack" as popcap_game_edit_method,
+                "popcap_rsb_unpack" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_rsb_unpack_simple.void_number_readline_argument() as evaluate_method:
@@ -259,10 +259,10 @@ async function create_evaluate_argument(
                 "popcap_rsb_resource_unpack" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_zlib_rsb_pack.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_rsb_pack.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_rsb_pack" as popcap_game_edit_method,
+                "popcap_rsb_pack" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_rsb_resource_pack.void_number_readline_argument() as evaluate_method:
@@ -277,10 +277,10 @@ async function create_evaluate_argument(
                 "popcap_rsb_pack_simple" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_zlib_smf_compress.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_zlib_compress.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_smf_compress" as popcap_game_edit_method,
+                "popcap_zlib_compress" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_lawnstrings_convert_to_localization.void_number_readline_argument() as evaluate_method:
@@ -295,10 +295,10 @@ async function create_evaluate_argument(
                 "popcap_lawnstrings_convert_from_localization" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_zlib_smf_decompress.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_zlib_uncompress.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_zlib_smf_decompress" as popcap_game_edit_method,
+                "popcap_zlib_uncompress" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.json_patch.void_number_readline_argument() as evaluate_method:
@@ -437,6 +437,18 @@ async function create_evaluate_argument(
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
                 "popcap_resource_to_res" as popcap_game_edit_method,
+            );
+            break;
+        case Display.ToolKit.Function.popcap_split_res_json.void_number_readline_argument() as evaluate_method:
+            await evaluate_modules_workspace_assertation(
+                execute_file_dir as assertation_argument,
+                "popcap_split_res_json" as popcap_game_edit_method,
+            );
+            break;
+        case Display.ToolKit.Function.popcap_merge_res_json.void_number_readline_argument() as evaluate_method:
+            await evaluate_modules_workspace_assertation(
+                execute_file_dir as assertation_argument,
+                "popcap_merge_res_json" as popcap_game_edit_method,
             );
             break;
         default:

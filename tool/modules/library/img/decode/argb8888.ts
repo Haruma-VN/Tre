@@ -10,31 +10,18 @@ export default async function (
     dir: string,
     width: number,
     height: number,
-    not_notify_console_log: boolean = false
+    not_notify_console_log: boolean = false,
 ): Promise<void> {
     if (!not_notify_console_log) {
+        Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_information")}: `) + "argb8888");
         Console.WriteLine(
-            color.fggreen_string(
-                `◉ ${localization("execution_information")}: `
-            ) + "argb8888"
+            color.fggreen_string(`◉ ${localization("execution_in")}:\n     `) + `${fs_js.get_full_path(dir)}`,
         );
-        Console.WriteLine(
-            color.fggreen_string(`◉ ${localization("execution_in")}:\n     `) +
-                `${fs_js.get_full_path(dir)}`
-        );
-        Console.WriteLine(
-            color.fggreen_string(
-                `◉ ${localization("execution_display_width")}: `
-            ) + `${width}`
-        );
-        Console.WriteLine(
-            color.fggreen_string(
-                `◉ ${localization("execution_display_height")}: `
-            ) + `${height}`
-        );
+        Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
+        Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_display_height")}: `) + `${height}`);
     }
     max_sharp(width, height);
-    fs_js.js_remove(dir + "/../" + fs_js.basename(dir) + ".png");
+    fs_js.js_remove(dir + "/../" + fs_js.parse_fs(dir).name + ".png");
     await sharp(fs_js.read_file(dir, "buffer"), {
         raw: { width: width, height: height, channels: 4 },
     })
@@ -62,34 +49,21 @@ export default async function (
                                                 .joinChannel(alpha)
                                                 .toBuffer()
                                                 .then(async (image: Buffer) => {
-                                                    if (
-                                                        !not_notify_console_log
-                                                    ) {
+                                                    if (!not_notify_console_log) {
                                                         Console.WriteLine(
                                                             color.fggreen_string(
-                                                                `◉ ${localization(
-                                                                    "execution_out"
-                                                                )}:\n     `
+                                                                `◉ ${localization("execution_out")}:\n     `,
                                                             ) +
                                                                 `${fs_js.resolve(
-                                                                    dir +
-                                                                        "/../" +
-                                                                        fs_js.basename(
-                                                                            dir
-                                                                        ) +
-                                                                        ".png"
-                                                                )}`
+                                                                    dir + "/../" + fs_js.parse_fs(dir).name + ".png",
+                                                                )}`,
                                                         );
                                                     }
-                                                    return await fs_js.write_file(
-                                                        dir +
-                                                            "/../" +
-                                                            fs_js.basename(
-                                                                dir
-                                                            ) +
-                                                            ".png",
-                                                        image
+                                                    fs_js.write_file(
+                                                        dir + "/../" + fs_js.parse_fs(dir).name + ".png",
+                                                        image,
                                                     );
+                                                    return;
                                                 });
                                         });
                                 });

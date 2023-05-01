@@ -1,9 +1,9 @@
 "use strict";
 import localization from "../../../../callback/localization.js";
 import * as color from "../../../../library/color/color.js";
-import sharp from "sharp";
 import fs_js from "../../../../library/fs/implement.js";
 import { Console } from "../../../../callback/console.js";
+import { split } from "../../../../library/img/util.js";
 
 export interface PopCapResJsonDataBundle {
     resources?: PopCapResJsonDetailInfo[];
@@ -43,7 +43,7 @@ async function atlas_split_advanced(execute_file_dir: string[]): Promise<void> {
                 if (json.resources === undefined) {
                     throw new Error(localization("not_popcap_res"));
                 }
-                directory_name = fs_js.basename(execute_file_dir[i]) + ".spg";
+                directory_name = fs_js.parse_fs(execute_file_dir[i]).name + ".spg";
                 dir_sys = execute_file_dir[i] + "/../" + directory_name;
                 fs_js.create_directory(dir_sys.toString());
                 break;
@@ -57,18 +57,12 @@ async function atlas_split_advanced(execute_file_dir: string[]): Promise<void> {
         }
     }
     let count_images_split: number = 0;
-    if (
-        "resources" in json &&
-        json.resources !== undefined &&
-        json.resources !== null &&
-        json.resources !== void 0
-    ) {
+    if ("resources" in json && json.resources !== undefined && json.resources !== null && json.resources !== void 0) {
         Console.WriteLine(
-            `${color.fggreen_string(
-                "◉ " + localization("execution_out") + ":\n     "
-            )} ${fs_js.resolve(`${dir_sys}`)}`
+            `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(`${dir_sys}`)}`,
         );
         const promises: Array<Promise<any>> = new Array();
+        let extension_list = new Array();
         for (let i: number = 0; i < json.resources.length; ++i) {
             if (json.resources[i].atlas !== undefined) {
                 continue;
@@ -82,32 +76,25 @@ async function atlas_split_advanced(execute_file_dir: string[]): Promise<void> {
             for (const img of img_list) {
                 if (
                     json.resources[i].parent.toUpperCase() ===
-                    "ATLASIMAGE_ATLAS_" + fs_js.basename(img).toUpperCase()
+                    "ATLASIMAGE_ATLAS_" + fs_js.parse_fs(img).name.toString().toUpperCase()
                 ) {
                     count_images_split++;
-                    const filePath = fs_js.join_fs(
-                        popcap_atlas_output_atlas_directory,
-                        `${json.resources[i].id}.png`
+                    const filePath: str = fs_js.resolve(
+                        `${popcap_atlas_output_atlas_directory}/${json.resources[i].id}.png`,
                     );
                     promises.push(
-                        sharp(img)
-                            .extract({
-                                width: json.resources[i].aw,
-                                height: json.resources[i].ah,
-                                left: json.resources[i].ax,
-                                top: json.resources[i].ay,
-                            })
-                            .toFile(filePath)
-                            .catch((error: any) => {
-                                throw new Error(
-                                    localization("bad_extract_area")
-                                );
-                            })
+                        split(
+                            img,
+                            json.resources[i].ax,
+                            json.resources[i].ay,
+                            json.resources[i].aw,
+                            json.resources[i].ah,
+                            filePath,
+                            json.resources[i].id,
+                            extension_list,
+                        ),
                     );
-                    const jsonPath = fs_js.join_fs(
-                        popcap_atlas_output_atlas_directory,
-                        `${json.resources[i].id}.json`
-                    );
+                    const jsonPath = `${popcap_atlas_output_atlas_directory}/${json.resources[i].id}.json`;
                     fs_js.write_json(jsonPath, {
                         x:
                             json.resources[i].x !== undefined &&
@@ -127,13 +114,12 @@ async function atlas_split_advanced(execute_file_dir: string[]): Promise<void> {
             }
         }
         await Promise.all(promises).catch((err: any) => {
-            throw new Error(localization("native_atlas_splitting_error"));
+            throw new Error(`${localization("native_atlas_splitting_error")} ${err}`);
         });
     }
     return Console.WriteLine(
-        color.fggreen_string(
-            "◉ " + localization("execution_actual_size") + ": "
-        ) + count_images_split
+        color.fggreen_string("◉ " + localization("execution_actual_size") + ": ") + count_images_split,
     );
 }
+
 export default atlas_split_advanced;

@@ -1,153 +1,51 @@
-import util from "util";
-import { signed, unsigned } from "big-varint";
+"use strict";
 import localization from "../../../callback/localization.js";
 import fs_js from "../../../library/fs/implement.js";
 import { args } from "../../../implement/arguments.js";
-
-export default function (rton_data: any): any {
-    let index_count = 8;
-    let indent_number = 0;
-    let currrent_indent = "\r\n";
-    let indent = "\t";
-    let R0x90List: any = new Array();
-    let R0x92List: any = new Array();
-    const Str_Null = "*";
-    const Str_RTID_0 = "RTID(0)";
-    const Str_RTID_2 = "RTID(%d.%d.%s@%s)";
-    const Str_RTID_3 = "RTID(%s@%s)";
+import rton_plain from "./rijndael/rton_plain.js";
+import { SmartBuffer } from "smart-buffer";
+import { Console } from "../../../callback/console.js";
+import * as color from "../../../library/color/color.js";
+/**
+ *
+ * @param rton_data - Nhận rton buffer;
+ * @param decipher - Nhập boolean decipher rton;
+ * @returns - Buffer json dùng write_file không dùng write_json;
+ */
+export default function rton2json(rton_data: Buffer, decipher: boolean): Buffer {
+    let rton_data_b: any = SmartBuffer.fromBuffer(rton_data);
     const config_json: any = fs_js.read_json(
-        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json"
+        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
+        true,
     );
+    if (decipher) {
+        const rton_cipher_key: string = config_json.popcap_rton_conversion.rton.rton_cipher;
+        Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_key")}: `) + rton_cipher_key);
+        const rton_decipher = rton_plain(rton_data, rton_cipher_key);
+        rton_data_b = SmartBuffer.fromBuffer(rton_decipher);
+    }
+    let indent_number: number = 0,
+        currrent_indent: string = "\r\n",
+        indent: string = "\t",
+        R0x90List: any = new Array(),
+        R0x92List: any = new Array();
     let trailing_commas = "";
     if ("allow_trailing_commas" in config_json.json) {
         if (config_json.json.allow_trailing_commas) {
             trailing_commas = ",";
         }
-        indent =
-            config_json.json.space !== undefined
-                ? config_json.json.space
-                : "\t";
+        indent = config_json.json.space !== undefined ? config_json.json.space : "\t";
     }
-    function RtonNumber(unsigned_number: boolean, utf8 = false) {
-        if (utf8) {
-            index_count++;
-        }
-        let offset_start = index_count;
-        let number = rton_data[index_count];
-        while (number > 127) {
-            number = rton_data[(index_count += 1)];
-        }
-        const rton_number = rton_data.slice(offset_start, (index_count += 1));
-
-        if (unsigned_number) {
-            return `${unsigned.decode(Buffer.from(rton_number, "hex"))}`;
-        } else {
-            return `${signed.decode(Buffer.from(rton_number, "hex"))}`;
-        }
+    const Str_Null: string = `"*"`,
+        Str_RTID_0: string = `"RTID(0)"`,
+        RTON_head = rton_data_b.readString(4);
+    if (RTON_head === "RTON") {
+        const ver: number = rton_data_b.readUInt32LE();
+        return read_object(rton_data_b.readUInt8());
+    } else {
+        throw new Error(localization("this_file_is_not_rton"));
     }
-    function ReadString(string_length: string, rtid: boolean) {
-        let string = rton_data
-            .slice(index_count, (index_count += parseInt(string_length)))
-            .toString("utf8");
-        if (rtid) {
-            return string;
-        }
-        return JSON.stringify(string);
-    }
-    function ReadRTID() {
-        const rtid_number = rton_data[index_count];
-        index_count++;
-        switch (rtid_number) {
-            case 0:
-                return `"${Str_RTID_0}"`;
-            case 1:
-                const value_1_2 = RtonNumber(true, true);
-                const value_1_1 = RtonNumber(true);
-                const x16_1 = rton_data
-                    .slice(index_count, (index_count += 4))
-                    .reverse()
-                    .toString("hex");
-                return `"${util.format(
-                    Str_RTID_2,
-                    value_1_1,
-                    value_1_2,
-                    x16_1,
-                    ""
-                )}"`;
-            case 2:
-                const string_temp_rtid2 = ReadString(
-                    RtonNumber(true, true),
-                    true
-                );
-                const value_2_2 = RtonNumber(true);
-                const value_2_1 = RtonNumber(true);
-                const x16_2 = rton_data
-                    .slice(index_count, (index_count += 4))
-                    .reverse()
-                    .toString("hex");
-                return `"${util.format(
-                    Str_RTID_2,
-                    value_2_1,
-                    value_2_2,
-                    x16_2,
-                    string_temp_rtid2
-                )}"`;
-            case 3:
-                const string_temp_01 = ReadString(RtonNumber(true, true), true);
-                const string_temp_02 = ReadString(RtonNumber(true, true), true);
-                return `"${util.format(
-                    Str_RTID_3,
-                    string_temp_02,
-                    string_temp_01
-                )}"`;
-            default:
-                return `""`;
-        }
-    }
-    function ReadArray() {
-        let items = new Array();
-        indent_number++;
-        let new_indent = currrent_indent + indent.repeat(indent_number);
-        let code = rton_data[index_count];
-        while (code !== 254) {
-            items.push(ReadByteCode(code));
-            code = rton_data[index_count];
-        }
-        index_count++;
-        indent_number--;
-        if (items.length !== 0) {
-            return `[${new_indent}${items.join(
-                `,${new_indent}`
-            )}${trailing_commas}${currrent_indent}${indent.repeat(
-                indent_number
-            )}]`;
-        }
-        return `[]`;
-    }
-    function ReadObject() {
-        let items = new Array();
-        indent_number++;
-        let new_indent = currrent_indent + indent.repeat(indent_number);
-        let code = rton_data[index_count];
-        while (code !== 255) {
-            const key = ReadByteCode(code);
-            const value = ReadByteCode(rton_data[index_count]);
-            items.push(`${key}: ${value}`);
-            code = rton_data[index_count];
-        }
-        index_count++;
-        indent_number--;
-        if (items.length !== 0) {
-            return `{${new_indent}${items.join(
-                `,${new_indent}`
-            )}${trailing_commas}${currrent_indent}${indent.repeat(
-                indent_number
-            )}}`;
-        }
-        return `{}`;
-    }
-    function ReadByteCode(bytecode: any) {
-        index_count++;
+    function read_byte_code(bytecode: number): any {
         switch (bytecode) {
             case 0:
                 return false;
@@ -156,9 +54,7 @@ export default function (rton_data: any): any {
             case 2:
                 return Str_Null;
             case 8:
-                return rton_data
-                    .slice(index_count, (index_count += 1))
-                    .readInt8();
+                return rton_data_b.readInt8();
             case 9:
             case 11:
             case 17:
@@ -167,92 +63,160 @@ export default function (rton_data: any): any {
             case 39:
             case 65:
             case 71:
-                return 0;
-            case 10:
-                return rton_data
-                    .slice(index_count, (index_count += 1))
-                    .readUInt8();
-            case 16:
-                return rton_data
-                    .slice(index_count, (index_count += 2))
-                    .readInt16LE();
-            case 18:
-                return rton_data
-                    .slice(index_count, (index_count += 2))
-                    .readUInt16LE();
-            case 32:
-                return rton_data
-                    .slice(index_count, (index_count += 4))
-                    .readInt32LE();
-            case 34:
-                return rton_data
-                    .slice(index_count, (index_count += 4))
-                    .readFloatLE();
             case 35:
             case 67:
-                return 0.0;
+                return 0;
+            case 10:
+                return rton_data_b.readUInt8();
+            case 16:
+                return rton_data_b.readInt16LE();
+            case 18:
+                return rton_data_b.readUInt16LE();
+            case 32:
+                return rton_data_b.readInt32LE();
+            case 34:
+                return rton_data_b.readFloatLE();
             case 36:
             case 40:
             case 68:
             case 72:
-                return RtonNumber(true);
+                return rton_number(false);
             case 37:
             case 41:
             case 69:
             case 73:
-                return RtonNumber(false);
+                return rton_number(true);
             case 38:
-                return rton_data
-                    .slice(index_count, (index_count += 4))
-                    .readUInt32LE();
+                return rton_data_b.readUInt32LE();
             case 64:
-                return rton_data
-                    .slice(index_count, (index_count += 8))
-                    .readBigInt64LE();
+                return rton_data_b.readBigInt64LE();
             case 66:
-                return rton_data
-                    .slice(index_count, (index_count += 8))
-                    .readDoubleLE();
+                return rton_data_b.readDoubleLE();
             case 70:
-                return rton_data
-                    .slice(index_count, (index_count += 8))
-                    .readBigUInt64LE();
+                return rton_data_b.readBigUInt64LE();
             case 129:
-                return ReadString(RtonNumber(true), false);
+                return read_string(false);
             case 130:
-                return ReadString(RtonNumber(true, true), false);
+                return JSON.stringify(read_string(true));
             case 131:
-                return ReadRTID();
+                return read_rtid(rton_data_b.readUInt8());
             case 132:
-                return `"${Str_RTID_0}"`;
+                return Str_RTID_0;
             case 133:
-                return ReadObject();
+                return read_object(rton_data_b.readUInt8());
             case 134:
-                RtonNumber(true);
-                return ReadArray();
+                return read_array(rton_data_b.readUInt8());
             case 144:
-                const string_length = RtonNumber(true);
-                const tempstring = ReadString(string_length, false);
-                R0x90List.push(tempstring);
-                return tempstring;
+                const rx90_string: string = read_string(false);
+                R0x90List.push(rx90_string);
+                return rx90_string;
             case 145:
-                return R0x90List[RtonNumber(true)];
+                return R0x90List[rton_number(false)];
             case 146:
-                const tempstring_2 = ReadString(RtonNumber(true, true), false);
-                R0x92List.push(tempstring_2);
-                return tempstring_2;
+                const rx92_string: string = JSON.stringify(read_string(true));
+                R0x92List.push(rx92_string);
+                return rx92_string;
             case 147:
-                return R0x92List[RtonNumber(true)];
+                return R0x92List[rton_number(false)];
             default:
                 throw new Error(
-                    localization("rton_bytecode_is_not_supported") +
-                        bytecode.toString("hex")
+                    `${localization("rton_bytecode_is_not_supported")}${bytecode} | pos: ${rton_data_b.readOffset}`,
                 );
         }
     }
-    if (rton_data.slice(0, 4).toString() === "RTON") {
-        return ReadObject();
-    } else {
-        throw new Error(localization("this_file_is_not_rton"));
+    function read_object(bytecode: number): any {
+        let items: any = new Array();
+        indent_number++;
+        let new_indent: string = currrent_indent + indent.repeat(indent_number);
+        while (bytecode !== 255) {
+            const key: string = read_byte_code(bytecode);
+            const value: any = read_byte_code(rton_data_b.readUInt8());
+            items.push(`${key}: ${value}`);
+            bytecode = rton_data_b.readUInt8();
+        }
+        indent_number--;
+        if (items.length !== 0) {
+            return `{${new_indent}${items.join(`,${new_indent}`)}${trailing_commas}${currrent_indent}${indent.repeat(
+                indent_number,
+            )}}`;
+        }
+        return `{}`;
+    }
+    function read_array(bytecode: number): any {
+        if (bytecode != 253) {
+            throw new Error("error_list" + " | pos: " + rton_data_b.readOffset);
+        } else {
+            const i_length: number = rton_number(false);
+            let items: any = new Array();
+            indent_number++;
+            let new_indent = currrent_indent + indent.repeat(indent_number);
+            bytecode = rton_data_b.readUInt8();
+            while (bytecode !== 254) {
+                items.push(read_byte_code(bytecode));
+                bytecode = rton_data_b.readUInt8();
+            }
+            indent_number--;
+            if (items.length !== 0) {
+                return `[${new_indent}${items.join(
+                    `,${new_indent}`,
+                )}${trailing_commas}${currrent_indent}${indent.repeat(indent_number)}]`;
+            }
+            return `[]`;
+        }
+    }
+    function read_rtid(rtid_number: number): string {
+        switch (rtid_number) {
+            case 0:
+                return Str_RTID_0;
+            case 1:
+                const v2: number = rton_number(false);
+                const v1: number = rton_number(false);
+                const x16: number = rton_data_b.readUInt32LE();
+                return `"RTID(${v1}.${v2}.${x16}@)"`;
+            case 2:
+                const str_2: string = read_string(true);
+                const i2: number = rton_number(false);
+                const i1: number = rton_number(false);
+                const id: string = rton_data_b.readBuffer(4).reverse().toString("hex");
+                return `"RTID(${i1}.${i2}.${id}@${str_2})"`;
+            case 3:
+                const str_1: string = read_string(true);
+                return `"RTID(${read_string(true)}@${str_1})"`;
+            default:
+                throw new Error(
+                    `unexpected subtype for type 83, found: ${rtid_number} | pos: ${rton_data_b.readOffset}`,
+                );
+        }
+    }
+    function rton_number(signed_number: boolean): number {
+        let num: number = rton_data_b.readUInt8(),
+            result: number = num & 127,
+            i: number = 128;
+        while (num > 127) {
+            num = rton_data_b.readUInt8();
+            result += i * (num & 127);
+            i *= 128;
+        }
+        if (signed_number) {
+            if (result % 2) {
+                result = -result - 1;
+            }
+            result = Math.floor(result / 2);
+        }
+        return result;
+    }
+    function read_string(utf8: boolean): string {
+        const str_length: number = rton_number(false);
+        if (utf8) {
+            let i_length: number = rton_number(false);
+            const str: string = rton_data_b.readString(i_length);
+            if (str_length !== str.length) {
+                throw new Error("utf8_string_length_break" + " | pos: " + (rton_data_b.readOffset - 2));
+            }
+            return str;
+        } else {
+            const str: string = JSON.stringify(rton_data_b.readString(str_length));
+            return str;
+        }
     }
 }

@@ -92,23 +92,23 @@ export namespace Display.ToolKit.Function {
         execution_evaluate_view("atlas_info_constructor").filter,
         execution_evaluate_view("atlas_info_constructor").allow,
     );
-    export const popcap_texture_atlas_split = new Void(
-        localization("popcap_texture_atlas_split"),
-        execution_evaluate_view("popcap_texture_atlas_split").option,
-        execution_evaluate_view("popcap_texture_atlas_split").filter,
-        execution_evaluate_view("popcap_texture_atlas_split").allow,
+    export const popcap_atlas_split = new Void(
+        localization("popcap_atlas_split"),
+        execution_evaluate_view("popcap_atlas_split").option,
+        execution_evaluate_view("popcap_atlas_split").filter,
+        execution_evaluate_view("popcap_atlas_split").allow,
     );
-    export const popcap_texture_atlas_cat_simple = new Void(
-        localization("popcap_texture_atlas_cat_simple"),
-        execution_evaluate_view("popcap_texture_atlas_cat_simple").option,
-        execution_evaluate_view("popcap_texture_atlas_cat_simple").filter,
-        execution_evaluate_view("popcap_texture_atlas_cat_simple").allow,
+    export const popcap_atlas_merge_simple = new Void(
+        localization("popcap_atlas_merge_simple"),
+        execution_evaluate_view("popcap_atlas_merge_simple").option,
+        execution_evaluate_view("popcap_atlas_merge_simple").filter,
+        execution_evaluate_view("popcap_atlas_merge_simple").allow,
     );
-    export const popcap_texture_atlas_cat = new Void(
-        localization("popcap_texture_atlas_cat"),
-        execution_evaluate_view("popcap_texture_atlas_cat").option,
-        execution_evaluate_view("popcap_texture_atlas_cat").filter,
-        execution_evaluate_view("popcap_texture_atlas_cat").allow,
+    export const popcap_texture_atlas_merge = new Void(
+        localization("popcap_texture_atlas_merge"),
+        execution_evaluate_view("popcap_texture_atlas_merge").option,
+        execution_evaluate_view("popcap_texture_atlas_merge").filter,
+        execution_evaluate_view("popcap_texture_atlas_merge").allow,
     );
     export const popcap_texture_encode_rgba8888 = new Void(
         `PopCap PTX RGBA8888 ${localization("encode")} (0)`,
@@ -170,17 +170,17 @@ export namespace Display.ToolKit.Function {
         execution_evaluate_view("popcap_texture_decode_etc1a_index").filter,
         execution_evaluate_view("popcap_texture_decode_etc1a_index").allow,
     );
-    export const popcap_texture_resize_atlas_simple = new Void(
-        localization("popcap_texture_resize_atlas_simple"),
-        execution_evaluate_view("popcap_texture_resize_atlas_simple").option,
-        execution_evaluate_view("popcap_texture_resize_atlas_simple").filter,
-        execution_evaluate_view("popcap_texture_resize_atlas_simple").allow,
+    export const popcap_resize_sprites_simple = new Void(
+        localization("popcap_resize_sprites_simple"),
+        execution_evaluate_view("popcap_resize_sprites_simple").option,
+        execution_evaluate_view("popcap_resize_sprites_simple").filter,
+        execution_evaluate_view("popcap_resize_sprites_simple").allow,
     );
-    export const popcap_texture_resize_atlas = new Void(
-        localization("popcap_texture_resize_atlas"),
-        execution_evaluate_view("popcap_texture_resize_atlas").option,
-        execution_evaluate_view("popcap_texture_resize_atlas").filter,
-        execution_evaluate_view("popcap_texture_resize_atlas").allow,
+    export const popcap_resize_sprites = new Void(
+        localization("popcap_resize_sprites"),
+        execution_evaluate_view("popcap_resize_sprites").option,
+        execution_evaluate_view("popcap_resize_sprites").filter,
+        execution_evaluate_view("popcap_resize_sprites").allow,
     );
     export const real_esrgan_upscaler_image = new Void(
         localization("real_esrgan_upscaler_image"),
@@ -188,53 +188,53 @@ export namespace Display.ToolKit.Function {
         execution_evaluate_view("real_esrgan_upscaler_image").filter,
         execution_evaluate_view("real_esrgan_upscaler_image").allow,
     );
-    export const popcap_zlib_rsg_unpack = new Void(
-        localization("popcap_zlib_rsg_unpack"),
-        execution_evaluate_view("popcap_zlib_rsg_unpack").option,
-        execution_evaluate_view("popcap_zlib_rsg_unpack").filter,
-        execution_evaluate_view("popcap_zlib_rsg_unpack").allow,
+    export const popcap_rsg_unpack = new Void(
+        localization("popcap_rsg_unpack"),
+        execution_evaluate_view("popcap_rsg_unpack").option,
+        execution_evaluate_view("popcap_rsg_unpack").filter,
+        execution_evaluate_view("popcap_rsg_unpack").allow,
     );
-    export const popcap_zlib_rsg_pack = new Void(
-        localization("popcap_zlib_rsg_pack"),
-        execution_evaluate_view("popcap_zlib_rsg_pack").option,
-        execution_evaluate_view("popcap_zlib_rsg_pack").filter,
-        execution_evaluate_view("popcap_zlib_rsg_pack").allow,
+    export const popcap_rsg_pack = new Void(
+        localization("popcap_rsg_pack"),
+        execution_evaluate_view("popcap_rsg_pack").option,
+        execution_evaluate_view("popcap_rsg_pack").filter,
+        execution_evaluate_view("popcap_rsg_pack").allow,
     );
-    export const popcap_zlib_rsb_unpack = new Void(
-        localization("popcap_zlib_rsb_unpack"),
-        execution_evaluate_view("popcap_zlib_rsb_unpack").option,
-        execution_evaluate_view("popcap_zlib_rsb_unpack").filter,
-        execution_evaluate_view("popcap_zlib_rsb_unpack").allow,
+    export const popcap_rsb_unpack = new Void(
+        localization("popcap_rsb_unpack"),
+        execution_evaluate_view("popcap_rsb_unpack").option,
+        execution_evaluate_view("popcap_rsb_unpack").filter,
+        execution_evaluate_view("popcap_rsb_unpack").allow,
     );
-    export const popcap_zlib_rsb_pack = new Void(
-        localization("popcap_zlib_rsb_pack"),
-        execution_evaluate_view("popcap_zlib_rsb_pack").option,
-        execution_evaluate_view("popcap_zlib_rsb_pack").filter,
-        execution_evaluate_view("popcap_zlib_rsb_pack").allow,
+    export const popcap_rsb_pack = new Void(
+        localization("popcap_rsb_pack"),
+        execution_evaluate_view("popcap_rsb_pack").option,
+        execution_evaluate_view("popcap_rsb_pack").filter,
+        execution_evaluate_view("popcap_rsb_pack").allow,
     );
-    export const popcap_zlib_smf_decompress = new Void(
-        localization("popcap_zlib_smf_decompress"),
-        execution_evaluate_view("popcap_zlib_smf_decompress").option,
-        execution_evaluate_view("popcap_zlib_smf_decompress").filter,
-        execution_evaluate_view("popcap_zlib_smf_decompress").allow,
+    export const popcap_zlib_uncompress = new Void(
+        localization("popcap_zlib_uncompress"),
+        execution_evaluate_view("popcap_zlib_uncompress").option,
+        execution_evaluate_view("popcap_zlib_uncompress").filter,
+        execution_evaluate_view("popcap_zlib_uncompress").allow,
     );
-    export const popcap_zlib_smf_compress = new Void(
-        localization("popcap_zlib_smf_compress"),
-        execution_evaluate_view("popcap_zlib_smf_compress").option,
-        execution_evaluate_view("popcap_zlib_smf_compress").filter,
-        execution_evaluate_view("popcap_zlib_smf_compress").allow,
+    export const popcap_zlib_compress = new Void(
+        localization("popcap_zlib_compress"),
+        execution_evaluate_view("popcap_zlib_compress").option,
+        execution_evaluate_view("popcap_zlib_compress").filter,
+        execution_evaluate_view("popcap_zlib_compress").allow,
     );
-    export const popcap_game_json_split = new Void(
-        localization("popcap_game_json_split"),
-        execution_evaluate_view("popcap_game_json_split").option,
-        execution_evaluate_view("popcap_game_json_split").filter,
-        execution_evaluate_view("popcap_game_json_split").allow,
+    export const popcap_packages_json_split = new Void(
+        localization("popcap_packages_json_split"),
+        execution_evaluate_view("popcap_packages_json_split").option,
+        execution_evaluate_view("popcap_packages_json_split").filter,
+        execution_evaluate_view("popcap_packages_json_split").allow,
     );
-    export const popcap_game_json_pack = new Void(
-        localization("popcap_game_json_pack"),
-        execution_evaluate_view("popcap_game_json_pack").option,
-        execution_evaluate_view("popcap_game_json_pack").filter,
-        execution_evaluate_view("popcap_game_json_pack").allow,
+    export const popcap_packages_json_merge = new Void(
+        localization("popcap_packages_json_merge"),
+        execution_evaluate_view("popcap_packages_json_merge").option,
+        execution_evaluate_view("popcap_packages_json_merge").filter,
+        execution_evaluate_view("popcap_packages_json_merge").allow,
     );
     export const json_patch = new Void(
         localization("json_patch"),
@@ -248,11 +248,11 @@ export namespace Display.ToolKit.Function {
         execution_evaluate_view("json_patch_generator").filter,
         execution_evaluate_view("json_patch_generator").allow,
     );
-    export const popcap_texture_atlas_pack_cross_resolution = new Void(
-        localization("popcap_texture_atlas_pack_cross_resolution"),
-        execution_evaluate_view("popcap_texture_atlas_pack_cross_resolution").option,
-        execution_evaluate_view("popcap_texture_atlas_pack_cross_resolution").filter,
-        execution_evaluate_view("popcap_texture_atlas_pack_cross_resolution").allow,
+    export const popcap_atlas_pack_cross_resolution = new Void(
+        localization("popcap_atlas_pack_cross_resolution"),
+        execution_evaluate_view("popcap_atlas_pack_cross_resolution").option,
+        execution_evaluate_view("popcap_atlas_pack_cross_resolution").filter,
+        execution_evaluate_view("popcap_atlas_pack_cross_resolution").allow,
     );
     export const popcap_lawnstrings_diff = new Void(
         localization("popcap_lawnstrings_diff"),
@@ -452,6 +452,18 @@ export namespace Display.ToolKit.Function {
         execution_evaluate_view("popcap_resource_to_res").filter,
         execution_evaluate_view("popcap_resource_to_res").allow,
     );
+    export const popcap_split_res_json = new Void(
+        localization("popcap_split_res_json"),
+        execution_evaluate_view("popcap_split_res_json").option,
+        execution_evaluate_view("popcap_split_res_json").filter,
+        execution_evaluate_view("popcap_split_res_json").allow,
+    );
+    export const popcap_merge_res_json = new Void(
+        localization("popcap_merge_res_json"),
+        execution_evaluate_view("popcap_merge_res_json").option,
+        execution_evaluate_view("popcap_merge_res_json").filter,
+        execution_evaluate_view("popcap_merge_res_json").allow,
+    );
 
     export function DisplayItems(
         toolkit_selector_array_list: Array<number>,
@@ -488,9 +500,9 @@ export namespace Display.ToolKit.Function {
         atlas_info_split,
         atlas_info_cat,
         atlas_info_constructor,
-        popcap_texture_atlas_split,
-        popcap_texture_atlas_cat_simple,
-        popcap_texture_atlas_cat,
+        popcap_atlas_split,
+        popcap_atlas_merge_simple,
+        popcap_texture_atlas_merge,
         popcap_texture_encode_rgba8888,
         popcap_texture_encode_argb8888,
         popcap_texture_encode_pvrtc,
@@ -501,20 +513,20 @@ export namespace Display.ToolKit.Function {
         popcap_texture_decode_pvrtc,
         popcap_texture_decode_etc1a,
         popcap_texture_decode_etc1a_index,
-        popcap_texture_resize_atlas_simple,
-        popcap_texture_resize_atlas,
+        popcap_resize_sprites_simple,
+        popcap_resize_sprites,
         real_esrgan_upscaler_image,
-        popcap_zlib_rsg_unpack,
-        popcap_zlib_rsg_pack,
-        popcap_zlib_rsb_unpack,
-        popcap_zlib_rsb_pack,
-        popcap_zlib_smf_decompress,
-        popcap_zlib_smf_compress,
-        popcap_game_json_split,
-        popcap_game_json_pack,
+        popcap_rsg_unpack,
+        popcap_rsg_pack,
+        popcap_rsb_unpack,
+        popcap_rsb_pack,
+        popcap_zlib_uncompress,
+        popcap_zlib_compress,
+        popcap_packages_json_split,
+        popcap_packages_json_merge,
         json_patch,
         json_patch_generator,
-        popcap_texture_atlas_pack_cross_resolution,
+        popcap_atlas_pack_cross_resolution,
         popcap_lawnstrings_diff,
         popcap_lawnstrings_convert_to_localization,
         popcap_lawnstrings_convert_from_localization,
@@ -548,5 +560,7 @@ export namespace Display.ToolKit.Function {
         popcap_rsb_disturb,
         popcap_res_to_resource,
         popcap_resource_to_res,
+        popcap_merge_res_json,
+        popcap_split_res_json,
     ];
 }

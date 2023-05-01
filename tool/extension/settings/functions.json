@@ -5,7 +5,7 @@
         "option": 1
     },
     "popcap_resources_split": {
-        "filter": [".json", ".rton"],
+        "filter": [".json", ".rton", "resources"],
         "allow": true,
         "option": 2
     },
@@ -64,12 +64,12 @@
     },
     "popcap_resources_to_tre_info": {
         "filter": [".res"],
-        "allow": true,
+        "allow": false,
         "option": 8
     },
     "popcap_resources_to_atlasinfo": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 9
     },
     "popcap_resources_beautify": {
@@ -79,12 +79,12 @@
     },
     "atlas_info_split": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 11
     },
     "atlas_info_cat": {
         "filter": [".bundles"],
-        "allow": true,
+        "allow": false,
         "option": 12
     },
     "atlas_info_constructor": {
@@ -92,7 +92,7 @@
         "allow": true,
         "option": 13
     },
-    "popcap_texture_atlas_split": {
+    "popcap_atlas_split": {
         "filter": ["$*/"],
         "allow": true,
         "option": 14,
@@ -106,7 +106,7 @@
             "split": "?"
         }
     },
-    "popcap_texture_atlas_cat_simple": {
+    "popcap_atlas_merge_simple": {
         "filter": [".spg"],
         "allow": true,
         "option": 15,
@@ -114,9 +114,9 @@
             "padding": 1
         }
     },
-    "popcap_texture_atlas_cat": {
+    "popcap_texture_atlas_merge": {
         "filter": [".spg"],
-        "allow": true,
+        "allow": false,
         "option": 16,
         "arguments": {
             "#comment": [
@@ -183,14 +183,14 @@
         "allow": true,
         "option": 26
     },
-    "popcap_texture_resize_atlas_simple": {
+    "popcap_resize_sprites_simple": {
         "filter": [".spg"],
         "allow": true,
         "option": 27
     },
-    "popcap_texture_resize_atlas": {
+    "popcap_resize_sprites": {
         "filter": [".spg"],
-        "allow": true,
+        "allow": false,
         "option": 28
     },
     "real_esrgan_upscaler_image": {
@@ -198,37 +198,37 @@
         "allow": true,
         "option": 29
     },
-    "popcap_zlib_rsg_unpack": {
+    "popcap_rsg_unpack": {
         "filter": [".rsg"],
         "allow": true,
         "option": 30
     },
-    "popcap_zlib_rsg_pack": {
+    "popcap_rsg_pack": {
         "filter": [".packet"],
         "allow": true,
         "option": 31
     },
-    "popcap_zlib_rsb_unpack": {
+    "popcap_rsb_unpack": {
         "filter": [".rsb", ".obb"],
         "allow": true,
         "option": 32
     },
-    "popcap_zlib_rsb_pack": {
+    "popcap_rsb_pack": {
         "filter": [".bundle"],
         "allow": true,
         "option": 33
     },
-    "popcap_zlib_smf_decompress": {
+    "popcap_zlib_uncompress": {
         "filter": [".smf"],
         "allow": true,
         "option": 34
     },
-    "popcap_zlib_smf_compress": {
+    "popcap_zlib_compress": {
         "filter": [".rsb", ".obb"],
         "allow": true,
         "option": 35
     },
-    "popcap_game_json_split": {
+    "popcap_packages_json_split": {
         "filter": [".json", ".rton"],
         "allow": true,
         "option": 36,
@@ -242,7 +242,7 @@
             "method": "?"
         }
     },
-    "popcap_game_json_pack": {
+    "popcap_packages_json_merge": {
         "filter": [".pgj"],
         "allow": true,
         "option": 37,
@@ -258,15 +258,15 @@
     },
     "json_patch": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 38
     },
     "json_patch_generator": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 39
     },
-    "popcap_texture_atlas_pack_cross_resolution": {
+    "popcap_atlas_pack_cross_resolution": {
         "filter": [".spg"],
         "allow": true,
         "option": 40,
@@ -276,17 +276,17 @@
     },
     "popcap_lawnstrings_diff": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 41
     },
     "popcap_lawnstrings_convert_to_localization": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 42
     },
     "popcap_lawnstrings_convert_from_localization": {
         "filter": [".json"],
-        "allow": true,
+        "allow": false,
         "option": 43
     },
     "popcap_rton_to_json": {
@@ -426,7 +426,7 @@
         "option": 62
     },
     "frame_rate_increasement": {
-        "filter": [".json"],
+        "filter": [".pam.json"],
         "allow": true,
         "option": 63,
         "arguments": {
@@ -434,7 +434,7 @@
         }
     },
     "popcap_pam_json_to_flash": {
-        "filter": [".json"],
+        "filter": [".pam.json"],
         "allow": true,
         "option": 64
     },
@@ -444,7 +444,7 @@
         "option": 65
     },
     "script_evaluate": {
-        "filter": [".json"],
+        "filter": [".script.json"],
         "allow": true,
         "option": 66
     },
@@ -472,5 +472,25 @@
         "filter": [".rsb", ".obb"],
         "allow": true,
         "option": 71
+    },
+    "popcap_resource_to_res": {
+        "filter": [".json"],
+        "allow": true,
+        "option": 72
+    },
+    "popcap_res_to_resource": {
+        "filter": [".json"],
+        "allow": true,
+        "option": 73
+    },
+    "popcap_split_res_json": {
+        "filter": [".json"],
+        "allow": true,
+        "option": 74
+    },
+    "popcap_merge_res_json": {
+        "filter": [".info"],
+        "allow": true,
+        "option": 75
     }
 }

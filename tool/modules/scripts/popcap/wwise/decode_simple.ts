@@ -38,9 +38,7 @@ export default function (wwise_bnk: any) {
     function STMGDecode() {
         const STMG_length = wwise_bnk.readUInt32LE();
         const volume_threshold = createHexCanReadable(wwise_bnk.readBuffer(4));
-        const max_voice_instances = createHexCanReadable(
-            wwise_bnk.readBuffer(2)
-        );
+        const max_voice_instances = createHexCanReadable(wwise_bnk.readBuffer(2));
         let unknown_type_1 = 0;
         if (ver_140) {
             unknown_type_1 = wwise_bnk.readUInt16LE();
@@ -49,9 +47,7 @@ export default function (wwise_bnk: any) {
         const stage_group = new Array();
         for (let i = 0; i < STMG_stage_number; i++) {
             const id = wwise_bnk.readUInt32LE();
-            const default_transition_time = createHexCanReadable(
-                wwise_bnk.readBuffer(4)
-            );
+            const default_transition_time = createHexCanReadable(wwise_bnk.readBuffer(4));
             const number_ms = wwise_bnk.readUInt32LE();
             const custom_transition = new Array();
             for (let k = 0; k < number_ms; i++) {
@@ -159,9 +155,7 @@ export default function (wwise_bnk: any) {
                 vaule,
             });
         }
-        const low_pass_filter_vaule = createHexCanReadable(
-            wwise_bnk.readBuffer(2)
-        );
+        const low_pass_filter_vaule = createHexCanReadable(wwise_bnk.readBuffer(2));
         const low_pass_filter_number = wwise_bnk.readUInt16LE();
         const low_pass_filter_point = new Array();
         for (let i = 0; i < low_pass_filter_number; i++) {
@@ -171,9 +165,7 @@ export default function (wwise_bnk: any) {
             });
         }
         if (ver_112 || ver_140) {
-            const high_pass_filter_vaule = createHexCanReadable(
-                wwise_bnk.readBuffer(2)
-            );
+            const high_pass_filter_vaule = createHexCanReadable(wwise_bnk.readBuffer(2));
             const high_pass_filter_number = wwise_bnk.readUInt16LE();
             const high_pass_filter_point = new Array();
             for (let i = 0; i < high_pass_filter_number; i++) {
@@ -232,10 +224,7 @@ export default function (wwise_bnk: any) {
         const DATA_length = wwise_bnk.readUInt32LE();
         const wem_items = wwise_bnk.readBuffer(DATA_length);
         for (let i = 0; i < wem_data.length; i++) {
-            wem_data[i].data = wem_items.slice(
-                wem_data[i].offset,
-                wem_data[i].offset + wem_data[i].length
-            );
+            wem_data[i].data = wem_items.slice(wem_data[i].offset, wem_data[i].offset + wem_data[i].length);
             delete wem_data[i].offset;
             delete wem_data[i].length;
         }
@@ -342,9 +331,7 @@ export default function (wwise_bnk: any) {
     }
     const id = wwise_bnk.readUInt32LE();
     const data_length = BKHD_length - 8;
-    const header_expand = createHexCanReadable(
-        wwise_bnk.readBuffer(data_length)
-    );
+    const header_expand = createHexCanReadable(wwise_bnk.readBuffer(data_length));
     wwise_json.BKHD = {
         version,
         id,

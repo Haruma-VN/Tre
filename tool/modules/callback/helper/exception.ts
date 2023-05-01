@@ -2,7 +2,7 @@
 namespace assertation_break {
     export const ban_list: Array<string> = [
         "popcap_atlas_split_advanced",
-        "popcap_texture_atlas_split",
+        "popcap_atlas_split",
         "start",
         "end",
         "notify",
@@ -21,8 +21,8 @@ namespace assertation_break {
         "atlas_info_split",
         "atlas_info_cat",
         "atlas_info_constructor",
-        "popcap_texture_atlas_cat_simple",
-        "popcap_texture_atlas_cat",
+        "popcap_atlas_merge_simple",
+        "popcap_texture_atlas_merge",
         "popcap_texture_encode_rgba8888",
         "popcap_texture_encode_argb8888",
         "popcap_texture_encode_pvrtc",
@@ -33,20 +33,20 @@ namespace assertation_break {
         "popcap_texture_decode_pvrtc",
         "popcap_texture_decode_etc1a",
         "popcap_texture_decode_etc1a_index",
-        "popcap_texture_resize_atlas_simple",
-        "popcap_texture_resize_atlas",
+        "popcap_resize_sprites_simple",
+        "popcap_resize_sprites",
         "real_esrgan_upscaler_image",
-        "popcap_zlib_rsg_unpack",
-        "popcap_zlib_rsg_pack",
-        "popcap_zlib_rsb_unpack",
-        "popcap_zlib_rsb_pack",
-        "popcap_zlib_smf_decompress",
-        "popcap_zlib_smf_compress",
-        "popcap_game_json_split",
-        "popcap_game_json_pack",
+        "popcap_rsg_unpack",
+        "popcap_rsg_pack",
+        "popcap_rsb_unpack",
+        "popcap_rsb_pack",
+        "popcap_zlib_uncompress",
+        "popcap_zlib_compress",
+        "popcap_packages_json_split",
+        "popcap_packages_json_merge",
         "json_patch",
         "json_patch_generator",
-        "popcap_texture_atlas_pack_cross_resolution",
+        "popcap_atlas_pack_cross_resolution",
         "popcap_lawnstrings_diff",
         "popcap_lawnstrings_convert_to_localization",
         "popcap_lawnstrings_convert_from_localization",
@@ -75,10 +75,7 @@ namespace assertation_break {
 
     export const scrapped_lists: Array<string> = ["popcap_rsb_disturb"];
 
-    export const allowance_lists: Array<string> = [
-        ...default_functions,
-        ...scrapped_lists,
-    ];
+    export const allowance_lists: Array<string> = [...default_functions, ...scrapped_lists];
 }
 
 export default assertation_break;

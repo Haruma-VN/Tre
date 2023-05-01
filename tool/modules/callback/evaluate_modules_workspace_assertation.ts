@@ -36,11 +36,10 @@ import { atlas_info_cat, atlas_info_split, atlasinfo_conduct } from "../scripts/
 import * as color from "../library/color/color.js";
 import { unpack_rsg, pack_rsg } from "../scripts/popcap/rsg/util.js";
 import readline_for_json from "./public/input/readline_for_json.js";
-import ban from "./public/js_evaluate/ban.js";
 import applyPatch from "../library/json/patch.js";
 import generatePatch from "../library/json/generate_patch.js";
 import * as ImagesUtilities from "../library/img/util.js";
-import * as popcap_game_content_edit from "../scripts/popcap/rsb/utilities.js";
+import * as popcap_game_content_edit from "../scripts/popcap/rsb/util.js";
 import { Lawnstrings } from "../scripts/popcap/localization/lawnstrings.js";
 import PopCapPackages from "../scripts/popcap/json/util.js";
 import RSBInfo from "../scripts/default/support/util.js";
@@ -74,6 +73,9 @@ import popcap_rsb_disturb from "../scripts/default/scrapped/disturb.js";
 import input_img from "./public/img/input_img.js";
 import popcap_resource_to_res from "../scripts/popcap/resources/res/encode.js";
 import popcap_res_to_resource from "../scripts/popcap/resources/res/to_official.js";
+import js_evaluate from "./jsshell.js";
+import merge_res_json from "../scripts/popcap/resources/res/merge/merge.js";
+import split_res_json from "../scripts/popcap/resources/res/split/split.js";
 
 /**
  *
@@ -128,6 +130,24 @@ async function evaluate_js_modules_workspace_assertation(
             } else {
                 execute_file_dir.forEach(async (file) => {
                     popcap_resource_to_res.create_conversion(file);
+                });
+            }
+            break;
+        case "popcap_split_res_json" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                split_res_json.create_conversion(execute_file_dir);
+            } else {
+                execute_file_dir.forEach(async (file) => {
+                    split_res_json.create_conversion(file);
+                });
+            }
+            break;
+        case "popcap_merge_res_json" as popcap_game_edit_method:
+            if (!js_checker.is_array(execute_file_dir)) {
+                merge_res_json.create_conversion(execute_file_dir);
+            } else {
+                execute_file_dir.forEach(async (file) => {
+                    merge_res_json.create_conversion(file);
                 });
             }
             break;
@@ -431,36 +451,7 @@ async function evaluate_js_modules_workspace_assertation(
         case "javascript_evaluate" as popcap_game_edit_method:
             try {
                 if (!js_checker.is_array(execute_file_dir)) {
-                    const js_shell_string_await_for_executor: string = fs_js.read_file(execute_file_dir, "utf8");
-                    let javascript_shell_allow_this_funcction: boolean = ban(
-                        [
-                            "eval",
-                            "exec",
-                            "execSync",
-                            "spawn",
-                            "setTimeout",
-                            "setInterval",
-                            "require",
-                            "import",
-                            "export",
-                            "node:fs",
-                            "window",
-                            "interface",
-                            "abstract",
-                            "with",
-                            "var",
-                            "readline",
-                            "fetch",
-                            "document",
-                            "console",
-                        ],
-                        js_shell_string_await_for_executor,
-                    );
-                    if (javascript_shell_allow_this_funcction) {
-                        await eval(js_shell_string_await_for_executor);
-                    } else {
-                        return;
-                    }
+                    await js_evaluate(execute_file_dir);
                 }
             } catch (error: any) {
                 throw new Error(error.message as evaluate_error);
@@ -748,7 +739,7 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_rsg_unpack":
+        case "popcap_rsg_unpack":
             if (!js_checker.is_array(execute_file_dir)) {
                 await unpack_rsg(
                     fs_js.read_file(execute_file_dir, "buffer"),
@@ -806,7 +797,7 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_rsg_pack" as popcap_game_edit_method:
+        case "popcap_rsg_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await pack_rsg(execute_file_dir);
             } else {
@@ -848,12 +839,10 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_texture_atlas_cat_simple" as popcap_game_edit_method:
+        case "popcap_atlas_merge_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 if (fs_js.create_toolkit_view("smart")) {
-                    fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_cat_simple")} ~ ${localization("is_smart")}`,
-                    );
+                    fs_js.execution_auto(`${localization("popcap_atlas_merge_simple")} ~ ${localization("is_smart")}`);
                     fs_js.execution_information(localization("found_smart"));
                     const create_list_of_atlas = sort_atlas_area(await evaluate_test(execute_file_dir, 1));
                     const allowance_list: number[] = [];
@@ -886,29 +875,27 @@ async function evaluate_js_modules_workspace_assertation(
                 }
                 const create_max_padding_size: number = width > height ? height : width;
                 const atlas_pack_size_view: number =
-                    arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding === "string" ||
-                        Number.isInteger(
-                            arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding,
-                        )) &&
-                    arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== "?" &&
-                    parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) >= 0 &&
-                    parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) <=
+                    arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== undefined &&
+                    arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== null &&
+                    arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding)) &&
+                    arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== "?" &&
+                    parseInt(arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding) >= 0 &&
+                    parseInt(arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding) <=
                         create_max_padding_size
-                        ? parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding)
+                        ? parseInt(arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding)
                         : -1;
                 if (atlas_pack_size_view === -1) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                         ),
                     );
                     fs_js.create_padding_argument(0, create_max_padding_size);
                 } else {
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_cat_simple")} ~ ${localization(
+                        `${localization("popcap_atlas_merge_simple")} ~ ${localization(
                             "padding_size",
                         )} = ${atlas_pack_size_view}`,
                     );
@@ -922,19 +909,19 @@ async function evaluate_js_modules_workspace_assertation(
                     width,
                     height,
                     true,
-                    Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                    Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_display_not_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_method_in_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_not_found_res_indicated_in_subgroups,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
                     true,
                     false,
                     true,
@@ -946,7 +933,7 @@ async function evaluate_js_modules_workspace_assertation(
                     if (fs_js.is_directory(file)) {
                         if (fs_js.create_toolkit_view("smart")) {
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat_simple")} ~ ${localization("is_smart")}`,
+                                `${localization("popcap_atlas_merge_simple")} ~ ${localization("is_smart")}`,
                             );
                             fs_js.execution_information(localization("found_smart"));
                             const create_list_of_atlas = sort_atlas_area(await evaluate_test(file, 1));
@@ -984,32 +971,30 @@ async function evaluate_js_modules_workspace_assertation(
                         }
                         const create_max_padding_size: number = width > height ? height : width;
                         const atlas_pack_size_view: number =
-                            arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !==
-                                undefined &&
-                            arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== null &&
-                            arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding ===
+                            arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== undefined &&
+                            arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== null &&
+                            arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding ===
                                 "string" ||
                                 Number.isInteger(
-                                    arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding,
+                                    arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding,
                                 )) &&
-                            arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding !== "?" &&
-                            parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) >=
-                                0 &&
-                            parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding) <=
+                            arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding !== "?" &&
+                            parseInt(arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding) >= 0 &&
+                            parseInt(arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding) <=
                                 create_max_padding_size
-                                ? parseInt(arguments_default_modifier.popcap_texture_atlas_cat_simple.arguments.padding)
+                                ? parseInt(arguments_default_modifier.popcap_atlas_merge_simple.arguments.padding)
                                 : -1;
                         if (atlas_pack_size_view === -1) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                                 ),
                             );
                             fs_js.create_padding_argument(0, create_max_padding_size);
                         } else {
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat_simple")} ~ ${localization(
+                                `${localization("popcap_atlas_merge_simple")} ~ ${localization(
                                     "padding_size",
                                 )} = ${atlas_pack_size_view}`,
                             );
@@ -1023,19 +1008,19 @@ async function evaluate_js_modules_workspace_assertation(
                             width,
                             height,
                             true,
-                            Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                            Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_display_not_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_method_in_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_not_found_res_indicated_in_subgroups,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
                             true,
                             false,
                             true,
@@ -1162,7 +1147,7 @@ async function evaluate_js_modules_workspace_assertation(
                 if (atlas_pack_size_view === -1) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                         ),
                     );
                     fs_js.create_padding_argument(0, create_max_padding_size);
@@ -1316,7 +1301,7 @@ async function evaluate_js_modules_workspace_assertation(
                         if (atlas_pack_size_view === -1) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                                 ),
                             );
                             fs_js.create_padding_argument(0, create_max_padding_size);
@@ -1344,11 +1329,11 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_texture_atlas_pack_cross_resolution" as popcap_game_edit_method:
+        case "popcap_atlas_pack_cross_resolution" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 if (fs_js.create_toolkit_view("smart")) {
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization("is_smart")}`,
+                        `${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("is_smart")}`,
                     );
                     fs_js.execution_information(localization("found_smart"));
                     const create_list_of_atlas = sort_atlas_area(await evaluate_test(execute_file_dir, 1));
@@ -1382,35 +1367,29 @@ async function evaluate_js_modules_workspace_assertation(
                 }
                 const create_max_padding_size = Math.min(width, height);
                 const atlas_pack_size_view: number =
-                    arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !==
-                        undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !==
-                        void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding ===
+                    arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !== undefined &&
+                    arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !== null &&
+                    arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding ===
                         "string" ||
                         Number.isInteger(
-                            arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding,
+                            arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding,
                         )) &&
-                    arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !== "?" &&
-                    parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) >=
-                        0 &&
-                    parseInt(arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding) <=
-                        width
-                        ? parseInt(
-                              arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding,
-                          )
+                    arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !== "?" &&
+                    parseInt(arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding) >= 0 &&
+                    parseInt(arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding) <= width
+                        ? parseInt(arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding)
                         : -1;
                 if (atlas_pack_size_view === -1) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                         ),
                     );
                     fs_js.create_padding_argument(0, create_max_padding_size);
                 } else {
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization(
+                        `${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization(
                             "padding_size",
                         )} = ${atlas_pack_size_view}`,
                     );
@@ -1423,19 +1402,19 @@ async function evaluate_js_modules_workspace_assertation(
                     execute_file_dir,
                     width,
                     height,
-                    Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                    Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_display_not_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_method_in_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_not_found_res_indicated_in_subgroups,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
                     atlas_cat_padding_size,
                 );
             } else {
@@ -1443,9 +1422,7 @@ async function evaluate_js_modules_workspace_assertation(
                     if (fs_js.is_directory(file)) {
                         if (fs_js.create_toolkit_view("smart")) {
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization(
-                                    "is_smart",
-                                )}`,
+                                `${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization("is_smart")}`,
                             );
                             fs_js.execution_information(localization("found_smart"));
                             const create_list_of_atlas = sort_atlas_area(await evaluate_test(file, 1));
@@ -1483,41 +1460,35 @@ async function evaluate_js_modules_workspace_assertation(
                         }
                         const create_max_padding_size = Math.min(width, height);
                         const atlas_pack_size_view: number =
-                            arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !==
+                            arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !==
                                 undefined &&
-                            arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !==
-                                null &&
-                            arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !==
+                            arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !== null &&
+                            arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !==
                                 void 0 &&
-                            (typeof arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments
-                                .padding === "string" ||
+                            (typeof arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding ===
+                                "string" ||
                                 Number.isInteger(
-                                    arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments
-                                        .padding,
+                                    arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding,
                                 )) &&
-                            arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding !==
-                                "?" &&
-                            parseInt(
-                                arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding,
-                            ) >= 0 &&
-                            parseInt(
-                                arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments.padding,
-                            ) <= width
+                            arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding !== "?" &&
+                            parseInt(arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding) >=
+                                0 &&
+                            parseInt(arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding) <=
+                                width
                                 ? parseInt(
-                                      arguments_default_modifier.popcap_texture_atlas_pack_cross_resolution.arguments
-                                          .padding,
+                                      arguments_default_modifier.popcap_atlas_pack_cross_resolution.arguments.padding,
                                   )
                                 : -1;
                         if (atlas_pack_size_view === -1) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                                 ),
                             );
                             fs_js.create_padding_argument(0, create_max_padding_size);
                         } else {
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_pack_cross_resolution")} ~ ${localization(
+                                `${localization("popcap_atlas_pack_cross_resolution")} ~ ${localization(
                                     "padding_size",
                                 )} = ${atlas_pack_size_view}`,
                             );
@@ -1530,19 +1501,19 @@ async function evaluate_js_modules_workspace_assertation(
                             file,
                             width,
                             height,
-                            Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                            Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_display_not_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_method_in_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_not_found_res_indicated_in_subgroups,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
                             atlas_cat_padding_size,
                         );
                     }
@@ -1572,10 +1543,10 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_texture_atlas_cat" as popcap_game_edit_method:
+        case "popcap_texture_atlas_merge" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 if (fs_js.create_toolkit_view("smart")) {
-                    fs_js.execution_auto(`${localization("popcap_texture_atlas_cat")} ~ ${localization("is_smart")}`);
+                    fs_js.execution_auto(`${localization("popcap_texture_atlas_merge")} ~ ${localization("is_smart")}`);
                     fs_js.execution_information(localization("found_smart"));
                     const create_list_of_atlas = sort_atlas_area(await evaluate_test(execute_file_dir, 1));
                     const allowance_list: number[] = [];
@@ -1608,19 +1579,19 @@ async function evaluate_js_modules_workspace_assertation(
                 }
                 const create_max_padding_size = Math.min(width, height);
                 const support_smart_pack: 1 | 2 | 0 =
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart !== undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart)) &&
-                    (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart) === 1 ||
-                        parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart) === 0)
-                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart) as 1 | 0)
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart !== undefined &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart !== null &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart)) &&
+                    (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart) === 1 ||
+                        parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart) === 0)
+                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart) as 1 | 0)
                         : 2;
                 if (support_smart_pack === 2) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_smart_pack}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_smart_pack}`,
                         ),
                     );
                     Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1628,7 +1599,7 @@ async function evaluate_js_modules_workspace_assertation(
                 } else {
                     const create_new_print_message: boolean = (support_smart_pack as 1 | 0) === 1 ? true : false;
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                        `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                             "smart_packing_area",
                         )} = ${create_new_print_message}`,
                     );
@@ -1637,19 +1608,19 @@ async function evaluate_js_modules_workspace_assertation(
                     support_smart_pack === 2 ? Console.IntegerReadLine(0, 1) : support_smart_pack;
                 atlas_cat_smart_option_area = atlas_cat_smart_option_area === 1 ? true : false;
                 const support_pack_pot: 1 | 2 | 0 =
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot !== undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot)) &&
-                    (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot) === 1 ||
-                        parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot) === 0)
-                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot) as 1 | 0)
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot !== undefined &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot !== null &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot)) &&
+                    (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot) === 1 ||
+                        parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot) === 0)
+                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot) as 1 | 0)
                         : 2;
                 if (support_pack_pot === 2) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_pot}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_pot}`,
                         ),
                     );
                     Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1657,7 +1628,7 @@ async function evaluate_js_modules_workspace_assertation(
                 } else {
                     const create_new_print_message: boolean = (support_pack_pot as 1 | 0) === 1 ? true : false;
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                        `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                             "pot",
                         )} = ${create_new_print_message}`,
                     );
@@ -1666,19 +1637,19 @@ async function evaluate_js_modules_workspace_assertation(
                     support_pack_pot === 2 ? Console.IntegerReadLine(0, 1) : support_pack_pot;
                 atlas_cat_pot_option_area = atlas_cat_pot_option_area === 1 ? true : false;
                 const support_pack_square: 1 | 2 | 0 =
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.square !== undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.square !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.square !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.square === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat.arguments.square)) &&
-                    (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.square) === 1 ||
-                        parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.square) === 0)
-                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.square) as 1 | 0)
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.square !== undefined &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.square !== null &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.square !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.square === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_merge.arguments.square)) &&
+                    (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.square) === 1 ||
+                        parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.square) === 0)
+                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.square) as 1 | 0)
                         : 2;
                 if (support_pack_square === 2) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_iz_square}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_iz_square}`,
                         ),
                     );
                     Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1686,7 +1657,7 @@ async function evaluate_js_modules_workspace_assertation(
                 } else {
                     const create_new_print_message: boolean = (support_pack_square as 1 | 0) === 1 ? true : false;
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                        `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                             "square_area",
                         )} = ${create_new_print_message}`,
                     );
@@ -1695,19 +1666,19 @@ async function evaluate_js_modules_workspace_assertation(
                     support_pack_square === 2 ? Console.IntegerReadLine(0, 1) : support_pack_square;
                 atlas_cat_square_option_area_force = atlas_cat_square_option_area_force === 1 ? true : false;
                 const support_pack_rotation: 1 | 2 | 0 =
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation !== undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation)) &&
-                    (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation) === 1 ||
-                        parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation) === 0)
-                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation) as 1 | 0)
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation !== undefined &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation !== null &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation)) &&
+                    (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation) === 1 ||
+                        parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation) === 0)
+                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation) as 1 | 0)
                         : 2;
                 if (support_pack_rotation === 2) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_can_be_allow_for_rotation}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_can_be_allow_for_rotation}`,
                         ),
                     );
                     Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1715,7 +1686,7 @@ async function evaluate_js_modules_workspace_assertation(
                 } else {
                     const create_new_print_message: boolean = (support_pack_rotation as 1 | 0) === 1 ? true : false;
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                        `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                             "allow_rotation",
                         )} = ${create_new_print_message}`,
                     );
@@ -1725,27 +1696,27 @@ async function evaluate_js_modules_workspace_assertation(
                 atlas_cat_allow_rotation_option_area_force =
                     atlas_cat_allow_rotation_option_area_force === 1 ? true : false;
                 const atlas_pack_size_view: number =
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding)) &&
-                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== "?" &&
-                    parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding) >= 0 &&
-                    parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding) <=
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== undefined &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== null &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding)) &&
+                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== "?" &&
+                    parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding) >= 0 &&
+                    parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding) <=
                         create_max_padding_size
-                        ? parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding)
+                        ? parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding)
                         : -1;
                 if (atlas_pack_size_view === -1) {
                     Console.WriteLine(
                         color.fgcyan_string(
-                            `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                            `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                         ),
                     );
                     fs_js.create_padding_argument(0, create_max_padding_size);
                 } else {
                     fs_js.execution_auto(
-                        `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                        `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                             "padding_size",
                         )} = ${atlas_pack_size_view}`,
                     );
@@ -1759,19 +1730,19 @@ async function evaluate_js_modules_workspace_assertation(
                     width,
                     height,
                     false,
-                    Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                    Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_display_not_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_method_in_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_not_found_res_indicated_in_subgroups,
                     Argument.Tre.Packages
-                        .popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                        .popcap_texture_atlas_merge_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
                     atlas_cat_smart_option_area,
                     atlas_cat_pot_option_area,
                     atlas_cat_square_option_area_force,
@@ -1783,7 +1754,7 @@ async function evaluate_js_modules_workspace_assertation(
                     if (fs_js.is_directory(file)) {
                         if (fs_js.create_toolkit_view("smart")) {
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat")} ~ ${localization("is_smart")}`,
+                                `${localization("popcap_texture_atlas_merge")} ~ ${localization("is_smart")}`,
                             );
                             fs_js.execution_information(localization("found_smart"));
                             const create_list_of_atlas = sort_atlas_area(await evaluate_test(file, 1));
@@ -1821,23 +1792,24 @@ async function evaluate_js_modules_workspace_assertation(
                         }
                         const create_max_padding_size = Math.min(width, height);
                         const support_smart_pack: 1 | 2 | 0 =
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart !== undefined &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart !== null &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart === "string" ||
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart !== undefined &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart !== null &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart ===
+                                "string" ||
                                 Number.isInteger(
-                                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart,
+                                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart,
                                 )) &&
-                            (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart) === 1 ||
-                                parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart) === 0)
-                                ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.smart) as
+                            (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart) === 1 ||
+                                parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart) === 0)
+                                ? (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.smart) as
                                       | 1
                                       | 0)
                                 : 2;
                         if (support_smart_pack === 2) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_smart_pack}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_smart_pack}`,
                                 ),
                             );
                             Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1846,7 +1818,7 @@ async function evaluate_js_modules_workspace_assertation(
                             const create_new_print_message: boolean =
                                 (support_smart_pack as 1 | 0) === 1 ? true : false;
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                                `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                                     "smart_packing_area",
                                 )} = ${create_new_print_message}`,
                             );
@@ -1855,19 +1827,23 @@ async function evaluate_js_modules_workspace_assertation(
                             support_smart_pack === 2 ? Console.IntegerReadLine(0, 1) : support_smart_pack;
                         atlas_cat_smart_option_area = atlas_cat_smart_option_area === 1 ? true : false;
                         const support_pack_pot: 1 | 2 | 0 =
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot !== undefined &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot !== null &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot === "string" ||
-                                Number.isInteger(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot)) &&
-                            (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot) === 1 ||
-                                parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot) === 0)
-                                ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.pot) as 1 | 0)
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot !== undefined &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot !== null &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot === "string" ||
+                                Number.isInteger(
+                                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot,
+                                )) &&
+                            (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot) === 1 ||
+                                parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot) === 0)
+                                ? (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.pot) as
+                                      | 1
+                                      | 0)
                                 : 2;
                         if (support_pack_pot === 2) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_pot}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_pot}`,
                                 ),
                             );
                             Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1875,7 +1851,7 @@ async function evaluate_js_modules_workspace_assertation(
                         } else {
                             const create_new_print_message: boolean = (support_pack_pot as 1 | 0) === 1 ? true : false;
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                                `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                                     "pot",
                                 )} = ${create_new_print_message}`,
                             );
@@ -1884,23 +1860,24 @@ async function evaluate_js_modules_workspace_assertation(
                             support_pack_pot === 2 ? Console.IntegerReadLine(0, 1) : support_pack_pot;
                         atlas_cat_pot_option_area = atlas_cat_pot_option_area === 1 ? true : false;
                         const support_pack_square: 1 | 2 | 0 =
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.square !== undefined &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.square !== null &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.square !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.square === "string" ||
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.square !== undefined &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.square !== null &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.square !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.square ===
+                                "string" ||
                                 Number.isInteger(
-                                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.square,
+                                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.square,
                                 )) &&
-                            (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.square) === 1 ||
-                                parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.square) === 0)
-                                ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.square) as
+                            (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.square) === 1 ||
+                                parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.square) === 0)
+                                ? (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.square) as
                                       | 1
                                       | 0)
                                 : 2;
                         if (support_pack_square === 2) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_iz_square}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_iz_square}`,
                                 ),
                             );
                             Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1909,7 +1886,7 @@ async function evaluate_js_modules_workspace_assertation(
                             const create_new_print_message: boolean =
                                 (support_pack_square as 1 | 0) === 1 ? true : false;
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                                `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                                     "square_area",
                                 )} = ${create_new_print_message}`,
                             );
@@ -1918,24 +1895,25 @@ async function evaluate_js_modules_workspace_assertation(
                             support_pack_square === 2 ? Console.IntegerReadLine(0, 1) : support_pack_square;
                         atlas_cat_square_option_area_force = atlas_cat_square_option_area_force === 1 ? true : false;
                         const support_pack_rotation: 1 | 2 | 0 =
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation !== undefined &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation !== null &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation ===
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation !== undefined &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation !== null &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation ===
                                 "string" ||
                                 Number.isInteger(
-                                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation,
+                                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation,
                                 )) &&
-                            (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation) === 1 ||
-                                parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation) === 0)
-                                ? (parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.rotation) as
-                                      | 1
-                                      | 0)
+                            (parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation) === 1 ||
+                                parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation) ===
+                                    0)
+                                ? (parseInt(
+                                      arguments_default_modifier.popcap_texture_atlas_merge.arguments.rotation,
+                                  ) as 1 | 0)
                                 : 2;
                         if (support_pack_rotation === 2) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_iz_thiz_pack_can_be_allow_for_rotation}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_iz_thiz_pack_can_be_allow_for_rotation}`,
                                 ),
                             );
                             Console.WriteLine(`${Argument.Tre.Packages.default_boolean_with_false}`);
@@ -1944,7 +1922,7 @@ async function evaluate_js_modules_workspace_assertation(
                             const create_new_print_message: boolean =
                                 (support_pack_rotation as 1 | 0) === 1 ? true : false;
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                                `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                                     "allow_rotation",
                                 )} = ${create_new_print_message}`,
                             );
@@ -1954,30 +1932,30 @@ async function evaluate_js_modules_workspace_assertation(
                         atlas_cat_allow_rotation_option_area_force =
                             atlas_cat_allow_rotation_option_area_force === 1 ? true : false;
                         const atlas_pack_size_view: number =
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== undefined &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== null &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding ===
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== undefined &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== null &&
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding ===
                                 "string" ||
                                 Number.isInteger(
-                                    arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding,
+                                    arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding,
                                 )) &&
-                            arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding !== "?" &&
-                            parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding) >= 0 &&
-                            parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding) <=
+                            arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding !== "?" &&
+                            parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding) >= 0 &&
+                            parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding) <=
                                 create_max_padding_size
-                                ? parseInt(arguments_default_modifier.popcap_texture_atlas_cat.arguments.padding)
+                                ? parseInt(arguments_default_modifier.popcap_texture_atlas_merge.arguments.padding)
                                 : -1;
                         if (atlas_pack_size_view === -1) {
                             Console.WriteLine(
                                 color.fgcyan_string(
-                                    `${Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
+                                    `${Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_boolean_question_padding_size_for_max_rects_bin}`,
                                 ),
                             );
                             fs_js.create_padding_argument(0, create_max_padding_size);
                         } else {
                             fs_js.execution_auto(
-                                `${localization("popcap_texture_atlas_cat")} ~ ${localization(
+                                `${localization("popcap_texture_atlas_merge")} ~ ${localization(
                                     "padding_size",
                                 )} = ${atlas_pack_size_view}`,
                             );
@@ -1991,19 +1969,19 @@ async function evaluate_js_modules_workspace_assertation(
                             width,
                             height,
                             false,
-                            Argument.Tre.Packages.popcap_texture_atlas_cat_max_rects_bin_display_not_atlas_info,
+                            Argument.Tre.Packages.popcap_texture_atlas_merge_max_rects_bin_display_not_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_groups_array_in_atlasinfo,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_subgroup_in_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_find_method_in_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_find_method_in_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_cannot_get_res_data_from_this_atlas_info,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_not_found_res_indicated_in_subgroups,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_not_found_res_indicated_in_subgroups,
                             Argument.Tre.Packages
-                                .popcap_texture_atlas_cat_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
+                                .popcap_texture_atlas_merge_max_rects_bin_display_total_sprites_sheet_process_in_this_void,
                             atlas_cat_smart_option_area,
                             atlas_cat_pot_option_area,
                             atlas_cat_square_option_area_force,
@@ -2014,7 +1992,7 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_texture_resize_atlas_simple" as popcap_game_edit_method:
+        case "popcap_resize_sprites_simple" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 Console.WriteLine(
                     color.fgcyan_string(`${Argument.Tre.Packages.popcap_atlas_member_resize_original_quality}`),
@@ -2196,21 +2174,23 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_game_json_split" as popcap_game_edit_method:
+        case "popcap_packages_json_split" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 const argument_checker_for_encoding: 0 | 1 | 2 =
-                    arguments_default_modifier.popcap_game_json_split.arguments.method !== undefined &&
-                    arguments_default_modifier.popcap_game_json_split.arguments.method !== null &&
-                    arguments_default_modifier.popcap_game_json_split.arguments.method !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_game_json_split.arguments.method === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_game_json_split.arguments.method)) &&
-                    arguments_default_modifier.popcap_game_json_split.arguments.method !== "?" &&
-                    (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 1 ||
-                        parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 2)
-                        ? (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) as 1 | 2)
+                    arguments_default_modifier.popcap_packages_json_split.arguments.method !== undefined &&
+                    arguments_default_modifier.popcap_packages_json_split.arguments.method !== null &&
+                    arguments_default_modifier.popcap_packages_json_split.arguments.method !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_packages_json_split.arguments.method === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_packages_json_split.arguments.method)) &&
+                    arguments_default_modifier.popcap_packages_json_split.arguments.method !== "?" &&
+                    (parseInt(arguments_default_modifier.popcap_packages_json_split.arguments.method) === 1 ||
+                        parseInt(arguments_default_modifier.popcap_packages_json_split.arguments.method) === 2)
+                        ? (parseInt(arguments_default_modifier.popcap_packages_json_split.arguments.method) as 1 | 2)
                         : 0;
                 if (argument_checker_for_encoding === 0) {
-                    Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_json_split_argument}`));
+                    Console.WriteLine(
+                        color.fgcyan_string(`${Argument.Tre.Packages.popcap_packages_json_split_argument}`),
+                    );
                     Console.WriteLine(`      1. ${localization("split_by_aliases")}`);
                     Console.WriteLine(`      2. ${localization("split_by_typename")}`);
                 } else {
@@ -2219,7 +2199,7 @@ async function evaluate_js_modules_workspace_assertation(
                             ? localization("split_by_typename")
                             : localization("split_by_aliases");
                     fs_js.execution_auto(
-                        `${localization("popcap_game_json_split")} ~ ${execution_information_message}`,
+                        `${localization("popcap_packages_json_split")} ~ ${execution_information_message}`,
                     );
                 }
                 const popcap_json_split_mode_selector: number =
@@ -2229,21 +2209,24 @@ async function evaluate_js_modules_workspace_assertation(
                 execute_file_dir.forEach((file) => {
                     if (fs_js.popcap_check_extname(file, ".json")) {
                         const argument_checker_for_encoding: 0 | 1 | 2 =
-                            arguments_default_modifier.popcap_game_json_split.arguments.method !== undefined &&
-                            arguments_default_modifier.popcap_game_json_split.arguments.method !== null &&
-                            arguments_default_modifier.popcap_game_json_split.arguments.method !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_game_json_split.arguments.method === "string" ||
-                                Number.isInteger(arguments_default_modifier.popcap_game_json_split.arguments.method)) &&
-                            arguments_default_modifier.popcap_game_json_split.arguments.method !== "?" &&
-                            (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 1 ||
-                                parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) === 2)
-                                ? (parseInt(arguments_default_modifier.popcap_game_json_split.arguments.method) as
+                            arguments_default_modifier.popcap_packages_json_split.arguments.method !== undefined &&
+                            arguments_default_modifier.popcap_packages_json_split.arguments.method !== null &&
+                            arguments_default_modifier.popcap_packages_json_split.arguments.method !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_packages_json_split.arguments.method ===
+                                "string" ||
+                                Number.isInteger(
+                                    arguments_default_modifier.popcap_packages_json_split.arguments.method,
+                                )) &&
+                            arguments_default_modifier.popcap_packages_json_split.arguments.method !== "?" &&
+                            (parseInt(arguments_default_modifier.popcap_packages_json_split.arguments.method) === 1 ||
+                                parseInt(arguments_default_modifier.popcap_packages_json_split.arguments.method) === 2)
+                                ? (parseInt(arguments_default_modifier.popcap_packages_json_split.arguments.method) as
                                       | 1
                                       | 2)
                                 : 0;
                         if (argument_checker_for_encoding === 0) {
                             Console.WriteLine(
-                                color.fgcyan_string(`${Argument.Tre.Packages.popcap_game_json_split_argument}`),
+                                color.fgcyan_string(`${Argument.Tre.Packages.popcap_packages_json_split_argument}`),
                             );
                             Console.WriteLine(`      1. ${localization("split_by_aliases")}`);
                             Console.WriteLine(`      2. ${localization("split_by_typename")}`);
@@ -2253,7 +2236,7 @@ async function evaluate_js_modules_workspace_assertation(
                                     ? localization("split_by_typename")
                                     : localization("split_by_aliases");
                             fs_js.execution_auto(
-                                `${localization("popcap_game_json_split")} ~ ${execution_information_message}`,
+                                `${localization("popcap_packages_json_split")} ~ ${execution_information_message}`,
                             );
                         }
                         const popcap_json_split_mode_selector: number =
@@ -2265,18 +2248,18 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_game_json_pack" as popcap_game_edit_method:
+        case "popcap_packages_json_merge" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 const argument_checker_for_encoding: 0 | 1 | 2 =
-                    arguments_default_modifier.popcap_game_json_pack.arguments.encode !== undefined &&
-                    arguments_default_modifier.popcap_game_json_pack.arguments.encode !== null &&
-                    arguments_default_modifier.popcap_game_json_pack.arguments.encode !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_game_json_pack.arguments.encode === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_game_json_pack.arguments.encode)) &&
-                    arguments_default_modifier.popcap_game_json_pack.arguments.encode !== "?" &&
-                    (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 1 ||
-                        parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 0)
-                        ? (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) as 0 | 1)
+                    arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== undefined &&
+                    arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== null &&
+                    arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_packages_json_merge.arguments.encode === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_packages_json_merge.arguments.encode)) &&
+                    arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== "?" &&
+                    (parseInt(arguments_default_modifier.popcap_packages_json_merge.arguments.encode) === 1 ||
+                        parseInt(arguments_default_modifier.popcap_packages_json_merge.arguments.encode) === 0)
+                        ? (parseInt(arguments_default_modifier.popcap_packages_json_merge.arguments.encode) as 0 | 1)
                         : 2;
                 if (argument_checker_for_encoding === 2) {
                     Console.WriteLine(color.fgcyan_string(`${Argument.Tre.Packages.concat_mode_argument_rton}`));
@@ -2288,7 +2271,9 @@ async function evaluate_js_modules_workspace_assertation(
                         argument_checker_for_encoding === 0
                             ? localization("res_cat_concat_no_encode_rton")
                             : localization("res_cat_concat_encode_rton");
-                    fs_js.execution_auto(`${localization("popcap_game_json_pack")} ~ ${execution_information_message}`);
+                    fs_js.execution_auto(
+                        `${localization("popcap_packages_json_merge")} ~ ${execution_information_message}`,
+                    );
                 }
                 const encode: number =
                     argument_checker_for_encoding === 2 ? Console.IntegerReadLine(0, 1) : argument_checker_for_encoding;
@@ -2297,15 +2282,20 @@ async function evaluate_js_modules_workspace_assertation(
                 execute_file_dir.forEach((file) => {
                     if (fs_js.is_directory(file)) {
                         const argument_checker_for_encoding: 0 | 1 | 2 =
-                            arguments_default_modifier.popcap_game_json_pack.arguments.encode !== undefined &&
-                            arguments_default_modifier.popcap_game_json_pack.arguments.encode !== null &&
-                            arguments_default_modifier.popcap_game_json_pack.arguments.encode !== void 0 &&
-                            (typeof arguments_default_modifier.popcap_game_json_pack.arguments.encode === "string" ||
-                                Number.isInteger(arguments_default_modifier.popcap_game_json_pack.arguments.encode)) &&
-                            arguments_default_modifier.popcap_game_json_pack.arguments.encode !== "?" &&
-                            (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 1 ||
-                                parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) === 0)
-                                ? (parseInt(arguments_default_modifier.popcap_game_json_pack.arguments.encode) as 0 | 1)
+                            arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== undefined &&
+                            arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== null &&
+                            arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== void 0 &&
+                            (typeof arguments_default_modifier.popcap_packages_json_merge.arguments.encode ===
+                                "string" ||
+                                Number.isInteger(
+                                    arguments_default_modifier.popcap_packages_json_merge.arguments.encode,
+                                )) &&
+                            arguments_default_modifier.popcap_packages_json_merge.arguments.encode !== "?" &&
+                            (parseInt(arguments_default_modifier.popcap_packages_json_merge.arguments.encode) === 1 ||
+                                parseInt(arguments_default_modifier.popcap_packages_json_merge.arguments.encode) === 0)
+                                ? (parseInt(arguments_default_modifier.popcap_packages_json_merge.arguments.encode) as
+                                      | 0
+                                      | 1)
                                 : 2;
                         if (argument_checker_for_encoding === 2) {
                             Console.WriteLine(
@@ -2320,7 +2310,7 @@ async function evaluate_js_modules_workspace_assertation(
                                     ? localization("res_cat_concat_no_encode_rton")
                                     : localization("res_cat_concat_encode_rton");
                             fs_js.execution_auto(
-                                `${localization("popcap_game_json_pack")} ~ ${execution_information_message}`,
+                                `${localization("popcap_packages_json_merge")} ~ ${execution_information_message}`,
                             );
                         }
                         const encode: number =
@@ -2402,18 +2392,18 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_texture_atlas_split" as popcap_game_edit_method:
+        case "popcap_atlas_split" as popcap_game_edit_method:
             if (js_checker.is_array(execute_file_dir)) {
                 const argument_checker_for_splitting_method: 0 | 1 | 2 =
-                    arguments_default_modifier.popcap_texture_atlas_split.arguments.split !== undefined &&
-                    arguments_default_modifier.popcap_texture_atlas_split.arguments.split !== null &&
-                    arguments_default_modifier.popcap_texture_atlas_split.arguments.split !== void 0 &&
-                    (typeof arguments_default_modifier.popcap_texture_atlas_split.arguments.split === "string" ||
-                        Number.isInteger(arguments_default_modifier.popcap_texture_atlas_split.arguments.split)) &&
-                    arguments_default_modifier.popcap_texture_atlas_split.arguments.split !== "?" &&
-                    (parseInt(arguments_default_modifier.popcap_texture_atlas_split.arguments.split) === 1 ||
-                        parseInt(arguments_default_modifier.popcap_texture_atlas_split.arguments.split) === 2)
-                        ? (parseInt(arguments_default_modifier.popcap_texture_atlas_split.arguments.split) as 1 | 2)
+                    arguments_default_modifier.popcap_atlas_split.arguments.split !== undefined &&
+                    arguments_default_modifier.popcap_atlas_split.arguments.split !== null &&
+                    arguments_default_modifier.popcap_atlas_split.arguments.split !== void 0 &&
+                    (typeof arguments_default_modifier.popcap_atlas_split.arguments.split === "string" ||
+                        Number.isInteger(arguments_default_modifier.popcap_atlas_split.arguments.split)) &&
+                    arguments_default_modifier.popcap_atlas_split.arguments.split !== "?" &&
+                    (parseInt(arguments_default_modifier.popcap_atlas_split.arguments.split) === 1 ||
+                        parseInt(arguments_default_modifier.popcap_atlas_split.arguments.split) === 2)
+                        ? (parseInt(arguments_default_modifier.popcap_atlas_split.arguments.split) as 1 | 2)
                         : 0;
                 if (argument_checker_for_splitting_method === 0) {
                     Console.WriteLine(
@@ -2426,9 +2416,7 @@ async function evaluate_js_modules_workspace_assertation(
                         argument_checker_for_splitting_method === 1
                             ? localization("method_split_popcap_atlas_texture_with_path_extension")
                             : localization("method_split_popcap_atlas_texture_with_id_extension");
-                    fs_js.execution_auto(
-                        localization("popcap_texture_atlas_split") + " ~ " + create_new_message_console_out,
-                    );
+                    fs_js.execution_auto(localization("popcap_atlas_split") + " ~ " + create_new_message_console_out);
                 }
                 let atlas_split_method: number =
                     argument_checker_for_splitting_method === 0
@@ -2466,7 +2454,7 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_rsb_unpack" as popcap_game_edit_method:
+        case "popcap_rsb_unpack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_unpack(execute_file_dir, false, false);
             } else {
@@ -2505,7 +2493,7 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_rsb_pack" as popcap_game_edit_method:
+        case "popcap_rsb_pack" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
                 await popcap_game_content_edit.rsb_pack(execute_file_dir, false, false);
             } else {
@@ -2538,13 +2526,13 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_smf_compress" as popcap_game_edit_method:
+        case "popcap_zlib_zlib_compress" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                await popcap_game_content_edit.smf_compress(execute_file_dir);
+                await popcap_game_content_edit.zlib_compress(execute_file_dir);
             } else {
                 execute_file_dir.forEach(async (file) => {
                     if (fs_js.is_file(file)) {
-                        await popcap_game_content_edit.smf_compress(file);
+                        await popcap_game_content_edit.zlib_compress(file);
                     }
                 });
             }
@@ -2571,13 +2559,13 @@ async function evaluate_js_modules_workspace_assertation(
                 });
             }
             break;
-        case "popcap_zlib_smf_decompress" as popcap_game_edit_method:
+        case "popcap_zlib_uncompress" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                await popcap_game_content_edit.smf_decompress(execute_file_dir);
+                await popcap_game_content_edit.zlib_uncompress(execute_file_dir);
             } else {
                 execute_file_dir.forEach(async (file) => {
                     if (fs_js.is_file(file)) {
-                        await popcap_game_content_edit.smf_decompress(file);
+                        await popcap_game_content_edit.zlib_uncompress(file);
                     }
                 });
             }
