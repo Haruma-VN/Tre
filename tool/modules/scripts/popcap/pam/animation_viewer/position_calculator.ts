@@ -1,5 +1,5 @@
 "use strict";
-export default function (pam_json: any) {
+export default function position_calculator(pam_json: any) {
     const x_tranformArray = new Array();
     const y_transformArray = new Array();
     function pushSpritePositon(sprite: any) {

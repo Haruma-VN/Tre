@@ -18,7 +18,7 @@ export default async function (): Promise<void> {
     fs_js.clear_console();
     Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_loaded")}: `) +
-            `${fs_js.resolve(`${args.main_js as any}/../`)} | ${version.tre_version} | ${localization(
+            `${fs_js.resolve(fs_js.dirname(`${args.main_js as any}`))} | ${version.tre_version} | ${localization(
                 "this.language",
             )}`,
     );

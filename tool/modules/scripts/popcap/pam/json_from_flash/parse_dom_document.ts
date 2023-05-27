@@ -1,6 +1,6 @@
 "use strict";
 import localization from "../../../../callback/localization.js";
-export default function (dom_document: any, main_sprite: any) {
+export default function (dom_document: any, main_sprite: any, last_frame: number) {
     if (Object.keys(dom_document)[0] != "DOMDocument") {
         throw new Error(localization("DOMDocument_invalid"));
     }
@@ -59,7 +59,12 @@ export default function (dom_document: any, main_sprite: any) {
         if (x_Actionscript.script.$cd.trim() != "stop();") {
             throw new Error(localization("DOMDocument_invalid_stop_event"));
         }
-        main_sprite[frame_index].stop = true;
+        if (main_sprite[frame_index] !== undefined) {
+            main_sprite[frame_index].stop = true;
+        }
+        else if (main_sprite[frame_index] === undefined && frame_index >= last_frame) {
+            main_sprite[last_frame].stop = true;
+        }
     });
     if (Object.keys(x_DOMLayer_list[1].frames).length != 1) {
         throw new Error(localization("DOMDocument_invalid_command"));

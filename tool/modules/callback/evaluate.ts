@@ -25,40 +25,10 @@ async function create_evaluate_argument(
                 "javascript_evaluate" as js_evaluate,
             );
             break;
-        case Display.ToolKit.Function.popcap_texture_encode_rgba8888.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_texture_encode.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_texture_encode_rgba8888" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_encode_argb8888.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_encode_argb8888" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_encode_etc1a.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_encode_etc1a" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.atlas_info_constructor.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "atlas_info_constructor" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_encode_etc1a_index.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_encode_etc1a_index" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_encode_pvrtc.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_encode_pvrtc" as popcap_game_edit_method,
+                "popcap_texture_encode" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_resources_split.void_number_readline_argument() as evaluate_method:
@@ -73,34 +43,10 @@ async function create_evaluate_argument(
                 "popcap_resources_cat" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_texture_decode_rgba8888.void_number_readline_argument() as evaluate_method:
+        case Display.ToolKit.Function.popcap_texture_decode.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
-                "popcap_texture_decode_rgba8888" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_decode_argb8888.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_decode_argb8888" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_decode_etc1a.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_decode_etc1a" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_decode_etc1a_index.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_decode_etc1a_index" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_texture_decode_pvrtc.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_texture_decode_pvrtc" as popcap_game_edit_method,
+                "popcap_texture_decode" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_rsg_unpack.void_number_readline_argument() as evaluate_method:
@@ -247,12 +193,6 @@ async function create_evaluate_argument(
                 "popcap_rsb_unpack" as popcap_game_edit_method,
             );
             break;
-        case Display.ToolKit.Function.popcap_rsb_unpack_simple.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_rsb_unpack_simple" as popcap_game_edit_method,
-            );
-            break;
         case Display.ToolKit.Function.popcap_rsb_resource_unpack.void_number_readline_argument() as evaluate_method:
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
@@ -269,12 +209,6 @@ async function create_evaluate_argument(
             await evaluate_modules_workspace_assertation(
                 execute_file_dir as assertation_argument,
                 "popcap_rsb_resource_pack" as popcap_game_edit_method,
-            );
-            break;
-        case Display.ToolKit.Function.popcap_rsb_pack_simple.void_number_readline_argument() as evaluate_method:
-            await evaluate_modules_workspace_assertation(
-                execute_file_dir as assertation_argument,
-                "popcap_rsb_pack_simple" as popcap_game_edit_method,
             );
             break;
         case Display.ToolKit.Function.popcap_zlib_compress.void_number_readline_argument() as evaluate_method:

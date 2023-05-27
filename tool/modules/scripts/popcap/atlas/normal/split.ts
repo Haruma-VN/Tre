@@ -1,4 +1,5 @@
 "use strict";
+import { createCanvas, Image, Canvas, SKRSContext2D } from "@napi-rs/canvas";
 import { split } from "../../../../library/img/util.js";
 import fix_duplicate_res from "../../../default/repair/duplicate_res.js";
 import localization from "../../../../callback/localization.js";
@@ -6,6 +7,7 @@ import * as color from "../../../../library/color/color.js";
 import fs_js from "../../../../library/fs/implement.js";
 import { Console } from "../../../../callback/console.js";
 import { args } from "../../../../implement/arguments.js";
+import to_official from "../../resources/res/to_official.js";
 
 export interface PopCapResJsonDataBundle {
     resources?: PopCapResJsonDetailInfo[];
@@ -48,6 +50,7 @@ export default async function (
     use_atlas_info: boolean = true,
     is_notify: boolean = true,
 ) {
+    let is_res: boolean = false;
     const json_config: any = fs_js.read_json(
         fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
         true,
@@ -60,6 +63,17 @@ export default async function (
         switch (fs_js.extname(execute_file_dir[i]).toLowerCase()) {
             case ".json":
                 json = fs_js.read_json(execute_file_dir[i]);
+                if ("packet" in json) {
+                    is_res = true;
+                    const expand_new_path: int = Console.IntegerReadLine(0, 1);
+                    json = to_official.convert_img(
+                        json as any,
+                        fs_js.parse_fs(execute_file_dir[i]).name,
+                        fs_js.parse_fs(execute_file_dir[i]).name,
+                        json.type as any,
+                        Boolean(expand_new_path),
+                    );
+                }
                 if (json.resources === undefined) {
                     throw new Error(localization("not_popcap_res"));
                 }
@@ -70,8 +84,8 @@ export default async function (
                     output_dir !== void 0 &&
                     typeof output_dir === "string"
                         ? output_dir
-                        : execute_file_dir[i] + "/../" + directory_name;
-                fs_js.create_directory(dir_sys.toString());
+                        : `${fs_js.dirname(execute_file_dir[i])}/${directory_name}`;
+                fs_js.create_directory(dir_sys);
                 break;
             case ".png":
                 img_list.push(execute_file_dir[i]);
@@ -80,10 +94,7 @@ export default async function (
                 continue;
         }
     }
-    if (json.resources !== undefined) {
-        Console.WriteLine(
-            `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(`${dir_sys}`)}`,
-        );
+    if ("resources" in json && json.resources !== undefined && json.resources !== null && json.resources !== void 0) {
         if (json_config.atlas.split.repairDuplicateFolder === true) {
             json.resources = fix_duplicate_res(json.resources);
         }
@@ -92,6 +103,7 @@ export default async function (
             subgroup: json.id,
             expand_path: "",
             trim: false,
+            official_resource: !is_res,
             groups: new Array(),
         };
         let extend_info = new Array();
@@ -125,34 +137,35 @@ export default async function (
             }
         }
         let parent_list = new Array();
-        const promises = new Array();
         let extension_list = new Array();
         let option = opt === 1 ? "extension" : "id";
         const actual_splitting_items = [...new Set(extend_info.map((a) => a[option]))];
-        for (const i in extend_info) {
-            for (const img of img_list) {
-                if (extend_info[i].parent.toUpperCase() === fs_js.parse_fs(img).name.toString().toUpperCase()) {
-                    parent_list.push(extend_info[i].parent);
-                    const process = await split(
-                        img,
-                        extend_info[i].ax,
-                        extend_info[i].ay,
-                        extend_info[i].aw,
-                        extend_info[i].ah,
-                        fs_js.resolve(dir_sys + "/" + extend_info[i][option] + ".png"),
-                        extend_info[i][option],
-                        extension_list,
-                    );
-                    extension_list = process[0];
-                    promises.push(process[1]);
-                } else {
-                    continue;
+        for (const img of img_list) {
+            const img_split: Image = new Image();
+            img_split.onload = function () {
+                const img_canvas: Canvas = createCanvas(img_split.width, img_split.height);
+                const img_ctx: SKRSContext2D = img_canvas.getContext("2d");
+                img_ctx.drawImage(img_split, 0, 0);
+                for (const i in extend_info) {
+                    if (extend_info[i].parent.toUpperCase() === fs_js.parse_fs(img).name.toString().toUpperCase()) {
+                        parent_list.push(extend_info[i].parent);
+                        split(
+                            img_ctx,
+                            extend_info[i].ax,
+                            extend_info[i].ay,
+                            extend_info[i].aw,
+                            extend_info[i].ah,
+                            fs_js.resolve(`${dir_sys}/${extend_info[i][option]}.png`),
+                            extend_info[i][option],
+                            extension_list,
+                        );
+                    } else {
+                        continue;
+                    }
                 }
-            }
+            };
+            img_split.src = fs_js.read_file(img, "buffer");
         }
-        await Promise.all(promises).catch((err: any) => {
-            throw new Error(`${localization("native_atlas_splitting_error")} ${err.message}`);
-        });
         parent_list = [...new Set(parent_list)];
         for (let info of extend_info) {
             for (let parent of parent_list) {
@@ -169,14 +182,14 @@ export default async function (
         atlas_info.method = option === "extension" ? "path" : "id";
         atlas_info.trim = false;
         if (json_config.atlas.split.allow_atlas_info || use_atlas_info) {
-            fs_js.write_json(dir_sys + "/" + "AtlasInfo.json", atlas_info);
+            fs_js.write_json(`${dir_sys}/AtlasInfo.json`, atlas_info, true);
         }
         if (is_notify) {
+            fs_js.execution_out(dir_sys);
             Console.WriteLine(
-                color.fggreen_string("◉ " + localization("execution_actual_size") + ": ") +
-                    actual_splitting_items.length +
-                    "/" +
-                    atlas_info.groups.length,
+                `${color.fggreen_string(`◉ ${localization("execution_actual_size")}: `)} ${
+                    actual_splitting_items.length
+                }/${atlas_info.groups.length}`,
             );
         }
     } else {

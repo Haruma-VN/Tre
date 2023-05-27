@@ -9,9 +9,6 @@
     "moduleResolution": "nodenext",
     "removeComments": true,
     "preserveConstEnums": true,
-    "paths": {
-      "~/*": ["./dist/*"]
-    },
     "rootDir": "./src",
     "outDir": "./dist"
   }

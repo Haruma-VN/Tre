@@ -1,7 +1,7 @@
 "use strict";
-import { createCanvas } from "canvas";
+import { createCanvas } from "@napi-rs/canvas";
 import mix_transform from "./mix_transform.js";
-export default async function (image_ctx: any, layer_sprite: any, image_canvas: any, max_position: [bigint, bigint]) {
+export default async function mix_image(image_ctx: any, layer_sprite: any, image_canvas: any, max_position: [bigint, bigint]) {
     if (!layer_sprite.sprite_disable) {
         let image_matrix: [bigint, bigint, bigint, bigint, bigint, bigint] = layer_sprite.matrix;
         for (let i = 0; i < layer_sprite.transform.length; i++) {

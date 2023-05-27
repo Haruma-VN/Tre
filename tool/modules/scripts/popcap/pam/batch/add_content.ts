@@ -1,5 +1,5 @@
 "use strict";
-import dimension from "../../../../library/img/dimension/dimension.js";
+import {async_dimension} from "../../../../library/img/dimension/dimension.js";
 import fs_js from "../../../../library/fs/implement.js";
 import template_source from "../template/source.js";
 import template_image from "../template/image.js";
@@ -17,7 +17,8 @@ import xmlButPrettier from "xml-but-prettier";
 async function add_content(
     additional_media: Array<string>,
     xfl_path: string,
-    animation_resize: 1536 | 768 | 384 | 640 | 1200
+    animation_resize: 1536 | 768 | 384 | 640 | 1200,
+    not_notify: boolean,
 ): Promise<void> {
     const append_media: Array<{
         width: number;
@@ -28,7 +29,7 @@ async function add_content(
         const additional_media_helper_dimension: {
             width: number;
             height: number;
-        } = await dimension(img);
+        } = await async_dimension(img);
         append_media.push({
             ...additional_media_helper_dimension,
             img_path: img,
@@ -49,37 +50,29 @@ async function add_content(
         };
     } = fs_js.read_json(`${xfl_path}/extra.json`) as any;
     fs_js.copy_manifest(`${xfl_path}`);
-    const manifest_json: resource_build = fs_js.read_json(
-        `${xfl_path}/resource_build.json`
-    ) as any;
+    const manifest_json: resource_build = fs_js.read_json(`${xfl_path}/resource_build.json`) as any;
     fs_js.delete_resource_build(`${xfl_path}`);
     const original_size_of_image: number = extra_json.image.length;
     const original_size_of_sprite: number = extra_json.sprite.length;
     const flash_animation_resize: number = 1200 / animation_resize;
     const DOMDocument_path: string = `${xfl_path}/DOMDocument.xml`;
     const dom_document: dom_document = XMLMapping.load(
-        xmlButPrettier(fs_js.read_file(`${DOMDocument_path}`, "utf8"))
+        xmlButPrettier(fs_js.read_file(`${DOMDocument_path}`, "utf8")),
     ) as any;
-    const dom_document_source: Array<Include> =
-        dom_document.DOMDocument.symbols.Include.filter((a) => {
-            return a.href.includes(`source`);
-        });
-    const dom_document_image: Array<Include> =
-        dom_document.DOMDocument.symbols.Include.filter((a) => {
-            return a.href.includes(`image`);
-        });
-    const dom_document_sprite: Array<Include> =
-        dom_document.DOMDocument.symbols.Include.filter((a) => {
-            return a.href.includes(`sprite`) && !a.href.includes(`main_sprite`);
-        });
-    const dom_document_main_sprite: Array<Include> =
-        dom_document.DOMDocument.symbols.Include.filter((a) => {
-            return a.href.includes(`main_sprite`);
-        });
+    const dom_document_source: Array<Include> = dom_document.DOMDocument.symbols.Include.filter((a) => {
+        return a.href.includes(`source`);
+    });
+    const dom_document_image: Array<Include> = dom_document.DOMDocument.symbols.Include.filter((a) => {
+        return a.href.includes(`image`);
+    });
+    const dom_document_sprite: Array<Include> = dom_document.DOMDocument.symbols.Include.filter((a) => {
+        return a.href.includes(`sprite`) && !a.href.includes(`main_sprite`);
+    });
+    const dom_document_main_sprite: Array<Include> = dom_document.DOMDocument.symbols.Include.filter((a) => {
+        return a.href.includes(`main_sprite`);
+    });
     for (let i = 0; i < append_media.length; ++i) {
-        const append_media_name: string = fs_js.parse_fs(
-            append_media[i].img_path
-        ).name;
+        const append_media_name: string = fs_js.parse_fs(append_media[i].img_path).name;
         const index_of_sprite: number = original_size_of_image + i + 1;
         extra_json.image.push({
             name: `${append_media_name}|${`${manifest_json.extend_id}${append_media_name}`.toUpperCase()}`,
@@ -100,24 +93,20 @@ async function add_content(
         });
         fs_js.outfile_fs(
             `${xfl_path}/LIBRARY/source/source_${index_of_sprite}.xml`,
-            template_source(
-                index_of_sprite,
-                append_media_name,
-                flash_animation_resize
-            )
+            template_source(index_of_sprite, append_media_name, flash_animation_resize),
+            not_notify,
         );
         fs_js.outfile_fs(
             `${xfl_path}/LIBRARY/image/image_${index_of_sprite}.xml`,
             template_image(index_of_sprite, {
                 tx: 0,
                 ty: 0,
-            })
+            }),
+            not_notify,
         );
         fs_js.fs_copy(
             append_media[i].img_path,
-            `${xfl_path}/LIBRARY/media/${
-                fs_js.parse_fs(append_media[i].img_path).base
-            }`
+            `${xfl_path}/LIBRARY/media/${fs_js.parse_fs(append_media[i].img_path).base}`,
         );
     }
     dom_document.DOMDocument.symbols.Include = [
@@ -127,12 +116,9 @@ async function add_content(
         ...dom_document_main_sprite,
     ];
     fs_js.js_remove(DOMDocument_path);
-    fs_js.outfile_fs(
-        DOMDocument_path,
-        xmlButPrettier(XMLMapping.dump(dom_document))
-    );
+    fs_js.outfile_fs(DOMDocument_path, xmlButPrettier(XMLMapping.dump(dom_document)), not_notify);
     fs_js.js_remove(`${xfl_path}/extra.json`);
-    fs_js.write_json(`${xfl_path}/extra.json`, extra_json);
+    fs_js.write_json(`${xfl_path}/extra.json`, extra_json, not_notify);
     fs_js.delete_resource_build(`${xfl_path}`);
 }
 

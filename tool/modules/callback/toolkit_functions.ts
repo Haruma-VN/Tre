@@ -110,65 +110,17 @@ export namespace Display.ToolKit.Function {
         execution_evaluate_view("popcap_texture_atlas_merge").filter,
         execution_evaluate_view("popcap_texture_atlas_merge").allow,
     );
-    export const popcap_texture_encode_rgba8888 = new Void(
-        `PopCap PTX RGBA8888 ${localization("encode")} (0)`,
-        execution_evaluate_view("popcap_texture_encode_rgba8888").option,
-        execution_evaluate_view("popcap_texture_encode_rgba8888").filter,
-        execution_evaluate_view("popcap_texture_encode_rgba8888").allow,
+    export const popcap_texture_encode = new Void(
+        `PopCap Texture ${localization("encode")}`,
+        execution_evaluate_view("popcap_texture_encode").option,
+        execution_evaluate_view("popcap_texture_encode").filter,
+        execution_evaluate_view("popcap_texture_encode").allow,
     );
-    export const popcap_texture_encode_argb8888 = new Void(
-        `PopCap PTX ARGB8888 ${localization("encode")} (0)`,
-        execution_evaluate_view("popcap_texture_encode_argb8888").option,
-        execution_evaluate_view("popcap_texture_encode_argb8888").filter,
-        execution_evaluate_view("popcap_texture_encode_argb8888").allow,
-    );
-    export const popcap_texture_encode_pvrtc = new Void(
-        `PopCap PTX RGB_PVRTC4_A_8 ${localization("encode")} (30)`,
-        execution_evaluate_view("popcap_texture_encode_pvrtc").option,
-        execution_evaluate_view("popcap_texture_encode_pvrtc").filter,
-        execution_evaluate_view("popcap_texture_encode_pvrtc").allow,
-    );
-    export const popcap_texture_encode_etc1a = new Void(
-        `PopCap PTX RGB_ETC1_A_8 ${localization("encode")} (147)`,
-        execution_evaluate_view("popcap_texture_encode_etc1a").option,
-        execution_evaluate_view("popcap_texture_encode_etc1a").filter,
-        execution_evaluate_view("popcap_texture_encode_etc1a").allow,
-    );
-    export const popcap_texture_encode_etc1a_index = new Void(
-        `PopCap PTX RGB_ETC1_A_8_Index ${localization("encode")} (147)`,
-        execution_evaluate_view("popcap_texture_encode_etc1a_index").option,
-        execution_evaluate_view("popcap_texture_encode_etc1a_index").filter,
-        execution_evaluate_view("popcap_texture_encode_etc1a_index").allow,
-    );
-    export const popcap_texture_decode_rgba8888 = new Void(
-        `PopCap PTX RGBA8888 ${localization("decode")} (0)`,
-        execution_evaluate_view("popcap_texture_decode_rgba8888").option,
-        execution_evaluate_view("popcap_texture_decode_rgba8888").filter,
-        execution_evaluate_view("popcap_texture_decode_rgba8888").allow,
-    );
-    export const popcap_texture_decode_argb8888 = new Void(
-        `PopCap PTX ARGB8888 ${localization("decode")} (0)`,
-        execution_evaluate_view("popcap_texture_decode_argb8888").option,
-        execution_evaluate_view("popcap_texture_decode_argb8888").filter,
-        execution_evaluate_view("popcap_texture_decode_argb8888").allow,
-    );
-    export const popcap_texture_decode_pvrtc = new Void(
-        `PopCap PTX RGB_PVRTC4_A_8 ${localization("decode")} (30)`,
-        execution_evaluate_view("popcap_texture_decode_pvrtc").option,
-        execution_evaluate_view("popcap_texture_decode_pvrtc").filter,
-        execution_evaluate_view("popcap_texture_decode_pvrtc").allow,
-    );
-    export const popcap_texture_decode_etc1a = new Void(
-        `PopCap PTX RGB_ETC1_A_8 ${localization("decode")} (147)`,
-        execution_evaluate_view("popcap_texture_decode_etc1a").option,
-        execution_evaluate_view("popcap_texture_decode_etc1a").filter,
-        execution_evaluate_view("popcap_texture_decode_etc1a").allow,
-    );
-    export const popcap_texture_decode_etc1a_index = new Void(
-        `PopCap PTX RGB_ETC1_A_8_Index ${localization("decode")} (147)`,
-        execution_evaluate_view("popcap_texture_decode_etc1a_index").option,
-        execution_evaluate_view("popcap_texture_decode_etc1a_index").filter,
-        execution_evaluate_view("popcap_texture_decode_etc1a_index").allow,
+    export const popcap_texture_decode = new Void(
+        `PopCap Texture ${localization("decode")}`,
+        execution_evaluate_view("popcap_texture_decode").option,
+        execution_evaluate_view("popcap_texture_decode").filter,
+        execution_evaluate_view("popcap_texture_decode").allow,
     );
     export const popcap_resize_sprites_simple = new Void(
         localization("popcap_resize_sprites_simple"),
@@ -319,18 +271,6 @@ export namespace Display.ToolKit.Function {
         execution_evaluate_view("popcap_rsg_pack_simple").option,
         execution_evaluate_view("popcap_rsg_pack_simple").filter,
         execution_evaluate_view("popcap_rsg_pack_simple").allow,
-    );
-    export const popcap_rsb_unpack_simple = new Void(
-        localization("popcap_rsb_unpack_simple"),
-        execution_evaluate_view("popcap_rsb_unpack_simple").option,
-        execution_evaluate_view("popcap_rsb_unpack_simple").filter,
-        execution_evaluate_view("popcap_rsb_unpack_simple").allow,
-    );
-    export const popcap_rsb_pack_simple = new Void(
-        localization("popcap_rsb_pack_simple"),
-        execution_evaluate_view("popcap_rsb_pack_simple").option,
-        execution_evaluate_view("popcap_rsb_pack_simple").filter,
-        execution_evaluate_view("popcap_rsb_pack_simple").allow,
     );
     export const popcap_rsb_resource_unpack = new Void(
         localization("popcap_rsb_resource_unpack"),
@@ -503,16 +443,8 @@ export namespace Display.ToolKit.Function {
         popcap_atlas_split,
         popcap_atlas_merge_simple,
         popcap_texture_atlas_merge,
-        popcap_texture_encode_rgba8888,
-        popcap_texture_encode_argb8888,
-        popcap_texture_encode_pvrtc,
-        popcap_texture_encode_etc1a,
-        popcap_texture_encode_etc1a_index,
-        popcap_texture_decode_rgba8888,
-        popcap_texture_decode_argb8888,
-        popcap_texture_decode_pvrtc,
-        popcap_texture_decode_etc1a,
-        popcap_texture_decode_etc1a_index,
+        popcap_texture_encode,
+        popcap_texture_decode,
         popcap_resize_sprites_simple,
         popcap_resize_sprites,
         real_esrgan_upscaler_image,
@@ -538,8 +470,6 @@ export namespace Display.ToolKit.Function {
         popcap_atlas_pack_advanced,
         popcap_rsg_unpack_simple,
         popcap_rsg_pack_simple,
-        popcap_rsb_unpack_simple,
-        popcap_rsb_pack_simple,
         popcap_rsb_resource_unpack,
         popcap_rsb_resource_pack,
         popcap_pam_decode,

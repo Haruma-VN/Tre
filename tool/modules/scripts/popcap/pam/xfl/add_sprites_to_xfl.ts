@@ -71,10 +71,10 @@ export default async function (path: string, number_sprites: number) {
             };
             const source_document = writeSourceXfl(`${filter_source_folder[k]}|_`, image_count++, image_reslution);
             const source_document_xml_pretty = xmlButPrettier(XMLMapping.dump(source_document));
-            fs_js.outfile_fs(`${path}/LIBRARY/source/source_${image_count + 1}.xml`, source_document_xml_pretty);
+            fs_js.outfile_fs(`${path}/LIBRARY/source/source_${image_count + 1}.xml`, source_document_xml_pretty, true);
             const image_document = writeImageXfl(image, image_count);
             const image_document_xml_pretty = xmlButPrettier(XMLMapping.dump(image_document));
-            fs_js.outfile_fs(`${path}/LIBRARY/image/image_${image_count}.xml`, image_document_xml_pretty);
+            fs_js.outfile_fs(`${path}/LIBRARY/image/image_${image_count}.xml`, image_document_xml_pretty, true);
             delete image.transform;
             extra_json.image.push(image);
         }
@@ -88,7 +88,7 @@ export default async function (path: string, number_sprites: number) {
     for (let h = sprite_count; h < sprite_length; h++) {
         const sprite_document = writeSpriteXfl(sprite_list[h - sprite_count], extra_json.sprite, h);
         const sprite_document_xml_pretty = xmlButPrettier(XMLMapping.dump(sprite_document));
-        fs_js.outfile_fs(`${path}/LIBRARY/sprite/sprite_${h + 1}.xml`, sprite_document_xml_pretty);
+        fs_js.outfile_fs(`${path}/LIBRARY/sprite/sprite_${h + 1}.xml`, sprite_document_xml_pretty, true);
     }
     if (source_count !== 0) {
         const resource_build_json_directory = `${path}/LIBRARY/media/resource_build.json`;
@@ -109,5 +109,5 @@ export default async function (path: string, number_sprites: number) {
     } else if (source_count === 0 && source_count === 0) {
         fs_js.execution_status("success", `nothing changed`);
     }
-    fs_js.write_json(`${path}/extra.json`, extra_json);
+    fs_js.write_json(`${path}/extra.json`, extra_json, true);
 }

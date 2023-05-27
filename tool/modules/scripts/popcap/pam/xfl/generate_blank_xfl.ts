@@ -31,7 +31,7 @@ export default async function (path: string, number_sprites: number): Promise<vo
             ],
         });
         const source = fs_js.read_file(`${path}/${filter_source_folder[i]}`, "buffer");
-        await fs_js.outfile_fs(`${pam_path}/LIBRARY/media/${filter_source_folder[i]}`, source);
+        fs_js.outfile_fs(`${pam_path}/LIBRARY/media/${filter_source_folder[i]}`, source, true);
     }
     const pam_json = {
         version: resource_build.version,
@@ -43,7 +43,7 @@ export default async function (path: string, number_sprites: number): Promise<vo
         main_sprite: createSprite(1, 1, "main_sprite")[0],
     };
     const resource_build_json_directory = `${path}/resource_build.json`;
-    await pam_xfl_decode(pam_json, pam_path, 1536);
+    pam_xfl_decode(pam_json, pam_path, 1536, true);
     atlasinfo_conduct(
         path,
         `${path}/Atlasinfo.json`,
@@ -55,4 +55,5 @@ export default async function (path: string, number_sprites: number): Promise<vo
     fs_js.js_remove(resource_build_json_directory);
     fs_js.execution_status("success", localization("deleted_resource_build_json"));
     await evaluate_modules_workspace_assertation(path, "popcap_atlas_pack_cross_resolution");
+    return;
 }

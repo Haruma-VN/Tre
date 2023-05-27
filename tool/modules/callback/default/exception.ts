@@ -40,81 +40,6 @@ namespace System.Tre.Checker {
         return true;
     }
 
-    export function check_tre_third_party(): boolean {
-        const tre_third_party_for_raw_images: string =
-            fs_js.dirname(args.main_js as any) + "/extension/third/encode/";
-        if (
-            !fs_js.js_exists(tre_third_party_for_raw_images) ||
-            !fs_js.view_io_stream(tre_third_party_for_raw_images).isDirectory()
-        ) {
-            Console.WriteLine(
-                color.fgred_string(
-                    "◉ Exception found: No third party for encoding images."
-                )
-            );
-            return false;
-        }
-        const tre_third_party_for_etc_pak: string =
-            fs_js.dirname(args.main_js as any) +
-            "/extension/third/encode/etcpak.exe";
-        if (
-            !fs_js.js_exists(tre_third_party_for_etc_pak) ||
-            !fs_js.view_io_stream(tre_third_party_for_etc_pak).isFile()
-        ) {
-            Console.WriteLine(
-                color.fgred_string(
-                    "◉ Exception found: No third party founded for etcpak."
-                )
-            );
-            return false;
-        }
-        const tre_third_party_for_pvrtc: string =
-            fs_js.dirname(args.main_js as any) +
-            "/extension/third/encode/PVRTexToolCLI.exe";
-        if (
-            !fs_js.js_exists(tre_third_party_for_pvrtc) ||
-            !fs_js.view_io_stream(tre_third_party_for_pvrtc).isFile()
-        ) {
-            Console.WriteLine(
-                color.fgred_string(
-                    "◉ Exception found: No third party founded for PVRTexToolCLI."
-                )
-            );
-            return false;
-        }
-        const tre_third_party_for_upscaler: string =
-            fs_js.dirname(args.main_js as any) +
-            "/extension/third/real_esrgan/";
-        if (
-            !fs_js.js_exists(tre_third_party_for_upscaler) ||
-            !fs_js.view_io_stream(tre_third_party_for_upscaler).isDirectory()
-        ) {
-            Console.WriteLine(
-                color.fgred_string(
-                    "◉ Exception found: No third party founded for upscaling images."
-                )
-            );
-            return false;
-        }
-        const tre_third_party_for_upscaler_real_esrgan: string =
-            fs_js.dirname(args.main_js as any) +
-            "/extension/third/real_esrgan/realesrgan-ncnn-vulkan.exe";
-        if (
-            !fs_js.js_exists(tre_third_party_for_upscaler_real_esrgan) ||
-            !fs_js
-                .view_io_stream(tre_third_party_for_upscaler_real_esrgan)
-                .isFile()
-        ) {
-            Console.WriteLine(
-                color.fgred_string(
-                    "◉ Exception found: No third party founded for realesrgan-ncnn-vulkan.exe."
-                )
-            );
-            return false;
-        }
-        return true;
-    }
-
     export function check_node_modules(): boolean {
         const node_modules_folder: string =
             fs_js.dirname(args.main_js as any) + "/node_modules";
@@ -135,8 +60,7 @@ namespace System.Tre.Checker {
     export function execute(): boolean {
         if (
             check_tre_extension() &&
-            check_tre_toolkit_json() &&
-            check_tre_third_party()
+            check_tre_toolkit_json() 
         ) {
             return true;
         }

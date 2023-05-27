@@ -31,7 +31,7 @@ async function evaluate_test(
         create_evaluate_array.map(async (evaluate_file: string) => {
             if (fs_js.js_check_extname(evaluate_file, ".png")) {
                 return (await (
-                    fs_js.get_dimension(
+                    fs_js.get_async_dimension(
                         `${file_system_directory}/${evaluate_file}`
                     ) as Promise<{
                         width: number;

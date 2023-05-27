@@ -12,15 +12,14 @@ import * as color from "../../../library/color/color.js";
  * @param decipher - Nhập boolean decipher rton;
  * @returns - Buffer json dùng write_file không dùng write_json;
  */
-export default function rton2json(rton_data: Buffer, decipher: boolean): Buffer {
+export default function rton2json(rton_data: Buffer, decipher: boolean, disable_execute_information: boolean = false): Buffer {
     let rton_data_b: any = SmartBuffer.fromBuffer(rton_data);
-    const config_json: any = fs_js.read_json(
-        fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
-        true,
-    );
+    const config_json: any = fs_js.read_json(fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json", true);
     if (decipher) {
         const rton_cipher_key: string = config_json.popcap_rton_conversion.rton.rton_cipher;
-        Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_key")}: `) + rton_cipher_key);
+        if (!disable_execute_information) {
+            Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_key")}: `) + rton_cipher_key);
+        }
         const rton_decipher = rton_plain(rton_data, rton_cipher_key);
         rton_data_b = SmartBuffer.fromBuffer(rton_decipher);
     }
@@ -119,9 +118,7 @@ export default function rton2json(rton_data: Buffer, decipher: boolean): Buffer 
             case 147:
                 return R0x92List[rton_number(false)];
             default:
-                throw new Error(
-                    `${localization("rton_bytecode_is_not_supported")}${bytecode} | pos: ${rton_data_b.readOffset}`,
-                );
+                throw new Error(`${localization("rton_bytecode_is_not_supported")}${bytecode} | pos: ${rton_data_b.readOffset}`);
         }
     }
     function read_object(bytecode: number): any {
@@ -136,9 +133,7 @@ export default function rton2json(rton_data: Buffer, decipher: boolean): Buffer 
         }
         indent_number--;
         if (items.length !== 0) {
-            return `{${new_indent}${items.join(`,${new_indent}`)}${trailing_commas}${currrent_indent}${indent.repeat(
-                indent_number,
-            )}}`;
+            return `{${new_indent}${items.join(`,${new_indent}`)}${trailing_commas}${currrent_indent}${indent.repeat(indent_number)}}`;
         }
         return `{}`;
     }
@@ -157,9 +152,7 @@ export default function rton2json(rton_data: Buffer, decipher: boolean): Buffer 
             }
             indent_number--;
             if (items.length !== 0) {
-                return `[${new_indent}${items.join(
-                    `,${new_indent}`,
-                )}${trailing_commas}${currrent_indent}${indent.repeat(indent_number)}]`;
+                return `[${new_indent}${items.join(`,${new_indent}`)}${trailing_commas}${currrent_indent}${indent.repeat(indent_number)}]`;
             }
             return `[]`;
         }
@@ -183,9 +176,7 @@ export default function rton2json(rton_data: Buffer, decipher: boolean): Buffer 
                 const str_1: string = read_string(true);
                 return `"RTID(${read_string(true)}@${str_1})"`;
             default:
-                throw new Error(
-                    `unexpected subtype for type 83, found: ${rtid_number} | pos: ${rton_data_b.readOffset}`,
-                );
+                throw new Error(`unexpected subtype for type 83, found: ${rtid_number} | pos: ${rton_data_b.readOffset}`);
         }
     }
     function rton_number(signed_number: boolean): number {

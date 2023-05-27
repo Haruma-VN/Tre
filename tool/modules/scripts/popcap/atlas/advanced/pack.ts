@@ -79,7 +79,7 @@ async function atlas_pack_advanced(
     const img_list: Array<any> = new Array();
     for (let i in containable_pngs) {
         const sprite_dimension: { width: number; height: number } = await portal
-            .dimension(containable_pngs[i])
+            .async_dimension(containable_pngs[i])
             .then((result: { width: number; height: number }) => {
                 return result;
             });
@@ -228,14 +228,9 @@ async function atlas_pack_advanced(
         const count = i < 9 && i >= 0 ? "0" + i.toString() : i;
         await portal.cat(
             append_array[i],
-            `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`,
+            `${fs_js.dirname(directory)}/${popcap_output_subgroup_name.toUpperCase()}_${count}.png`,
             dimension_array_value[i].width,
             dimension_array_value[i].height,
-        );
-        Console.WriteLine(
-            `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                `${directory}/../${popcap_output_subgroup_name.toUpperCase()}_${count}.png`,
-            )}`,
         );
     }
     if (extend_for_new_pvz2_int_version) {
@@ -245,13 +240,12 @@ async function atlas_pack_advanced(
             }
         }
     }
-    fs_js.write_json(fs_js.resolve(directory + "/../" + popcap_output_subgroup_name + ".json"), result_json);
-    Console.WriteLine(
-        `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-            directory + "/../" + popcap_output_subgroup_name + ".json",
-        )}`,
+    fs_js.write_json(
+        fs_js.resolve(`${fs_js.dirname(directory)}/${popcap_output_subgroup_name}.json`),
+        result_json,
+        false,
     );
-    Console.WriteLine(color.fggreen_string("◉ " + `${localization("execution_actual_size")}: `) + `${img_list.length}`);
+    Console.WriteLine(`${color.fggreen_string(`◉ ${localization("execution_actual_size")}: `)}${img_list.length}`);
     return;
 }
 export default atlas_pack_advanced;

@@ -91,7 +91,8 @@ class merge_res_json extends check_resource {
     }
     public static do_process_whole<Template extends Output_Value>(
         directory_path: string,
-        output_file: string = `${directory_path}/../${fs_js.parse_fs(directory_path).name}.json`,
+        is_notify: boolean,
+        output_file: string = `${fs_js.dirname(directory_path)}/${fs_js.parse_fs(directory_path).name}.json`,
     ): void {
         this.check_directory_info(directory_path);
         const info_json_information: Template = fs_js.read_json(`${directory_path}/info.json`) as Template;
@@ -131,7 +132,7 @@ class merge_res_json extends check_resource {
                 );
             }
         }
-        fs_js.write_json(output_file, res_json);
+        fs_js.write_json(output_file, res_json, is_notify);
         return;
     }
     /**
@@ -139,8 +140,8 @@ class merge_res_json extends check_resource {
      * @param directory_path - Pass directory here
      * @param output_file - Pass output file location, etc: "C:/Haruma-VN/test.json"
      */
-    public static create_conversion(directory_path: string, output_file?: string): void {
-        this.do_process_whole<Output_Value>(directory_path, output_file);
+    public static create_conversion(directory_path: string, is_notify: boolean, output_file?: string): void {
+        this.do_process_whole<Output_Value>(directory_path, is_notify, output_file);
         return;
     }
 }

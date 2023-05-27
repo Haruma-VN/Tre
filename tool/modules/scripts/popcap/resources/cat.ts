@@ -87,15 +87,20 @@ export default function (
         return resources_output_result;
     }
     if (!is_rewrite_mode) {
-        fs_js.write_json(`${dir}/../${fs_js.parse_fs(dir).name}.json`, resources_output_result);
+        fs_js.write_json(`${fs_js.dirname(dir)}/${fs_js.parse_fs(dir).name}.json`, resources_output_result, false);
     } else {
         if (encode) {
             fs_js.outfile_fs(
-                `${dir}/../${fs_js.parse_fs(dir).name}.rewrite.rton`,
+                `${fs_js.dirname(dir)}/${fs_js.parse_fs(dir).name}.rewrite.rton`,
                 json2rton(resources_output_result, false),
+                false,
             );
         } else {
-            fs_js.write_json(`${dir}/../${fs_js.parse_fs(dir).name}.rewrite.json`, resources_output_result);
+            fs_js.write_json(
+                `${fs_js.dirname(dir)}/${fs_js.parse_fs(dir).name}.rewrite.json`,
+                resources_output_result,
+                false,
+            );
         }
     }
     return 0;

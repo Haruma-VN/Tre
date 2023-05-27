@@ -7,11 +7,9 @@ import { readline_normal } from "../../../readline/util.js";
 function conduct_atlas_info(
     folder_system_as_string: string,
     file_system_output_as_string?: string,
-    read_resource_build: any = fs_js.read_json(
-        `${folder_system_as_string}/resource_build.json`
-    ) as resource_build,
+    read_resource_build: any = fs_js.read_json(`${folder_system_as_string}/resource_build.json`) as resource_build,
     is_return_mode: boolean = false,
-    subgroup_name?: string
+    subgroup_name?: string,
 ): void | {
     method: string;
     subgroup: string;
@@ -29,18 +27,12 @@ function conduct_atlas_info(
         file_system_output_as_string === null ||
         file_system_output_as_string === void 0
     ) {
-        file_system_output_as_string = `${folder_system_as_string}/../Atlasinfo.json`;
+        file_system_output_as_string = `${fs_js.dirname(folder_system_as_string)}/Atlasinfo.json`;
     }
-    if (
-        !("extend_id" in read_resource_build) ||
-        !(typeof read_resource_build.extend_id === "string")
-    ) {
+    if (!("extend_id" in read_resource_build) || !(typeof read_resource_build.extend_id === "string")) {
         throw new Error(localization("not_found_extend_id"));
     }
-    if (
-        !("extend_path" in read_resource_build) ||
-        !js_checker.is_array(read_resource_build.extend_path)
-    ) {
+    if (!("extend_path" in read_resource_build) || !js_checker.is_array(read_resource_build.extend_path)) {
         throw new Error(localization("not_found_extend_path"));
     }
     if (!("popcap_resource_x" in read_resource_build)) {
@@ -64,11 +56,7 @@ function conduct_atlas_info(
             atlas_storage.push(fs_js.parse_fs(image).name);
         }
     });
-    if (
-        subgroup_name === undefined ||
-        subgroup_name === null ||
-        subgroup_name === void 0
-    ) {
+    if (subgroup_name === undefined || subgroup_name === null || subgroup_name === void 0) {
         fs_js.execution_notify("argument", localization("concat_subgroup"));
         subgroup_name = readline_normal();
         while (true) {
@@ -81,10 +69,7 @@ function conduct_atlas_info(
             ) {
                 break;
             }
-            fs_js.execution_notify(
-                "failed",
-                localization("subgroup_does_not_contain")
-            );
+            fs_js.execution_notify("failed", localization("subgroup_does_not_contain"));
             subgroup_name = readline_normal();
         }
     }
@@ -93,8 +78,7 @@ function conduct_atlas_info(
     const popcap_resource_x: number = read_resource_build.popcap_resource_x;
     const popcap_resource_y: number = read_resource_build.popcap_resource_y;
     const popcap_support_trim: boolean = read_resource_build.trim;
-    const popcap_resource_path_type: string =
-        read_resource_build.popcap_resource_path_type;
+    const popcap_resource_path_type: string = read_resource_build.popcap_resource_path_type;
     const create_atlas_info: {
         method: string;
         subgroup: string;
@@ -124,11 +108,8 @@ function conduct_atlas_info(
         });
     }
     if (!is_return_mode) {
-        fs_js.execution_out(file_system_output_as_string);
-        return fs_js.write_json(
-            file_system_output_as_string,
-            create_atlas_info
-        );
+        fs_js.write_json(file_system_output_as_string, create_atlas_info, false);
+        return;
     }
     return create_atlas_info;
 }

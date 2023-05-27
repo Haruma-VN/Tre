@@ -1,0 +1,20 @@
+{
+    "notify": true,
+    "modules": [
+        {
+            "notify": "Command loaded",
+            "func": "start",
+            "entry": null
+        },
+        {
+            "notify": null,
+            "func": "popcap_rsb_disturb",
+            "entry": ["?", "->"]
+        },
+        {
+            "notify": "End evaluate",
+            "func": "end",
+            "entry": null
+        }
+    ]
+}

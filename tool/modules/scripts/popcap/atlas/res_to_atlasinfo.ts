@@ -1,8 +1,5 @@
 "use strict";
-import localization from "../../../callback/localization.js";
-import * as color from "../../../library/color/color.js";
 import fs_js from "../../../library/fs/implement.js";
-import { Console } from "../../../callback/console.js";
 
 export default function (method: string, dir: string): void {
     const json: any = fs_js.read_json(dir);
@@ -29,12 +26,7 @@ export default function (method: string, dir: string): void {
                 });
             }
         }
-        fs_js.write_json(`${dir}/../AtlasInfo.json`, atlasinfo);
-        Console.WriteLine(
-            `${color.fggreen_string(
-                "◉ " + localization("execution_out") + ":\n     "
-            )} ${fs_js.resolve(`${dir}/../AtlasInfo.json`)}`
-        );
+        fs_js.write_json(`${fs_js.dirname(dir)}/AtlasInfo.json`, atlasinfo, false);
     }
     return;
 }

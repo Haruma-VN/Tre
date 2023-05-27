@@ -14,12 +14,12 @@ import { Console } from "../../../../callback/console.js";
  * @param {string} media_path - The path to the directory containing the image files for the animation
  * @returns {void}
  */
-export default async function (
+export default async function generate_animation(
     animation_json: any,
     animation_path: string,
     media_path: string
 ) {
-    const setting: any = fs_js.create_toolkit_view("gif");
+    const setting: any = fs_js.create_toolkit_view("animation_viewer");
     if (
         typeof setting.texture_reslution !== "number" ||
         typeof setting.width_append !== "number" ||
@@ -32,8 +32,9 @@ export default async function (
     }
     if (
         typeof setting.image_name_by_id !== "boolean" ||
-        typeof setting.create_apng !== "boolean" ||
-        typeof setting.split_label !== "boolean" ||
+        typeof setting.generate_apng !== "boolean" ||
+        typeof setting.generate_gif !== "boolean" ||
+        typeof setting.split_labels !== "boolean" ||
         typeof setting.generate_image_frames !== "boolean"
     ) {
         throw new Error(localization("wrong_type"));
@@ -44,7 +45,7 @@ export default async function (
     }
     const apng_folder_path: string = `${fs_js.parse_fs(animation_path).dir}/${
         fs_js.parse_fs(animation_path).name
-    }.apng`;
+    }.animation_folder`;
     const image_list: any = await read_image(
         animation_json.image,
         media_path,

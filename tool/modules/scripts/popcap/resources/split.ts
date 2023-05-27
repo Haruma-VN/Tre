@@ -12,10 +12,7 @@ export interface TreSetting {
         };
     };
 }
-export default async function (
-    dir: string,
-    json_data_if_no_dir_were_parsed?: any
-) {
+export default async function (dir: string, json_data_if_no_dir_were_parsed?: any) {
     const json: any =
         json_data_if_no_dir_were_parsed !== undefined &&
         json_data_if_no_dir_were_parsed !== null &&
@@ -24,17 +21,15 @@ export default async function (
             : fs_js.read_json(dir);
     const config: TreSetting = fs_js.read_json(
         fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
-        true
+        true,
     ) as TreSetting;
-    const is_beautify_mode: boolean = config.resources.split.beautify_res
-        ? true
-        : false;
+    const is_beautify_mode: boolean = config.resources.split.beautify_res ? true : false;
     const directories = fs_js.parse_fs(dir).name + ".res";
     if (!("groups" in json)) {
         throw new Error(localization("not_valid_resources"));
     }
     if ("groups" in json) {
-        fs_js.create_directory(dir + "/../" + directories, true);
+        fs_js.create_directory(`${fs_js.dirname(dir)}/${directories}`, true);
         for (let group of json.groups) {
             if (
                 "resources" in config &&
@@ -43,11 +38,7 @@ export default async function (
             ) {
                 if (config.resources.split.remove_unused_info) {
                     if ("resources" in group) {
-                        for (
-                            let j: number = 0;
-                            j < group.resources.length;
-                            ++j
-                        ) {
+                        for (let j: number = 0; j < group.resources.length; ++j) {
                             if ("aflag" in group.resources[j]) {
                                 group.resources[j].aflag = undefined;
                             }
@@ -58,21 +49,14 @@ export default async function (
                     }
                 }
             }
-            if (
-                "resources" in config &&
-                "split" in config.resources &&
-                "beautify_res" in config.resources.split
-            ) {
+            if ("resources" in config && "split" in config.resources && "beautify_res" in config.resources.split) {
                 if (is_beautify_mode) {
                     if ("resources" in group) {
                         group = BeautifyRes.Tre.Resources.beautify_res(group);
                     }
                 }
             }
-            fs_js.write_json(
-                dir + "/../" + directories + "/" + group.id + ".json",
-                group as object
-            );
+            fs_js.write_json(`${fs_js.dirname(dir)}/${directories}/${group.id}.json`, group as object, false);
         }
         return 0;
     } else {

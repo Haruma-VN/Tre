@@ -1,49 +1,40 @@
-"use strict";
-import unpack from "./unpack_rsg.js";
-import pack from "./rsg_pack.js";
-import * as color from "../../../library/color/color.js";
-import localization from "../../../callback/localization.js";
-import { Console } from "../../../callback/console.js";
-import fs_js from "../../../library/fs/implement.js";
-
-export async function unpack_rsg(
-    rsg_data: any,
-    rsg_path: string,
-    decode_image: boolean = false,
-    decode_rton: boolean = false,
-    decode_data: boolean = false,
-    removeinfo: boolean = false
-) {
-    Console.WriteLine(
-        `${color.fggreen_string(
-            "◉ " + localization("execution_out") + ":\n     "
-        )} ${fs_js.resolve(rsg_path)}`
-    );
-    await unpack(
-        rsg_data,
-        rsg_path,
-        decode_image,
-        decode_rton,
-        decode_data,
-        removeinfo,
-        2
-    );
-    return;
-}
-export async function pack_rsg(dir: string, is_pack_simple: boolean = false) {
-    const rsg_data = is_pack_simple
-        ? await pack(dir, true, false, false, false, false, false)
-        : await pack(dir, false, false, false, false, false, false);
-    await fs_js.write_file(
-        `${fs_js.parse_fs(dir).dir}/${fs_js.parse_fs(dir).name}.rsg`,
-        rsg_data
-    );
-    Console.WriteLine(
-        `${color.fggreen_string(
-            "◉ " + localization("execution_out") + ":\n     "
-        )} ${fs_js.resolve(
-            `${fs_js.parse_fs(dir).dir}/${fs_js.parse_fs(dir).name}.rsg`
-        )}`
-    );
-    return;
+import up_rsg from "./unpack/unpack_rsg.js";
+import p_rsg from "./pack/pack_rsg.js";
+export namespace rsg_method {
+    /**
+     *
+     * @param {String} rsg_input_path - Path to the rsg input file.
+     * @param {Buffer} rsg_buffer - Rsg as buffer.
+     * @param {boolean} simple_mode - Simple mode, default is false.
+     * @param {boolean} return_mode - Return_mode mode, default is false.
+     * @param {boolean} disable_notify - Disable notify, default is false.
+     *
+     */
+    export function unpack_rsg(
+        rsg_input_path: string,
+        rsg_buffer: Buffer,
+        simple_mode: boolean,
+        return_mode: boolean = false,
+        disable_notify: boolean = false
+    ) {
+        return up_rsg(rsg_input_path, rsg_buffer, simple_mode, return_mode, disable_notify);
+    }
+    /**
+     *
+     * @param {String} rsg_folder_input_path - Path to the rsg input folder.
+     * @param {packet_info | null} packet_info - Customize packet info, default is null.
+     * @param {boolean} simple_mode - Simple mode, default is false.
+     * @param {boolean} return_mode - Return_mode mode, default is false.
+     * @param {boolean} disable_notify - Disable notify, default is false.
+     *
+     */
+    export function pack_rsg(
+        rsg_folder_input_path: string,
+        packet_info: packet_info | null,
+        simple_mode: boolean,
+        return_mode: boolean = false,
+        disable_notify: boolean = false
+    ) {
+        return p_rsg(rsg_folder_input_path, packet_info, simple_mode, return_mode, disable_notify);
+    }
 }

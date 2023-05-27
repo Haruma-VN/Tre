@@ -106,7 +106,8 @@ declare type view_option =
     | "pam_resolution"
     | "pam_to_flash"
     | "open_windows_explorer"
-    | "gif"
+    | "animation_viewer"
+    | "packets"
     | "host";
 
 declare type popcap_resources_render = {
@@ -186,7 +187,7 @@ declare type toolkit_json = {
             pam_to_xfl: boolean;
         };
     };
-    apng: {
+    animation_viewer: {
         texture_reslution: number;
         image_name_by_id: boolean;
         turn_on_sprite: boolean;
@@ -196,11 +197,23 @@ declare type toolkit_json = {
         y_position_append: number;
         background_color: string;
         frame_rate: number;
-        create_apng: boolean;
-        split_label: boolean;
+        generate_apng: boolean;
+        generate_gif: boolean;
+        split_labels: boolean;
         generate_image_frames: boolean;
         frame_default_name: string;
     };
+    packets: {
+        array_path: boolean;
+        argb8888_decode: boolean;
+        default_settings: {
+            compression_flags: number;
+            head_version: number;
+            rton_encrypted: boolean;
+            ptx_fmt: number;
+            ptx_platform: string;
+        };
+    }
 };
 
 declare type toolkit_error = NodeJS.ErrnoException;

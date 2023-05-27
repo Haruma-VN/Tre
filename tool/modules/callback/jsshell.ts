@@ -1,17 +1,5 @@
 "use strict";
 import {
-    decode_argb8888,
-    decode_rgba8888,
-    encode_argb8888,
-    encode_rgba8888,
-    encode_etc1a,
-    encode_pvrtc,
-    decode_etc1a,
-    decode_pvrtc,
-    decode_etc1alpha_palette,
-    encode_etc1alpha_palette,
-} from "../library/img/util.js";
-import {
     res_pack,
     res_split,
     res_rewrite,
@@ -32,12 +20,10 @@ import {
 import { Console } from "./console.js";
 import { atlas_info_cat, atlas_info_split, atlasinfo_conduct } from "../scripts/default/atlas_info/util.js";
 import * as color from "../library/color/color.js";
-import { unpack_rsg, pack_rsg } from "../scripts/popcap/rsg/util.js";
 import ban from "./public/js_evaluate/ban.js";
 import applyPatch from "../library/json/patch.js";
 import generatePatch from "../library/json/generate_patch.js";
 import * as ImagesUtilities from "../library/img/util.js";
-import * as popcap_game_content_edit from "../scripts/popcap/rsb/util.js";
 import { Lawnstrings } from "../scripts/popcap/localization/lawnstrings.js";
 import PopCapPackages from "../scripts/popcap/json/util.js";
 import RSBInfo from "../scripts/default/support/util.js";
@@ -65,7 +51,6 @@ import {
 } from "../scripts/popcap/pam/utilitity.js";
 import { popcap_bnk_decode, popcap_bnk_encode } from "../scripts/popcap/wwise/util.js";
 import { create_evaluate } from "./helper/util.js";
-import popcap_rsb_disturb from "../scripts/default/scrapped/disturb.js";
 import popcap_resource_to_res from "../scripts/popcap/resources/res/encode.js";
 import popcap_res_to_resource from "../scripts/popcap/resources/res/to_official.js";
 import vm from "node:vm";
@@ -127,24 +112,8 @@ export default async function js_evaluate(execute_file_dir: string): Promise<voi
              */
             popcap_atlas_split: atlas_split,
             popcap_atlas_merge: atlas_cat,
-            popcap_texture_encode_rgba8888: encode_rgba8888,
-            popcap_texture_encode_argb8888: encode_argb8888,
-            popcap_texture_encode_pvrtc: encode_pvrtc,
-            popcap_texture_encode_etc1a: encode_etc1a,
-            popcap_texture_encode_etc1a_index: encode_etc1alpha_palette,
-            popcap_texture_decode_rgba8888: decode_rgba8888,
-            popcap_texture_decode_argb8888: decode_argb8888,
-            popcap_texture_decode_pvrtc: decode_pvrtc,
-            popcap_texture_decode_etc1a: decode_etc1a,
-            popcap_texture_decode_etc1a_index: decode_etc1alpha_palette,
             popcap_resize_sprites: resize_atlas,
             real_esrgan_upscaler_image: ImagesUtilities.real_esrgan,
-            popcap_rsg_unpack: unpack_rsg,
-            popcap_rsg_pack: pack_rsg,
-            popcap_rsb_unpack: popcap_game_content_edit.rsb_unpack,
-            popcap_rsb_pack: popcap_game_content_edit.rsb_pack,
-            popcap_zlib_uncompress: popcap_game_content_edit.zlib_uncompress,
-            popcap_zlib_compress: popcap_game_content_edit.zlib_compress,
             popcap_packages_json_split: PopCapPackages.Json.Split,
             popcap_packages_json_merge: PopCapPackages.Json.CatToFile,
             json_patch: applyPatch,
@@ -174,7 +143,6 @@ export default async function js_evaluate(execute_file_dir: string): Promise<voi
             flash_animation_resize: flash_animation_resize,
             popcap_repair_resources_path: RepairPvZ2CResourcesPath,
             batch_popcap_animation_add_media_content: add_content,
-            popcap_rsb_disturb: popcap_rsb_disturb,
             popcap_resource_to_res: popcap_resource_to_res,
             popcap_res_to_resource: popcap_res_to_resource,
             color: color,

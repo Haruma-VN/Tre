@@ -51,53 +51,30 @@ export default async function popcap_atlas_pack(
     thiz_selection_max_rects_bin_iz_pot: boolean = false,
     thiz_selection_max_rects_bin_iz_square: boolean = true,
     thiz_selection_max_rects_bin_can_be_rotation: boolean = false,
-    thiz_selection_max_rects_bin_padding_size: number = 1
+    thiz_selection_max_rects_bin_padding_size: number = 1,
 ): Promise<number> {
     const img_list = new Array();
     const atlas_info: any = fs_js.read_json(dir + "/AtlasInfo.json");
-    if (
-        atlas_info.groups === undefined ||
-        atlas_info.groups === null ||
-        atlas_info.groups === void 0
-    ) {
+    if (atlas_info.groups === undefined || atlas_info.groups === null || atlas_info.groups === void 0) {
         throw new Error(cannot_find_groups_array_in_atlasinfo);
     }
-    if (
-        atlas_info.subgroup === undefined ||
-        atlas_info.subgroup === null ||
-        atlas_info.subgroup === void 0
-    ) {
+    if (atlas_info.subgroup === undefined || atlas_info.subgroup === null || atlas_info.subgroup === void 0) {
         throw new Error(cannot_find_subgroup_in_atlas_info);
     }
-    if (
-        atlas_info.method === undefined ||
-        atlas_info.method === null ||
-        atlas_info.method === void 0
-    ) {
+    if (atlas_info.method === undefined || atlas_info.method === null || atlas_info.method === void 0) {
         throw new Error(cannot_find_method_in_atlas_info);
     }
-    const is_trim_mode: boolean =
-        "trim" in atlas_info && atlas_info.trim ? true : false;
-    const is_square_trim: boolean =
-        (fs_js.create_toolkit_view("cut_unused_space") as boolean) &&
-        !is_trim_mode;
+    const is_trim_mode: boolean = "trim" in atlas_info && atlas_info.trim ? true : false;
+    const is_square_trim: boolean = (fs_js.create_toolkit_view("cut_unused_space") as boolean) && !is_trim_mode;
     const selection: string = atlas_info.method === "path" ? "extension" : "id";
-    const expand_path_for_new_version: boolean =
-        atlas_info.expand_path === "array" ? false : true;
+    const expand_path_for_new_version: boolean = atlas_info.expand_path === "array" ? false : true;
     for (let i in atlas_info.groups) {
-        atlas_info.groups[i].extension =
-            atlas_info.groups[i].path[atlas_info.groups[i].path.length - 1];
+        atlas_info.groups[i].extension = atlas_info.groups[i].path[atlas_info.groups[i].path.length - 1];
     }
     for (let i in atlas_info.groups) {
-        const sprite_dimension: any = await dimension(
-            dir + "/" + atlas_info.groups[i][selection] + ".png"
-        ).then((result: any) => {
-            return result;
-        });
-        atlas_info.groups[i].x =
-            atlas_info.groups[i].x !== undefined ? atlas_info.groups[i].x : 0;
-        atlas_info.groups[i].y =
-            atlas_info.groups[i].y !== undefined ? atlas_info.groups[i].y : 0;
+        const sprite_dimension: any = dimension(dir + "/" + atlas_info.groups[i][selection] + ".png");
+        atlas_info.groups[i].x = atlas_info.groups[i].x !== undefined ? atlas_info.groups[i].x : 0;
+        atlas_info.groups[i].y = atlas_info.groups[i].y !== undefined ? atlas_info.groups[i].y : 0;
         img_list.push({
             width: sprite_dimension.width,
             height: sprite_dimension.height,
@@ -115,12 +92,7 @@ export default async function popcap_atlas_pack(
         allowRotation: thiz_selection_max_rects_bin_can_be_rotation,
     };
     const img_data = new Array();
-    let packer = new MaxRectsPacker(
-        width,
-        height,
-        thiz_selection_max_rects_bin_padding_size,
-        options
-    );
+    let packer = new MaxRectsPacker(width, height, thiz_selection_max_rects_bin_padding_size, options);
     packer.addArray(img_list);
     packer.bins.forEach((bin: any) => {
         img_data.push(bin.rects);
@@ -152,8 +124,7 @@ export default async function popcap_atlas_pack(
         resources: new Array(),
     };
     const append_array = new Array();
-    const dimension_array_value: Array<{ width: number; height: number }> =
-        new Array();
+    const dimension_array_value: Array<{ width: number; height: number }> = new Array();
     for (let i = 0; i < img_data.length; ++i) {
         img_data[i] = best_sorting(img_data[i]);
         const count = i < 9 && i >= 0 ? "0" + i : i;
@@ -162,15 +133,11 @@ export default async function popcap_atlas_pack(
                 ? getTrim(img_data[i])
                 : is_square_trim
                 ? squareTrim(img_data[i])
-                : { width: width, height: height }
+                : { width: width, height: height },
         );
         result_json.resources.push({
             slot: 0,
-            id:
-                "ATLASIMAGE_ATLAS_" +
-                atlas_info.subgroup.toUpperCase() +
-                "_" +
-                count,
+            id: "ATLASIMAGE_ATLAS_" + atlas_info.subgroup.toUpperCase() + "_" + count,
             path: ["atlases", atlas_info.subgroup + "_" + count],
             type: "Image",
             atlas: true,
@@ -197,11 +164,7 @@ export default async function popcap_atlas_pack(
                     id: img_data[i][j].id,
                     path: img_data[i][j].path,
                     type: "Image",
-                    parent:
-                        "ATLASIMAGE_ATLAS_" +
-                        atlas_info.subgroup.toUpperCase() +
-                        "_" +
-                        count,
+                    parent: "ATLASIMAGE_ATLAS_" + atlas_info.subgroup.toUpperCase() + "_" + count,
                     ax: img_data[i][j].x,
                     ay: img_data[i][j].y,
                     aw: img_data[i][j].width,
@@ -215,54 +178,27 @@ export default async function popcap_atlas_pack(
     }
     for (let i = 0; i < append_array.length; ++i) {
         if (dimension_array_value[i].width !== width) {
-            fs_js.execution_information(
-                `${localization("new_width")} = ${
-                    dimension_array_value[i].width
-                }`
-            );
+            fs_js.execution_information(`${localization("new_width")} = ${dimension_array_value[i].width}`);
         }
         if (dimension_array_value[i].height !== height) {
-            fs_js.execution_information(
-                `${localization("new_height")} = ${
-                    dimension_array_value[i].height
-                }`
-            );
+            fs_js.execution_information(`${localization("new_height")} = ${dimension_array_value[i].height}`);
         }
         const count = i < 9 && i >= 0 ? "0" + i.toString() : i;
         await cat(
             append_array[i],
-            `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`,
+            `${fs_js.dirname(dir)}/${atlas_info.subgroup.toUpperCase()}_${count}.png`,
             dimension_array_value[i].width,
-            dimension_array_value[i].height
-        );
-        Console.WriteLine(
-            `${color.fggreen_string(
-                "◉ " + localization("execution_out") + ":\n     "
-            )} ${fs_js.resolve(
-                `${dir}/../${atlas_info.subgroup.toUpperCase()}_${count}.png`
-            )}`
+            dimension_array_value[i].height,
         );
     }
     if (expand_path_for_new_version) {
         for (let i: number = 0; i < result_json.resources.length; ++i) {
-            if (
-                "path" in result_json.resources[i] &&
-                Array.isArray(result_json.resources[i].path)
-            ) {
-                result_json.resources[i].path =
-                    result_json.resources[i].path.join("\\");
+            if ("path" in result_json.resources[i] && Array.isArray(result_json.resources[i].path)) {
+                result_json.resources[i].path = result_json.resources[i].path.join("\\");
             }
         }
     }
-    fs_js.write_json(dir + "/../" + atlas_info.subgroup + ".json", result_json);
-    Console.WriteLine(
-        `${color.fggreen_string(
-            "◉ " + localization("execution_out") + ":\n     "
-        )} ${fs_js.resolve(dir + "/../" + atlas_info.subgroup + ".json")}`
-    );
-    Console.WriteLine(
-        color.fggreen_string(`${total_sprites_process_in_thiz_function}`) +
-            `${img_list.length}`
-    );
+    fs_js.write_json(`${fs_js.dirname(dir)}/${atlas_info.subgroup}.json`, result_json, false);
+    Console.WriteLine(color.fggreen_string(`${total_sprites_process_in_thiz_function}`) + `${img_list.length}`);
     return 0;
 }

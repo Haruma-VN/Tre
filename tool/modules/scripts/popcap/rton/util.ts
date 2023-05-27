@@ -7,7 +7,7 @@ import fs_js from "../../../library/fs/implement.js";
 import { Console } from "../../../callback/console.js";
 import { args } from "../../../implement/arguments.js";
 
-export function popcap_rton_to_json(filepath?: string, this_will_stop_console_log: boolean = false): void {
+export function popcap_rton_to_json(filepath?: string): void {
     if (!filepath) {
         return;
     }
@@ -17,33 +17,20 @@ export function popcap_rton_to_json(filepath?: string, this_will_stop_console_lo
         fs_js.create_directory(`${filepath}_json`);
         for (let file of folder) {
             if (fs_js.parse_fs(file).ext.toUpperCase() === ".RTON") {
-                const jsonpath = `${filepath}/../${fs_js.parse_fs(filepath).name}.json`;
-                fs_js.outfile_fs(jsonpath, rton2json(fs_js.read_file(file, "buffer"), false) as any);
+                const jsonpath = `${fs_js.dirname(filepath)}/${fs_js.parse_fs(filepath).name}.json`;
+                fs_js.outfile_fs(jsonpath, rton2json(fs_js.read_file(file, "buffer"), false) as any, false);
             }
-        }
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${filepath}_json`,
-                )}`,
-            );
         }
     } else {
         fs_js.outfile_fs(
             `${fs_js.parse_fs(filepath).dir}/${fs_js.parse_fs(filepath).name}.json`,
             rton2json(fs_js.read_file(filepath, "buffer"), false) as any,
+            false,
         );
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${fs_js.parse_fs(filepath).dir}/${fs_js.parse_fs(filepath).name}.json`,
-                )}`,
-            );
-        }
     }
 }
 
-export function rton_decrypt_and_decode_to_json(filepath?: string, this_will_stop_console_log: boolean = false): void {
+export function rton_decrypt_and_decode_to_json(filepath?: string): void {
     if (!filepath) {
         return;
     }
@@ -57,34 +44,21 @@ export function rton_decrypt_and_decode_to_json(filepath?: string, this_will_sto
         for (let file of folder) {
             if (fs_js.parse_fs(file).ext.toUpperCase() === ".RTON") {
                 const rton_cipher_file = fs_js.read_file(file, "buffer");
-                const jsonpath = `${filepath}/../${fs_js.parse_fs(filepath).name}.json`;
-                fs_js.outfile_fs(jsonpath, rton2json(rton_cipher_file as Buffer, true) as any);
+                const jsonpath = `${fs_js.dirname(filepath)}/${fs_js.parse_fs(filepath).name}.json`;
+                fs_js.outfile_fs(jsonpath, rton2json(rton_cipher_file as Buffer, true) as any, false);
             }
-        }
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${filepath}_json`,
-                )}`,
-            );
         }
     } else {
         const rton_cipher_file = (fs_js.read_file(filepath, "buffer"), rton_cipher_key);
         fs_js.outfile_fs(
-            `${filepath}/../${fs_js.parse_fs(filepath).name}.json`,
+            `${fs_js.dirname(filepath)}/${fs_js.parse_fs(filepath).name}.json`,
             rton2json(rton_cipher_file as any, true),
+            false,
         );
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${fs_js.parse_fs(filepath).dir}/${fs_js.parse_fs(filepath).name}.json`,
-                )}`,
-            );
-        }
     }
 }
 
-export function popcap_json_to_rton_and_encrypt(filepath?: string, this_will_stop_console_log: boolean = false): void {
+export function popcap_json_to_rton_and_encrypt(filepath?: string): void {
     if (!filepath) {
         return;
     }
@@ -100,32 +74,19 @@ export function popcap_json_to_rton_and_encrypt(filepath?: string, this_will_sto
                 const jsonpath = `${filepath}_rton${fs_js.parse_fs(file.slice(filepath.length)).dir}/${
                     fs_js.parse_fs(file.slice(filepath.length)).name
                 }.rton`;
-                fs_js.outfile_fs(jsonpath, (json2rton(fs_js.read_json(file), true) as any, rton_cipher_key));
+                fs_js.outfile_fs(jsonpath, (json2rton(fs_js.read_json(file), true) as any, rton_cipher_key), false);
             }
-        }
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${filepath}_rton`,
-                )}`,
-            );
         }
     } else {
         fs_js.outfile_fs(
             `${fs_js.parse_fs(filepath).dir}/${fs_js.parse_fs(filepath).name}.rton`,
             (json2rton(fs_js.read_json(filepath), true) as any, rton_cipher_key),
+            false,
         );
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${fs_js.parse_fs(filepath).dir}/${fs_js.parse_fs(filepath).name}.rton`,
-                )}`,
-            );
-        }
     }
 }
 
-export function popcap_json_to_rton(filepath?: string, this_will_stop_console_log: boolean = false): void {
+export function popcap_json_to_rton(filepath?: string): void {
     if (!filepath) {
         return;
     }
@@ -137,27 +98,14 @@ export function popcap_json_to_rton(filepath?: string, this_will_stop_console_lo
                 const jsonpath = `${filepath}_rton${fs_js.parse_fs(file.slice(filepath.length)).dir}/${
                     fs_js.parse_fs(file.slice(filepath.length)).name
                 }.rton`;
-                fs_js.outfile_fs(jsonpath, json2rton(fs_js.read_json(file), false) as any);
+                fs_js.outfile_fs(jsonpath, json2rton(fs_js.read_json(file), false) as any, false);
             }
-        }
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${filepath}_rton`,
-                )}`,
-            );
         }
     } else {
         fs_js.outfile_fs(
             `${fs_js.parse_fs(filepath).dir}/${fs_js.parse_fs(filepath).name}.rton`,
             json2rton(fs_js.read_json(filepath), false) as any,
+            false,
         );
-        if (!this_will_stop_console_log) {
-            Console.WriteLine(
-                `${color.fggreen_string("◉ " + localization("execution_out") + ":\n     ")} ${fs_js.resolve(
-                    `${fs_js.parse_fs(filepath).dir}/${fs_js.parse_fs(filepath).name}.rton`,
-                )}`,
-            );
-        }
     }
 }

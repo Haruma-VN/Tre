@@ -1,13 +1,14 @@
 "use strict";
-import { createCanvas, loadImage } from "canvas";
-export default async function (animation_image: any, media_path: string, image_name_by_id: boolean, texture_reslution: number) {
+import { createCanvas, loadImage } from "@napi-rs/canvas";
+import localization from "../../../../callback/localization.js";
+export default async function read_image(animation_image: any, media_path: string, image_name_by_id: boolean, texture_reslution: number) {
     let scale_ratio: number = 0;
     const texture_range: number[] = [1536, 1200, 768, 640, 384];
     if (texture_reslution != -1) {
         if (texture_range.includes(texture_reslution)) {
             scale_ratio = 1200 / texture_reslution;
         } else {
-            throw new Error("Texture Reslution must be one of the following: 1536, 1200, 768, 640, 384");
+            throw new Error(`${localization("default_animation_reslution_to_follow")}: ${1536}, ${1200}, ${768}, ${640}, ${384}`);
         }
     } else {
         scale_ratio = texture_reslution;

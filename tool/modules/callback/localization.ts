@@ -10,14 +10,10 @@ function localization(locate_data: string): string {
             "/extension/settings/localization/" +
             (
                 JSON.parse(
-                    fs.readFileSync(
-                        path.dirname(args.main_js as any) +
-                            "/extension/settings/toolkit.json",
-                        {
-                            encoding: "utf-8",
-                            flag: "r",
-                        }
-                    )
+                    fs.readFileSync(path.dirname(args.main_js as any) + "/extension/settings/toolkit.json", {
+                        encoding: "utf-8",
+                        flag: "r",
+                    })
                 ) as any
             ).language +
             ".json";

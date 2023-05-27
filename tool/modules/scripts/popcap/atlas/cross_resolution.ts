@@ -1,6 +1,6 @@
 "use strict";
 import cat from "./normal/cat.js";
-import resize from "./normal/resize.js";
+import folder_resize from "./folder_resize.js";
 import localization from "../../../callback/localization.js";
 import * as color from "../../../library/color/color.js";
 import fs_js from "../../../library/fs/implement.js";
@@ -18,17 +18,13 @@ export default async function (
     cannot_get_res_data?: string,
     not_found_res_indicated_in_subgroups?: string,
     total_sprites_process_in_thiz_function?: string,
-    padding_size?: number
+    padding_size?: number,
 ): Promise<void> {
-    const config_json: any = fs_js.write_json(
+    const config_json: any = fs_js.read_json(
         fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json",
-        true
+        true,
     );
-    if (
-        padding_size === undefined ||
-        padding_size === void 0 ||
-        padding_size === null
-    ) {
+    if (padding_size === undefined || padding_size === void 0 || padding_size === null) {
         padding_size = 1;
     } else if (padding_size < 0) {
         padding_size = Math.abs(padding_size);
@@ -50,17 +46,16 @@ export default async function (
         false,
         true,
         false,
-        padding_size
+        padding_size,
     );
     // 768
     Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
-            `${localization("finish_packing")} 1536`
+            `${localization("finish_packing")} 1536`,
     );
-    const create_768_packet_fast_resize = await resize(dir, 1536, 768);
+    const create_768_packet_fast_resize = await folder_resize(dir, 1536, 768);
     Console.WriteLine(
-        color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
-            `${localization("finish_resize")} 768`
+        color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) + `${localization("finish_resize")} 768`,
     );
     await cat(
         create_768_packet_fast_resize,
@@ -78,19 +73,18 @@ export default async function (
         false,
         true,
         false,
-        padding_size
+        padding_size,
     );
     // 384
     Console.WriteLine(
         color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
-            `${localization("finish_packing")} 768`
+            `${localization("finish_packing")} 768`,
     );
     if (config_json.atlas.cross_resolution.allow_384) {
-        const create_384_packet_fast_resize = await resize(dir, 1536, 384);
+        const create_384_packet_fast_resize = await folder_resize(dir, 1536, 384);
         Console.WriteLine(
-            color.fggreen_string(
-                `◉ ${localization("execution_status")}:\n      `
-            ) + `${localization("finish_resize")} 384`
+            color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
+                `${localization("finish_resize")} 384`,
         );
         await cat(
             create_384_packet_fast_resize,
@@ -108,12 +102,11 @@ export default async function (
             false,
             true,
             false,
-            padding_size
+            padding_size,
         );
         Console.WriteLine(
-            color.fggreen_string(
-                `◉ ${localization("execution_status")}:\n      `
-            ) + `${localization("finish_packing")} 384`
+            color.fggreen_string(`◉ ${localization("execution_status")}:\n      `) +
+                `${localization("finish_packing")} 384`,
         );
     }
 }

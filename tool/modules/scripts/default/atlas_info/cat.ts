@@ -21,19 +21,10 @@ export default function (dir: string): number {
     const atlas: string[] = fs_js.one_reader(`${dir}/atlas/`);
     const info: AtlasInfo = fs_js.read_json(`${dir}/info.json`) as AtlasInfo;
     for (let bundle of atlas) {
-        if (
-            info.groups !== undefined &&
-            info.groups !== null &&
-            info.groups !== void 0
-        ) {
+        if (info.groups !== undefined && info.groups !== null && info.groups !== void 0) {
             info.groups.push(fs_js.read_json(bundle) as ResInfo);
         }
     }
-    fs_js.write_json(`${dir}/../AtlasInfo.json`, info);
-    Console.WriteLine(
-        `${color.fggreen_string(
-            "◉ " + localization("execution_out") + ":\n     "
-        )} ${fs_js.resolve(`${dir}/../AtlasInfo.json`)}`
-    );
+    fs_js.write_json(`${fs_js.dirname(dir)}/AtlasInfo.json`, info, false);
     return 0;
 }

@@ -10,7 +10,8 @@ class to_official extends check_resource {
      * @param subgroup_default_parent - Pass default parent which contains whole subgroups
      * @returns
      */
-    private static convert_img<Template extends packet_data>(
+
+    public static convert_img<Template extends packet_data>(
         packet: Template,
         subgroup_parent_name: string,
         subgroup_default_parent: string,
@@ -583,10 +584,16 @@ class to_official extends check_resource {
         );
         return resources_json;
     }
-    public static create_conversion(file_input: string, output_file: string = `${file_input}/../RESOURCES.json`): void {
+    public static create_conversion(
+        file_input: string,
+        output_file: string = `${fs_js.dirname(file_input)}/RESOURCES.json`,
+    ): void {
         const res_json: res_json = fs_js.read_json(file_input) as res_json;
-        fs_js.write_json(output_file, this.do_process_whole<res_json, Resources_Group_Structure_Template>(res_json));
-        fs_js.execution_out(output_file);
+        fs_js.write_json(
+            output_file,
+            this.do_process_whole<res_json, Resources_Group_Structure_Template>(res_json),
+            false,
+        );
     }
 }
 

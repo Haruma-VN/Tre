@@ -4,7 +4,7 @@ import write_sprite_xlf from "../json_to_flash/write_spritexfl.js";
 import parse_transform from "../json_from_flash/parse_transform.js";
 import parse_color from "../json_from_flash/parse_color.js";
 
-export default async function (
+export default async function read_sprite(
     sprite: any,
     animation_sprite: any,
     image_list: any,
@@ -108,7 +108,7 @@ export default async function (
             ),
         };
         const DOM_main_sprite: any = new Array();
-        if (setting.create_apng && setting.split_label) {
+        if (setting.generate_apng && setting.split_labels || setting.generate_gif && setting.split_labels) {
             for (let k = 0; k < sprite.frame.length; k++) {
                 if (sprite.frame[k].label != null) {
                     DOM_main_sprite.push({

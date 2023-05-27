@@ -2,11 +2,11 @@
 import fs_js from "../../../../library/fs/implement.js";
 import check_manifest_build from "./check_manifest_build.js";
 
-async function popcap_pam_from_gif(
+function popcap_pam_from_gif(
     file_system_input_directory: string,
     file_system_output_path_for_gif_to_pam: string
-): Promise<structure> {
-    const frames_lists_of_string: Array<string> = await fs_js.gif_to_pngs(
+): structure {
+    const frames_lists_of_string: Array<string> = fs_js.gif_to_pngs(
         file_system_input_directory,
         file_system_output_path_for_gif_to_pam
     );
@@ -19,7 +19,7 @@ async function popcap_pam_from_gif(
         const create_dimension_view: {
             width: number;
             height: number;
-        } = (await fs_js.get_dimension(frames_lists_of_string[i])) as {
+        } = (fs_js.get_dimension(frames_lists_of_string[i])) as {
             width: number;
             height: number;
         };

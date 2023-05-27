@@ -1,0 +1,26 @@
+interface rsb_head_infomation {
+    magic: string;
+    version: number;
+    rsg_offset: number;
+    file_list_length: number;
+    file_list_begin_offset: number;
+    rsg_list_length: number;
+    rsg_list_begin_offset: number;
+    rsg_number: number;
+    rsg_info_begin_offset: number;
+    rsg_info_each_length: number;
+    composite_number: number;
+    composite_info_begin_offset: number;
+    composite_info_each_length: number;
+    composite_list_length: number;
+    composite_list_begin_offset: number;
+    autopool_number: number;
+    autopool_info_begin_offset: number;
+    autopool_info_each_length: number;
+    ptx_number: number;
+    ptx_info_begin_offset: number;
+    ptx_info_each_length: number;
+    part1_begin_offset: number;
+    part2_begin_offset: number;
+    part3_begin_offset: number;
+};

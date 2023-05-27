@@ -74,12 +74,10 @@ namespace AdaptPvZ2InternationalResPath {
         public evaluate(method: number): PopCapResourcesChildren {
             switch (method) {
                 case 1:
-                    this.res =
-                        this.old_to_new_conversion() as PopCapResourcesChildren;
+                    this.res = this.old_to_new_conversion() as PopCapResourcesChildren;
                     break;
                 case 2:
-                    this.res =
-                        this.new_to_old_conversion() as PopCapResourcesChildren;
+                    this.res = this.new_to_old_conversion() as PopCapResourcesChildren;
                     break;
                 default:
                     break;
@@ -89,36 +87,27 @@ namespace AdaptPvZ2InternationalResPath {
     }
 
     export abstract class ResourcesPath {
-        public abstract write_fs_js_json(
-            directory: string,
-            method_number: 1 | 2
-        ): void;
+        public abstract write_fs_js_json(directory: string, method_number: 1 | 2): void;
         protected abstract handle_resource_data(
             resource_json_parsed: PopCapResources,
-            method_number: number
+            method_number: number,
         ): PopCapResources | {};
     }
 
     export class res_conversion extends ResourcesPath {
-        public write_fs_js_json(
-            directory: string,
-            method_number: number
-        ): void {
-            let resources_json: PopCapResources = fs_js.read_json(
-                directory
-            ) as PopCapResources;
+        public write_fs_js_json(directory: string, method_number: number): void {
+            let resources_json: PopCapResources = fs_js.read_json(directory) as PopCapResources;
             const method: string = method_number === 1 ? "new" : "old";
             return fs_js.write_json(
-                `${directory}/../${
-                    fs_js.parse_fs(directory).name
-                }.${method}.json`,
-                this.handle_resource_data(resources_json, method_number)
+                `${fs_js.dirname(directory)}/${fs_js.parse_fs(directory).name}.${method}.json`,
+                this.handle_resource_data(resources_json, method_number),
+                false,
             );
         }
 
         protected handle_resource_data(
             resource_json_parsed: PopCapResources,
-            method_number: number
+            method_number: number,
         ): PopCapResources | {} {
             if (!("groups" in resource_json_parsed)) {
                 return {};
@@ -131,9 +120,7 @@ namespace AdaptPvZ2InternationalResPath {
                     if (!("path" in res_data)) {
                         continue;
                     }
-                    res_data = new AdaptPvZ2InternationalResPath.res_path(
-                        res_data
-                    ).evaluate(method_number);
+                    res_data = new AdaptPvZ2InternationalResPath.res_path(res_data).evaluate(method_number);
                 }
             }
             return resource_json_parsed;

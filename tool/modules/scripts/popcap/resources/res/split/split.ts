@@ -35,13 +35,13 @@ class split_res_json extends check_resource {
     }
     public static do_process_whole<Template extends res_json>(
         file_path: string,
-        save_directory: string = `${file_path}/../${fs_js.parse_fs(file_path).name}.info`,
+        save_directory: string = `${fs_js.dirname(file_path)}/${fs_js.parse_fs(file_path).name}.info`,
     ): void {
         const groups_directory: string = `${save_directory}/groups`;
         const res_json: Template = fs_js.read_json(file_path) as Template;
         const info_json: Output_Value = this.set_info<Template, Output_Value>(res_json);
         fs_js.create_directory(`${save_directory}`, true);
-        fs_js.write_json(`${save_directory}/info.json`, info_json);
+        fs_js.write_json(`${save_directory}/info.json`, info_json, true);
         fs_js.create_directory(groups_directory, true);
         this.create_whole_directory<Output_Value>(groups_directory, info_json);
         for (let index: number = 0; index < info_json.groups.length; ++index) {
@@ -49,7 +49,7 @@ class split_res_json extends check_resource {
                 res_json_children,
                 small_bundle_info_json
             >(res_json.groups[info_json.groups[index]]);
-            fs_js.write_json(`${groups_directory}/${info_json.groups[index]}/data.json`, subgroup_info_json);
+            fs_js.write_json(`${groups_directory}/${info_json.groups[index]}/data.json`, subgroup_info_json, true);
             const directory_contain_whole_subgroups: string = `${groups_directory}/${info_json.groups[index]}/subgroup`;
             fs_js.create_directory(directory_contain_whole_subgroups, true);
             const subgroup_keys: Array<string> = Object.keys(res_json.groups[info_json.groups[index]].subgroup);
@@ -57,6 +57,7 @@ class split_res_json extends check_resource {
                 fs_js.write_json(
                     `${directory_contain_whole_subgroups}/${subgroup_keys[j_index]}.json`,
                     res_json.groups[info_json.groups[index]].subgroup[subgroup_keys[j_index]],
+                    true,
                 );
             }
         }

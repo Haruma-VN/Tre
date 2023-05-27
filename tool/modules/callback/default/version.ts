@@ -1,6 +1,6 @@
 "use strict";
 namespace version {
-    export const tre_version: string = "4.3.0";
+    export const tre_version: string = "5.0.0";
 
     export const outdated_version: string[] = [
         "1.0.0",
@@ -13,6 +13,7 @@ namespace version {
         "4.0.0",
         "4.1.0",
         "4.2.0",
+        "4.3.0"
     ];
 }
 export default version;

@@ -4,7 +4,7 @@ import fs_js from "../../../../library/fs/implement.js";
 import check_resource from "./check.js";
 
 class resource_conversion extends check_resource {
-    private static check_path_type<Template extends Resources_Group_Structure_Template>(
+    public static check_path_type<Template extends Resources_Group_Structure_Template>(
         resource_json: Template,
     ): "array" | "string" {
         for (let index: number = 0; index < resource_json.groups.length; ++index) {
@@ -248,10 +248,13 @@ class resource_conversion extends check_resource {
     public static create_conversion<
         Required_Template extends Resources_Group_Structure_Template,
         Res_JSON_Structure extends res_json,
-    >(file_input: string, output_file: string = `${file_input}/../res.json`): void {
+    >(file_input: string, not_notify: boolean, output_file: string = `${fs_js.dirname(file_input)}/res.json`): void {
         const resource_json: Required_Template = fs_js.read_json(file_input) as Required_Template;
-        fs_js.write_json(output_file, this.do_process_whole<Required_Template, Res_JSON_Structure>(resource_json));
-        fs_js.execution_out(output_file);
+        fs_js.write_json(
+            output_file,
+            this.do_process_whole<Required_Template, Res_JSON_Structure>(resource_json),
+            not_notify,
+        );
     }
 }
 

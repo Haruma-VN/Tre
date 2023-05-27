@@ -1,8 +1,9 @@
 "use strict";
+import { createCanvas, Image, loadImage, Canvas, SKRSContext2D } from "@napi-rs/canvas";
+import { decodeFrames } from "modern-gif";
 import fs from "node:fs";
 import * as js_json from "../json/util.js";
 import path from "../../implement/path.js";
-import sharp from "sharp";
 import * as color from "../color/color.js";
 import localization from "../../callback/localization.js";
 import zlib from "zlib";
@@ -11,7 +12,6 @@ import dataview_checker from "../../callback/default/checker.js";
 import { execSync } from "child_process";
 import { Console } from "../../callback/console.js";
 import { args, arguments_list } from "../../implement/arguments.js";
-
 interface FrameData {
     getImage: () => NodeJS.ReadableStream;
 }
@@ -29,15 +29,24 @@ class fs_js {
     public static write_file(
         file_system_path: string,
         file_system_data_write_to_file: Buffer | ArrayBuffer | string,
+        stop_execution_out: boolean,
         is_utf16_le: boolean = false,
     ): void {
         //#region
+
+        if (this.js_exists(file_system_path)) {
+            this.js_remove(file_system_path);
+        }
+
         let auto_encoding_system: auto_file_system_encoding =
             file_system_data_write_to_file instanceof Buffer ? "hex" : "utf-8";
         if (is_utf16_le) {
             auto_encoding_system = "utf16le";
         }
         try {
+            if (!stop_execution_out) {
+                this.execution_out(file_system_path);
+            }
             fs.writeFileSync(file_system_path, file_system_data_write_to_file as auto, {
                 encoding: auto_encoding_system,
                 flag: "w",
@@ -49,6 +58,7 @@ class fs_js {
                 )}, ${localization("code")} ${error.message}`,
             );
         }
+        return;
         //#endregion
     }
 
@@ -97,6 +107,9 @@ class fs_js {
     /*-------------------------------------------------------------------------------------------------*/
     public static read_json(file_system_path: string, file_system_force_reading_trailing_commas: bool = true): {} {
         //#region
+        if (!this.js_exists(file_system_path)) {
+            throw new Error(`${localization("does_not_exists")} ${this.resolve(file_system_path)}`);
+        }
         if (!this.is_json_extension(file_system_path)) {
             throw new Error(
                 `${this.get_full_path(`${file_system_path}`)} ${localization("not_having_extension_json")}`,
@@ -114,15 +127,19 @@ class fs_js {
         //#endregion
     }
 
-    public static write_json(file_system_output_path: string, file_system_json_data_view: string | {} | object): void {
+    public static write_json(
+        file_system_output_path: string,
+        file_system_json_data_view: string | {} | object,
+        not_notify: boolean,
+    ): void {
         //#region
 
         if (typeof file_system_json_data_view === "string") {
-            return this.write_file(file_system_output_path, file_system_json_data_view);
+            return this.write_file(file_system_output_path, file_system_json_data_view, not_notify);
         }
 
         if (file_system_json_data_view instanceof Object) {
-            return this.write_file(file_system_output_path, js_json.stringify(file_system_json_data_view));
+            return this.write_file(file_system_output_path, js_json.stringify(file_system_json_data_view), not_notify);
         }
 
         //#endregion
@@ -139,9 +156,13 @@ class fs_js {
     public static outfile_fs(
         file_system_directory_output: string,
         file_system_data_output: auto,
+        prevent_execution_out: boolean,
         file_system_is_output_directory: bool = true,
     ): void {
         //#region
+        if (this.js_exists(file_system_directory_output)) {
+            this.js_remove(file_system_directory_output);
+        }
         const file_system_directory_output_as_list_string: Array<string> = file_system_directory_output
             .replace(/\\/g, "/")
             .split("/");
@@ -158,8 +179,13 @@ class fs_js {
             this.write_file(
                 `${file_system_directory_output_as_folder_of_joined_strings}/${file_system_directory_output_as_file_string}`,
                 file_system_data_output,
+                true,
             );
         }
+        if (!prevent_execution_out) {
+            this.execution_out(file_system_directory_output);
+        }
+        return;
 
         //#endregion
     }
@@ -440,14 +466,14 @@ class fs_js {
 
     public static fs_copy(file_system_path_of_the_copy_start: string, file_system_path_of_the_copy_end: string): void {
         const create_buffer_view_file: Buffer = this.read_file(file_system_path_of_the_copy_start, "buffer");
-        this.write_file(file_system_path_of_the_copy_end, create_buffer_view_file as Buffer);
+        this.write_file(file_system_path_of_the_copy_end, create_buffer_view_file as Buffer, false);
     }
     /*-------------------------------------------------------------------------------------------------*/
 
     public static fs_move(file_system_path_of_the_move_start: string, file_system_path_of_the_move_end: string): void {
         //#region
         const create_buffer_view_file: Buffer = this.read_file(file_system_path_of_the_move_start, "buffer");
-        this.write_file(file_system_path_of_the_move_end, create_buffer_view_file as Buffer);
+        this.write_file(file_system_path_of_the_move_end, create_buffer_view_file as Buffer, false);
         this.js_remove(file_system_path_of_the_move_start);
         //#endregion
     }
@@ -484,7 +510,44 @@ class fs_js {
         //#endregion
     }
 
-    public static async get_dimension(
+    public static get_dimension(
+        file_system_input_path: string,
+        width_output_as_property: string = "width",
+        height_output_as_property: string = "height",
+    ): {
+        [x: string]: number;
+    } {
+        //#region
+        if (this.js_exists(file_system_input_path)) {
+            const create_image_canvas: Image = new Image();
+            let dimension_image: { width: number; height: number } = { width: 0, height: 0 };
+            create_image_canvas.onload = function () {
+                dimension_image = {
+                    width: create_image_canvas.width,
+                    height: create_image_canvas.height,
+                };
+            };
+            create_image_canvas.src = fs_js.read_file(file_system_input_path, "buffer");
+            if (typeof create_image_canvas.width === "number" && typeof create_image_canvas.height === "number") {
+                return {
+                    [width_output_as_property]: dimension_image.width as number,
+                    [height_output_as_property]: dimension_image.height as number,
+                };
+            } else {
+                throw new Error(
+                    `${localization("cannot_get")} ${this.get_full_path(file_system_input_path)} ${localization(
+                        "dimension",
+                    )}`,
+                );
+            }
+        } else {
+            throw new Error(`${localization("cannot_read")} ${this.get_full_path(file_system_input_path)}`);
+        }
+
+        //#endregion
+    }
+
+    public static async get_async_dimension(
         file_system_input_path: string,
         width_output_as_property: string = "width",
         height_output_as_property: string = "height",
@@ -493,18 +556,11 @@ class fs_js {
     }> {
         //#region
         if (this.js_exists(file_system_input_path)) {
-            const create_image_nodejs_sharp_view: sharp.Sharp = sharp(file_system_input_path);
-            const create_auto_view_dimension: sharp.Metadata = await create_image_nodejs_sharp_view.metadata();
-
-            if (
-                "width" in create_auto_view_dimension &&
-                "height" in create_auto_view_dimension &&
-                typeof create_auto_view_dimension.width === "number" &&
-                typeof create_auto_view_dimension.height === "number"
-            ) {
+            const { width, height } = await loadImage(file_system_input_path);
+            if (typeof width === "number" && typeof height === "number") {
                 return {
-                    [width_output_as_property]: create_auto_view_dimension.width as number,
-                    [height_output_as_property]: create_auto_view_dimension.height as number,
+                    [width_output_as_property]: width as number,
+                    [height_output_as_property]: height as number,
                 };
             } else {
                 throw new Error(
@@ -558,50 +614,53 @@ class fs_js {
         //#endregion
     }
 
-    public static async extract_image(
+    public static extract_image(
         file_system_input_path: string,
         sharp_data_for_width: number,
         sharp_data_for_height: number,
         sharp_data_for_x: number,
         sharp_data_for_y: number,
         file_system_output_path: string | undefined,
-    ): Promise<Void> {
+    ): void {
         //#region
         if (
             file_system_output_path === undefined ||
             file_system_input_path === void 0 ||
             file_system_input_path === null
         ) {
-            file_system_output_path = `${file_system_input_path}/../${this.js_basename(
+            file_system_output_path = `${this.dirname(`${file_system_input_path}`)}/${this.js_basename(
                 file_system_input_path,
             )}.view.png`;
         }
 
         this.js_remove(file_system_output_path);
-
+        let img_extracted_png: Buffer = Buffer.alloc(0);
         if (this.js_exists(file_system_input_path)) {
-            await sharp(file_system_input_path)
-                .extract({
-                    width: sharp_data_for_width,
-                    height: sharp_data_for_height,
-                    left: sharp_data_for_x,
-                    top: sharp_data_for_y,
-                })
-                .toFile(file_system_output_path)
-                .catch(function (error: auto) {
-                    throw new Error(
-                        `${localization("cannot_create")} ${fs_js.get_full_path(
-                            file_system_output_path as string,
-                        )}, ${localization("and_the_error_is")} ${error.message as evaluate_error}`,
-                    );
-                });
+            const img: Image = new Image();
+            img.onload = function () {
+                const canvas: Canvas = createCanvas(img.width, img.height);
+                const ctx: SKRSContext2D = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                const imageData: any = ctx.getImageData(
+                    sharp_data_for_x,
+                    sharp_data_for_y,
+                    sharp_data_for_width,
+                    sharp_data_for_height,
+                );
+                const img_extracted: Canvas = createCanvas(sharp_data_for_width, sharp_data_for_height);
+                const img_extracted_ctx: SKRSContext2D = img_extracted.getContext("2d");
+                img_extracted_ctx.putImageData(imageData, 0, 0);
+                img_extracted_png = img_extracted.toBuffer("image/png");
+            };
+            img.src = fs_js.read_file(file_system_input_path, "buffer");
         }
+        fs_js.outfile_fs(file_system_output_path, img_extracted_png, true);
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async pack_image(
+    public static pack_image(
         file_system_directory_file_path_output: string,
         file_system_width: number,
         file_system_height: number,
@@ -617,7 +676,7 @@ class fs_js {
             file_system_output_green_channel?: number;
             file_system_output_alpha_channel?: number;
         },
-    ): Promise<Void> {
+    ): Void {
         //#region
         if (
             file_system_adjustment_background.file_system_output_red_channel === undefined ||
@@ -651,64 +710,140 @@ class fs_js {
             file_system_adjustment_background.file_system_output_alpha_channel = 0;
         }
 
-        const create_new_sharp_composite: sharp.Sharp = sharp({
-            create: {
-                width: file_system_width,
-                height: file_system_height,
-                channels: file_system_channel_output,
-                background: {
-                    r: file_system_adjustment_background.file_system_output_red_channel,
-                    b: file_system_adjustment_background.file_system_output_blue_channel,
-                    g: file_system_adjustment_background.file_system_output_green_channel,
-                    alpha: file_system_adjustment_background.file_system_output_alpha_channel,
-                },
-            },
-        });
-        await create_new_sharp_composite
-            .composite(file_system_assertation_array)
-            .toFile(file_system_directory_file_path_output)
-            .catch((error: auto) => {
+        const create_new_canvas_composite: Canvas = createCanvas(file_system_width, file_system_height);
+        const create_new_ctx_composite: SKRSContext2D = create_new_canvas_composite.getContext("2d");
+        create_new_ctx_composite.fillStyle = `rgba(${file_system_adjustment_background.file_system_output_red_channel},
+            ${file_system_adjustment_background.file_system_output_blue_channel},
+            ${file_system_adjustment_background.file_system_output_green_channel},
+            ${file_system_adjustment_background.file_system_output_alpha_channel})`;
+
+        for (let i = 0; i < file_system_assertation_array.length; i++) {
+            const img_composite: Image = new Image();
+            img_composite.onload = function () {
+                const img_canvas: Canvas = createCanvas(img_composite.width, img_composite.height);
+                const img_ctx: SKRSContext2D = img_canvas.getContext("2d");
+                img_ctx.drawImage(img_composite, 0, 0);
+                create_new_ctx_composite.drawImage(
+                    img_canvas,
+                    file_system_assertation_array[i].top,
+                    file_system_assertation_array[i].left,
+                );
+            };
+            img_composite.onerror = function (error: auto) {
                 throw new Error(`${localization("cannot_pack_image_because")} ${error.message as evaluate_error}`);
-            });
+            };
+            img_composite.src = fs_js.read_file(file_system_assertation_array[i].input, "buffer");
+        }
+        fs_js.outfile_fs(
+            file_system_directory_file_path_output,
+            create_new_canvas_composite.toBuffer("image/png"),
+            true,
+        );
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async extract_alpha_channel(file_system_input_path: string): Promise<Buffer> {
+    public static extract_alpha_channel(file_system_input_path: string): Buffer {
         //#region
-        return await sharp(file_system_input_path).extractChannel("alpha").toBuffer();
+        const img: Image = new Image();
+        let alpha_channel: Uint8ClampedArray = new Uint8ClampedArray();
+        img.onload = function () {
+            const canvas: Canvas = createCanvas(img.width, img.height);
+            const ctx: SKRSContext2D = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const imageData: Uint8ClampedArray = ctx.getImageData(0, 0, img.width, img.height).data;
+            const alpha: Uint8ClampedArray = new Uint8ClampedArray(imageData.length / 4);
+            for (let i = 0; i < imageData.length / 4; i++) {
+                alpha[i] = imageData[i * 4 + 3];
+            }
+            alpha_channel = alpha;
+        };
+        img.src = fs_js.read_file(file_system_input_path, "buffer");
+        return Buffer.from(alpha_channel);
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async extract_red_channel(file_system_input_path: string): Promise<Buffer> {
+    public static extract_red_channel(file_system_input_path: string): Buffer {
         //#region
-        return await sharp(file_system_input_path).extractChannel("red").toBuffer();
+        const img: Image = new Image();
+        let red_channel: Uint8ClampedArray = new Uint8ClampedArray();
+        img.onload = function () {
+            const canvas: Canvas = createCanvas(img.width, img.height);
+            const ctx: SKRSContext2D = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const imageData: Uint8ClampedArray = ctx.getImageData(0, 0, img.width, img.height).data;
+            const red: Uint8ClampedArray = new Uint8ClampedArray(imageData.length / 4);
+            for (let i = 0; i < imageData.length / 4; i++) {
+                red[i] = imageData[i * 4];
+            }
+            red_channel = red;
+        };
+        img.src = fs_js.read_file(file_system_input_path, "buffer");
+        return Buffer.from(red_channel);
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
-    public static async extract_blue_channel(file_system_input_path: string): Promise<Buffer> {
+    public static extract_blue_channel(file_system_input_path: string): Buffer {
         //#region
-        return await sharp(file_system_input_path).extractChannel("blue").toBuffer();
+        const img: Image = new Image();
+        let blue_channel: Uint8ClampedArray = new Uint8ClampedArray();
+        img.onload = function () {
+            const canvas: Canvas = createCanvas(img.width, img.height);
+            const ctx: SKRSContext2D = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const imageData: Uint8ClampedArray = ctx.getImageData(0, 0, img.width, img.height).data;
+            const blue: Uint8ClampedArray = new Uint8ClampedArray(imageData.length / 4);
+            for (let i = 0; i < imageData.length / 4; i++) {
+                blue[i] = imageData[i * 4 + 1];
+            }
+            blue_channel = blue;
+        };
+        img.src = fs_js.read_file(file_system_input_path, "buffer");
+        return Buffer.from(blue_channel);
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async extract_green_channel(file_system_input_path: string): Promise<Buffer> {
+    public static extract_green_channel(file_system_input_path: string): Buffer {
         //#region
-        return await sharp(file_system_input_path).extractChannel("green").toBuffer();
+        const img: Image = new Image();
+        let green_channel: Uint8ClampedArray = new Uint8ClampedArray();
+        img.onload = function () {
+            const canvas: Canvas = createCanvas(img.width, img.height);
+            const ctx: SKRSContext2D = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const imageData: Uint8ClampedArray = ctx.getImageData(0, 0, img.width, img.height).data;
+            const green: Uint8ClampedArray = new Uint8ClampedArray(imageData.length / 4);
+            for (let i = 0; i < imageData.length / 4; i++) {
+                green[i] = imageData[i * 4 + 2];
+            }
+            green_channel = green;
+        };
+        img.src = fs_js.read_file(file_system_input_path, "buffer");
+        return Buffer.from(green_channel);
         //#endregion
     }
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async extract_raw(file_system_input_path: string): Promise<Buffer> {
+    public static extract_raw(file_system_input_path: string): Buffer {
         //#region
-        return await sharp(file_system_input_path).raw().toBuffer();
+        const img: Image = new Image();
+        let raw_channel: Uint8ClampedArray = new Uint8ClampedArray();
+        img.onload = function () {
+            const canvas: Canvas = createCanvas(img.width, img.height);
+            const ctx: SKRSContext2D = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const imageData: Uint8ClampedArray = ctx.getImageData(0, 0, img.width, img.height).data;
+            raw_channel = imageData;
+        };
+        img.src = fs_js.read_file(file_system_input_path, "buffer");
+        return Buffer.from(raw_channel);
         //#endregion
     }
 
@@ -727,67 +862,8 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async rotate_image(file_system_input_path: string, angle: number): Promise<Buffer> {
-        //#region
-        angle = angle > 360 ? this.degree_circle(angle) : angle;
-        const create_sharp_rotation: Buffer = await sharp(file_system_input_path).rotate(angle).toBuffer();
-
-        return create_sharp_rotation;
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
-    public static async flip_image(file_system_input_path: string): Promise<Buffer> {
-        //#region
-        const create_sharp_flip: Buffer = await sharp(file_system_input_path).flip().toBuffer();
-        return create_sharp_flip;
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
-    public static async flop_image(file_system_input_path: string): Promise<Buffer> {
-        //#region
-        const create_sharp_flop: Buffer = await sharp(file_system_input_path).flop().toBuffer();
-        return create_sharp_flop;
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
-    public static async blur_image(file_system_input_path: string, blur_level: number): Promise<Buffer> {
-        //#region
-        const create_js_sharp_blur: Buffer = await sharp(file_system_input_path).blur(blur_level).toBuffer();
-        return create_js_sharp_blur;
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
-    public static async negate_image(
-        file_system_input_path: string,
-        negate_channel_alpha: bool = false,
-    ): Promise<Buffer> {
-        //#region
-        const create_js_sharp_negate: Buffer = negate_channel_alpha
-            ? await sharp(file_system_input_path).negate({ alpha: true }).toBuffer()
-            : await sharp(file_system_input_path).negate().toBuffer();
-
-        return create_js_sharp_negate;
-
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
-    public static async normalize_image(file_system_input_path: string): Promise<Buffer> {
-        //#region
-        const create_sharp_js_normalize: Buffer = await sharp(file_system_input_path).normalize().toBuffer();
-        return create_sharp_js_normalize;
-
-        //#endregion
-    }
+    public static tre_thirdparty_for_texture_compression =
+        path.dirname(args.main_js as any) + "/extension/third/texture_compression.exe";
 
     /*-------------------------------------------------------------------------------------------------*/
 
@@ -1123,7 +1199,9 @@ class fs_js {
     ) {
         //#region
         if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
-            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+            file_output_as_string = `${this.dirname(file_input_as_string)}/${this.get_filename(
+                file_input_as_string,
+            )}.bin`;
         }
 
         if (zlib_level === undefined || zlib_level === null || zlib_level === void 0) {
@@ -1151,7 +1229,9 @@ class fs_js {
     ) {
         //#region
         if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
-            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+            file_output_as_string = `${this.dirname(file_input_as_string)}/${this.get_filename(
+                file_input_as_string,
+            )}.bin`;
         }
 
         if (zlib_level === undefined || zlib_level === null || zlib_level === void 0) {
@@ -1179,7 +1259,9 @@ class fs_js {
     ) {
         //#region
         if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
-            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+            file_output_as_string = `${this.dirname(file_input_as_string)}/${this.get_filename(
+                file_input_as_string,
+            )}.bin`;
         }
 
         if (zlib_level === undefined || zlib_level === null || zlib_level === void 0) {
@@ -1203,7 +1285,9 @@ class fs_js {
     public static async create_brotli_fs_js(file_input_as_string: string, file_output_as_string?: string) {
         //#region
         if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
-            file_output_as_string = `${file_input_as_string}/../${this.get_filename(file_input_as_string)}.bin`;
+            file_output_as_string = `${this.dirname(file_input_as_string)}/${this.get_filename(
+                file_input_as_string,
+            )}.bin`;
         }
 
         const create_fs_js_read_stream: fs.ReadStream = fs.createReadStream(file_input_as_string);
@@ -1402,12 +1486,12 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async create_resize(
+    public static create_resize(
         file_system_path_for_image_as_string: string,
         allocate_width: number,
         allocate_height: number,
         file_system_path_for_output_image?: string,
-    ): Promise<Void> {
+    ): Void {
         //#region
         if (
             file_system_path_for_output_image === null ||
@@ -1415,26 +1499,29 @@ class fs_js {
             file_system_path_for_output_image === void 0
         ) {
             // create output
-            file_system_path_for_output_image = `${file_system_path_for_image_as_string}/../${this.js_basename(
+            file_system_path_for_output_image = `${this.dirname(
                 file_system_path_for_image_as_string,
-            )}.output.png`;
+            )}/${this.js_basename(file_system_path_for_image_as_string)}.output.png`;
         }
-
-        const create_new_sharp_view = await sharp(file_system_path_for_image_as_string).resize(
-            allocate_width,
-            allocate_height,
-        );
-
-        await create_new_sharp_view.toFile(file_system_path_for_output_image, (err: auto) => {
+        const img_canvas: Image = new Image();
+        let img_resized: Buffer = Buffer.alloc(0);
+        img_canvas.onload = function () {
+            const rs_canvas = createCanvas(allocate_width, allocate_height);
+            const img_context: SKRSContext2D = rs_canvas.getContext("2d");
+            img_context.drawImage(img_canvas, 0, 0, allocate_width, allocate_height);
+            img_resized = rs_canvas.toBuffer("image/png");
+        };
+        img_canvas.onerror = function (err: auto) {
             if (err as auto) {
                 throw new Error(
-                    `${localization("cannot_resize")} ${this.get_full_path(
+                    `${localization("cannot_resize")} ${fs_js.get_full_path(
                         `${file_system_path_for_image_as_string}`,
                     )}, ${localization("code")} ${err.message as string}`,
                 );
             }
-        });
-
+        };
+        img_canvas.src = fs_js.read_file(file_system_path_for_image_as_string, "buffer");
+        fs_js.outfile_fs(file_system_path_for_output_image, img_resized, true);
         //#endregion
     }
 
@@ -1638,6 +1725,7 @@ class fs_js {
         this.write_file(
             create_new_debug_file_save as file_system_full_path_directory,
             view_debug_text satisfies view_debug_text,
+            false,
         );
         //#endregion
     }
@@ -1727,7 +1815,8 @@ class fs_js {
             | "pam_resolution"
             | "pam_to_flash"
             | "open_windows_explorer"
-            | "gif"
+            | "animation_viewer"
+            | "packets"
             | "host",
     ): bool | str | int | popcap_resources_render | any {
         //#region
@@ -1781,8 +1870,10 @@ class fs_js {
                 return toolkit_json.popcap_resource_stream_group_unpack.simple.pam_to_xfl as boolean;
             case "open_windows_explorer":
                 return toolkit_json.user.open_windows_explorer as bool;
-            case "gif":
-                return toolkit_json.apng as any;
+            case "animation_viewer":
+                return toolkit_json.animation_viewer as any;
+            case "packets":
+                return toolkit_json.packets as any;
             case "host":
                 return toolkit_json.user.host as string;
             default:
@@ -1864,36 +1955,6 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async create_round_image(file_system_input_path: str, file_system_output_path?: str): Promise<Void> {
-        //#region
-        if (
-            file_system_output_path === undefined ||
-            file_system_output_path === null ||
-            file_system_output_path === void 0
-        ) {
-            file_system_output_path = `${file_system_input_path}/../${this.js_basename(
-                file_system_input_path,
-            )}.round.png`;
-        }
-        await sharp(file_system_input_path)
-            .composite([
-                {
-                    input: Buffer.from(`<svg><circle cx="250" cy="250" r="250"/></svg>`),
-                    blend: "dest-in",
-                },
-            ])
-            .toFile(file_system_output_path)
-            .then(() => {
-                this.assertation_create("success", `Successfully create round image`);
-            })
-            .catch((err: auto) => {
-                throw new Error(`${err.message as toolkit_error}`);
-            });
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
     public static display_dimension(width: number, height: number): void {
         //#region
         Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_display_width")}: `) + `${width}`);
@@ -1903,49 +1964,49 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static async generateFrames(gifURL = "", outputPath = "", output_name: string): Promise<string[]> {
-        const create_sharp_view: sharp.Sharp = await sharp(gifURL);
+    public static generateFrames(gifURL = "", outputPath = "", output_name: string): string[] {
+        interface DecodedFrame {
+            width: number;
+            height: number;
+            delay: number;
+            imageData: Uint8ClampedArray;
+        }
+        const frames: Array<DecodedFrame> = decodeFrames(this.read_file(gifURL, "buffer"));
         const create_append_list: Array<string> = new Array();
-        await create_sharp_view.metadata().then(async (data) => {
-            if (!data.pages) {
-                return;
-            }
-            const create_async_javascript_void: Array<Promise<void>> = Array.from(
-                { length: data.pages },
-                async (_nullify, i) => {
-                    const create_new_empty_sharp = await sharp(gifURL, {
-                        page: i,
-                    });
-                    const output_page = `${outputPath}/${output_name}_${i}.png`;
-                    await create_new_empty_sharp.toFile(output_page);
-                    create_append_list.push(output_page);
-                },
-            );
-
-            await Promise.all(create_async_javascript_void);
+        frames.forEach((frame, index) => {
+            const output_page = `${outputPath}/${output_name}_${index}.png`;
+            const img_canvas: Canvas = createCanvas(frame.width, frame.height);
+            const ctx: SKRSContext2D = img_canvas.getContext("2d");
+            const canvas_data: any = ctx.createImageData(frame.width, frame.height);
+            canvas_data.data.set(frame.imageData);
+            ctx.putImageData(canvas_data, 0, 0);
+            this.outfile_fs(output_page, img_canvas.toBuffer("image/png"), true);
+            create_append_list.push(output_page);
         });
         return create_append_list;
     }
 
-    public static async gif_to_pngs(file_system_input_path: string, file_system_output_path?: string) {
+    public static gif_to_pngs(file_system_input_path: string, file_system_output_path?: string) {
         //#region
         if (
             file_system_output_path === undefined ||
             file_system_output_path === null ||
             file_system_output_path === void 0
         ) {
-            file_system_output_path = `${file_system_input_path}/../${this.js_basename(file_system_input_path)}.tre`;
+            file_system_output_path = `${this.dirname(file_system_input_path)}/${this.js_basename(
+                file_system_input_path,
+            )}.tre`;
         }
         if (!this.js_exists(file_system_output_path)) {
             this.create_directory(file_system_output_path, true);
         }
         try {
-            const urls = await this.generateFrames(
+            const urls = this.generateFrames(
                 file_system_input_path,
                 file_system_output_path,
                 path.parse(file_system_input_path).name,
             );
-            return await urls;
+            return urls;
         } catch (error: any) {
             throw new Error(error as str);
         }
@@ -1968,30 +2029,6 @@ class fs_js {
         this.execution_notify("argument", localization("edit_resource_build_argument"));
         this.fs_copy(this.manifest_build_directory, `${file_system_output_path}/resource_build.json`);
         return;
-        //#endregion
-    }
-
-    /*-------------------------------------------------------------------------------------------------*/
-
-    /**
-     *
-     * @param file_system_input_path - Gif file path
-     * @param file_output_as_string  - WEBP Output path
-     */
-
-    public static async gif_to_webp(file_system_input_path: string, file_output_as_string?: string): Promise<void> {
-        //#region
-        if (file_output_as_string === undefined || file_output_as_string === void 0 || file_output_as_string === null) {
-            file_output_as_string = `${file_system_input_path}/../${this.js_basename(file_system_input_path)}.webp`;
-        }
-        await sharp(file_system_input_path)
-            .webp()
-            .toFile(file_output_as_string, (err: any) => {
-                if (err as NodeJS.ErrnoException) {
-                    throw new Error(`${localization("cannot_convert_gif_to_webp")}`);
-                }
-            });
-
         //#endregion
     }
 
