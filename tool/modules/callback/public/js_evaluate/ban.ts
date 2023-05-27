@@ -1,4 +1,5 @@
 "use strict";
+import { RuntimeError } from "../../../implement/error.js";
 import localization from "../../localization.js";
 export default function (list_ban_function: string[], code: string): boolean {
     const lines: string[] = code.split("\n");
@@ -7,9 +8,7 @@ export default function (list_ban_function: string[], code: string): boolean {
         for (const line of lines) {
             let match;
             while ((match = regex.exec(line))) {
-                throw new Error(
-                    `${bannedWord} ${localization("is_not_defined")}`
-                );
+                throw new RuntimeError(`${bannedWord} ${localization("is_not_defined")}`);
             }
         }
     }

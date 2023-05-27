@@ -1,28 +1,18 @@
 "use strict";
+import { ReadPathFailed } from "../../../implement/error.js";
 import fs_js from "../../../library/fs/implement.js";
 import localization from "../../localization.js";
 function check_evaluate_system(file_system_input_as_str: string): string {
     if (!fs_js.check_path(file_system_input_as_str)) {
-        throw new Error(
-            `${localization("cannot_read_the_path")} ${fs_js.get_full_path(
-                file_system_input_as_str
-            )}`
+        throw new ReadPathFailed(
+            `${localization("cannot_read_the_path")} ${fs_js.get_full_path(file_system_input_as_str)}`,
+            file_system_input_as_str,
         );
     }
     if (fs_js.is_file(file_system_input_as_str)) {
-        switch (
-            fs_js
-                .parse_fs(file_system_input_as_str)
-                .ext.toString()
-                .toLowerCase()
-        ) {
+        switch (fs_js.parse_fs(file_system_input_as_str).ext.toString().toLowerCase()) {
             case ".json":
-                switch (
-                    fs_js
-                        .parse_fs(file_system_input_as_str)
-                        .name.toString()
-                        .toLowerCase()
-                ) {
+                switch (fs_js.parse_fs(file_system_input_as_str).name.toString().toLowerCase()) {
                     case "atlasinfo":
                         return localization("atlasinfo_json") as string;
                     case "extra":
@@ -106,12 +96,7 @@ function check_evaluate_system(file_system_input_as_str: string): string {
                 return localization("local_machine_file") as never;
         }
     } else if (fs_js.is_directory(file_system_input_as_str)) {
-        switch (
-            fs_js
-                .parse_fs(file_system_input_as_str)
-                .ext.toString()
-                .toLowerCase()
-        ) {
+        switch (fs_js.parse_fs(file_system_input_as_str).ext.toString().toLowerCase()) {
             case ".res":
                 return localization("res_folder") as string;
             case ".atlas":
@@ -130,7 +115,7 @@ function check_evaluate_system(file_system_input_as_str: string): string {
                 return localization("local_machine_folder") as never;
         }
     } else {
-        throw new Error(localization("invalid_file_system"));
+        throw new ReadPathFailed(localization("invalid_file_system"), file_system_input_as_str);
     }
 }
 

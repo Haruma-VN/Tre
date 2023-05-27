@@ -7,6 +7,7 @@ import * as portal from "../../../../library/img/util.js";
 import fs_js from "../../../../library/fs/implement.js";
 import squareTrim from "../helper/square_trim.js";
 import { Console } from "../../../../callback/console.js";
+import { WrongPropertyValue } from "../../../../implement/error.js";
 
 export interface sprite_template {
     width: number;
@@ -74,7 +75,12 @@ async function atlas_pack_advanced(
     } else if (popcap_output_subgroup_name.toString().indexOf("_1200") !== -1) {
         res = "1200";
     } else {
-        throw new Error(localization("cannot_find_res_data_indicated_in_subgroup"));
+        throw new WrongPropertyValue(
+            localization("cannot_find_res_data_indicated_in_subgroup"),
+            "subgroup name",
+            directory,
+            localization("subgroup_value_should_contains"),
+        );
     }
     const img_list: Array<any> = new Array();
     for (let i in containable_pngs) {

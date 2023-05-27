@@ -11,6 +11,7 @@ import exit_program from "./default/exit.js";
 import { prompt } from "../../modules/readline/prompt/util.js";
 import { args, arguments_list } from "../implement/arguments.js";
 import get_script from "./public/exception/script.js";
+import print_error from "../implement/handler.js";
 
 export default async function (): Promise<void> {
     fs_js.encode_utf8();
@@ -130,17 +131,7 @@ export default async function (): Promise<void> {
                         try {
                             await functions(i + 1, proc_arr[i], proc_arr.length);
                         } catch (error: any) {
-                            Console.WriteLine(
-                                color.fgred_string(
-                                    !fs_js.is_host()
-                                        ? `◉ ${localization("execution_error") + ":"} ${error.message}`
-                                        : `◉ ${localization("execution_error") + ":"} ${error.message}\n◉ ${
-                                              localization("execution_thrown") + ":"
-                                          } ${`${get_script(error).functionName}() ${localization("located_in")} ${
-                                              get_script(error).fileName
-                                          }`}`,
-                                ),
-                            );
+                            print_error(error);
                             hasError = true;
                         }
                     } else {
@@ -190,17 +181,7 @@ export default async function (): Promise<void> {
         try {
             await functions(1, proc_arr, 1);
         } catch (error: any) {
-            Console.WriteLine(
-                color.fgred_string(
-                    !fs_js.is_host()
-                        ? `◉ ${localization("execution_error") + ":"} ${error.message}`
-                        : `◉ ${localization("execution_error") + ":"} ${error.message}\n◉ ${
-                              localization("execution_thrown") + ":"
-                          } ${`${get_script(error).functionName}() ${localization("located_in")} ${
-                              get_script(error).fileName
-                          }`}`,
-                ),
-            );
+            print_error(error);
             hasError = true;
         }
     }

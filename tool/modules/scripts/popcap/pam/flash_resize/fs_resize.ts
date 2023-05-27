@@ -3,6 +3,7 @@ import XMLMapping from "xml-mapping";
 import xmlButPrettier from "xml-but-prettier";
 import fs_js from "../../../../library/fs/implement.js";
 import localization from "../../../../callback/localization.js";
+import { InvalidRange } from "../../../../implement/error.js";
 export default function (folder_input: string, texture_reslution: number) {
     const reslution = parseFloat((1200 / texture_reslution) as any).toFixed(6);
     const source_list = fs_js.full_reader(`${folder_input}/LIBRARY/source`);
@@ -12,7 +13,7 @@ export default function (folder_input: string, texture_reslution: number) {
             xml_source.DOMSymbolItem.timeline.DOMTimeline.layers.DOMLayer.frames.DOMFrame.elements.DOMBitmapInstance
                 .matrix.Matrix;
         if (image_reslution == undefined) {
-            throw new Error(localization("invaild_image_reslution"));
+            throw new InvalidRange(localization("invaild_image_reslution"), folder_input);
         }
         image_reslution.a = reslution;
         image_reslution.d = reslution;

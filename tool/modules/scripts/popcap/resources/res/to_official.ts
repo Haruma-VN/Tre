@@ -17,6 +17,7 @@ class to_official extends check_resource {
         subgroup_default_parent: string,
         res_type: resolution,
         expand_path_for_array: boolean,
+        file_path: string,
     ): resource_atlas_and_sprites {
         const manifest_group_for_atlas_and_sprite: resource_atlas_and_sprites = {
             id: subgroup_parent_name,
@@ -48,21 +49,29 @@ class to_official extends check_resource {
                     (packet.packet[resource_atlas_parent[index]].data as any)[
                         resource_atlas_children_sprites_id[j_index]
                     ].default.ax,
+                    "ax",
+                    file_path,
                 );
                 this.check_integer_number(
                     (packet.packet[resource_atlas_parent[index]].data as any)[
                         resource_atlas_children_sprites_id[j_index]
                     ].default.ay,
+                    "ay",
+                    file_path,
                 );
                 this.check_integer_number(
                     (packet.packet[resource_atlas_parent[index]].data as any)[
                         resource_atlas_children_sprites_id[j_index]
                     ].default.ah,
+                    "ah",
+                    file_path,
                 );
                 this.check_integer_number(
                     (packet.packet[resource_atlas_parent[index]].data as any)[
                         resource_atlas_children_sprites_id[j_index]
                     ].default.aw,
+                    "aw",
+                    file_path,
                 );
                 manifest_group_for_atlas_and_sprite.resources.push(
                     (packet.packet[resource_atlas_parent[index]].data as any)[
@@ -78,6 +87,8 @@ class to_official extends check_resource {
                             (packet.packet[resource_atlas_parent[index]].data as any)[
                                 resource_atlas_children_sprites_id[j_index]
                             ].default.cols,
+                            "cols",
+                            file_path,
                         )
                         ? {
                               slot: 0,
@@ -107,6 +118,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.ax,
+                                      "ax",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -133,6 +146,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.ay,
+                                      "ay",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -159,6 +174,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.aw,
+                                      "aw",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -185,6 +202,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.ah,
+                                      "ah",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -211,6 +230,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.x,
+                                      "x",
+                                      file_path,
                                   )
                                       ? (packet.packet[resource_atlas_parent[index]] as any).data[
                                             resource_atlas_children_sprites_id[j_index]
@@ -230,6 +251,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.y,
+                                      "y",
+                                      file_path,
                                   )
                                       ? (packet.packet[resource_atlas_parent[index]] as any).data[
                                             resource_atlas_children_sprites_id[j_index]
@@ -267,6 +290,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.ax,
+                                      "ax",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -293,6 +318,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.ay,
+                                      "ay",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -319,6 +346,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.aw,
+                                      "aw",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -345,6 +374,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.ah,
+                                      "ah",
+                                      file_path,
                                   ) &&
                                   (packet.packet[resource_atlas_parent[index]] as any).data[
                                       resource_atlas_children_sprites_id[j_index]
@@ -371,6 +402,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.x,
+                                      "x",
+                                      file_path,
                                   )
                                       ? (packet.packet[resource_atlas_parent[index]] as any).data[
                                             resource_atlas_children_sprites_id[j_index]
@@ -390,6 +423,8 @@ class to_official extends check_resource {
                                       (packet.packet[resource_atlas_parent[index]] as any).data[
                                           resource_atlas_children_sprites_id[j_index]
                                       ].default.y,
+                                      "y",
+                                      file_path,
                                   )
                                       ? (packet.packet[resource_atlas_parent[index]] as any).data[
                                             resource_atlas_children_sprites_id[j_index]
@@ -404,6 +439,7 @@ class to_official extends check_resource {
     private static convert_file<Template extends packet_data, Value_Return extends Resource_File_Bundle>(
         res_subgroup_children: Template,
         subgroup_id: string,
+        file_path: string,
         expand_path_for_array: boolean,
         subgroup_parent?: string,
     ): Value_Return | Resource_File_Bundle {
@@ -421,7 +457,11 @@ class to_official extends check_resource {
               };
         const resource_data: Array<string> = Object.keys((res_subgroup_children as any).packet.data);
         for (let index: number = 0; index < resource_data.length; ++index) {
-            this.check_string((res_subgroup_children.packet.data as any)[resource_data[index]].type as string & any);
+            this.check_string(
+                (res_subgroup_children.packet.data as any)[resource_data[index]].type as string & any,
+                "type",
+                file_path,
+            );
             template_resource_build.resources.push(
                 (res_subgroup_children.packet.data as any)[resource_data[index]].srcpath !== undefined &&
                     (res_subgroup_children.packet.data as any)[resource_data[index]].srcpath !== null &&
@@ -468,6 +508,7 @@ class to_official extends check_resource {
     private static generate_composite<Template extends subgroup_children>(
         subgroup: Template,
         subgroup_parent: string,
+        file_input: string,
     ): composite_object {
         const composite_object: composite_object = {
             id: subgroup_parent,
@@ -480,7 +521,7 @@ class to_official extends check_resource {
                 subgroup[subgroups_keys[index]].type !== undefined &&
                     subgroup[subgroups_keys[index]].type !== null &&
                     subgroup[subgroups_keys[index]].type !== void 0 &&
-                    this.check_string(subgroup[subgroups_keys[index]].type)
+                    this.check_string(subgroup[subgroups_keys[index]].type, "type", file_input)
                     ? {
                           id: subgroups_keys[index],
                           res: subgroup[subgroups_keys[index]].type,
@@ -495,8 +536,8 @@ class to_official extends check_resource {
     public static do_process_whole<
         Res_Json_Template extends res_json,
         Resource_json_Template extends Resources_Group_Structure_Template,
-    >(res_json: Res_Json_Template): Resource_json_Template {
-        this.check_res_json(res_json);
+    >(res_json: Res_Json_Template, file_path: string): Resource_json_Template {
+        this.check_res_json(res_json, file_path);
         const resources_json: Resource_json_Template = {
             version: 1,
             content_version: 1,
@@ -514,6 +555,7 @@ class to_official extends check_resource {
                     this.generate_composite<subgroup_children>(
                         res_json.groups[subgroups_key[index]].subgroup,
                         subgroups_key[index],
+                        file_path,
                     ),
                 );
                 for (let j_index: number = 0; j_index < create_subgroup_placeholder.length; ++j_index) {
@@ -526,6 +568,8 @@ class to_official extends check_resource {
                             void 0 &&
                         this.check_string(
                             res_json.groups[subgroups_key[index]].subgroup[create_subgroup_placeholder[j_index]].type,
+                            "type",
+                            file_path,
                         )
                     ) {
                         (resources_json as any).groups.push(
@@ -538,6 +582,7 @@ class to_official extends check_resource {
                                 res_json.groups[subgroups_key[index]].subgroup[create_subgroup_placeholder[j_index]]
                                     .type as resolution & any,
                                 res_json.expand_path === "array",
+                                file_path,
                             ),
                         );
                     } else {
@@ -547,6 +592,7 @@ class to_official extends check_resource {
                                     create_subgroup_placeholder[j_index]
                                 ] as any,
                                 create_subgroup_placeholder[j_index],
+                                file_path,
                                 res_json.expand_path === "array",
                                 subgroups_key[index],
                             ),
@@ -562,6 +608,7 @@ class to_official extends check_resource {
                         this.convert_file<packet_data, Resource_File_Bundle>(
                             res_json.groups[subgroups_key[index]].subgroup[create_subgroup_placeholder[j_index]] as any,
                             create_subgroup_placeholder[j_index],
+                            file_path,
                             res_json.expand_path === "array",
                         ),
                     );
@@ -591,7 +638,7 @@ class to_official extends check_resource {
         const res_json: res_json = fs_js.read_json(file_input) as res_json;
         fs_js.write_json(
             output_file,
-            this.do_process_whole<res_json, Resources_Group_Structure_Template>(res_json),
+            this.do_process_whole<res_json, Resources_Group_Structure_Template>(res_json, file_input),
             false,
         );
     }

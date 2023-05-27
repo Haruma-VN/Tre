@@ -1,6 +1,7 @@
 "use strict";
 import localization from "../../../callback/localization.js";
 import { args } from "../../../implement/arguments.js";
+import { MissingDirectory } from "../../../implement/error.js";
 import fs_js from "../../fs/implement.js";
 
 export default async function (
@@ -8,7 +9,7 @@ export default async function (
     modelname: string = "realesrgan-x4plus-anime",
     ratio: number | string,
     new_dir?: string,
-    is_folder: boolean = false
+    is_folder: boolean = false,
 ): Promise<void> {
     const real_esrgan_exists = fs_js.check_real_esrgan();
     if (real_esrgan_exists) {
@@ -24,14 +25,16 @@ export default async function (
                     " -s " +
                     ratio +
                     " -f png",
-                fs_js.dirname(args.main_js as any) +
-                    "/extension/third/real_esrgan",
-                "ignore"
+                fs_js.dirname(args.main_js as any) + "/extension/third/real_esrgan",
+                "ignore",
             );
         } catch (error: any) {
-            throw new Error(localization("local_bug_check_debug_folder"));
+            throw new MissingDirectory(
+                localization("local_bug_check_debug_folder"),
+                fs_js.tre_thirdparty_real_esrgan_location,
+            );
         }
-        if (new_dir !== undefined) {
+        if (new_dir !== undefined && new_dir !== null && new_dir !== void 0) {
             if (is_folder) {
                 fs_js.full_reader(new_dir).forEach((item: str) => {
                     while (!fs_js.js_exists(`${new_dir}/${item}`)) {

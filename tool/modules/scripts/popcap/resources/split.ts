@@ -1,6 +1,7 @@
 "use strict";
 import localization from "../../../callback/localization.js";
 import { args } from "../../../implement/arguments.js";
+import { MissingProperty } from "../../../implement/error.js";
 import fs_js from "../../../library/fs/implement.js";
 import BeautifyRes from "./beautify/beautify.js";
 
@@ -26,7 +27,7 @@ export default async function (dir: string, json_data_if_no_dir_were_parsed?: an
     const is_beautify_mode: boolean = config.resources.split.beautify_res ? true : false;
     const directories = fs_js.parse_fs(dir).name + ".res";
     if (!("groups" in json)) {
-        throw new Error(localization("not_valid_resources"));
+        throw new MissingProperty(localization("not_valid_resources"), "groups", dir);
     }
     if ("groups" in json) {
         fs_js.create_directory(`${fs_js.dirname(dir)}/${directories}`, true);
@@ -60,6 +61,6 @@ export default async function (dir: string, json_data_if_no_dir_were_parsed?: an
         }
         return 0;
     } else {
-        throw new Error(localization("not_valid_resources"));
+        throw new MissingProperty(localization("not_valid_resources"), "groups", dir);
     }
 }

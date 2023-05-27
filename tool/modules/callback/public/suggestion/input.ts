@@ -1,4 +1,5 @@
 "use strict";
+import { RuntimeError } from "../../../implement/error.js";
 import Void from "../../function_class.js";
 import localization from "../../localization.js";
 
@@ -8,16 +9,10 @@ class input_set extends Void {
         super(name, void_number);
     }
 
-    public create_input(
-        width: number,
-        height: number,
-        atlas_count: number
-    ): string {
-        const evaluate_display = `${localization(
-            "width"
-        )}: ${width} ~ ${localization("height")}: ${height} ~ ${localization(
-            "atlas_count"
-        )}: ${atlas_count}`;
+    public create_input(width: number, height: number, atlas_count: number): string {
+        const evaluate_display = `${localization("width")}: ${width} ~ ${localization(
+            "height",
+        )}: ${height} ~ ${localization("atlas_count")}: ${atlas_count}`;
         switch (this.void_number.toString().length) {
             case 1:
                 return `      ${this.void_number}. ${evaluate_display}`;
@@ -39,7 +34,7 @@ class input_set extends Void {
     public static create_instant_void(
         mode: "notify" | "los" | "os",
         void_number: number,
-        void_name: string
+        void_name: string,
     ): string | void {
         switch (mode) {
             case "notify":
@@ -64,9 +59,7 @@ class input_set extends Void {
             case "los":
                 return;
             default:
-                throw new Error(
-                    `${localization("no_void_to_evaluate")}`
-                ) as never;
+                throw new RuntimeError(`${localization("no_void_to_evaluate")}`) as never;
         }
     }
 

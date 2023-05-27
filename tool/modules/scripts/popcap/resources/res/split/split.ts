@@ -5,8 +5,9 @@ import fs_js from "../../../../../library/fs/implement.js";
 class split_res_json extends check_resource {
     private static set_info<Template extends res_json, Value extends Output_Value>(
         res_json: Template,
+        file_path: string,
     ): Value | Output_Value {
-        this.check_res_json(res_json);
+        this.check_res_json(res_json, file_path);
         const info_json: Output_Value | Value = {
             information: {
                 expand_path: res_json.expand_path as "string" | "array",
@@ -39,7 +40,7 @@ class split_res_json extends check_resource {
     ): void {
         const groups_directory: string = `${save_directory}/groups`;
         const res_json: Template = fs_js.read_json(file_path) as Template;
-        const info_json: Output_Value = this.set_info<Template, Output_Value>(res_json);
+        const info_json: Output_Value = this.set_info<Template, Output_Value>(res_json, file_path);
         fs_js.create_directory(`${save_directory}`, true);
         fs_js.write_json(`${save_directory}/info.json`, info_json, true);
         fs_js.create_directory(groups_directory, true);

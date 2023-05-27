@@ -6,6 +6,7 @@ import rton2json from "../rton/rton2json.js";
 import fs_js from "../../../library/fs/implement.js";
 import { parse } from "../../../library/json/util.js";
 import json2rton from "../rton/json2rton.js";
+import { WrongFile } from "../../../implement/error.js";
 
 namespace PopCapPackages.Json {
     export interface PopCapCommonJSON {
@@ -26,22 +27,28 @@ namespace PopCapPackages.Json {
             case ".json":
                 return fs_js.read_json(popcap_common_json_file_location);
             case ".rton":
-                return parse(rton2json(fs_js.read_file(popcap_common_json_file_location, "buffer"), false));
+                return parse(
+                    rton2json(
+                        fs_js.read_file(popcap_common_json_file_location, "buffer"),
+                        false,
+                        undefined,
+                        popcap_common_json_file_location,
+                    ),
+                    popcap_common_json_file_location,
+                );
             default:
-                throw new Error(
-                    `${fs_js.get_full_path(popcap_common_json_file_location)} ${localization(
-                        "is_a_directory_not_a_valid_json_file",
-                    )}`,
+                throw new WrongFile(
+                    `${localization("is_a_directory_not_a_valid_json_file")}`,
+                    `${fs_js.get_full_path(popcap_common_json_file_location)}`,
                 ) as never;
         }
     }
 
     export function Split(popcap_common_json_file_location: string, popcap_split_method_selector: number): void {
         if (!fs_js.is_file(popcap_common_json_file_location)) {
-            throw new Error(
-                `${fs_js.get_full_path(popcap_common_json_file_location)} ${localization(
-                    "is_a_directory_not_a_valid_json_file",
-                )}`,
+            throw new WrongFile(
+                `${localization("is_a_directory_not_a_valid_json_file")}`,
+                `${fs_js.get_full_path(popcap_common_json_file_location)}`,
             );
         }
         const popcap_common_json = ReadJSONObject(popcap_common_json_file_location);
@@ -86,8 +93,9 @@ namespace PopCapPackages.Json {
 
     export function Cat(popcap_common_directory_file_location: string): PopCapCommonJSON | void {
         if (fs_js.is_file(popcap_common_directory_file_location)) {
-            throw new Error(
-                `${fs_js.get_full_path(popcap_common_directory_file_location)} ${localization("not_a_directory")}`,
+            throw new WrongFile(
+                `${localization("not_a_directory")}`,
+                `${fs_js.get_full_path(popcap_common_directory_file_location)}`,
             );
         }
         const popcap_in_common_jsons_list: string[] = fs_js.one_reader(popcap_common_directory_file_location);
@@ -118,7 +126,11 @@ namespace PopCapPackages.Json {
         )}`;
         file_out_type === "json"
             ? fs_js.write_json(output, create_popcap_common_json_object, false)
-            : fs_js.outfile_fs(output, json2rton(create_popcap_common_json_object, false), false);
+            : fs_js.outfile_fs(
+                  output,
+                  json2rton(create_popcap_common_json_object, false, undefined, popcap_common_directory_file_location),
+                  false,
+              );
         return;
     }
 }

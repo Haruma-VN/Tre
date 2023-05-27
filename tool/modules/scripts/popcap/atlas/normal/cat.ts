@@ -8,6 +8,7 @@ import getTrim from "../helper/trim.js";
 import fs_js from "../../../../library/fs/implement.js";
 import squareTrim from "../helper/square_trim.js";
 import { Console } from "../../../../callback/console.js";
+import { MissingProperty, WrongPropertyValue } from "../../../../implement/error.js";
 
 export type AtlasImage = {
     slot: number;
@@ -54,15 +55,15 @@ export default async function popcap_atlas_pack(
     thiz_selection_max_rects_bin_padding_size: number = 1,
 ): Promise<number> {
     const img_list = new Array();
-    const atlas_info: any = fs_js.read_json(dir + "/AtlasInfo.json");
+    const atlas_info: any = fs_js.read_json(`${dir}/AtlasInfo.json`);
     if (atlas_info.groups === undefined || atlas_info.groups === null || atlas_info.groups === void 0) {
-        throw new Error(cannot_find_groups_array_in_atlasinfo);
+        throw new MissingProperty(cannot_find_groups_array_in_atlasinfo, "groups", `${dir}/AtlasInfo.json`);
     }
     if (atlas_info.subgroup === undefined || atlas_info.subgroup === null || atlas_info.subgroup === void 0) {
-        throw new Error(cannot_find_subgroup_in_atlas_info);
+        throw new MissingProperty(cannot_find_subgroup_in_atlas_info, "subgroup", `${dir}/AtlasInfo.json`);
     }
     if (atlas_info.method === undefined || atlas_info.method === null || atlas_info.method === void 0) {
-        throw new Error(cannot_find_method_in_atlas_info);
+        throw new MissingProperty(cannot_find_method_in_atlas_info, "method", `${dir}/AtlasInfo.json`);
     }
     const is_trim_mode: boolean = "trim" in atlas_info && atlas_info.trim ? true : false;
     const is_square_trim: boolean = (fs_js.create_toolkit_view("cut_unused_space") as boolean) && !is_trim_mode;
@@ -109,7 +110,7 @@ export default async function popcap_atlas_pack(
     } else if (atlas_info.subgroup.indexOf("_1200") !== -1) {
         res = "1200";
     } else {
-        throw new Error(not_found_res_indicated_in_subgroups);
+        throw new WrongPropertyValue(not_found_res_indicated_in_subgroups, "subgroup", `${dir}/AtlasInfo.json`);
     }
     let result_json: any = {
         id: atlas_info.subgroup,

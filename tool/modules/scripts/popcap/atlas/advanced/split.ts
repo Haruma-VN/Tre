@@ -5,6 +5,7 @@ import * as color from "../../../../library/color/color.js";
 import fs_js from "../../../../library/fs/implement.js";
 import { Console } from "../../../../callback/console.js";
 import { split } from "../../../../library/img/util.js";
+import { MissingProperty } from "../../../../implement/error.js";
 
 export interface PopCapResJsonDataBundle {
     resources?: PopCapResJsonDetailInfo[];
@@ -41,7 +42,7 @@ function atlas_split_advanced(execute_file_dir: string[]): void {
             case ".json":
                 json = fs_js.read_json(execute_file_dir[i]);
                 if (json.resources === undefined) {
-                    throw new Error(localization("not_popcap_res"));
+                    throw new MissingProperty(localization("not_popcap_res"), "resources", execute_file_dir[i]);
                 }
                 directory_name = fs_js.parse_fs(execute_file_dir[i]).name + ".spg";
                 dir_sys += `${fs_js.dirname(execute_file_dir[i])}/${directory_name}`;

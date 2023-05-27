@@ -2,27 +2,36 @@
 import check_resource from "../check.js";
 import fs_js from "../../../../../library/fs/implement.js";
 import localization from "../../../../../callback/localization.js";
+import { MissingDirectory, MissingFile, MissingProperty, WrongDataType } from "../../../../../implement/error.js";
 
 interface res_for_work extends small_bundle_info_json {
     group_parent: string;
 }
 
 class merge_res_json extends check_resource {
-    private static check_info_json<Template extends Output_Value>(res_json: Template): res_json is Template {
+    private static check_info_json<Template extends Output_Value>(
+        res_json: Template,
+        file_path: string,
+    ): res_json is Template {
         if (!("information" in res_json)) {
-            throw new Error(localization("property_information_is_null"));
+            throw new MissingProperty(localization("property_information_is_null"), "information", file_path);
         }
         if (!("expand_path" in res_json.information)) {
-            throw new Error(localization("property_expand_path_is_null"));
+            throw new MissingProperty(localization("property_expand_path_is_null"), "expand_path", file_path);
         }
         if (res_json.information.expand_path !== "array" && res_json.information.expand_path !== "string") {
-            throw new Error(localization("property_expand_path_does_not_meet_requirement"));
+            throw new WrongDataType(
+                localization("property_expand_path_does_not_meet_requirement"),
+                "expand_path",
+                file_path,
+                localization("expected_expand_path_must_be_an_array_or_string"),
+            );
         }
         if (!("groups" in res_json)) {
-            throw new Error(localization("property_groups_is_null"));
+            throw new MissingProperty(localization("property_groups_is_null"), "groups", file_path);
         }
         if (!Array.isArray(res_json.groups)) {
-            throw new Error(localization("property_groups_is_not_type_of_list"));
+            throw new WrongDataType(localization("property_groups_is_not_type_of_list"), "groups", file_path, "array");
         }
         return true;
     }
@@ -31,33 +40,39 @@ class merge_res_json extends check_resource {
         file_path: string,
     ): res_json is Template {
         if (!("is_composite" in res_json)) {
-            fs_js.exception_thrown(file_path);
-            throw new Error(localization("property_is_composite_is_null"));
+            throw new MissingProperty(localization("property_is_composite_is_null"), "is_composite", file_path);
         }
         if (typeof res_json.is_composite !== "boolean") {
-            fs_js.exception_thrown(file_path);
-            throw new Error(localization("property_is_composite_is_not_type_of_boolean"));
+            throw new WrongDataType(
+                localization("property_is_composite_is_not_type_of_boolean"),
+                "is_composite",
+                file_path,
+                "boolean",
+            );
         }
         if (!("subgroups" in res_json)) {
-            fs_js.exception_thrown(file_path);
-            throw new Error(localization("property_is_subgroups_is_null"));
+            throw new MissingProperty(localization("property_is_subgroups_is_null"), "subgroups", file_path);
         }
         if (!Array.isArray(res_json.subgroups)) {
-            fs_js.exception_thrown(file_path);
-            throw new Error(localization("property_is_subgroups_is_not_type_of_list"));
+            throw new WrongDataType(
+                localization("property_is_subgroups_is_not_type_of_list"),
+                "subgroups",
+                file_path,
+                "array",
+            );
         }
         return true;
     }
     private static check_directory_info(directory_path: string): void {
         if (!fs_js.js_exists(`${directory_path}`)) {
-            throw new Error(`${localization("does_not_exists")} ${directory_path}`);
+            throw new MissingDirectory(`${localization("does_not_exists")}`, directory_path);
         }
         if (!fs_js.js_exists(`${directory_path}/info.json`)) {
-            throw new Error(`${localization("does_not_exists")} ${`${directory_path}/info.json`}`);
+            throw new MissingFile(`${localization("does_not_exists")}`, `${directory_path}/info.json`);
         }
         const groups_directory: string = `${directory_path}/groups`;
         if (!fs_js.js_exists(groups_directory)) {
-            throw new Error(`${localization("does_not_exists")} ${groups_directory}`);
+            throw new MissingDirectory(`${localization("does_not_exists")}`, groups_directory);
         }
         return;
     }
@@ -65,13 +80,13 @@ class merge_res_json extends check_resource {
         for (const dir of groups) {
             const save_path: string = `${directory}/${dir}`;
             if (!fs_js.js_exists(save_path)) {
-                throw new Error(`${localization("does_not_exists")} ${save_path}`);
+                throw new MissingDirectory(`${localization("does_not_exists")}`, save_path);
             }
             if (!fs_js.js_exists(`${save_path}/data.json`)) {
-                throw new Error(`${localization("does_not_exists")} ${`${save_path}/data.json`}`);
+                throw new MissingFile(`${localization("does_not_exists")}`, `${save_path}/data.json`);
             }
             if (!fs_js.js_exists(`${save_path}/subgroup`)) {
-                throw new Error(`${localization("does_not_exists")} ${`${save_path}/subgroup`}`);
+                throw new MissingDirectory(`${localization("does_not_exists")}`, `${save_path}/subgroup`);
             }
         }
         return;
@@ -83,8 +98,10 @@ class merge_res_json extends check_resource {
     ): void {
         for (const group of groups_inventory.subgroups) {
             if (!fs_js.js_exists(`${group_directory}/${group_directory_name}/subgroup/${group}.json`)) {
-                fs_js.exception_thrown(`${group_directory}/${group_directory_name}/subgroup/${group}.json`);
-                throw new Error(localization("does_not_exists"));
+                throw new MissingFile(
+                    localization("does_not_exists"),
+                    `${group_directory}/${group_directory_name}/subgroup/${group}.json`,
+                );
             }
         }
         return;
@@ -96,7 +113,7 @@ class merge_res_json extends check_resource {
     ): void {
         this.check_directory_info(directory_path);
         const info_json_information: Template = fs_js.read_json(`${directory_path}/info.json`) as Template;
-        this.check_info_json<Output_Value>(info_json_information);
+        this.check_info_json<Output_Value>(info_json_information, `${directory_path}/info.json`);
         const res_json: res_json = {
             expand_path: info_json_information.information.expand_path as "array" | "string",
             groups: {},

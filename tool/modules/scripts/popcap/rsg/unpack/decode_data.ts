@@ -8,7 +8,7 @@ export default function decode_data(
     data: Buffer,
     simple_mode: boolean | { decode_rton: boolean; decode_pam: boolean; decode_bnk: boolean; decode_texture: boolean },
     rsg_path: string,
-    item_path: string
+    item_path: string,
 ): {
     item_path: string;
     decode_data: Buffer | null;
@@ -44,14 +44,14 @@ export default function decode_data(
                     if (check_rijndeal) {
                         return {
                             item_path,
-                            decode_data: rton_2_json(data, true, true),
+                            decode_data: rton_2_json(data, true, true, item_path),
                             json_data: null,
                             rton_encrypted: true,
                         };
                     } else {
                         return {
                             item_path,
-                            decode_data: rton_2_json(data, false, true),
+                            decode_data: rton_2_json(data, false, true, item_path),
                             json_data: null,
                             rton_encrypted: false,
                         };
@@ -61,7 +61,7 @@ export default function decode_data(
                 }
             case ".pam":
                 if (decode_pam) {
-                    const animation_json: any = pam_json_decode(data);
+                    const animation_json: any = pam_json_decode(data, item_path);
                     if (pam_to_xfl) {
                         item_path = item_path + ".XFL";
                         const animation_path: string = `${rsg_path}/res/${item_path}`;

@@ -1,18 +1,23 @@
 "use strict";
 import localization from "../../../callback/localization.js";
-import { fgred_string } from "../../../library/color/color.js";
 import rton_cipher from "./rijndael/rton_cipher.js";
 import fs_js from "../../../library/fs/implement.js";
 import { args } from "../../../implement/arguments.js";
 import { Console } from "../../../callback/console.js";
 import * as color from "../../../library/color/color.js";
+import { UnsupportedDataType } from "../../../implement/error.js";
 /**
  *
  * @param json_data - Nhận json đã parse;
  * @param cipher - Nhập boolean cipher rton;
  * @returns - Buffer rton;
  */
-export default function (json_data: object, cipher: boolean, disable_execute_information: boolean = false): Buffer {
+export default function (
+    json_data: object,
+    cipher: boolean,
+    disable_execute_information: boolean = false,
+    original_file_path: string,
+): Buffer {
     const cached_strings: any = new Object();
     let cache_index: number = 0;
     const root_rton_w: Array<any> = [Buffer.from("RTON\x01\0\0\0")];
@@ -24,8 +29,9 @@ export default function (json_data: object, cipher: boolean, disable_execute_inf
     root_rton_w.push(Buffer.from("DONE"));
     const rton_data: Buffer = Buffer.concat(root_rton_w);
     if (cipher) {
-        const rton_cipher_key: string = (fs_js.read_json(fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json", true) as any)
-            .popcap_rton_conversion.rton.rton_cipher;
+        const rton_cipher_key: string = (
+            fs_js.read_json(fs_js.dirname(args.main_js as any) + "/extension/settings/toolkit.json", true) as any
+        ).popcap_rton_conversion.rton.rton_cipher;
         if (!disable_execute_information) {
             Console.WriteLine(color.fggreen_string(`◉ ${localization("execution_key")}: `) + rton_cipher_key);
         }
@@ -59,7 +65,7 @@ export default function (json_data: object, cipher: boolean, disable_execute_inf
                     return encode_object(value as any);
                 }
             default:
-                throw new Error(fgred_string("◉ " + localization("excecution_exception"), value));
+                throw new UnsupportedDataType(`${localization("excecution_exception")} ${value}`, original_file_path);
         }
     }
     function encode_array(value: Array<any>): Buffer {
@@ -99,7 +105,10 @@ export default function (json_data: object, cipher: boolean, disable_execute_inf
     function encode_float(dec: number): Buffer {
         if (dec === 0) {
             return Buffer.from([0x23]);
-        } else if ((-340282346638528859811704183484516925440n <= dec && dec <= 340282346638528859811704183484516925440n) || check_infinity(dec)) {
+        } else if (
+            (-340282346638528859811704183484516925440n <= dec && dec <= 340282346638528859811704183484516925440n) ||
+            check_infinity(dec)
+        ) {
             const floatle: Buffer = Buffer.alloc(4);
             floatle.writeFloatLE(dec);
             return Buffer.from([0x22, ...floatle]);
@@ -161,7 +170,11 @@ export default function (json_data: object, cipher: boolean, disable_execute_inf
         return result;
     }
     function encode_unicode(str: string) {
-        return Buffer.from([...encode_number(Buffer.byteLength(str)), ...encode_number(Buffer.byteLength(str)), ...Buffer.from(str)]);
+        return Buffer.from([
+            ...encode_number(Buffer.byteLength(str)),
+            ...encode_number(Buffer.byteLength(str)),
+            ...Buffer.from(str),
+        ]);
     }
     function encode_rtid(str: string): Buffer {
         if (str.includes("@")) {

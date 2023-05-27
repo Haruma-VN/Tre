@@ -1,11 +1,13 @@
 "use strict";
 import localization from "../../../../callback/localization.js";
+import { WrongDataType } from "../../../../implement/error.js";
 import fs_js from "../../../../library/fs/implement.js";
 import check_resource from "./check.js";
 
 class resource_conversion extends check_resource {
     public static check_path_type<Template extends Resources_Group_Structure_Template>(
         resource_json: Template,
+        file_path: string,
     ): "array" | "string" {
         for (let index: number = 0; index < resource_json.groups.length; ++index) {
             if ("resources" in resource_json.groups[index]) {
@@ -21,12 +23,18 @@ class resource_conversion extends check_resource {
                 }
             }
         }
-        throw new Error(localization("path_is_invalid"));
+        throw new WrongDataType(
+            localization("path_is_invalid"),
+            "path",
+            file_path,
+            localization("expected_path_must_be_an_array_or_string"),
+        );
     }
     private static convert_file<Template extends Resource_Structure_Template, Value extends subgroup_children>(
         sub_resource_data: Template,
+        file_path: string,
     ): Value {
-        this.check_whole_data(sub_resource_data);
+        this.check_whole_data(sub_resource_data, file_path);
         const res_json_conversion: Value = {
             [sub_resource_data.id]: {
                 type: null,
@@ -68,8 +76,11 @@ class resource_conversion extends check_resource {
         }
         return res_json_conversion;
     }
-    private static convert_img<Template extends Resource_Structure_Template>(sub_resource_data: Template): sprite_data {
-        this.check_img_data<Resource_Structure_Template>(sub_resource_data);
+    private static convert_img<Template extends Resource_Structure_Template>(
+        sub_resource_data: Template,
+        file_path: string,
+    ): sprite_data {
+        this.check_img_data<Resource_Structure_Template>(sub_resource_data, file_path);
         const res_json_conversion: sprite_data = {
             [sub_resource_data.id]: {
                 type: sub_resource_data.res !== undefined ? (sub_resource_data.res as resolution) : null,
@@ -99,7 +110,11 @@ class resource_conversion extends check_resource {
                                     sub_resource_data.resources[j_index].ax !== undefined &&
                                     sub_resource_data.resources[j_index].ax !== null &&
                                     sub_resource_data.resources[j_index].ax !== void 0 &&
-                                    this.check_integer_number(sub_resource_data.resources[j_index].ax as number) &&
+                                    this.check_integer_number(
+                                        sub_resource_data.resources[j_index].ax as number,
+                                        "ax",
+                                        file_path,
+                                    ) &&
                                     (sub_resource_data.resources[j_index].ax as number) > 0
                                         ? sub_resource_data.resources[j_index].ax
                                         : Math.abs(sub_resource_data.resources[j_index].ax as number),
@@ -107,7 +122,11 @@ class resource_conversion extends check_resource {
                                     sub_resource_data.resources[j_index].ay !== undefined &&
                                     sub_resource_data.resources[j_index].ay !== null &&
                                     sub_resource_data.resources[j_index].ay !== void 0 &&
-                                    this.check_integer_number(sub_resource_data.resources[j_index].ay as number) &&
+                                    this.check_integer_number(
+                                        sub_resource_data.resources[j_index].ay as number,
+                                        "ay",
+                                        file_path,
+                                    ) &&
                                     (sub_resource_data.resources[j_index].ay as number) > 0
                                         ? sub_resource_data.resources[j_index].ay
                                         : Math.abs(sub_resource_data.resources[j_index].ay as number),
@@ -115,7 +134,11 @@ class resource_conversion extends check_resource {
                                     sub_resource_data.resources[j_index].aw !== undefined &&
                                     sub_resource_data.resources[j_index].aw !== null &&
                                     sub_resource_data.resources[j_index].aw !== void 0 &&
-                                    this.check_integer_number(sub_resource_data.resources[j_index].aw as number) &&
+                                    this.check_integer_number(
+                                        sub_resource_data.resources[j_index].aw as number,
+                                        "aw",
+                                        file_path,
+                                    ) &&
                                     (sub_resource_data.resources[j_index].aw as number) > 0
                                         ? sub_resource_data.resources[j_index].aw
                                         : Math.abs(sub_resource_data.resources[j_index].aw as number),
@@ -123,7 +146,11 @@ class resource_conversion extends check_resource {
                                     sub_resource_data.resources[j_index].ah !== undefined &&
                                     sub_resource_data.resources[j_index].ah !== null &&
                                     sub_resource_data.resources[j_index].ah !== void 0 &&
-                                    this.check_integer_number(sub_resource_data.resources[j_index].ah as number) &&
+                                    this.check_integer_number(
+                                        sub_resource_data.resources[j_index].ah as number,
+                                        "ah",
+                                        file_path,
+                                    ) &&
                                     (sub_resource_data.resources[j_index].ah as number) > 0
                                         ? sub_resource_data.resources[j_index].ah
                                         : Math.abs(sub_resource_data.resources[j_index].ah as number),
@@ -131,14 +158,22 @@ class resource_conversion extends check_resource {
                                     sub_resource_data.resources[j_index].x !== undefined &&
                                     sub_resource_data.resources[j_index].x !== null &&
                                     sub_resource_data.resources[j_index].x !== void 0 &&
-                                    this.check_integer_number(sub_resource_data.resources[j_index].x as number)
+                                    this.check_integer_number(
+                                        sub_resource_data.resources[j_index].x as number,
+                                        "x",
+                                        file_path,
+                                    )
                                         ? sub_resource_data.resources[j_index].x
                                         : 0,
                                 y:
                                     sub_resource_data.resources[j_index].y !== undefined &&
                                     sub_resource_data.resources[j_index].y !== null &&
                                     sub_resource_data.resources[j_index].y !== void 0 &&
-                                    this.check_integer_number(sub_resource_data.resources[j_index].y as number)
+                                    this.check_integer_number(
+                                        sub_resource_data.resources[j_index].y as number,
+                                        "y",
+                                        file_path,
+                                    )
                                         ? sub_resource_data.resources[j_index].y
                                         : 0,
                                 cols: sub_resource_data.resources[j_index].cols,
@@ -157,10 +192,11 @@ class resource_conversion extends check_resource {
     }
     public static do_process_whole<Template extends Resources_Group_Structure_Template, Value_Return extends res_json>(
         resources_group: Template,
+        file_path: string,
     ): Value_Return {
-        this.check_official<Template>(resources_group);
+        this.check_official<Template>(resources_group, file_path);
         const res_json: Value_Return = {
-            expand_path: this.check_path_type<Resources_Group_Structure_Template>(resources_group),
+            expand_path: this.check_path_type<Resources_Group_Structure_Template>(resources_group, file_path),
             groups: {},
         } as Value_Return;
         const subgroups_parent_containers: Array<{
@@ -222,6 +258,7 @@ class resource_conversion extends check_resource {
                                       resources_group.groups.filter(
                                           (res) => res.id === subgroup_list[j_index][k_index].name,
                                       )[0] as any,
+                                      file_path,
                                   ),
                               )[0]
                             : (Object.values(
@@ -229,6 +266,7 @@ class resource_conversion extends check_resource {
                                       resources_group.groups.filter(
                                           (res) => res.id === subgroup_list[j_index][k_index].name,
                                       )[0] as any,
+                                      file_path,
                                   ) as any,
                               )[0] as any);
                 }
@@ -241,6 +279,7 @@ class resource_conversion extends check_resource {
             };
             res_json.groups[subgroups_independent_construct[index]].subgroup = this.convert_file(
                 resources_group.groups.filter((res) => res.id === subgroups_independent_construct[index])[0],
+                file_path,
             );
         }
         return res_json;
@@ -252,7 +291,7 @@ class resource_conversion extends check_resource {
         const resource_json: Required_Template = fs_js.read_json(file_input) as Required_Template;
         fs_js.write_json(
             output_file,
-            this.do_process_whole<Required_Template, Res_JSON_Structure>(resource_json),
+            this.do_process_whole<Required_Template, Res_JSON_Structure>(resource_json, file_input),
             not_notify,
         );
     }

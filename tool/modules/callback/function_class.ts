@@ -1,14 +1,23 @@
 "use strict";
 import localization from "./localization.js";
 import { Console } from "./console.js";
+import { FunctionNumberCannotBeSmallerThanZero, MissingPropertySpecializeFunctionJSON } from "../implement/error.js";
+import fs_js from "../library/fs/implement.js";
 
 export default class Void {
     static count_void: number = 0;
 
-    constructor(protected name: string, protected void_number: number, private filter?: Array<string>, private allow?: boolean) {
+    constructor(
+        protected name: string,
+        protected void_number: number,
+        private filter?: Array<string>,
+        private allow?: boolean,
+    ) {
         Void.count_void++;
         if (this.void_number < 0) {
-            throw new Error(`${name} ${localization("function_num_cannot_smaller_than_zero")}`);
+            throw new FunctionNumberCannotBeSmallerThanZero(
+                `${name} ${localization("function_num_cannot_smaller_than_zero")}`,
+            );
         }
     }
 
@@ -52,7 +61,12 @@ export default class Void {
         if (this.filter !== undefined && this.filter !== null && this.filter !== void 0) {
             return this.filter;
         } else {
-            throw new Error(`${this.name} ${localization("not_having_property_filter")}`);
+            throw new MissingPropertySpecializeFunctionJSON(
+                `${this.name} ${localization("not_having_property_filter")}`,
+                "filter",
+                fs_js.functions_json_location,
+                this.name,
+            );
         }
     }
 
@@ -60,7 +74,12 @@ export default class Void {
         if (this.allow !== undefined && this.allow !== null && this.allow !== void 0) {
             return this.allow;
         } else {
-            throw new Error(`${this.name} ${localization("not_having_property_allow")}`);
+            throw new MissingPropertySpecializeFunctionJSON(
+                `${this.name} ${localization("not_having_property_allow")}`,
+                "allow",
+                fs_js.functions_json_location,
+                this.name,
+            );
         }
     }
     //#endregion

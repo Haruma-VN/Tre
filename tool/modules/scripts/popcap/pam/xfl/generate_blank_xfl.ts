@@ -46,6 +46,7 @@ export default async function (path: string, number_sprites: number): Promise<vo
     pam_xfl_decode(pam_json, pam_path, 1536, true);
     atlasinfo_conduct(
         path,
+        resource_build_json_directory,
         `${path}/Atlasinfo.json`,
         fs_js.read_json(resource_build_json_directory),
         false,

@@ -1,4 +1,5 @@
 "use strict";
+import { ModuleNotFound } from "../implement/error.js";
 import evaluate_modules_workspace_assertation from "./evaluate_modules_workspace_assertation.js";
 import localization from "./localization.js";
 import { Display } from "./toolkit_functions.js";
@@ -386,7 +387,7 @@ async function create_evaluate_argument(
             );
             break;
         default:
-            throw new Error(`${localization("cannot_find_module")}`) as never;
+            throw new ModuleNotFound(`${localization("cannot_find_module")}`, "undefined") as never;
     }
     return;
 }

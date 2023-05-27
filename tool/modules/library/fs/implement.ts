@@ -12,6 +12,17 @@ import dataview_checker from "../../callback/default/checker.js";
 import { execSync } from "child_process";
 import { Console } from "../../callback/console.js";
 import { args, arguments_list } from "../../implement/arguments.js";
+import {
+    CannotReadFileSystem,
+    CannotWriteFile,
+    DimensionError,
+    ExtensionDoesNotMeetsRequirement,
+    JSONParseSyntaxError,
+    JoinImageError,
+    MissingFile,
+    RuntimeError,
+    UnknownFormat,
+} from "../../implement/error.js";
 interface FrameData {
     getImage: () => NodeJS.ReadableStream;
 }
@@ -52,11 +63,7 @@ class fs_js {
                 flag: "w",
             });
         } catch (error: auto) {
-            throw new Error(
-                `${localization("Write")} ${this.get_full_path(file_system_path)} ${localization(
-                    "failed",
-                )}, ${localization("code")} ${error.message}`,
-            );
+            throw new CannotWriteFile(`${error.message}`, file_system_path);
         }
         return;
         //#endregion
@@ -88,11 +95,7 @@ class fs_js {
                     return fs.readFileSync(file_system_path) as never;
             }
         } catch (error: auto) {
-            throw new Error(
-                `${localization("Read")} ${this.get_full_path(file_system_path)} ${localization(
-                    "failed",
-                )}, ${localization("code")} ${error.message}`,
-            );
+            throw new CannotReadFileSystem(error.message, file_system_path, "file");
         }
         //#endregion
     }
@@ -108,21 +111,22 @@ class fs_js {
     public static read_json(file_system_path: string, file_system_force_reading_trailing_commas: bool = true): {} {
         //#region
         if (!this.js_exists(file_system_path)) {
-            throw new Error(`${localization("does_not_exists")} ${this.resolve(file_system_path)}`);
+            throw new MissingFile(`${localization("does_not_exists")}`, `${this.resolve(file_system_path)}`);
         }
         if (!this.is_json_extension(file_system_path)) {
-            throw new Error(
-                `${this.get_full_path(`${file_system_path}`)} ${localization("not_having_extension_json")}`,
+            throw new ExtensionDoesNotMeetsRequirement(
+                `${localization("not_having_extension_json")}`,
+                `${this.get_full_path(`${file_system_path}`)}`,
             );
         }
         try {
-            return js_json.parse(this.read_file(file_system_path, "utf8"), file_system_force_reading_trailing_commas);
-        } catch (error: auto) {
-            throw new Error(
-                `${localization("Read")} ${this.get_full_path(file_system_path)} ${localization(
-                    "failed",
-                )}, ${localization("the_json_might_be_corrupted")} ${error.message as evaluate_error}`,
+            return js_json.parse(
+                this.read_file(file_system_path, "utf8"),
+                file_system_path,
+                file_system_force_reading_trailing_commas,
             );
+        } catch (error: auto) {
+            throw new JSONParseSyntaxError(`${error.message as evaluate_error}`, file_system_path);
         }
         //#endregion
     }
@@ -195,8 +199,10 @@ class fs_js {
         if (this.js_exists(file_system_file_path_as_string)) {
             return fs.statSync(file_system_file_path_as_string);
         } else {
-            throw new Error(
-                `${localization("cannot_specify_the_path")} ${this.get_full_path(file_system_file_path_as_string)}`,
+            throw new CannotReadFileSystem(
+                `${localization("cannot_specify_the_path")}`,
+                `${this.get_full_path(file_system_file_path_as_string)}`,
+                "unknown",
             );
         }
     }
@@ -207,10 +213,10 @@ class fs_js {
         if (this.js_exists(file_system_directory_input_as_string)) {
             return this.view_io_stream(file_system_directory_input_as_string).isFile();
         } else {
-            throw new Error(
-                `${localization("cannot_specify_the_path")} ${this.get_full_path(
-                    file_system_directory_input_as_string,
-                )}`,
+            throw new CannotReadFileSystem(
+                `${localization("cannot_specify_the_path")}`,
+                `${this.get_full_path(file_system_directory_input_as_string)}`,
+                "unknown",
             );
         }
 
@@ -226,10 +232,10 @@ class fs_js {
                 !this.view_io_stream(file_system_directory_input_as_string).isFile()
             );
         } else {
-            throw new Error(
-                `${localization("cannot_specify_the_path")} ${this.get_full_path(
-                    file_system_directory_input_as_string,
-                )}`,
+            throw new CannotReadFileSystem(
+                `${localization("cannot_specify_the_path")}`,
+                `${this.get_full_path(file_system_directory_input_as_string)}`,
+                "unknown",
             );
         }
 
@@ -292,11 +298,7 @@ class fs_js {
         try {
             return fs.readdirSync(file_system_path);
         } catch (error: auto) {
-            throw new Error(
-                `${localization("cannot_read_the_path")} ${this.get_full_path(file_system_path)}, ${localization(
-                    "code",
-                )} ${error.message}`,
-            );
+            throw new CannotReadFileSystem(`${error.message}`, `${file_system_path}`, "directory");
         }
         //#endregion
     }
@@ -333,7 +335,7 @@ class fs_js {
             flags: "w",
         });
         create_write_stream_fs_js.on("error", (error: auto) => {
-            throw new Error(`${this.throw_error(`${localization("write_failed")} ${error.message as string}`)}`);
+            throw new CannotWriteFile(`${error.message as string}`, file_system_static_path);
         });
         create_write_stream_fs_js.write(file_system_write_data_view);
         create_write_stream_fs_js.close();
@@ -534,14 +536,20 @@ class fs_js {
                     [height_output_as_property]: dimension_image.height as number,
                 };
             } else {
-                throw new Error(
+                throw new DimensionError(
                     `${localization("cannot_get")} ${this.get_full_path(file_system_input_path)} ${localization(
                         "dimension",
                     )}`,
+                    file_system_input_path,
+                    "width",
                 );
             }
         } else {
-            throw new Error(`${localization("cannot_read")} ${this.get_full_path(file_system_input_path)}`);
+            throw new CannotReadFileSystem(
+                `${localization("cannot_read")}`,
+                `${this.get_full_path(file_system_input_path)}`,
+                "file",
+            );
         }
 
         //#endregion
@@ -563,14 +571,20 @@ class fs_js {
                     [height_output_as_property]: height as number,
                 };
             } else {
-                throw new Error(
+                throw new DimensionError(
                     `${localization("cannot_get")} ${this.get_full_path(file_system_input_path)} ${localization(
                         "dimension",
                     )}`,
+                    file_system_input_path,
+                    "height",
                 );
             }
         } else {
-            throw new Error(`${localization("cannot_read")} ${this.get_full_path(file_system_input_path)}`);
+            throw new CannotReadFileSystem(
+                `${localization("cannot_read")}`,
+                `${this.get_full_path(file_system_input_path)}`,
+                "file",
+            );
         }
 
         //#endregion
@@ -730,7 +744,7 @@ class fs_js {
                 );
             };
             img_composite.onerror = function (error: auto) {
-                throw new Error(`${localization("cannot_pack_image_because")} ${error.message as evaluate_error}`);
+                throw new JoinImageError(`${error.message as evaluate_error}`, file_system_directory_file_path_output);
             };
             img_composite.src = fs_js.read_file(file_system_assertation_array[i].input, "buffer");
         }
@@ -927,7 +941,7 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    protected static readonly tre_thirdparty_real_esrgan_location =
+    public static readonly tre_thirdparty_real_esrgan_location =
         path.dirname(args.main_js as any) + "/extension/third/real_esrgan";
 
     public static check_real_esrgan(file_system_real_esrgan_third_default_path?: string): bool {
@@ -1131,14 +1145,14 @@ class fs_js {
 
     /*-------------------------------------------------------------------------------------------------*/
 
-    public static create_dimension_validate(evaluate_width: number, evaluate_height: number): bool {
+    public static create_dimension_validate(evaluate_width: number, evaluate_height: number, file_path: string): bool {
         //#region
         if (evaluate_width <= 1 || evaluate_width >= 16384) {
-            throw new Error(`${localization("width_not_in_range_1_to_16384")}`);
+            throw new DimensionError(`${localization("width_not_in_range_1_to_16384")}`, file_path, "width");
         }
 
         if (evaluate_height <= 1 || evaluate_height >= 16384) {
-            throw new Error(`${localization("height_not_in_range_1_to_16384")}`);
+            throw new DimensionError(`${localization("height_not_in_range_1_to_16384")}`, file_path, "height");
         }
 
         return true;
@@ -1156,6 +1170,7 @@ class fs_js {
         const create_dimension_validator: bool = this.create_dimension_validate(
             create_image_dimension_view.width,
             create_image_dimension_view.height,
+            evaluate_file_system_as_string,
         );
         if (create_dimension_validator) {
             return true;
@@ -1461,6 +1476,7 @@ class fs_js {
         const create_validate: bool = this.create_dimension_validate(
             create_sharp_data_view.width,
             create_sharp_data_view.height,
+            file_input_as_string,
         );
 
         if (create_validate) {
@@ -1473,11 +1489,11 @@ class fs_js {
             }
         }
         if (!is_valid_width) {
-            throw new Error(`${localization("width_not_filled")}`);
+            throw new DimensionError(`${localization("width_not_filled")}`, file_input_as_string, "width");
         }
 
         if (!is_valid_height) {
-            throw new Error(`${localization("height_not_filled")}`);
+            throw new DimensionError(`${localization("height_not_filled")}`, file_input_as_string, "height");
         }
         return is_valid_height && is_valid_width;
 
@@ -1513,11 +1529,7 @@ class fs_js {
         };
         img_canvas.onerror = function (err: auto) {
             if (err as auto) {
-                throw new Error(
-                    `${localization("cannot_resize")} ${fs_js.get_full_path(
-                        `${file_system_path_for_image_as_string}`,
-                    )}, ${localization("code")} ${err.message as string}`,
-                );
+                throw new CannotWriteFile(`${err.message as string}`, file_system_path_for_image_as_string);
             }
         };
         img_canvas.src = fs_js.read_file(file_system_path_for_image_as_string, "buffer");
@@ -1621,7 +1633,7 @@ class fs_js {
         if (arguments_list.length >= 2) {
             return this.create_assertation(arguments_list);
         } else {
-            throw new Error(`${localization("assertation_failed")}: arguments_list.length >= 2`);
+            throw new RuntimeError(`${localization("assertation_failed")}: arguments_list.length >= 2`);
         }
 
         //#endregion
@@ -2008,7 +2020,7 @@ class fs_js {
             );
             return urls;
         } catch (error: any) {
-            throw new Error(error as str);
+            throw new UnknownFormat<string>(error.message as str, file_system_input_path, error, "undefined");
         }
         //#endregion
     }
@@ -2360,6 +2372,18 @@ class fs_js {
 
     public static exception_thrown(error: string): void {
         Console.WriteLine(color.fgred_string(`◉ ${localization("execution_thrown") + ":\n"}     ${error}`));
+    }
+
+    public static execution_exception_type(error: string): void {
+        Console.WriteLine(color.fgred_string(`◉ ${localization("execution_error_type") + ": "}${error}`));
+    }
+
+    public static execution_load(file_path: string) {
+        Console.WriteLine(color.fgred_string(`◉ ${localization("execution_actual_size") + ":\n"}     ${file_path}`));
+    }
+
+    public static execution_error(error: string): void {
+        Console.WriteLine(color.fgred_string(`◉ ${localization("execution_error") + ": "}${error}`));
     }
 }
 

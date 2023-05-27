@@ -10,6 +10,7 @@ import rton_to_json from "../rton/rton2json.js";
 import fs_js from "../../../library/fs/implement.js";
 import { parse } from "../../../library/json/util.js";
 import repair from "./repair/pvz2c_path.js";
+import { MissingProperty } from "../../../implement/error.js";
 
 export function LocalResourcesCompare(vanilla_directory: string, modded_directory: string) {
     local_res_compare(vanilla_directory, modded_directory);
@@ -19,7 +20,7 @@ export function res_split(dir: string) {
     let json: any;
 
     if (fs_js.parse_fs(dir).ext.toString().toLowerCase() === ".rton") {
-        json = parse(rton_to_json(fs_js.read_file(dir, "buffer"), false));
+        json = parse(rton_to_json(fs_js.read_file(dir, "buffer"), false, undefined, dir), dir);
     } else {
         json = fs_js.read_json(dir as string);
     }
@@ -27,7 +28,7 @@ export function res_split(dir: string) {
     if ("groups" in json) {
         split(dir, json);
     } else {
-        throw new Error(localization("not_valid_resources"));
+        throw new MissingProperty(localization("not_valid_resources"), "groups", dir);
     }
 }
 
@@ -109,5 +110,5 @@ export function RepairPvZ2CResourcesPath(file_path: string, file_output?: string
         file_output = `${fs_js.dirname(file_path)}/RESOURCES.Repair.json`;
     }
     const res_json: any = fs_js.read_json(file_path);
-    fs_js.write_json(file_output, repair(res_json), false);
+    fs_js.write_json(file_output, repair(res_json, file_path), false);
 }

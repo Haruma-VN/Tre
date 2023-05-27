@@ -64,6 +64,7 @@ import popcap_res_to_resource from "../scripts/popcap/resources/res/to_official.
 import js_evaluate from "./jsshell.js";
 import merge_res_json from "../scripts/popcap/resources/res/merge/merge.js";
 import split_res_json from "../scripts/popcap/resources/res/split/split.js";
+import { EvaluateError, FrameRateIncreasementError, MissingFileRequirement } from "../implement/error.js";
 
 /**
  *
@@ -336,7 +337,9 @@ async function evaluate_js_modules_workspace_assertation(
                             execution_message = localization("frame_rate_ratio_x4");
                             break;
                         default:
-                            throw new Error(`${localization("failed_to_read_frame_rate_argument")}`) as never;
+                            throw new FrameRateIncreasementError(
+                                `${localization("failed_to_read_frame_rate_argument")}`,
+                            ) as never;
                     }
                     fs_js.execution_auto(`${localization("frame_rate_increasement")} ~ ${execution_message}`);
                 }
@@ -384,7 +387,9 @@ async function evaluate_js_modules_workspace_assertation(
                                 execution_message = localization("frame_rate_ratio_x4");
                                 break;
                             default:
-                                throw new Error(`${localization("failed_to_read_frame_rate_argument")}`) as never;
+                                throw new FrameRateIncreasementError(
+                                    `${localization("failed_to_read_frame_rate_argument")}`,
+                                ) as never;
                         }
                         fs_js.execution_auto(`${localization("frame_rate_increasement")} ~ ${execution_message}`);
                     }
@@ -484,7 +489,7 @@ async function evaluate_js_modules_workspace_assertation(
                     await js_evaluate(execute_file_dir);
                 }
             } catch (error: any) {
-                throw new Error(error.message as evaluate_error);
+                throw new EvaluateError(error.message as evaluate_error);
             }
             break;
         case "popcap_resources_split" as popcap_game_edit_method:
@@ -601,10 +606,10 @@ async function evaluate_js_modules_workspace_assertation(
             break;
         case "atlas_info_constructor" as popcap_game_edit_method:
             if (!js_checker.is_array(execute_file_dir)) {
-                atlasinfo_conduct(execute_file_dir);
+                atlasinfo_conduct(execute_file_dir, `${execute_file_dir}/resource_build.json`);
             } else {
                 execute_file_dir.forEach((file) => {
-                    atlasinfo_conduct(file);
+                    atlasinfo_conduct(file, `${file}/resource_build.json`);
                 });
             }
             break;
@@ -2209,7 +2214,7 @@ async function evaluate_js_modules_workspace_assertation(
             if (js_checker.is_array(execute_file_dir) && execute_file_dir.length >= 2) {
                 atlas_split_advanced(execute_file_dir);
             } else {
-                throw new Error(`Split atlas requires to have at least 1 json & 1 png`);
+                throw new MissingFileRequirement(`${localization("atlas_split_requirement")}`);
             }
             break;
         case "atlas_info_split" as popcap_game_edit_method:
@@ -2368,7 +2373,7 @@ async function evaluate_js_modules_workspace_assertation(
                 fs_js.execution_notify("argument", color.fgcyan_string(`${localization("provide_media_directory")}`));
                 const media_path = await Console.ReadDir();
                 await animation_viewer(
-                    read_pam(fs_js.read_file(execute_file_dir, "buffer")),
+                    read_pam(fs_js.read_file(execute_file_dir, "buffer"), execute_file_dir),
                     execute_file_dir,
                     media_path,
                 );

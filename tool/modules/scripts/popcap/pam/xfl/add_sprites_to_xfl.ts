@@ -12,6 +12,7 @@ import localization from "../../../../callback/localization.js";
 import evaluate_modules_workspace_assertation from "../../../../callback/evaluate_modules_workspace_assertation.js";
 import createSprite from "./create_sprite.js";
 import { Console } from "../../../../callback/console.js";
+import { MissingFile } from "../../../../implement/error.js";
 
 export default async function (path: string, number_sprites: number) {
     const extra_json: any = fs_js.read_json(`${path}/extra.json`);
@@ -25,7 +26,10 @@ export default async function (path: string, number_sprites: number) {
         const image_name = extra_json.image[i].name.split("|")[0];
         image_list.push(image_name);
         if (!filter_source_folder.includes(image_name)) {
-            throw new Error(`Missing ${image_name} in media folder`);
+            throw new MissingFile(
+                `${localization("missing_in_media_folder").replace(/\{\}/g, image_name)}`,
+                `${path}/LIBRARY/media/${image_name}`,
+            );
         }
     }
     let source_count = 0;
@@ -94,6 +98,7 @@ export default async function (path: string, number_sprites: number) {
         const resource_build_json_directory = `${path}/LIBRARY/media/resource_build.json`;
         atlasinfo_conduct(
             `${path}/LIBRARY/media`,
+            resource_build_json_directory,
             `${path}/LIBRARY/media/Atlasinfo.json`,
             fs_js.read_json(resource_build_json_directory),
             false,

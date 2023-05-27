@@ -1,7 +1,8 @@
 "use strict";
-import {createCanvas, Image, Canvas, SKRSContext2D} from "@napi-rs/canvas";
+import { createCanvas, Image, Canvas, SKRSContext2D } from "@napi-rs/canvas";
 import fs_js from "../../fs/implement.js";
 import localization from "../../../callback/localization.js";
+import { ResizeImageError } from "../../../implement/error.js";
 export default function (
     dir: string,
     width: number | string,
@@ -21,10 +22,10 @@ export default function (
     };
     img_canvas.onerror = function (err: auto) {
         if (err as auto) {
-            throw new Error(
-                `${localization("cannot_resize")} ${fs_js.get_full_path(`${dir}`)}, ${localization("code")} ${
-                    err.message as string
-                }`
+            throw new ResizeImageError(
+                `${localization("cannot_resize")}`,
+                `${fs_js.get_full_path(`${dir}`)}`,
+                err.message,
             );
         }
     };

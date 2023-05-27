@@ -92,7 +92,12 @@ export default function (
         if (encode) {
             fs_js.outfile_fs(
                 `${fs_js.dirname(dir)}/${fs_js.parse_fs(dir).name}.rewrite.rton`,
-                json2rton(resources_output_result, false),
+                json2rton(
+                    resources_output_result,
+                    false,
+                    undefined,
+                    `${fs_js.dirname(dir)}/${fs_js.parse_fs(dir).name}.rewrite.rton`,
+                ),
                 false,
             );
         } else {

@@ -17,7 +17,10 @@ export { read_pam };
 export { add_content };
 
 export function popcap_pam_encode(file_system_data_input_argument: string): void {
-    const pam_data: Buffer = writepam(fs_js.read_json(file_system_data_input_argument));
+    const pam_data: Buffer = writepam(
+        fs_js.read_json(file_system_data_input_argument),
+        file_system_data_input_argument,
+    );
     const file_system_output: string = `${fs_js.dirname(file_system_data_input_argument)}/${
         fs_js.parse_fs(fs_js.parse_fs(file_system_data_input_argument).name).name
     }.pam`;
@@ -26,7 +29,10 @@ export function popcap_pam_encode(file_system_data_input_argument: string): void
 }
 
 export async function popcap_pam_decode(file_system_data_input_argument: string): Promise<void> {
-    const pam_data: Buffer = read_pam(await fs_js.read_file(file_system_data_input_argument, "buffer"));
+    const pam_data: Buffer = read_pam(
+        await fs_js.read_file(file_system_data_input_argument, "buffer"),
+        file_system_data_input_argument,
+    );
     const file_system_output: string = `${fs_js.dirname(file_system_data_input_argument)}/${
         fs_js.parse_fs(file_system_data_input_argument).name
     }.pam.json`;
@@ -39,13 +45,14 @@ export async function gif_to_pam(file_system_data_input_argument: string): Promi
     const gif_output_directory: string = `${fs_js.dirname(file_system_data_input_argument)}/${subgroup_name}_1536.spg`;
     const resource_build_json_directory: string = `${gif_output_directory}/resource_build.json`;
     const pam_json: structure = popcap_pam_from_gif(file_system_data_input_argument, gif_output_directory);
-    const pam_data: Buffer = writepam(pam_json);
+    const pam_data: Buffer = writepam(pam_json, file_system_data_input_argument);
     const file_system_output: string = `${fs_js.dirname(file_system_data_input_argument)}/${
         fs_js.parse_fs(file_system_data_input_argument).name
     }.pam`;
     fs_js.write_file(file_system_output, pam_data, false);
     atlasinfo_conduct(
         gif_output_directory,
+        resource_build_json_directory,
         `${gif_output_directory}/Atlasinfo.json`,
         fs_js.read_json(resource_build_json_directory) as resource_build,
         false,
@@ -65,7 +72,7 @@ export async function popcap_pam_to_flash(
     texture_reslution: number,
 ): Promise<void> {
     pamjson2pamflash(
-        read_pam(await fs_js.read_file(file_system_data_input_argument, "buffer")),
+        read_pam(await fs_js.read_file(file_system_data_input_argument, "buffer"), file_system_data_input_argument),
         file_system_data_input_argument,
         texture_reslution,
         false,
@@ -78,7 +85,7 @@ export function popcap_flash_to_pam(file_system_data_input_argument: string): vo
     const file_system_output: string = `${fs_js.dirname(file_system_data_input_argument)}/${
         fs_js.parse_fs(file_system_data_input_argument).name
     }.pam`;
-    const pam_data = writepam(pam_json);
+    const pam_data = writepam(pam_json, file_system_data_input_argument);
     fs_js.write_file(file_system_output, pam_data, false);
     return;
 }
@@ -88,7 +95,7 @@ export async function frame_rate_increasement(
     ratio: 2 | 3 | 4,
 ): Promise<void> {
     const input: string = file_system_data_input_argument;
-    const output: any = await increaseFramerate(fs_js.read_json(input), ratio);
+    const output: any = await increaseFramerate(fs_js.read_json(input), ratio, input);
     const file_system_output: string = `${fs_js.dirname(file_system_data_input_argument)}/${
         fs_js.parse_fs(fs_js.parse_fs(file_system_data_input_argument).name).name
     }.x${ratio}.pam.json`;

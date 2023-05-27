@@ -8,6 +8,7 @@ import fs_js from "../../../../library/fs/implement.js";
 import { Console } from "../../../../callback/console.js";
 import { args } from "../../../../implement/arguments.js";
 import to_official from "../../resources/res/to_official.js";
+import { MissingProperty, RuntimeError } from "../../../../implement/error.js";
 
 export interface PopCapResJsonDataBundle {
     resources?: PopCapResJsonDetailInfo[];
@@ -72,10 +73,11 @@ export default async function (
                         fs_js.parse_fs(execute_file_dir[i]).name,
                         json.type as any,
                         Boolean(expand_new_path),
+                        execute_file_dir[i],
                     );
                 }
                 if (json.resources === undefined) {
-                    throw new Error(localization("not_popcap_res"));
+                    throw new MissingProperty(localization("not_popcap_res"), "resources", execute_file_dir[i]);
                 }
                 directory_name = fs_js.parse_fs(execute_file_dir[i]).name + ".spg";
                 dir_sys =
@@ -193,7 +195,7 @@ export default async function (
             );
         }
     } else {
-        throw new Error(localization("cannot_detect_json"));
+        throw new RuntimeError(localization("cannot_detect_json"));
     }
     return 0;
 }

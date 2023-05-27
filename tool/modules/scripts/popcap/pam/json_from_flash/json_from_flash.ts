@@ -19,26 +19,44 @@ export default function (folder_xfl_path: string) {
     const sprite = new Array();
     extra_json.image.map(function (item: string, index: number) {
         image.push(
-            parseImageXML(XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/image/image_${index + 1}.xml`, "utf8"))), index, item)
+            parseImageXML(
+                XMLMapping.load(
+                    xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/image/image_${index + 1}.xml`, "utf8")),
+                ),
+                index,
+                item,
+                `${folder_xfl_path}/LIBRARY/image/image_${index + 1}.xml`,
+            ),
         );
     });
     extra_json.sprite.map(function (item: string, index: number) {
         sprite.push(
             parseSpriteXML(
-                XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/sprite/sprite_${index + 1}.xml`, "utf8"))),
+                XMLMapping.load(
+                    xmlButPrettier(
+                        fs_js.read_file(`${folder_xfl_path}/LIBRARY/sprite/sprite_${index + 1}.xml`, "utf8"),
+                    ),
+                ),
                 index,
                 (item as any).name,
-                frame_rate
-            )
+                frame_rate,
+                `${folder_xfl_path}/LIBRARY/sprite/sprite_${index + 1}.xml`,
+            ),
         );
     });
     const main_sprite: any = parseSpriteXML(
         XMLMapping.load(xmlButPrettier(fs_js.read_file(`${folder_xfl_path}/LIBRARY/main_sprite.xml`, "utf8"))),
         -1,
         "main_sprite",
-        frame_rate
+        frame_rate,
+        `${folder_xfl_path}/LIBRARY/main_sprite.xml`,
     );
-    parseDOMDocument(dom_document, main_sprite.frame, (main_sprite.work_area[1] - 1));
+    parseDOMDocument(
+        dom_document,
+        main_sprite.frame,
+        main_sprite.work_area[1] - 1,
+        `${folder_xfl_path}/DOMDocument.xml`,
+    );
     return {
         version: extra_json.version,
         frame_rate: frame_rate,

@@ -1,10 +1,11 @@
 "use strict";
 import localization from "../../../../callback/localization.js";
+import { InvalidRange } from "../../../../implement/error.js";
 
-export default function (pam_json: any, ratio: number) {
+export default function (pam_json: any, ratio: number, file_path: string) {
     const new_frame_rate = ratio * pam_json.frame_rate;
     if (new_frame_rate > 120) {
-        throw new Error(localization("frame_rate_must_be_smaller_than_120fps"));
+        throw new InvalidRange(localization("frame_rate_must_be_smaller_than_120fps"), file_path);
     }
     pam_json.frame_rate = new_frame_rate;
     for (let i = 0; i < pam_json.sprite.length; i++) {
@@ -30,8 +31,8 @@ export default function (pam_json: any, ratio: number) {
                     command: [],
                     remove: [],
                     append: [],
-                    change: []
-                })
+                    change: [],
+                });
             } else {
                 new_frame.push({
                     label: null,
@@ -39,8 +40,8 @@ export default function (pam_json: any, ratio: number) {
                     command: [],
                     remove: [],
                     append: [],
-                    change: []
-                })
+                    change: [],
+                });
             }
         }
     }

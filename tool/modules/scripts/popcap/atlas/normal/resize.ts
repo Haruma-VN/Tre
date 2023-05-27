@@ -1,6 +1,7 @@
 "use strict";
 import { calculate, resize } from "../../../../library/img/resize/util.js";
 import fs_js from "../../../../library/fs/implement.js";
+import { ResizeImageError } from "../../../../implement/error.js";
 
 export default async function (dir: string, orig: number | string, mod: number | string, new_dir?: string) {
     if (new_dir === null || new_dir === undefined || new_dir === void 0) {
@@ -16,7 +17,7 @@ export default async function (dir: string, orig: number | string, mod: number |
         .get_async_dimension(dir)
         .then((data: any) => data)
         .catch((error: any) => {
-            throw new Error(error.message as string);
+            throw new ResizeImageError(error.message, dir, error);
         });
     const transform_x = calculate(orig, mod);
     if (input.width / transform_x <= 1 || input.height / transform_x <= 1) {
